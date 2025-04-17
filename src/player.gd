@@ -26,6 +26,7 @@ func _unhandled_input(event:InputEvent) -> void:
 		var position_name:String = click(event.position)
 		if !position_name:
 			cancel_drawing_navi.emit()
+			return
 		drawing_navi.emit(position_name) 
 
 	if event is InputEventSingleScreenTouch:
