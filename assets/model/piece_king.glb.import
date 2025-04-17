@@ -4,12 +4,12 @@ importer="scene"
 importer_version=1
 type="PackedScene"
 uid="uid://bopgdgv46gefh"
-path="res://.godot/imported/chess_king.glb-297dab302dc0bdad4d7fb78a8067dd9b.scn"
+path="res://.godot/imported/piece_king.glb-33befe4d210d4fe3876cb8edf1a16a48.scn"
 
 [deps]
 
-source_file="res://assets/model/chess_king.glb"
-dest_files=["res://.godot/imported/chess_king.glb-297dab302dc0bdad4d7fb78a8067dd9b.scn"]
+source_file="res://assets/model/piece_king.glb"
+dest_files=["res://.godot/imported/piece_king.glb-33befe4d210d4fe3876cb8edf1a16a48.scn"]
 
 [params]
 

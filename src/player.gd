@@ -5,6 +5,8 @@ signal drawing_navi(position_name:String)
 signal end_drawing_navi()
 signal cancel_drawing_navi()
 
+signal confirm()
+
 @onready var ray_cast:RayCast3D = $ray_cast
 
 func _ready() -> void:
@@ -47,6 +49,8 @@ func _unhandled_input(event:InputEvent) -> void:
 	if event is InputEventScreenPinch:
 		cancel_drawing_navi.emit()
 		$head/camera.position.z -= event.relative / 200
+	if event is InputEventKey && event.pressed && event.keycode == KEY_SPACE:
+		confirm.emit()
 
 func click(screen_position:Vector2) -> String:
 	var from:Vector3 = $head/camera.project_ray_origin(screen_position)

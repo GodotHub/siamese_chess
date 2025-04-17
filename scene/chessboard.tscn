@@ -1,7 +1,6 @@
-[gd_scene load_steps=10 format=3 uid="uid://d1s6qj7aofldk"]
+[gd_scene load_steps=9 format=3 uid="uid://d1s6qj7aofldk"]
 
 [ext_resource type="PackedScene" uid="uid://dk81n85kf8ln0" path="res://assets/model/chessboard.glb" id="1_tntyj"]
-[ext_resource type="PackedScene" uid="uid://dvfilx1shno5w" path="res://scene/piece.tscn" id="2_0dgm7"]
 [ext_resource type="Script" uid="uid://d1qn0lbk66o3i" path="res://src/chessboard.gd" id="2_m6gnn"]
 [ext_resource type="PackedScene" uid="uid://b3ml34bssywkr" path="res://scene/player.tscn" id="4_s1mrl"]
 [ext_resource type="PackedScene" uid="uid://bmt1hscjfvqcg" path="res://scene/canvas.tscn" id="5_07eby"]
@@ -36,9 +35,6 @@ camera_attributes = SubResource("CameraAttributesPractical_jc3v0")
 
 [node name="canvas" parent="." index="5" instance=ExtResource("5_07eby")]
 
-[node name="chess" type="Node3D" parent="." index="6"]
+[node name="player" parent="." index="6" instance=ExtResource("4_s1mrl")]
 
-[node name="chess_king" parent="chess" index="0" instance=ExtResource("2_0dgm7")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.512076, 0, 3.47542)
-
-[node name="player" parent="." index="7" instance=ExtResource("4_s1mrl")]
+[node name="pieces" type="Node3D" parent="." index="7"]
