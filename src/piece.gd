@@ -18,4 +18,7 @@ func _ready() -> void:
 
 func receive_navi(position_name_to:String) -> void:
 	Chess.move_piece(chessboard_name, position_name, position_name_to)
-	position_name = position_name_to
+
+func move(_position_name:String) -> void:
+	position_name = _position_name
+	position = chessboard.convert_name_to_position(position_name)

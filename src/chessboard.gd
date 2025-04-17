@@ -3,7 +3,6 @@ class_name Chessboard
 
 var navi:Array[String] = []	# 线条是有排序的，总结下来只有四个字符：起点和终点
 var chessboard_name:String = "test"
-var map:Dictionary[String, Piece] = {}
 
 func _ready() -> void:
 	Chess.set_current_chessboard(self)	# 调试用：直接运行棋盘场景时设置当前位置
@@ -14,12 +13,8 @@ func _ready() -> void:
 	$player.connect("confirm", confirm)
 	var pieces:Dictionary = Chess.get_pieces_in_chessboard(chessboard_name)
 	for key:String in pieces:
-		var packed_scene:PackedScene = load("res://scene/piece_%s.tscn" % pieces[key]["class"])
-		var piece:Piece = packed_scene.instantiate()
-		piece.chessboard_name = chessboard_name
-		piece.position_name = key
+		var piece:Piece = Chess.get_piece_instance(chessboard_name, key)
 		$pieces.add_child(piece)
-		map[key] = piece
 
 func get_position_name(_position:Vector3) -> String:
 	var chess_pos:Vector2i = Vector2i(int(_position.x + 4) / 1, int(_position.z + 4) / 1)
@@ -47,7 +42,10 @@ func check_piece() -> void:
 	pass
 
 func confirm() -> void:
+	if !navi.size():
+		return
 	var position_name_1:String = navi[0].substr(0, 2)
 	var position_name_2:String = navi[0].substr(2)
-	if map.has(position_name_1):
-		map[position_name_1].receive_navi(position_name_2)
+	if Chess.has_piece(chessboard_name, position_name_1):
+		Chess.get_piece_instance(chessboard_name, position_name_1).receive_navi(position_name_2)
+	navi.pop_front()
