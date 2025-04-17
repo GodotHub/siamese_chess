@@ -13,7 +13,7 @@ func _ready() -> void:
 	$player.connect("confirm", confirm)
 	var pieces:Dictionary = Chess.get_pieces_in_chessboard(chessboard_name)
 	for key:String in pieces:
-		var piece:Piece = Chess.get_piece_instance(chessboard_name, key)
+		var piece:PieceInstance = Chess.get_piece_instance(chessboard_name, key)
 		$pieces.add_child(piece)
 
 func get_position_name(_position:Vector3) -> String:
@@ -44,8 +44,7 @@ func check_piece() -> void:
 func confirm() -> void:
 	if !navi.size():
 		return
-	var position_name_1:String = navi[0].substr(0, 2)
-	var position_name_2:String = navi[0].substr(2)
-	if Chess.has_piece(chessboard_name, position_name_1):
-		Chess.get_piece_instance(chessboard_name, position_name_1).receive_navi(position_name_2)
+	var position_name_from:String = navi[0].substr(0, 2)
+	var position_name_to:String = navi[0].substr(2)
+	Chess.execute_navi(chessboard_name, position_name_from, position_name_to)
 	navi.pop_front()

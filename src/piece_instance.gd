@@ -1,5 +1,5 @@
 extends Node3D
-class_name Piece
+class_name PieceInstance
 
 var chessboard:Chessboard = null
 var chessboard_name:String = ""
@@ -14,10 +14,6 @@ func _ready() -> void:
 	else:
 		position_name = chessboard.get_position_name(position)
 		position = chessboard.convert_name_to_position(position_name)
-	
-
-func receive_navi(position_name_to:String) -> void:
-	Chess.move_piece(chessboard_name, position_name, position_name_to)
 
 func move(_position_name:String) -> void:
 	position_name = _position_name

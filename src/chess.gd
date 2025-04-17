@@ -22,8 +22,8 @@ func get_current_chessboard() -> Chessboard:
 func set_current_chessboard(_chessboard:Chessboard) -> void:
 	current_chessboard = _chessboard
 
-func get_piece_instance(chessboard_name:String, position_name:String) -> Piece:
-	var piece:Piece = null
+func get_piece_instance(chessboard_name:String, position_name:String) -> PieceInstance:
+	var piece:PieceInstance = null
 	if pieces[chessboard_name][position_name].has("instance"):
 		return pieces[chessboard_name][position_name]["instance"]
 	var packed_scene:PackedScene = load("res://scene/piece_%s.tscn" % pieces[chessboard_name][position_name]["class"])
@@ -44,8 +44,15 @@ func move_piece(chessboard_name:String, from:String, to:String) -> void:
 	pieces[chessboard_name].erase(from)
 	pieces[chessboard_name][to] = piece_data
 	if pieces[chessboard_name][to].has("instance"):
-		var instance:Piece = pieces[chessboard_name][to]["instance"]
+		var instance:PieceInstance = pieces[chessboard_name][to]["instance"]
 		instance.move(to)
 
 func has_piece(chessboard_name:String, position_name:String) -> bool:
 	return pieces.has(chessboard_name) && pieces[chessboard_name].has(position_name)
+
+func execute_navi(chessboard_name:String, position_name_from:String, position_name_to:String) -> void:
+	if has_piece(chessboard_name, position_name_from):
+		call("receive_navi_%s" % pieces[chessboard_name][position_name_from]["class"], chessboard_name, position_name_from, position_name_to)
+
+func receive_navi_king(chessboard_name:String, position_name_from:String, position_name_to:String) -> void:
+	Chess.move_piece(chessboard_name, position_name_from, position_name_to)
