@@ -2,15 +2,12 @@ extends Node3D
 
 @onready var resolution:float = 512
 
-var line:Array[Line2D] = []	# 直接暴力搜解决问题
+var lines:Array[Line2D] = []	# 直接暴力搜解决问题
+var points:Array[Sprite2D] = []
 var drawing_line:Line2D = null
 
-func _ready():
+func _ready() -> void:
 	$sub_viewport.size = Vector2(resolution, resolution)
-
-func clear() -> void:
-	for iter:Line2D in $sub_viewport.get_children():
-		iter.queue_free()
 
 func start_drawing(start_position:Vector2) -> void:
 	var new_line:Line2D = Line2D.new()
@@ -22,7 +19,7 @@ func start_drawing(start_position:Vector2) -> void:
 	new_line.add_point(start_position)
 	drawing_line = new_line
 	$sub_viewport.add_child(new_line)
-	line.push_back(new_line)
+	lines.push_back(new_line)
 
 func drawing_curve(drawing_position:Vector2) -> void:
 	if !is_instance_valid(drawing_line):
@@ -49,6 +46,8 @@ func end_drawing() -> void:
 
 func cancel_drawing() -> void:
 	if is_instance_valid(drawing_line):
+		if lines.has(drawing_line):
+			lines.erase(drawing_line)
 		drawing_line.queue_free()
 
 func erase_line(drawing_position:Vector2) -> void:
@@ -61,6 +60,24 @@ func erase_line(drawing_position:Vector2) -> void:
 			if point.distance_squared_to(drawing_position) < 10 * 10:
 				iter.queue_free()
 				break
+
+func draw_point(drawing_position:Vector2) -> void:
+	var new_point:Sprite2D = Sprite2D.new()
+	new_point.texture = PlaceholderTexture2D.new()
+	new_point.texture.size = Vector2(20, 20)
+	new_point.position = drawing_position
+	$sub_viewport.add_child(new_point)
+	points.push_back(new_point)
+
+func clear_points() -> void:
+	for iter:Sprite2D in points:
+		iter.queue_free()
+	points.clear()
+
+func clear_lines() -> void:
+	for iter:Line2D in lines:
+		iter.queue_free()
+	lines.clear()
 
 func convert_name_to_position(_name:String) -> Vector2:
 	var ascii:PackedByteArray = _name.to_ascii_buffer()

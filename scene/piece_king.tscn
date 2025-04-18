@@ -3,10 +3,10 @@
 [ext_resource type="PackedScene" uid="uid://bopgdgv46gefh" path="res://assets/model/piece_king.glb" id="1_wwyhy"]
 [ext_resource type="Script" uid="uid://pofjvdbbj3iy" path="res://src/piece_instance.gd" id="2_bjoa2"]
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wwyhy"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_bjoa2"]
 
 [node name="chess_king" instance=ExtResource("1_wwyhy")]
 script = ExtResource("2_bjoa2")
 
-[node name="king" parent="." index="0"]
-surface_material_override/0 = SubResource("StandardMaterial3D_wwyhy")
+[node name="piece" parent="." index="0"]
+surface_material_override/0 = SubResource("StandardMaterial3D_bjoa2")

@@ -25,7 +25,7 @@ func _unhandled_input(event:InputEvent) -> void:
 			return
 		var position_name:String = click(event.position)
 		if !position_name:
-			cancel_drawing_navi.emit()
+			#cancel_drawing_navi.emit()
 			return
 		drawing_navi.emit(position_name) 
 

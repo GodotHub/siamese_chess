@@ -25,11 +25,16 @@ func convert_name_to_position(_name:String) -> Vector3:
 	return get_node(_name).position
 
 func start_drawing_navi(position_name:String) -> void:
-	$canvas.clear()
+	$canvas.clear_lines()
 	if !Chess.has_piece(chessboard_name, position_name):
 		return
-	$canvas.start_drawing($canvas.convert_name_to_position(position_name))
 	position_name_from = position_name
+	$canvas.start_drawing($canvas.convert_name_to_position(position_name))
+	for i:int in range(8):
+		for j:int in range(8):
+			var _position_name_to = "%c%d" % [i + 97, j + 1]
+			if Chess.is_navi_valid(chessboard_name, position_name, _position_name_to):
+				$canvas.draw_point($canvas.convert_name_to_position(_position_name_to))
 
 func drawing_navi(position_name:String) -> void:
 	if !position_name_from:
@@ -41,6 +46,7 @@ func drawing_navi(position_name:String) -> void:
 
 func end_drawing_navi() -> void:
 	$canvas.end_drawing()
+	$canvas.clear_points()
 
 func cancel_drawing_navi() -> void:
 	$canvas.cancel_drawing()
@@ -54,4 +60,4 @@ func confirm() -> void:
 	Chess.execute_navi(chessboard_name, position_name_from, position_name_to)
 	position_name_from = ""
 	position_name_to = ""
-	$canvas.clear()
+	$canvas.clear_lines()

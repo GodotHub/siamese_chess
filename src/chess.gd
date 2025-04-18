@@ -2,8 +2,17 @@ extends Node
 
 var pieces:Dictionary[String, Dictionary] = {
 	"test": {
-		"e8": {
+		"a1": {
+			"class": "rook"
+		},
+		"d1": {
+			"class": "queen"
+		},
+		"e1": {
 			"class": "king"
+		},
+		"h1": {
+			"class": "rook"
 		}
 	}
 }
@@ -67,5 +76,25 @@ func is_navi_valid_king(position_name_from:String, position_name_to:String) -> b
 	var distance:float = position_from.distance_squared_to(position_to)
 	return distance == 1 || distance == 2
 
+func is_navi_valid_queen(position_name_from:String, position_name_to:String) -> bool:
+	var position_name_from_buffer:PackedByteArray = position_name_from.to_ascii_buffer()
+	var position_name_to_buffer:PackedByteArray = position_name_to.to_ascii_buffer()
+	var position_from:Vector2i = Vector2i(position_name_from_buffer[0] - 97, position_name_from_buffer[1] - 49)
+	var position_to:Vector2i = Vector2i(position_name_to_buffer[0] - 97, position_name_to_buffer[1] - 49)
+	return position_from.x == position_to.x || position_from.y == position_to.y || position_from.x + position_from.y == position_to.x + position_to.y || position_from.x - position_from.y == position_to.x - position_to.y
+
+func is_navi_valid_rook(position_name_from:String, position_name_to:String) -> bool:
+	var position_name_from_buffer:PackedByteArray = position_name_from.to_ascii_buffer()
+	var position_name_to_buffer:PackedByteArray = position_name_to.to_ascii_buffer()
+	var position_from:Vector2i = Vector2i(position_name_from_buffer[0] - 97, position_name_from_buffer[1] - 49)
+	var position_to:Vector2i = Vector2i(position_name_to_buffer[0] - 97, position_name_to_buffer[1] - 49)
+	return position_from.x == position_to.x || position_from.y == position_to.y
+
 func execute_navi_king(chessboard_name:String, position_name_from:String, position_name_to:String) -> void:
+	Chess.move_piece(chessboard_name, position_name_from, position_name_to)
+
+func execute_navi_queen(chessboard_name:String, position_name_from:String, position_name_to:String) -> void:
+	Chess.move_piece(chessboard_name, position_name_from, position_name_to)
+
+func execute_navi_rook(chessboard_name:String, position_name_from:String, position_name_to:String) -> void:
 	Chess.move_piece(chessboard_name, position_name_from, position_name_to)
