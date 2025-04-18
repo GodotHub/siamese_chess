@@ -1,7 +1,8 @@
 extends Node3D
 class_name Chessboard
 
-var navi:Array[String] = []	# 线条是有排序的，总结下来只有四个字符：起点和终点
+var position_name_from:String = ""
+var position_name_to:String = ""
 var chessboard_name:String = "test"
 
 func _ready() -> void:
@@ -24,27 +25,33 @@ func convert_name_to_position(_name:String) -> Vector3:
 	return get_node(_name).position
 
 func start_drawing_navi(position_name:String) -> void:
+	$canvas.clear()
+	if !Chess.has_piece(chessboard_name, position_name):
+		return
 	$canvas.start_drawing($canvas.convert_name_to_position(position_name))
-	navi.push_back(position_name)
+	position_name_from = position_name
 
 func drawing_navi(position_name:String) -> void:
+	if !position_name_from:
+		return
+	if !Chess.is_navi_valid(chessboard_name, position_name_from, position_name):
+		return
 	$canvas.drawing_straight($canvas.convert_name_to_position(position_name))
-	navi[-1] = navi[-1].substr(0, 2) + position_name
+	position_name_to = position_name
 
 func end_drawing_navi() -> void:
 	$canvas.end_drawing()
 
 func cancel_drawing_navi() -> void:
 	$canvas.cancel_drawing()
-	navi.pop_back()
 
 func check_piece() -> void:
 	pass
 
 func confirm() -> void:
-	if !navi.size():
+	if !position_name_from || !position_name_to:
 		return
-	var position_name_from:String = navi[0].substr(0, 2)
-	var position_name_to:String = navi[0].substr(2)
 	Chess.execute_navi(chessboard_name, position_name_from, position_name_to)
-	navi.pop_front()
+	position_name_from = ""
+	position_name_to = ""
+	$canvas.clear()

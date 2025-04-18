@@ -9,7 +9,7 @@ func _ready():
 	$sub_viewport.size = Vector2(resolution, resolution)
 
 func clear() -> void:
-	for iter:Line2D in get_children():
+	for iter:Line2D in $sub_viewport.get_children():
 		iter.queue_free()
 
 func start_drawing(start_position:Vector2) -> void:
