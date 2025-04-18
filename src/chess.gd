@@ -6,6 +6,10 @@ var pieces:Dictionary[String, Dictionary] = {
 			"class": "rook",
 			"group": 0
 		},
+		"b1": {
+			"class": "knight",
+			"group": 0
+		},
 		"c1": {
 			"class": "bishop",
 			"group": 0
@@ -22,12 +26,84 @@ var pieces:Dictionary[String, Dictionary] = {
 			"class": "bishop",
 			"group": 0
 		},
+		"g1": {
+			"class": "knight",
+			"group": 0
+		},
 		"h1": {
 			"class": "rook",
 			"group": 0
 		},
+		"a2": {
+			"class": "pawn",
+			"group": 0
+		},
+		"b2": {
+			"class": "pawn",
+			"group": 0
+		},
+		"c2": {
+			"class": "pawn",
+			"group": 0
+		},
+		"d2": {
+			"class": "pawn",
+			"group": 0
+		},
+		"e2": {
+			"class": "pawn",
+			"group": 0
+		},
+		"f2": {
+			"class": "pawn",
+			"group": 0
+		},
+		"g2": {
+			"class": "pawn",
+			"group": 0
+		},
+		"h2": {
+			"class": "pawn",
+			"group": 0
+		},
+		"a7": {
+			"class": "pawn",
+			"group": 1
+		},
+		"b7": {
+			"class": "pawn",
+			"group": 1
+		},
+		"c7": {
+			"class": "pawn",
+			"group": 1
+		},
+		"d7": {
+			"class": "pawn",
+			"group": 1
+		},
+		"e7": {
+			"class": "pawn",
+			"group": 1
+		},
+		"f7": {
+			"class": "pawn",
+			"group": 1
+		},
+		"g7": {
+			"class": "pawn",
+			"group": 1
+		},
+		"h7": {
+			"class": "pawn",
+			"group": 1
+		},
 		"a8": {
 			"class": "rook",
+			"group": 1
+		},
+		"b8": {
+			"class": "knight",
 			"group": 1
 		},
 		"c8": {
@@ -44,6 +120,10 @@ var pieces:Dictionary[String, Dictionary] = {
 		},
 		"f8": {
 			"class": "bishop",
+			"group": 1
+		},
+		"g8": {
+			"class": "knight",
 			"group": 1
 		},
 		"h8": {
@@ -172,6 +252,32 @@ func is_navi_valid_bishop(chessboard_name:String, position_name_from:String, pos
 			return false
 	return true
 
+func is_navi_valid_knight(chessboard_name:String, position_name_from:String, position_name_to:String) -> bool:
+	var position_from:Vector2i = to_piece_position(position_name_from)
+	var position_to:Vector2i = to_piece_position(position_name_to)
+	var distance:Vector2i = position_to - position_from
+	if distance != Vector2i(1, 2) && distance != Vector2i(2, 1) && distance != Vector2i(-1, 2) && distance != Vector2i(2, -1) && distance != Vector2i(1, -2) && \
+	distance != Vector2i(-2, 1) && distance != Vector2i(-1, -2) && distance != Vector2i(-2, -1):
+		return false
+	if has_piece(chessboard_name, position_name_to) && pieces[chessboard_name][position_name_from]["group"] == pieces[chessboard_name][position_name_to]["group"]:
+		return false
+	return true
+
+func is_navi_valid_pawn(chessboard_name:String, position_name_from:String, position_name_to:String) -> bool:
+	var position_from:Vector2i = to_piece_position(position_name_from)
+	var position_to:Vector2i = to_piece_position(position_name_to)
+	var forward:Vector2i = Vector2i(0, 1) if pieces[chessboard_name][position_name_from]["group"] == 0 else Vector2i(0, -1)
+	var on_start:bool = pieces[chessboard_name][position_name_from]["group"] == 0 && position_from.y == 1 || pieces[chessboard_name][position_name_from]["group"] == 1 && position_from.y == 6
+	if on_start && position_from + forward * 2 == position_to && !has_piece(chessboard_name, position_name_to):
+		return true
+	if position_from + forward == position_to && !has_piece(chessboard_name, position_name_to):
+		return true
+	if position_from + forward + Vector2i(1, 0) == position_to && has_piece(chessboard_name, position_name_to) && pieces[chessboard_name][position_name_from]["group"] != pieces[chessboard_name][position_name_to]["group"]:
+		return true
+	if position_from + forward + Vector2i(-1, 0) == position_to && has_piece(chessboard_name, position_name_to) && pieces[chessboard_name][position_name_from]["group"] != pieces[chessboard_name][position_name_to]["group"]:
+		return true
+	return false
+
 func execute_navi_king(chessboard_name:String, position_name_from:String, position_name_to:String) -> void:
 	if Chess.has_piece(chessboard_name, position_name_to):
 		Chess.capture_piece(chessboard_name, position_name_to)
@@ -188,6 +294,16 @@ func execute_navi_rook(chessboard_name:String, position_name_from:String, positi
 	Chess.move_piece(chessboard_name, position_name_from, position_name_to)
 
 func execute_navi_bishop(chessboard_name:String, position_name_from:String, position_name_to:String) -> void:
+	if Chess.has_piece(chessboard_name, position_name_to):
+		Chess.capture_piece(chessboard_name, position_name_to)
+	Chess.move_piece(chessboard_name, position_name_from, position_name_to)
+
+func execute_navi_knight(chessboard_name:String, position_name_from:String, position_name_to:String) -> void:
+	if Chess.has_piece(chessboard_name, position_name_to):
+		Chess.capture_piece(chessboard_name, position_name_to)
+	Chess.move_piece(chessboard_name, position_name_from, position_name_to)
+	
+func execute_navi_pawn(chessboard_name:String, position_name_from:String, position_name_to:String) -> void:
 	if Chess.has_piece(chessboard_name, position_name_to):
 		Chess.capture_piece(chessboard_name, position_name_to)
 	Chess.move_piece(chessboard_name, position_name_from, position_name_to)
