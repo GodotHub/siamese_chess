@@ -6,6 +6,10 @@ var pieces:Dictionary[String, Dictionary] = {
 			"class": "rook",
 			"group": 0
 		},
+		"c1": {
+			"class": "bishop",
+			"group": 0
+		},
 		"d1": {
 			"class": "queen",
 			"group": 0
@@ -14,9 +18,37 @@ var pieces:Dictionary[String, Dictionary] = {
 			"class": "king",
 			"group": 0
 		},
+		"f1": {
+			"class": "bishop",
+			"group": 0
+		},
 		"h1": {
 			"class": "rook",
 			"group": 0
+		},
+		"a8": {
+			"class": "rook",
+			"group": 1
+		},
+		"c8": {
+			"class": "bishop",
+			"group": 1
+		},
+		"d8": {
+			"class": "queen",
+			"group": 1
+		},
+		"e8": {
+			"class": "king",
+			"group": 1
+		},
+		"f8": {
+			"class": "bishop",
+			"group": 1
+		},
+		"h8": {
+			"class": "rook",
+			"group": 1
 		}
 	}
 }
@@ -50,6 +82,7 @@ func get_piece_instance(chessboard_name:String, position_name:String) -> PieceIn
 	piece = packed_scene.instantiate()
 	piece.chessboard_name = chessboard_name
 	piece.position_name = position_name
+	piece.group = pieces[chessboard_name][position_name]["group"]
 	pieces[chessboard_name][position_name]["instance"] = piece
 	return piece
 
@@ -125,6 +158,20 @@ func is_navi_valid_rook(chessboard_name:String, position_name_from:String, posit
 			return false
 	return true
 
+func is_navi_valid_bishop(chessboard_name:String, position_name_from:String, position_name_to:String) -> bool:
+	var position_from:Vector2i = to_piece_position(position_name_from)
+	var position_to:Vector2i = to_piece_position(position_name_to)
+	if position_from.x + position_from.y != position_to.x + position_to.y && position_from.x - position_from.y != position_to.x - position_to.y:
+		return false
+	var direction:Vector2i = position_to - position_from
+	direction.x = 1 if direction.x > 0 else (-1 if direction.x < 0 else 0)
+	direction.y = 1 if direction.y > 0 else (-1 if direction.y < 0 else 0)
+	while position_from != position_to:
+		position_from += direction
+		if has_piece(chessboard_name, to_position_name(position_from)) && (position_from != position_to || pieces[chessboard_name][position_name_from]["group"] == pieces[chessboard_name][position_name_to]["group"]):
+			return false
+	return true
+
 func execute_navi_king(chessboard_name:String, position_name_from:String, position_name_to:String) -> void:
 	if Chess.has_piece(chessboard_name, position_name_to):
 		Chess.capture_piece(chessboard_name, position_name_to)
@@ -136,6 +183,11 @@ func execute_navi_queen(chessboard_name:String, position_name_from:String, posit
 	Chess.move_piece(chessboard_name, position_name_from, position_name_to)
 
 func execute_navi_rook(chessboard_name:String, position_name_from:String, position_name_to:String) -> void:
+	if Chess.has_piece(chessboard_name, position_name_to):
+		Chess.capture_piece(chessboard_name, position_name_to)
+	Chess.move_piece(chessboard_name, position_name_from, position_name_to)
+
+func execute_navi_bishop(chessboard_name:String, position_name_from:String, position_name_to:String) -> void:
 	if Chess.has_piece(chessboard_name, position_name_to):
 		Chess.capture_piece(chessboard_name, position_name_to)
 	Chess.move_piece(chessboard_name, position_name_from, position_name_to)
