@@ -25,4 +25,6 @@ func _ready() -> void:
 
 func move(_position_name:String) -> void:
 	position_name = _position_name
-	position = chessboard.convert_name_to_position(position_name)
+	var tween:Tween = create_tween()
+	tween.set_trans(Tween.TRANS_SINE)
+	tween.tween_property(self, "position", chessboard.convert_name_to_position(position_name), 0.4)
