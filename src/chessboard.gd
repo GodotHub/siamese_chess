@@ -47,6 +47,7 @@ func drawing_navi(position_name:String) -> void:
 func end_drawing_navi() -> void:
 	$canvas.end_drawing()
 	$canvas.clear_points()
+	confirm()
 
 func cancel_drawing_navi() -> void:
 	$canvas.cancel_drawing()

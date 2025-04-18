@@ -56,45 +56,81 @@ func move_piece(chessboard_name:String, from:String, to:String) -> void:
 		var instance:PieceInstance = pieces[chessboard_name][to]["instance"]
 		instance.move(to)
 
+func capture_piece(chessboard_name:String, position_name:String) -> void:
+	if pieces[chessboard_name][position_name].has("instance"):
+		var instance:PieceInstance = pieces[chessboard_name][position_name]["instance"]
+		pieces[chessboard_name][position_name].erase("instance")
+		instance.queue_free()
+	pieces[chessboard_name].erase(position_name)
+
 func has_piece(chessboard_name:String, position_name:String) -> bool:
 	return pieces.has(chessboard_name) && pieces[chessboard_name].has(position_name)
 
 func is_navi_valid(chessboard_name:String, position_name_from:String, position_name_to:String) -> bool:
 	if has_piece(chessboard_name, position_name_from):
-		return call("is_navi_valid_" + pieces[chessboard_name][position_name_from]["class"], position_name_from, position_name_to)
-	return false 
+		return call("is_navi_valid_" + pieces[chessboard_name][position_name_from]["class"], chessboard_name, position_name_from, position_name_to)
+	return false
 
 func execute_navi(chessboard_name:String, position_name_from:String, position_name_to:String) -> void:
 	if is_navi_valid(chessboard_name, position_name_from, position_name_to):
 		call("execute_navi_" + pieces[chessboard_name][position_name_from]["class"], chessboard_name, position_name_from, position_name_to)
 
-func is_navi_valid_king(position_name_from:String, position_name_to:String) -> bool:
+func is_navi_valid_king(chessboard_name:String, position_name_from:String, position_name_to:String) -> bool:
 	var position_name_from_buffer:PackedByteArray = position_name_from.to_ascii_buffer()
 	var position_name_to_buffer:PackedByteArray = position_name_to.to_ascii_buffer()
 	var position_from:Vector2i = Vector2i(position_name_from_buffer[0] - 97, position_name_from_buffer[1] - 49)
 	var position_to:Vector2i = Vector2i(position_name_to_buffer[0] - 97, position_name_to_buffer[1] - 49)
 	var distance:float = position_from.distance_squared_to(position_to)
-	return distance == 1 || distance == 2
+	if distance != 1 && distance != 2:
+		return false
+	if has_piece(chessboard_name, position_name_to):
+		return true
+	return true
 
-func is_navi_valid_queen(position_name_from:String, position_name_to:String) -> bool:
+func is_navi_valid_queen(chessboard_name:String, position_name_from:String, position_name_to:String) -> bool:
 	var position_name_from_buffer:PackedByteArray = position_name_from.to_ascii_buffer()
 	var position_name_to_buffer:PackedByteArray = position_name_to.to_ascii_buffer()
 	var position_from:Vector2i = Vector2i(position_name_from_buffer[0] - 97, position_name_from_buffer[1] - 49)
 	var position_to:Vector2i = Vector2i(position_name_to_buffer[0] - 97, position_name_to_buffer[1] - 49)
-	return position_from.x == position_to.x || position_from.y == position_to.y || position_from.x + position_from.y == position_to.x + position_to.y || position_from.x - position_from.y == position_to.x - position_to.y
+	if position_to == position_from || position_from.x != position_to.x && position_from.y != position_to.y && position_from.x + position_from.y != position_to.x + position_to.y && position_from.x - position_from.y != position_to.x - position_to.y:
+		return false
+	var direction:Vector2i = position_to - position_from
+	direction.x = 1 if direction.x > 0 else (-1 if direction.x < 0 else 0)
+	direction.y = 1 if direction.y > 0 else (-1 if direction.y < 0 else 0)
+	while position_from != position_to:
+		position_from += direction
+		if has_piece(chessboard_name, "%c%d" % [position_from.x + 97, position_from.y + 1]) && position_from != position_to:
+			return false
+	return true
 
-func is_navi_valid_rook(position_name_from:String, position_name_to:String) -> bool:
+
+func is_navi_valid_rook(chessboard_name:String, position_name_from:String, position_name_to:String) -> bool:
 	var position_name_from_buffer:PackedByteArray = position_name_from.to_ascii_buffer()
 	var position_name_to_buffer:PackedByteArray = position_name_to.to_ascii_buffer()
 	var position_from:Vector2i = Vector2i(position_name_from_buffer[0] - 97, position_name_from_buffer[1] - 49)
 	var position_to:Vector2i = Vector2i(position_name_to_buffer[0] - 97, position_name_to_buffer[1] - 49)
-	return position_from.x == position_to.x || position_from.y == position_to.y
+	if position_from.x != position_to.x && position_from.y != position_to.y:
+		return false
+	var direction:Vector2i = position_to - position_from
+	direction.x = 1 if direction.x > 0 else (-1 if direction.x < 0 else 0)
+	direction.y = 1 if direction.y > 0 else (-1 if direction.y < 0 else 0)
+	while position_from != position_to:
+		position_from += direction
+		if has_piece(chessboard_name, "%c%d" % [position_from.x + 97, position_from.y + 1]) && position_from != position_to:
+			return false
+	return true
 
 func execute_navi_king(chessboard_name:String, position_name_from:String, position_name_to:String) -> void:
+	if Chess.has_piece(chessboard_name, position_name_to):
+		Chess.capture_piece(chessboard_name, position_name_to)
 	Chess.move_piece(chessboard_name, position_name_from, position_name_to)
 
 func execute_navi_queen(chessboard_name:String, position_name_from:String, position_name_to:String) -> void:
+	if Chess.has_piece(chessboard_name, position_name_to):
+		Chess.capture_piece(chessboard_name, position_name_to)
 	Chess.move_piece(chessboard_name, position_name_from, position_name_to)
 
 func execute_navi_rook(chessboard_name:String, position_name_from:String, position_name_to:String) -> void:
+	if Chess.has_piece(chessboard_name, position_name_to):
+		Chess.capture_piece(chessboard_name, position_name_to)
 	Chess.move_piece(chessboard_name, position_name_from, position_name_to)
