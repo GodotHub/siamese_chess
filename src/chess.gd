@@ -139,7 +139,12 @@ func to_piece_position(position_name:String) -> Vector2i:
 	return Vector2i(position_name_buffer[0] - 97, position_name_buffer[1] - 49)
 
 func to_position_name(piece_position:Vector2i) -> String:
+	if piece_position.x < 0 || piece_position.x > 7 || piece_position.y < 0 || piece_position.y > 7:
+		return ""
 	return "%c%c" % [piece_position.x + 97, piece_position.y + 49]
+
+func direction_to(position_name_from:String, direction:Vector2i) -> String:
+	return to_position_name(to_piece_position(position_name_from) + direction)
 
 func change_chessboard(next:String) -> void:
 	if is_instance_valid(current_chessboard):
@@ -191,92 +196,84 @@ func has_piece(chessboard_name:String, position_name:String) -> bool:
 	return pieces.has(chessboard_name) && pieces[chessboard_name].has(position_name)
 
 func is_navi_valid(chessboard_name:String, position_name_from:String, position_name_to:String) -> bool:
+	return get_valid_navi(chessboard_name, position_name_from).has(position_name_to)
+
+func get_valid_navi(chessboard_name:String, position_name_from:String) -> PackedStringArray:
 	if has_piece(chessboard_name, position_name_from):
-		return call("is_navi_valid_" + pieces[chessboard_name][position_name_from]["class"], chessboard_name, position_name_from, position_name_to)
-	return false
+		return call("get_valid_navi_" + pieces[chessboard_name][position_name_from]["class"], chessboard_name, position_name_from)
+	return []
 
 func execute_navi(chessboard_name:String, position_name_from:String, position_name_to:String) -> void:
 	if is_navi_valid(chessboard_name, position_name_from, position_name_to):
 		call("execute_navi_" + pieces[chessboard_name][position_name_from]["class"], chessboard_name, position_name_from, position_name_to)
 
-func is_navi_valid_king(chessboard_name:String, position_name_from:String, position_name_to:String) -> bool:
-	var position_from:Vector2i = to_piece_position(position_name_from)
-	var position_to:Vector2i = to_piece_position(position_name_to)
-	var distance:float = position_from.distance_squared_to(position_to)
-	if distance != 1 && distance != 2:
-		return false
-	if has_piece(chessboard_name, position_name_to) && pieces[chessboard_name][position_name_from]["group"] == pieces[chessboard_name][position_name_to]["group"]:
-		return false
-	return true
+func get_valid_navi_king(chessboard_name:String, position_name_from:String) -> PackedStringArray:
+	var directions:PackedVector2Array = [Vector2i(-1, -1), Vector2i(-1, 0), Vector2i(-1, 1), Vector2i(0, -1), Vector2i(0, 1), Vector2i(1, -1), Vector2i(1, 0), Vector2i(1, 1)]
+	var answer:PackedStringArray = []
+	for iter:Vector2i in directions:
+		var position_name_to:String = direction_to(position_name_from, iter)
+		if !position_name_to || has_piece(chessboard_name, position_name_to) && pieces[chessboard_name][position_name_from]["group"] == pieces[chessboard_name][position_name_to]["group"]:
+			continue
+		answer.push_back(position_name_to)
+	return answer
 
-func is_navi_valid_queen(chessboard_name:String, position_name_from:String, position_name_to:String) -> bool:
-	var position_from:Vector2i = to_piece_position(position_name_from)
-	var position_to:Vector2i = to_piece_position(position_name_to)
-	if position_to == position_from || position_from.x != position_to.x && position_from.y != position_to.y && position_from.x + position_from.y != position_to.x + position_to.y && position_from.x - position_from.y != position_to.x - position_to.y:
-		return false
-	var direction:Vector2i = position_to - position_from
-	direction.x = 1 if direction.x > 0 else (-1 if direction.x < 0 else 0)
-	direction.y = 1 if direction.y > 0 else (-1 if direction.y < 0 else 0)
-	while position_from != position_to:
-		position_from += direction
-		if has_piece(chessboard_name, to_position_name(position_from)) && (position_from != position_to || pieces[chessboard_name][position_name_from]["group"] == pieces[chessboard_name][position_name_to]["group"]):
-			return false
-	return true
+func get_valid_navi_queen(chessboard_name:String, position_name_from:String) -> PackedStringArray:
+	var directions:PackedVector2Array = [Vector2i(-1, -1), Vector2i(-1, 0), Vector2i(-1, 1), Vector2i(0, -1), Vector2i(0, 1), Vector2i(1, -1), Vector2i(1, 0), Vector2i(1, 1)]
+	var answer:PackedStringArray = []
+	for iter:Vector2i in directions:
+		var position_name_to:String = direction_to(position_name_from, iter)
+		while !(!position_name_to || has_piece(chessboard_name, position_name_to) && pieces[chessboard_name][position_name_from]["group"] == pieces[chessboard_name][position_name_to]["group"]):
+			answer.push_back(position_name_to)
+			position_name_to = direction_to(position_name_to, iter)
+	return answer
 
+func get_valid_navi_rook(chessboard_name:String, position_name_from:String) -> PackedStringArray:
+	var directions:PackedVector2Array = [Vector2i(-1, 0), Vector2i(0, -1), Vector2i(0, 1), Vector2i(1, 0)]
+	var answer:PackedStringArray = []
+	for iter:Vector2i in directions:
+		var position_name_to:String = direction_to(position_name_from, iter)
+		while !(!position_name_to || has_piece(chessboard_name, position_name_to) && pieces[chessboard_name][position_name_from]["group"] == pieces[chessboard_name][position_name_to]["group"]):
+			answer.push_back(position_name_to)
+			position_name_to = direction_to(position_name_to, iter)
+	return answer
 
-func is_navi_valid_rook(chessboard_name:String, position_name_from:String, position_name_to:String) -> bool:
-	var position_from:Vector2i = to_piece_position(position_name_from)
-	var position_to:Vector2i = to_piece_position(position_name_to)
-	if position_from.x != position_to.x && position_from.y != position_to.y:
-		return false
-	var direction:Vector2i = position_to - position_from
-	direction.x = 1 if direction.x > 0 else (-1 if direction.x < 0 else 0)
-	direction.y = 1 if direction.y > 0 else (-1 if direction.y < 0 else 0)
-	while position_from != position_to:
-		position_from += direction
-		if has_piece(chessboard_name, to_position_name(position_from)) && (position_from != position_to || pieces[chessboard_name][position_name_from]["group"] == pieces[chessboard_name][position_name_to]["group"]):
-			return false
-	return true
+func get_valid_navi_bishop(chessboard_name:String, position_name_from:String) -> PackedStringArray:
+	var directions:PackedVector2Array = [Vector2i(-1, -1), Vector2i(-1, 1), Vector2i(1, -1), Vector2i(1, 1)]
+	var answer:PackedStringArray = []
+	for iter:Vector2i in directions:
+		var position_name_to:String = direction_to(position_name_from, iter)
+		while !(!position_name_to || has_piece(chessboard_name, position_name_to) && pieces[chessboard_name][position_name_from]["group"] == pieces[chessboard_name][position_name_to]["group"]):
+			answer.push_back(position_name_to)
+			position_name_to = direction_to(position_name_to, iter)
+	return answer
 
-func is_navi_valid_bishop(chessboard_name:String, position_name_from:String, position_name_to:String) -> bool:
-	var position_from:Vector2i = to_piece_position(position_name_from)
-	var position_to:Vector2i = to_piece_position(position_name_to)
-	if position_from.x + position_from.y != position_to.x + position_to.y && position_from.x - position_from.y != position_to.x - position_to.y:
-		return false
-	var direction:Vector2i = position_to - position_from
-	direction.x = 1 if direction.x > 0 else (-1 if direction.x < 0 else 0)
-	direction.y = 1 if direction.y > 0 else (-1 if direction.y < 0 else 0)
-	while position_from != position_to:
-		position_from += direction
-		if has_piece(chessboard_name, to_position_name(position_from)) && (position_from != position_to || pieces[chessboard_name][position_name_from]["group"] == pieces[chessboard_name][position_name_to]["group"]):
-			return false
-	return true
+func get_valid_navi_knight(chessboard_name:String, position_name_from:String) -> PackedStringArray:
+	var directions:PackedVector2Array = [Vector2i(1, 2), Vector2i(2, 1), Vector2i(-1, 2), Vector2i(-2, 1), Vector2i(1, -2), Vector2i(2, -1), Vector2i(-1, -2), Vector2i(-2, -1)]
+	var answer:PackedStringArray = []
+	for iter:Vector2i in directions:
+		var position_name_to:String = direction_to(position_name_from, iter)
+		if !position_name_to || has_piece(chessboard_name, position_name_to) && pieces[chessboard_name][position_name_from]["group"] == pieces[chessboard_name][position_name_to]["group"]:
+			continue
+		answer.push_back(position_name_to)
+	return answer
 
-func is_navi_valid_knight(chessboard_name:String, position_name_from:String, position_name_to:String) -> bool:
-	var position_from:Vector2i = to_piece_position(position_name_from)
-	var position_to:Vector2i = to_piece_position(position_name_to)
-	var distance:Vector2i = position_to - position_from
-	if distance != Vector2i(1, 2) && distance != Vector2i(2, 1) && distance != Vector2i(-1, 2) && distance != Vector2i(2, -1) && distance != Vector2i(1, -2) && \
-	distance != Vector2i(-2, 1) && distance != Vector2i(-1, -2) && distance != Vector2i(-2, -1):
-		return false
-	if has_piece(chessboard_name, position_name_to) && pieces[chessboard_name][position_name_from]["group"] == pieces[chessboard_name][position_name_to]["group"]:
-		return false
-	return true
-
-func is_navi_valid_pawn(chessboard_name:String, position_name_from:String, position_name_to:String) -> bool:
-	var position_from:Vector2i = to_piece_position(position_name_from)
-	var position_to:Vector2i = to_piece_position(position_name_to)
+func get_valid_navi_pawn(chessboard_name:String, position_name_from:String) -> PackedStringArray:
+	var answer:PackedStringArray = []
 	var forward:Vector2i = Vector2i(0, 1) if pieces[chessboard_name][position_name_from]["group"] == 0 else Vector2i(0, -1)
-	var on_start:bool = pieces[chessboard_name][position_name_from]["group"] == 0 && position_from.y == 1 || pieces[chessboard_name][position_name_from]["group"] == 1 && position_from.y == 6
-	if on_start && position_from + forward * 2 == position_to && !has_piece(chessboard_name, position_name_to):
-		return true
-	if position_from + forward == position_to && !has_piece(chessboard_name, position_name_to):
-		return true
-	if position_from + forward + Vector2i(1, 0) == position_to && has_piece(chessboard_name, position_name_to) && pieces[chessboard_name][position_name_from]["group"] != pieces[chessboard_name][position_name_to]["group"]:
-		return true
-	if position_from + forward + Vector2i(-1, 0) == position_to && has_piece(chessboard_name, position_name_to) && pieces[chessboard_name][position_name_from]["group"] != pieces[chessboard_name][position_name_to]["group"]:
-		return true
-	return false
+	var on_start:bool = pieces[chessboard_name][position_name_from]["group"] == 0 && position_name_from[1] == "2" || pieces[chessboard_name][position_name_from]["group"] == 1 && position_name_from[1] == "7"
+	var position_name_to:String = direction_to(position_name_from, forward)
+	var position_name_to_2:String = direction_to(position_name_from, forward * 2)
+	var position_name_to_l:String = direction_to(position_name_to, Vector2i(1, 0))
+	var position_name_to_r:String = direction_to(position_name_to, Vector2i(-1, 0))
+	if !has_piece(chessboard_name, position_name_to):
+		answer.push_back(position_name_to)
+		if on_start && !has_piece(chessboard_name, position_name_to_2):
+			answer.push_back(position_name_to_2)
+	if has_piece(chessboard_name, position_name_to_l) && pieces[chessboard_name][position_name_from]["group"] != pieces[chessboard_name][position_name_to_l]["group"]:
+		answer.push_back(position_name_to_l)
+	if has_piece(chessboard_name, position_name_to_r) && pieces[chessboard_name][position_name_from]["group"] != pieces[chessboard_name][position_name_to_r]["group"]:
+		answer.push_back(position_name_to_r)
+	return answer
 
 func execute_navi_king(chessboard_name:String, position_name_from:String, position_name_to:String) -> void:
 	if Chess.has_piece(chessboard_name, position_name_to):
