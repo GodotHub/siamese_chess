@@ -9,9 +9,9 @@ func _ready() -> void:
 	$player.connect("confirm_navi", confirm_navi)
 	$player.connect("finger_on_position", finger_on_position)
 	$player.connect("finger_up", finger_up)
-	var pieces:Dictionary = Chess.get_pieces_in_chessboard(chessboard_name)
+	var pieces:Dictionary = Chess.get_chess_state().current
 	for key:String in pieces:
-		var piece:PieceInstance = Chess.get_piece_instance(chessboard_name, key)
+		var piece:PieceInstance = Chess.get_chess_state().get_piece_instance(key)
 		$pieces.add_child(piece)
 
 func get_position_name(_position:Vector3) -> String:
@@ -23,12 +23,12 @@ func convert_name_to_position(_name:String) -> Vector3:
 
 func tap_position(position_name:String) -> void:
 	$canvas.clear_points()
-	if !Chess.has_piece(chessboard_name, position_name):
+	if !Chess.get_chess_state().has_piece(position_name):
 		return
 	for i:int in range(8):
 		for j:int in range(8):
 			var _position_name_to = "%c%d" % [i + 97, j + 1]
-			if Chess.is_navi_valid(chessboard_name, position_name, _position_name_to):
+			if Chess.get_chess_state().is_navi_valid(position_name, _position_name_to):
 				$canvas.draw_point($canvas.convert_name_to_position(_position_name_to))
 
 func finger_on_position(position_name:String) -> void:
@@ -38,7 +38,7 @@ func finger_up() -> void:
 	pass
 
 func confirm_navi(position_name_from:String, position_name_to:String) -> void:
-	if !position_name_from || !position_name_to || !Chess.is_navi_valid(chessboard_name, position_name_from, position_name_to):
+	if !position_name_from || !position_name_to || !Chess.get_chess_state().is_navi_valid(position_name_from, position_name_to):
 		return
-	Chess.execute_navi(chessboard_name, position_name_from, position_name_to)
+	Chess.get_chess_state().execute_navi(position_name_from, position_name_to)
 	$canvas.clear_points()
