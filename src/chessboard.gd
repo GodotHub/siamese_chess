@@ -7,6 +7,8 @@ func _ready() -> void:
 	Chess.set_current_chessboard(self)	# 调试用：直接运行棋盘场景时设置当前位置
 	$player.connect("tap_position", tap_position)
 	$player.connect("confirm_navi", confirm_navi)
+	$player.connect("finger_on_position", finger_on_position)
+	$player.connect("finger_up", finger_up)
 	var pieces:Dictionary = Chess.get_pieces_in_chessboard(chessboard_name)
 	for key:String in pieces:
 		var piece:PieceInstance = Chess.get_piece_instance(chessboard_name, key)
@@ -28,6 +30,12 @@ func tap_position(position_name:String) -> void:
 			var _position_name_to = "%c%d" % [i + 97, j + 1]
 			if Chess.is_navi_valid(chessboard_name, position_name, _position_name_to):
 				$canvas.draw_point($canvas.convert_name_to_position(_position_name_to))
+
+func finger_on_position(position_name:String) -> void:
+	pass
+
+func finger_up() -> void:
+	pass
 
 func confirm_navi(position_name_from:String, position_name_to:String) -> void:
 	if !position_name_from || !position_name_to || !Chess.is_navi_valid(chessboard_name, position_name_from, position_name_to):

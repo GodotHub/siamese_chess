@@ -1,6 +1,8 @@
 extends Node3D
 
 signal tap_position(position_name:String)
+signal finger_on_position(position_name:String)
+signal finger_up()
 signal confirm_navi(position_name_from:String, position_name_to:String)
 
 @onready var ray_cast:RayCast3D = $ray_cast
@@ -15,6 +17,7 @@ func _unhandled_input(event:InputEvent) -> void:
 	if event is InputEventMouseButton:
 		if event.pressed && event.button_index == MOUSE_BUTTON_LEFT:
 			var position_name:String = click(event.position)
+			finger_on_position.emit(click(event.position))
 			if !inspect_position_name:
 				tap_position.emit(position_name)
 				inspect_position_name = position_name
@@ -25,9 +28,11 @@ func _unhandled_input(event:InputEvent) -> void:
 		elif !event.pressed && mouse_moved && event.button_index == MOUSE_BUTTON_LEFT:
 			var position_name:String = click(event.position)
 			confirm_navi.emit(inspect_position_name, position_name)
+			finger_up.emit()
 			inspect_position_name = ""
 	if event is InputEventMouseMotion:
 		mouse_moved = true
+		finger_on_position.emit(click(event.position))
 
 	#if event is InputEventSingleScreenTouch:
 	#	var position_name:String = click(event.position)
