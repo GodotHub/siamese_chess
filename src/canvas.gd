@@ -3,13 +3,21 @@ extends Node3D
 @onready var resolution:float = 512
 
 var lines:Array[Line2D] = []	# 直接暴力搜解决问题
-var points:Array[Node2D] = []
+var select_position:Array[Node2D] = []
+var pointer_position:Node2D = null
 var drawing_line:Line2D = null
 
-class ChessboardPoint extends Node2D:
+class ChessboardSelectPosition extends Node2D:
+	var resolution:float = 512
 	func _draw() -> void:
-		draw_rect(Rect2(-32, -32, 64, 64), Color(0.6, 0.1, 0.1, 0.4))
-		draw_rect(Rect2(-32, -32, 64, 64), Color(0.6, 0.3, 0.3), false, 10)
+		draw_rect(Rect2(-resolution / 16, -resolution / 16, resolution / 8, resolution / 8), Color(0.6, 0.1, 0.1, 0.4))
+		draw_rect(Rect2(-resolution / 16, -resolution / 16, resolution / 8, resolution / 8), Color(0.6, 0.3, 0.3), false, 10)
+
+class ChessboardPointerPosition extends Node2D:
+	var resolution:float = 512
+	func _draw() -> void:
+		draw_rect(Rect2(-resolution / 16, -resolution / 16, resolution / 8, resolution / 8), Color(0.1, 0.6, 0.1, 0.4))
+		draw_rect(Rect2(-resolution / 16, -resolution / 16, resolution / 8, resolution / 8), Color(0.3, 0.6, 0.3), false, 10)
 
 func _ready() -> void:
 	$sub_viewport.size = Vector2(resolution, resolution)
@@ -61,21 +69,33 @@ func erase_line(drawing_position:Vector2) -> void:
 	for iter:Line2D in point_list:
 		if iter.get_point_count() < 2:
 			iter.queue_free()
-		for point:Vector2 in iter.points:
+		for point:Vector2 in iter.select_position:
 			if point.distance_squared_to(drawing_position) < 10 * 10:
 				iter.queue_free()
 				break
 
-func draw_point(drawing_position:Vector2) -> void:
-	var new_point:ChessboardPoint = ChessboardPoint.new()
-	new_point.position = drawing_position
-	$sub_viewport.add_child(new_point)
-	points.push_back(new_point)
+func draw_pointer_position(drawing_position:Vector2) -> void:
+	if !is_instance_valid(pointer_position):
+		pointer_position = ChessboardPointerPosition.new()
+		pointer_position.resolution = resolution
+	if !pointer_position.is_inside_tree():
+		$sub_viewport.add_child(pointer_position)
+	pointer_position.position = drawing_position
 
-func clear_points() -> void:
-	for iter:Node2D in points:
+func clear_pointer_position() -> void:
+	$sub_viewport.remove_child(pointer_position)
+
+func draw_select_position(drawing_position:Vector2) -> void:
+	var new_point:ChessboardSelectPosition = ChessboardSelectPosition.new()
+	new_point.position = drawing_position
+	new_point.resolution = resolution
+	$sub_viewport.add_child(new_point)
+	select_position.push_back(new_point)
+
+func clear_select_position() -> void:
+	for iter:Node2D in select_position:
 		iter.queue_free()
-	points.clear()
+	select_position.clear()
 
 func clear_lines() -> void:
 	for iter:Line2D in lines:

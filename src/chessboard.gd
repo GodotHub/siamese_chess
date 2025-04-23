@@ -23,7 +23,7 @@ func convert_name_to_position(_position_name:String) -> Vector3:
 	return get_node(_position_name).position
 
 func tap_position(position_name:String) -> void:
-	$canvas.clear_points()
+	$canvas.clear_select_position()
 	if selected_position_name:
 		confirm_navi(selected_position_name, position_name)
 		selected_position_name = ""
@@ -32,17 +32,20 @@ func tap_position(position_name:String) -> void:
 		return
 	var valid_navi:PackedStringArray = Chess.get_chess_state().get_valid_navi(position_name)
 	for iter:String in valid_navi:
-		$canvas.draw_point($canvas.convert_name_to_position(iter))
+		$canvas.draw_select_position($canvas.convert_name_to_position(iter))
 	selected_position_name = position_name
 
 func finger_on_position(position_name:String) -> void:
-	pass
+	if !position_name:
+		$canvas.clear_pointer_position()
+		return
+	$canvas.draw_pointer_position($canvas.convert_name_to_position(position_name))
 
 func finger_up() -> void:
-	pass
+	$canvas.clear_pointer_position()
 
 func confirm_navi(position_name_from:String, position_name_to:String) -> void:
 	if !position_name_from || !position_name_to || !Chess.get_chess_state().is_navi_valid(position_name_from, position_name_to):
 		return
 	Chess.get_chess_state().execute_navi(position_name_from, position_name_to)
-	$canvas.clear_points()
+	$canvas.clear_select_position()
