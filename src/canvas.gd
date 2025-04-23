@@ -83,7 +83,8 @@ func draw_pointer_position(drawing_position:Vector2) -> void:
 	pointer_position.position = drawing_position
 
 func clear_pointer_position() -> void:
-	$sub_viewport.remove_child(pointer_position)
+	if is_instance_valid(pointer_position):
+		$sub_viewport.remove_child(pointer_position)
 
 func draw_select_position(drawing_position:Vector2) -> void:
 	var new_point:ChessboardSelectPosition = ChessboardSelectPosition.new()
