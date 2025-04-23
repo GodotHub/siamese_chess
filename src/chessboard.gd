@@ -2,6 +2,7 @@ extends Node3D
 class_name Chessboard
 
 var chessboard_name:String = "test"
+var selected_position_name:String = ""
 
 func _ready() -> void:
 	Chess.set_current_chessboard(self)	# 调试用：直接运行棋盘场景时设置当前位置
@@ -18,18 +19,21 @@ func get_position_name(_position:Vector3) -> String:
 	var chess_pos:Vector2i = Vector2i(int(_position.x + 4) / 1, int(_position.z + 4) / 1)
 	return "%c%d" % [chess_pos.x + 97, chess_pos.y + 1]
 
-func convert_name_to_position(_name:String) -> Vector3:
-	return get_node(_name).position
+func convert_name_to_position(_position_name:String) -> Vector3:
+	return get_node(_position_name).position
 
 func tap_position(position_name:String) -> void:
 	$canvas.clear_points()
+	if selected_position_name:
+		confirm_navi(selected_position_name, position_name)
+		selected_position_name = ""
+		return
 	if !Chess.get_chess_state().has_piece(position_name):
 		return
-	for i:int in range(8):
-		for j:int in range(8):
-			var _position_name_to = "%c%d" % [i + 97, j + 1]
-			if Chess.get_chess_state().is_navi_valid(position_name, _position_name_to):
-				$canvas.draw_point($canvas.convert_name_to_position(_position_name_to))
+	var valid_navi:PackedStringArray = Chess.get_chess_state().get_valid_navi(position_name)
+	for iter:String in valid_navi:
+		$canvas.draw_point($canvas.convert_name_to_position(iter))
+	selected_position_name = position_name
 
 func finger_on_position(position_name:String) -> void:
 	pass
