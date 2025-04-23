@@ -102,7 +102,7 @@ class PieceBishop extends PieceInterface:
 		state.move_piece(position_name_from, position_name_to)
 
 	static func get_valid_navi(state:ChessState, position_name_from:String) -> PackedStringArray:
-		var directions:PackedVector2Array = [Vector2i(-1, -1), Vector2i(-1, 0), Vector2i(-1, 1), Vector2i(0, -1), Vector2i(0, 1), Vector2i(1, -1), Vector2i(1, 0), Vector2i(1, 1)]
+		var directions:PackedVector2Array = [Vector2i(-1, -1), Vector2i(-1, 1), Vector2i(1, -1), Vector2i(1, 1)]
 		var answer:PackedStringArray = []
 		for iter:Vector2i in directions:
 			var position_name_to:String = Chess.direction_to(position_name_from, iter)
@@ -164,6 +164,31 @@ class PiecePawn extends PieceInterface:
 		if state.has_piece(position_name_to_r) && state.get_piece(position_name_from).group != state.get_piece(position_name_to_r).group:
 			answer.push_back(position_name_to_r)
 		return answer
+
+class ChessEvent:
+	var step:int = 0	# 步数
+
+class ChessEventMove extends ChessEvent:
+	var position_name_from:String = ""
+	var position_name_to:String = ""
+
+class ChessEventCapture extends ChessEvent:	# 记录被删除的棋子，方便撤销
+	var position_name:String = ""
+	var captured_piece:Piece = null
+
+func create_chess_event_move(_step:int, _position_name_from:String, _position_name_to:String) -> ChessEventMove:
+	var new_event:ChessEventMove = ChessEventMove.new()
+	new_event.step = _step
+	new_event.position_name_from = _position_name_from
+	new_event.position_name_to = _position_name_to
+	return new_event
+
+func create_chess_event_capture(_step:int, _position_name:String, _captured_piece:Piece) -> ChessEventCapture:
+	var new_event:ChessEventCapture = ChessEventCapture.new()
+	new_event.step = _step
+	new_event.position_name = _position_name
+	new_event.captured_piece = _captured_piece
+	return new_event
 
 class ChessState:
 	var state_name:String = "test"
@@ -231,17 +256,20 @@ class ChessState:
 	func execute_navi(position_name_from:String, position_name_to:String) -> void:
 		if has_piece(position_name_from):
 			current[position_name_from].class_type.execute_navi(self, position_name_from, position_name_to)
+		history.push_back(position_name_from + "->" + position_name_to)
 
 	func has_piece(position_name:String) -> bool:
 		return current.has(position_name)
 
 	func capture_piece(position_name:String) -> void:
+		history_buffer.push_back(Chess.create_chess_event_capture(history.size(), position_name, current[position_name]))
 		var instance:PieceInstance = get_piece(position_name).instance
 		if is_instance_valid(instance):
 			instance.queue_free()
 		current.erase(position_name)
 
 	func move_piece(position_name_from:String, position_name_to:String) -> void:
+		history_buffer.push_back(Chess.create_chess_event_move(history.size(), position_name_from, position_name_to))
 		var piece:Piece = get_piece(position_name_from)
 		current.erase(position_name_from)
 		current[position_name_to] = piece

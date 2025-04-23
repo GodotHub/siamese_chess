@@ -3,8 +3,13 @@ extends Node3D
 @onready var resolution:float = 512
 
 var lines:Array[Line2D] = []	# 直接暴力搜解决问题
-var points:Array[Sprite2D] = []
+var points:Array[Node2D] = []
 var drawing_line:Line2D = null
+
+class ChessboardPoint extends Node2D:
+	func _draw() -> void:
+		draw_rect(Rect2(-32, -32, 64, 64), Color(0.6, 0.1, 0.1, 0.4))
+		draw_rect(Rect2(-32, -32, 64, 64), Color(0.6, 0.3, 0.3), false, 10)
 
 func _ready() -> void:
 	$sub_viewport.size = Vector2(resolution, resolution)
@@ -62,15 +67,13 @@ func erase_line(drawing_position:Vector2) -> void:
 				break
 
 func draw_point(drawing_position:Vector2) -> void:
-	var new_point:Sprite2D = Sprite2D.new()
-	new_point.texture = PlaceholderTexture2D.new()
-	new_point.texture.size = Vector2(20, 20)
+	var new_point:ChessboardPoint = ChessboardPoint.new()
 	new_point.position = drawing_position
 	$sub_viewport.add_child(new_point)
 	points.push_back(new_point)
 
 func clear_points() -> void:
-	for iter:Sprite2D in points:
+	for iter:Node2D in points:
 		iter.queue_free()
 	points.clear()
 
