@@ -1,0 +1,40 @@
+[gd_scene load_steps=6 format=3 uid="uid://b0ots07uggqyg"]
+
+[ext_resource type="Script" uid="uid://dovrsks1cn8gl" path="res://src/history.gd" id="1_1i63t"]
+[ext_resource type="Theme" uid="uid://d32bwe36vwxip" path="res://assets/theme.tres" id="2_ysvxy"]
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_6vnsk"]
+size = Vector2(0.3, 0.4)
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_ysvxy"]
+viewport_path = NodePath("sub_viewport")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_o7yno"]
+resource_local_to_scene = true
+albedo_texture = SubResource("ViewportTexture_ysvxy")
+
+[node name="history" type="Node3D"]
+script = ExtResource("1_1i63t")
+
+[node name="mesh_instance_3d" type="MeshInstance3D" parent="."]
+mesh = SubResource("PlaneMesh_6vnsk")
+surface_material_override/0 = SubResource("StandardMaterial3D_o7yno")
+
+[node name="sub_viewport" type="SubViewport" parent="."]
+size = Vector2i(384, 512)
+
+[node name="label_title" type="Label" parent="sub_viewport"]
+offset_left = 150.0
+offset_top = 10.0
+offset_right = 219.0
+offset_bottom = 33.0
+theme = ExtResource("2_ysvxy")
+text = "Notation"
+
+[node name="rich_text_label" type="RichTextLabel" parent="sub_viewport"]
+offset_left = 28.0
+offset_top = 57.0
+offset_right = 348.0
+offset_bottom = 527.0
+theme = ExtResource("2_ysvxy")
+bbcode_enabled = true

@@ -1,0 +1,5 @@
+[gd_resource type="Theme" format=3 uid="uid://d32bwe36vwxip"]
+
+[resource]
+Label/colors/font_color = Color(0, 0, 0, 1)
+RichTextLabel/colors/default_color = Color(0, 0, 0, 1)
