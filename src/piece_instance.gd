@@ -21,7 +21,7 @@ func _ready() -> void:
 	next_pass_material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
 	next_pass_material.cull_mode = BaseMaterial3D.CULL_FRONT
 	next_pass_material.grow = true
-	next_pass_material.grow_amount = 0.01
+	next_pass_material.grow_amount = 0.001
 	if group == 1:
 		material.albedo_color = Color(0.3, 0.3, 0.3, 1)
 		next_pass_material.albedo_color = Color(1, 1, 1, 1)

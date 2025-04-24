@@ -83,7 +83,7 @@ func draw_pointer_position(drawing_position:Vector2) -> void:
 	pointer_position.position = drawing_position
 
 func clear_pointer_position() -> void:
-	if is_instance_valid(pointer_position):
+	if is_instance_valid(pointer_position) && pointer_position.is_inside_tree():
 		$sub_viewport.remove_child(pointer_position)
 
 func draw_select_position(drawing_position:Vector2) -> void:

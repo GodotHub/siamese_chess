@@ -1,15 +1,13 @@
 extends Node3D
 class_name Chessboard
 
+signal navi_played(position_name_from:String, position_name_to:String)
+
 var chessboard_name:String = "test"
 var selected_position_name:String = ""
 
 func _ready() -> void:
 	Chess.set_current_chessboard(self)	# 调试用：直接运行棋盘场景时设置当前位置
-	$player.connect("tap_position", tap_position)
-	$player.connect("confirm_navi", confirm_navi)
-	$player.connect("finger_on_position", finger_on_position)
-	$player.connect("finger_up", finger_up)
 	var pieces:Dictionary = Chess.get_chess_state().current
 	for key:String in pieces:
 		var piece:PieceInstance = Chess.get_chess_state().get_piece_instance(key)
@@ -49,3 +47,4 @@ func confirm_navi(position_name_from:String, position_name_to:String) -> void:
 		return
 	Chess.get_chess_state().execute_navi(position_name_from, position_name_to)
 	$canvas.clear_select_position()
+	navi_played.emit(position_name_from, position_name_to)

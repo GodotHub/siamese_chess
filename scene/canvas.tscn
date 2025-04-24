@@ -2,9 +2,8 @@
 
 [ext_resource type="Script" uid="uid://ghqa0vob53fm" path="res://src/canvas.gd" id="1_m4lpw"]
 
-[sub_resource type="QuadMesh" id="QuadMesh_ecs85"]
-size = Vector2(8, 8)
-orientation = 1
+[sub_resource type="PlaneMesh" id="PlaneMesh_lelh2"]
+size = Vector2(1, 1)
 
 [sub_resource type="ViewportTexture" id="ViewportTexture_lelh2"]
 viewport_path = NodePath("sub_viewport")
@@ -21,7 +20,7 @@ script = ExtResource("1_m4lpw")
 
 [node name="mesh_instance" type="MeshInstance3D" parent="."]
 transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 0, 0)
-mesh = SubResource("QuadMesh_ecs85")
+mesh = SubResource("PlaneMesh_lelh2")
 surface_material_override/0 = SubResource("StandardMaterial3D_2pvxu")
 
 [node name="sub_viewport" type="SubViewport" parent="."]
