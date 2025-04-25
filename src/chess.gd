@@ -18,6 +18,8 @@ class PieceInterface:
 		pass
 	static func get_valid_navi(_state:ChessState, _position_name_from:String) -> PackedStringArray:
 		return []
+	static func get_attack_position(_state:ChessState, _position_name_from:String) -> PackedStringArray:
+		return []
 
 class PieceKing extends PieceInterface:
 	static func create_instance(position_name:String, group:int) -> PieceInstance:
@@ -41,6 +43,8 @@ class PieceKing extends PieceInterface:
 				continue
 			answer.push_back(position_name_to)
 		return answer
+	static func get_attack_position(state:ChessState, position_name_from:String) -> PackedStringArray:
+		return get_valid_navi(state, position_name_from)
 
 class PieceQueen extends PieceInterface:
 	static func create_instance(position_name:String, group:int) -> PieceInstance:
@@ -64,6 +68,8 @@ class PieceQueen extends PieceInterface:
 				answer.push_back(position_name_to)
 				position_name_to = Chess.direction_to(position_name_to, iter)
 		return answer
+	static func get_attack_position(state:ChessState, position_name_from:String) -> PackedStringArray:
+		return get_valid_navi(state, position_name_from)
 
 class PieceRook extends PieceInterface:
 	static func create_instance(position_name:String, group:int) -> PieceInstance:
@@ -87,6 +93,8 @@ class PieceRook extends PieceInterface:
 				answer.push_back(position_name_to)
 				position_name_to = Chess.direction_to(position_name_to, iter)
 		return answer
+	static func get_attack_position(state:ChessState, position_name_from:String) -> PackedStringArray:
+		return get_valid_navi(state, position_name_from)
 
 class PieceBishop extends PieceInterface:
 	static func create_instance(position_name:String, group:int) -> PieceInstance:
@@ -110,6 +118,8 @@ class PieceBishop extends PieceInterface:
 				answer.push_back(position_name_to)
 				position_name_to = Chess.direction_to(position_name_to, iter)
 		return answer
+	static func get_attack_position(state:ChessState, position_name_from:String) -> PackedStringArray:
+		return get_valid_navi(state, position_name_from)
 
 class PieceKnight extends PieceInterface:
 	static func create_instance(position_name:String, group:int) -> PieceInstance:
@@ -133,6 +143,8 @@ class PieceKnight extends PieceInterface:
 				continue
 			answer.push_back(position_name_to)
 		return answer
+	static func get_attack_position(state:ChessState, position_name_from:String) -> PackedStringArray:
+		return get_valid_navi(state, position_name_from)
 
 class PiecePawn extends PieceInterface:
 	static func create_instance(position_name:String, group:int) -> PieceInstance:
@@ -162,6 +174,17 @@ class PiecePawn extends PieceInterface:
 		if state.has_piece(position_name_to_l) && state.get_piece(position_name_from).group != state.get_piece(position_name_to_l).group:
 			answer.push_back(position_name_to_l)
 		if state.has_piece(position_name_to_r) && state.get_piece(position_name_from).group != state.get_piece(position_name_to_r).group:
+			answer.push_back(position_name_to_r)
+		return answer
+	static func get_attack_position(state:ChessState, position_name_from:String) -> PackedStringArray:
+		var forward:Vector2i = Vector2i(0, 1) if state.get_piece(position_name_from).group == 0 else Vector2i(0, -1)
+		var position_name_to:String = Chess.direction_to(position_name_from, forward)
+		var position_name_to_l:String = Chess.direction_to(position_name_to, Vector2i(1, 0))
+		var position_name_to_r:String = Chess.direction_to(position_name_to, Vector2i(-1, 0))
+		var answer:PackedStringArray = []
+		if position_name_to_l:
+			answer.push_back(position_name_to_l)
+		if position_name_to_r:
 			answer.push_back(position_name_to_r)
 		return answer
 
@@ -195,6 +218,7 @@ class ChessState:
 	var current:Dictionary[String, Piece] = {}
 	var history:PackedStringArray = []	# 仅记录着法
 	var history_buffer:Array = []	# 详细记录所有变动
+	var attack_count:Dictionary[String, int] = {}	# 分两位：黑方攻击和白方攻击
 	func _init() -> void:
 		current = {
 			"a1": Chess.create_piece(PieceRook, 0),
@@ -230,6 +254,7 @@ class ChessState:
 			"g7": Chess.create_piece(PiecePawn, 1),
 			"h7": Chess.create_piece(PiecePawn, 1),
 		}
+		update_attack()
 	func get_piece_instance(position_name:String) -> PieceInstance:
 		var instance:PieceInstance = current[position_name].instance
 		if is_instance_valid(instance):
@@ -273,9 +298,19 @@ class ChessState:
 		var piece:Piece = get_piece(position_name_from)
 		current.erase(position_name_from)
 		current[position_name_to] = piece
+		update_attack()
 		var instance:PieceInstance = piece.instance
 		if is_instance_valid(instance):
 			instance.move(position_name_to)
+	
+	func update_attack() -> void:
+		attack_count.clear()
+		for key:String in current:
+			var attack_position:PackedStringArray = current[key].class_type.get_attack_position(self, key)
+			for iter:String in attack_position:
+				if !attack_count.has(iter):
+					attack_count[iter] = 0
+				attack_count[iter] += 1 << (0 if current[key].group == 0 else 6)
 
 var current_chessboard:Chessboard = null
 @onready var test_state:ChessState = ChessState.new()

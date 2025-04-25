@@ -12,6 +12,7 @@ func _ready() -> void:
 	for key:String in pieces:
 		var piece:PieceInstance = Chess.get_chess_state().get_piece_instance(key)
 		$pieces.add_child(piece)
+	draw_attack_position()
 
 func get_position_name(_position:Vector3) -> String:
 	var chess_pos:Vector2i = Vector2i(int(_position.x + 4) / 1, int(_position.z + 4) / 1)
@@ -47,4 +48,15 @@ func confirm_navi(position_name_from:String, position_name_to:String) -> void:
 		return
 	Chess.get_chess_state().execute_navi(position_name_from, position_name_to)
 	$canvas.clear_select_position()
+	draw_attack_position()
 	navi_played.emit(position_name_from, position_name_to)
+
+func draw_attack_position() -> void:
+	$canvas.clear_attack_position()
+	for i:int in range(8):
+		for j:int in range(8):
+			var position_name:String = "%c%d" % [i + 97, j + 1]
+			if !Chess.get_chess_state().attack_count.has(position_name):
+				continue
+			var count:int = Chess.get_chess_state().attack_count[position_name]
+			$canvas.draw_attack_position($canvas.convert_name_to_position(position_name), count)

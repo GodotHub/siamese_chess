@@ -4,20 +4,30 @@ extends Node3D
 
 var lines:Array[Line2D] = []	# 直接暴力搜解决问题
 var select_position:Array[Node2D] = []
+var attack_position:Array[Node2D] = []
 var pointer_position:Node2D = null
 var drawing_line:Line2D = null
 
 class ChessboardSelectPosition extends Node2D:
 	var resolution:float = 512
 	func _draw() -> void:
-		draw_rect(Rect2(-resolution / 16, -resolution / 16, resolution / 8, resolution / 8), Color(0.6, 0.1, 0.1, 0.4))
-		draw_rect(Rect2(-resolution / 16, -resolution / 16, resolution / 8, resolution / 8), Color(0.6, 0.3, 0.3), false, 10)
+		draw_rect(Rect2(-resolution / 16, -resolution / 16, resolution / 8, resolution / 8), Color(0.1, 0.6, 0.1, 0.4))
+		draw_rect(Rect2(-resolution / 16, -resolution / 16, resolution / 8, resolution / 8), Color(0.3, 0.6, 0.3), false, 10)
 
 class ChessboardPointerPosition extends Node2D:
 	var resolution:float = 512
 	func _draw() -> void:
 		draw_rect(Rect2(-resolution / 16, -resolution / 16, resolution / 8, resolution / 8), Color(0.1, 0.6, 0.1, 0.4))
 		draw_rect(Rect2(-resolution / 16, -resolution / 16, resolution / 8, resolution / 8), Color(0.3, 0.6, 0.3), false, 10)
+
+class ChessboardAttackPosition extends Node2D:
+	var resolution:float = 512
+	var count:int = 0
+	func _draw() -> void:
+		var white:int = count & 0x3F
+		var black:int = (count >> 6) & 0x3F
+		draw_rect(Rect2(-resolution / 16, -resolution / 16, resolution / 8, resolution / 8), Color(0.6, 0.1, 0.1, white * 0.3))
+		draw_rect(Rect2(-resolution / 16, -resolution / 16, resolution / 8, resolution / 8), Color(0.1, 0.1, 0.6, black * 0.3))
 
 func _ready() -> void:
 	$sub_viewport.size = Vector2(resolution, resolution)
@@ -97,6 +107,19 @@ func clear_select_position() -> void:
 	for iter:Node2D in select_position:
 		iter.queue_free()
 	select_position.clear()
+
+func draw_attack_position(drawing_position:Vector2, count:int) -> void:
+	var new_point:ChessboardAttackPosition = ChessboardAttackPosition.new()
+	new_point.position = drawing_position
+	new_point.resolution = resolution
+	new_point.count = count
+	$sub_viewport.add_child(new_point)
+	attack_position.push_back(new_point)
+
+func clear_attack_position() -> void:
+	for iter:Node2D in attack_position:
+		iter.queue_free()
+	attack_position.clear()
 
 func clear_lines() -> void:
 	for iter:Line2D in lines:
