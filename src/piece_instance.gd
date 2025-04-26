@@ -2,14 +2,10 @@ extends Node3D
 class_name PieceInstance
 
 var chessboard:Chessboard = null
-var chessboard_name:String = ""
 var position_name:String = ""
 var group:int = 0
 
 func _ready() -> void:
-	chessboard = Chess.get_current_chessboard()
-	if !chessboard:
-		return
 	if position_name:
 		position = chessboard.convert_name_to_position(position_name)
 	else:
