@@ -1,7 +1,7 @@
 extends Node3D
 class_name Chessboard
 
-signal navi_played(position_name_from:String, position_name_to:String)
+signal move_played(position_name_from:String, position_name_to:String)
 
 var chess_state:Chess.ChessState = null
 var selected_position_name:String = ""
@@ -29,13 +29,13 @@ func convert_name_to_position(_position_name:String) -> Vector3:
 func tap_position(position_name:String) -> void:
 	$canvas.clear_select_position()
 	if selected_position_name:
-		confirm_navi(selected_position_name, position_name)
+		confirm_move(selected_position_name, position_name)
 		selected_position_name = ""
 		return
 	if !chess_state.has_piece(position_name):
 		return
-	var valid_navi:PackedStringArray = chess_state.get_valid_navi(position_name)
-	for iter:String in valid_navi:
+	var valid_move:PackedStringArray = chess_state.get_valid_move(position_name)
+	for iter:String in valid_move:
 		$canvas.draw_select_position($canvas.convert_name_to_position(iter))
 	selected_position_name = position_name
 
@@ -48,13 +48,13 @@ func finger_on_position(position_name:String) -> void:
 func finger_up() -> void:
 	$canvas.clear_pointer_position()
 
-func confirm_navi(position_name_from:String, position_name_to:String) -> void:
-	if !position_name_from || !position_name_to || !chess_state.is_navi_valid(position_name_from, position_name_to):
+func confirm_move(position_name_from:String, position_name_to:String) -> void:
+	if !position_name_from || !position_name_to || !chess_state.is_move_valid(position_name_from, position_name_to):
 		return
-	chess_state.execute_navi(position_name_from, position_name_to)
+	chess_state.execute_move(position_name_from, position_name_to)
 	$canvas.clear_select_position()
 	draw_attack_position()
-	navi_played.emit(position_name_from, position_name_to)
+	move_played.emit(position_name_from, position_name_to)
 
 func draw_attack_position() -> void:
 	$canvas.clear_attack_position()

@@ -13,9 +13,9 @@ func create_piece(_class_type:Object, _group:int) -> Piece:
 class PieceInterface:
 	static func create_instance(_position_name:String, _group:int) -> PieceInstance:
 		return null
-	static func execute_navi(_state:ChessState, _position_name_from:String, _position_name_to:String) -> void:
+	static func execute_move(_state:ChessState, _position_name_from:String, _position_name_to:String) -> void:
 		pass
-	static func get_valid_navi(_state:ChessState, _position_name_from:String) -> PackedStringArray:
+	static func get_valid_move(_state:ChessState, _position_name_from:String) -> PackedStringArray:
 		return []
 	static func get_attack_position(_state:ChessState, _position_name_from:String) -> PackedStringArray:
 		return []
@@ -30,12 +30,12 @@ class PieceKing extends PieceInterface:
 		instance.group = group
 		return instance
 
-	static func execute_navi(state:ChessState, position_name_from:String, position_name_to:String) -> void:
+	static func execute_move(state:ChessState, position_name_from:String, position_name_to:String) -> void:
 		if state.has_piece(position_name_to):
 			state.capture_piece(position_name_to)
 		state.move_piece(position_name_from, position_name_to)
 
-	static func get_valid_navi(state:ChessState, position_name_from:String) -> PackedStringArray:
+	static func get_valid_move(state:ChessState, position_name_from:String) -> PackedStringArray:
 		var directions:PackedVector2Array = [Vector2i(-1, -1), Vector2i(-1, 0), Vector2i(-1, 1), Vector2i(0, -1), Vector2i(0, 1), Vector2i(1, -1), Vector2i(1, 0), Vector2i(1, 1)]
 		var answer:PackedStringArray = []
 		for iter:Vector2i in directions:
@@ -64,12 +64,12 @@ class PieceQueen extends PieceInterface:
 		instance.group = group
 		return instance
 
-	static func execute_navi(state:ChessState, position_name_from:String, position_name_to:String) -> void:
+	static func execute_move(state:ChessState, position_name_from:String, position_name_to:String) -> void:
 		if state.has_piece(position_name_to):
 			state.capture_piece(position_name_to)
 		state.move_piece(position_name_from, position_name_to)
 
-	static func get_valid_navi(state:ChessState, position_name_from:String) -> PackedStringArray:
+	static func get_valid_move(state:ChessState, position_name_from:String) -> PackedStringArray:
 		var directions:PackedVector2Array = [Vector2i(-1, -1), Vector2i(-1, 0), Vector2i(-1, 1), Vector2i(0, -1), Vector2i(0, 1), Vector2i(1, -1), Vector2i(1, 0), Vector2i(1, 1)]
 		var answer:PackedStringArray = []
 		for iter:Vector2i in directions:
@@ -102,12 +102,12 @@ class PieceRook extends PieceInterface:
 		instance.group = group
 		return instance
 
-	static func execute_navi(state:ChessState, position_name_from:String, position_name_to:String) -> void:
+	static func execute_move(state:ChessState, position_name_from:String, position_name_to:String) -> void:
 		if state.has_piece(position_name_to):
 			state.capture_piece(position_name_to)
 		state.move_piece(position_name_from, position_name_to)
 
-	static func get_valid_navi(state:ChessState, position_name_from:String) -> PackedStringArray:
+	static func get_valid_move(state:ChessState, position_name_from:String) -> PackedStringArray:
 		var directions:PackedVector2Array = [Vector2i(-1, 0), Vector2i(0, -1), Vector2i(0, 1), Vector2i(1, 0)]
 		var answer:PackedStringArray = []
 		for iter:Vector2i in directions:
@@ -140,12 +140,12 @@ class PieceBishop extends PieceInterface:
 		instance.group = group
 		return instance
 
-	static func execute_navi(state:ChessState, position_name_from:String, position_name_to:String) -> void:
+	static func execute_move(state:ChessState, position_name_from:String, position_name_to:String) -> void:
 		if state.has_piece(position_name_to):
 			state.capture_piece(position_name_to)
 		state.move_piece(position_name_from, position_name_to)
 
-	static func get_valid_navi(state:ChessState, position_name_from:String) -> PackedStringArray:
+	static func get_valid_move(state:ChessState, position_name_from:String) -> PackedStringArray:
 		var directions:PackedVector2Array = [Vector2i(-1, -1), Vector2i(-1, 1), Vector2i(1, -1), Vector2i(1, 1)]
 		var answer:PackedStringArray = []
 		for iter:Vector2i in directions:
@@ -178,12 +178,12 @@ class PieceKnight extends PieceInterface:
 		instance.group = group
 		return instance
 
-	static func execute_navi(state:ChessState, position_name_from:String, position_name_to:String) -> void:
+	static func execute_move(state:ChessState, position_name_from:String, position_name_to:String) -> void:
 		if state.has_piece(position_name_to):
 			state.capture_piece(position_name_to)
 		state.move_piece(position_name_from, position_name_to)
 
-	static func get_valid_navi(state:ChessState, position_name_from:String) -> PackedStringArray:
+	static func get_valid_move(state:ChessState, position_name_from:String) -> PackedStringArray:
 		var directions:PackedVector2Array = [Vector2i(1, 2), Vector2i(2, 1), Vector2i(-1, 2), Vector2i(-2, 1), Vector2i(1, -2), Vector2i(2, -1), Vector2i(-1, -2), Vector2i(-2, -1)]
 		var answer:PackedStringArray = []
 		for iter:Vector2i in directions:
@@ -212,12 +212,12 @@ class PiecePawn extends PieceInterface:
 		instance.group = group
 		return instance
 
-	static func execute_navi(state:ChessState, position_name_from:String, position_name_to:String) -> void:
+	static func execute_move(state:ChessState, position_name_from:String, position_name_to:String) -> void:
 		if state.has_piece(position_name_to):
 			state.capture_piece(position_name_to)
 		state.move_piece(position_name_from, position_name_to)
 
-	static func get_valid_navi(state:ChessState, position_name_from:String) -> PackedStringArray:
+	static func get_valid_move(state:ChessState, position_name_from:String) -> PackedStringArray:
 		var answer:PackedStringArray = []
 		var forward:Vector2i = Vector2i(0, 1) if state.get_piece(position_name_from).group == 0 else Vector2i(0, -1)
 		var on_start:bool = state.get_piece(position_name_from).group == 0 && position_name_from[1] == "2" || state.get_piece(position_name_from).group == 1 && position_name_from[1] == "7"
@@ -284,6 +284,7 @@ class ChessState:
 	var history_buffer:Array = []	# 详细记录所有变动
 	var attack_count:Dictionary[String, int] = {}	# 分两位：黑方攻击和白方攻击
 	var piece_value_sum:float = 0
+	var move_dict:Dictionary[String, Dictionary] = {}	# 起点到终点
 	func _init() -> void:
 		current = {
 			"a1": Chess.create_piece(PieceRook, 0),
@@ -329,19 +330,19 @@ class ChessState:
 			return null
 		return current[position_name]
 
-	func is_navi_valid(position_name_from:String, position_name_to:String) -> bool:
+	func is_move_valid(position_name_from:String, position_name_to:String) -> bool:
 		if !position_name_from || !position_name_to || !current.has(position_name_from):
 			return false
-		return get_valid_navi(position_name_from).has(position_name_to)
+		return get_valid_move(position_name_from).has(position_name_to)
 
-	func get_valid_navi(position_name_from:String) -> PackedStringArray:
+	func get_valid_move(position_name_from:String) -> PackedStringArray:
 		if has_piece(position_name_from):
-			return current[position_name_from].class_type.get_valid_navi(self, position_name_from)
+			return current[position_name_from].class_type.get_valid_move(self, position_name_from)
 		return []
 
-	func execute_navi(position_name_from:String, position_name_to:String) -> void:
+	func execute_move(position_name_from:String, position_name_to:String) -> void:
 		if has_piece(position_name_from):
-			current[position_name_from].class_type.execute_navi(self, position_name_from, position_name_to)
+			current[position_name_from].class_type.execute_move(self, position_name_from, position_name_to)
 		history.push_back(position_name_from + "->" + position_name_to)
 		piece_value_sum = evaluate_state()
 
@@ -383,20 +384,21 @@ class ChessState:
 	func next_state(position_name_from:String, position_name_to:String) -> ChessState:
 		var new_state:ChessState = ChessState.new()
 		new_state.current = current.duplicate(false)
-		new_state.execute_navi(position_name_from, position_name_to)
+		new_state.execute_move(position_name_from, position_name_to)
 		return new_state
 	
-	func evaluate_move(depth:int = 1) -> Dictionary:
+	func evaluate_move(depth:int = 1) -> void:
 		if depth == 0:
-			return {}
-		var result:Dictionary = {}
+			return
 		for piece:String in current:
-			var move_list:PackedStringArray = current[piece].class_type.get_valid_navi(self, piece)
+			var move_list:PackedStringArray = current[piece].class_type.get_valid_move(self, piece)
 			for move:String in move_list:
 				var next:ChessState = next_state(piece, move)
-				result[piece + move] = next.evaluate_state()
+				move_dict[piece + move] = {
+					"value": next.piece_value_sum,
+					"move": {}
+				}
 				next.evaluate_move(depth - 1)
-		return result
 
 var current_chessboard:Chessboard = null
 @onready var test_state:ChessState = ChessState.new()

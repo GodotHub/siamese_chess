@@ -3,7 +3,7 @@ extends Node3D
 var history:PackedStringArray = ["", ""]
 var state:Chess.ChessState = null
 
-func push_navi(position_name_from:String, position_name_to:String) -> void:
+func push_move(position_name_from:String, position_name_to:String) -> void:
 	history.push_back(position_name_from + "->" + position_name_to)
 	update_table()
 
