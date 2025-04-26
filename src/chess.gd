@@ -44,7 +44,14 @@ class PieceKing extends PieceInterface:
 			answer.push_back(position_name_to)
 		return answer
 	static func get_attack_position(state:ChessState, position_name_from:String) -> PackedStringArray:
-		return get_valid_navi(state, position_name_from)
+		var directions:PackedVector2Array = [Vector2i(-1, -1), Vector2i(-1, 0), Vector2i(-1, 1), Vector2i(0, -1), Vector2i(0, 1), Vector2i(1, -1), Vector2i(1, 0), Vector2i(1, 1)]
+		var answer:PackedStringArray = []
+		for iter:Vector2i in directions:
+			var position_name_to:String = Chess.direction_to(position_name_from, iter)
+			if !position_name_to:
+				continue
+			answer.push_back(position_name_to)
+		return answer
 
 class PieceQueen extends PieceInterface:
 	static func create_instance(position_name:String, group:int) -> PieceInstance:
@@ -66,10 +73,21 @@ class PieceQueen extends PieceInterface:
 			var position_name_to:String = Chess.direction_to(position_name_from, iter)
 			while position_name_to && (!state.has_piece(position_name_to) || state.get_piece(position_name_from).group != state.get_piece(position_name_to).group):
 				answer.push_back(position_name_to)
+				if state.has_piece(position_name_to) && state.get_piece(position_name_from).group != state.get_piece(position_name_to).group:
+					break
 				position_name_to = Chess.direction_to(position_name_to, iter)
 		return answer
 	static func get_attack_position(state:ChessState, position_name_from:String) -> PackedStringArray:
-		return get_valid_navi(state, position_name_from)
+		var directions:PackedVector2Array = [Vector2i(-1, -1), Vector2i(-1, 0), Vector2i(-1, 1), Vector2i(0, -1), Vector2i(0, 1), Vector2i(1, -1), Vector2i(1, 0), Vector2i(1, 1)]
+		var answer:PackedStringArray = []
+		for iter:Vector2i in directions:
+			var position_name_to:String = Chess.direction_to(position_name_from, iter)
+			while position_name_to:
+				answer.push_back(position_name_to)
+				if state.has_piece(position_name_to):
+					break
+				position_name_to = Chess.direction_to(position_name_to, iter)
+		return answer
 
 class PieceRook extends PieceInterface:
 	static func create_instance(position_name:String, group:int) -> PieceInstance:
@@ -91,10 +109,21 @@ class PieceRook extends PieceInterface:
 			var position_name_to:String = Chess.direction_to(position_name_from, iter)
 			while position_name_to && (!state.has_piece(position_name_to) || state.get_piece(position_name_from).group != state.get_piece(position_name_to).group):
 				answer.push_back(position_name_to)
+				if state.has_piece(position_name_to) && state.get_piece(position_name_from).group != state.get_piece(position_name_to).group:
+					break
 				position_name_to = Chess.direction_to(position_name_to, iter)
 		return answer
 	static func get_attack_position(state:ChessState, position_name_from:String) -> PackedStringArray:
-		return get_valid_navi(state, position_name_from)
+		var directions:PackedVector2Array = [Vector2i(-1, 0), Vector2i(0, -1), Vector2i(0, 1), Vector2i(1, 0)]
+		var answer:PackedStringArray = []
+		for iter:Vector2i in directions:
+			var position_name_to:String = Chess.direction_to(position_name_from, iter)
+			while position_name_to:
+				answer.push_back(position_name_to)
+				if state.has_piece(position_name_to):
+					break
+				position_name_to = Chess.direction_to(position_name_to, iter)
+		return answer
 
 class PieceBishop extends PieceInterface:
 	static func create_instance(position_name:String, group:int) -> PieceInstance:
@@ -116,10 +145,21 @@ class PieceBishop extends PieceInterface:
 			var position_name_to:String = Chess.direction_to(position_name_from, iter)
 			while position_name_to && (!state.has_piece(position_name_to) || state.get_piece(position_name_from).group != state.get_piece(position_name_to).group):
 				answer.push_back(position_name_to)
+				if state.has_piece(position_name_to) && state.get_piece(position_name_from).group != state.get_piece(position_name_to).group:
+					break
 				position_name_to = Chess.direction_to(position_name_to, iter)
 		return answer
 	static func get_attack_position(state:ChessState, position_name_from:String) -> PackedStringArray:
-		return get_valid_navi(state, position_name_from)
+		var directions:PackedVector2Array = [Vector2i(-1, -1), Vector2i(-1, 1), Vector2i(1, -1), Vector2i(1, 1)]
+		var answer:PackedStringArray = []
+		for iter:Vector2i in directions:
+			var position_name_to:String = Chess.direction_to(position_name_from, iter)
+			while position_name_to:
+				answer.push_back(position_name_to)
+				if state.has_piece(position_name_to):
+					break
+				position_name_to = Chess.direction_to(position_name_to, iter)
+		return answer
 
 class PieceKnight extends PieceInterface:
 	static func create_instance(position_name:String, group:int) -> PieceInstance:
@@ -144,7 +184,14 @@ class PieceKnight extends PieceInterface:
 			answer.push_back(position_name_to)
 		return answer
 	static func get_attack_position(state:ChessState, position_name_from:String) -> PackedStringArray:
-		return get_valid_navi(state, position_name_from)
+		var directions:PackedVector2Array = [Vector2i(1, 2), Vector2i(2, 1), Vector2i(-1, 2), Vector2i(-2, 1), Vector2i(1, -2), Vector2i(2, -1), Vector2i(-1, -2), Vector2i(-2, -1)]
+		var answer:PackedStringArray = []
+		for iter:Vector2i in directions:
+			var position_name_to:String = Chess.direction_to(position_name_from, iter)
+			if !position_name_to:
+				continue
+			answer.push_back(position_name_to)
+		return answer
 
 class PiecePawn extends PieceInterface:
 	static func create_instance(position_name:String, group:int) -> PieceInstance:
@@ -179,6 +226,8 @@ class PiecePawn extends PieceInterface:
 	static func get_attack_position(state:ChessState, position_name_from:String) -> PackedStringArray:
 		var forward:Vector2i = Vector2i(0, 1) if state.get_piece(position_name_from).group == 0 else Vector2i(0, -1)
 		var position_name_to:String = Chess.direction_to(position_name_from, forward)
+		if !position_name_to:
+			return []
 		var position_name_to_l:String = Chess.direction_to(position_name_to, Vector2i(1, 0))
 		var position_name_to_r:String = Chess.direction_to(position_name_to, Vector2i(-1, 0))
 		var answer:PackedStringArray = []
