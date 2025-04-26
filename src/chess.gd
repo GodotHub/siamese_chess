@@ -283,6 +283,7 @@ class ChessState:
 	var history:PackedStringArray = []	# 仅记录着法
 	var history_buffer:Array = []	# 详细记录所有变动
 	var attack_count:Dictionary[String, int] = {}	# 分两位：黑方攻击和白方攻击
+	var piece_value_sum:float = 0
 	func _init() -> void:
 		current = {
 			"a1": Chess.create_piece(PieceRook, 0),
@@ -319,6 +320,7 @@ class ChessState:
 			"h7": Chess.create_piece(PiecePawn, 1),
 		}
 		update_attack()
+		piece_value_sum = evaluate_state()
 	func get_piece_instance(position_name:String) -> PieceInstance:
 		return current[position_name].class_type.create_instance(position_name, current[position_name].group)
 
@@ -341,6 +343,7 @@ class ChessState:
 		if has_piece(position_name_from):
 			current[position_name_from].class_type.execute_navi(self, position_name_from, position_name_to)
 		history.push_back(position_name_from + "->" + position_name_to)
+		piece_value_sum = evaluate_state()
 
 	func has_piece(position_name:String) -> bool:
 		return current.has(position_name)
@@ -382,6 +385,18 @@ class ChessState:
 		new_state.current = current.duplicate(false)
 		new_state.execute_navi(position_name_from, position_name_to)
 		return new_state
+	
+	func evaluate_move(depth:int = 1) -> Dictionary:
+		if depth == 0:
+			return {}
+		var result:Dictionary = {}
+		for piece:String in current:
+			var move_list:PackedStringArray = current[piece].class_type.get_valid_navi(self, piece)
+			for move:String in move_list:
+				var next:ChessState = next_state(piece, move)
+				result[piece + move] = next.evaluate_state()
+				next.evaluate_move(depth - 1)
+		return result
 
 var current_chessboard:Chessboard = null
 @onready var test_state:ChessState = ChessState.new()
