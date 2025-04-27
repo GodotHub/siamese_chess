@@ -13,8 +13,8 @@ func create_piece(_class_type:Object, _group:int) -> Piece:
 class PieceInterface:
 	static func create_instance(_position_name:String, _group:int) -> PieceInstance:
 		return null
-	static func execute_move(_state:ChessState, _position_name_from:String, _position_name_to:String) -> void:
-		pass
+	static func get_move_event(_state:ChessState, _position_name_from:String, _position_name_to:String) -> Array[ChessEvent]:
+		return []
 	static func get_valid_move(_state:ChessState, _position_name_from:String) -> PackedStringArray:
 		return []
 	static func get_attack_position(_state:ChessState, _position_name_from:String) -> PackedStringArray:
@@ -30,17 +30,19 @@ class PieceKing extends PieceInterface:
 		instance.group = group
 		return instance
 
-	static func execute_move(state:ChessState, position_name_from:String, position_name_to:String) -> void:
+	static func get_move_event(state:ChessState, position_name_from:String, position_name_to:String) -> Array[ChessEvent]:
+		var output:Array[ChessEvent]
 		if state.has_piece(position_name_to):
-			state.capture_piece(position_name_to)
-		state.move_piece(position_name_from, position_name_to)
+			output.push_back(Chess.create_chess_event_capture(position_name_to, state.get_piece(position_name_to)))
+		output.push_back(Chess.create_chess_event_move(position_name_from, position_name_to))
+		return output
 
 	static func get_valid_move(state:ChessState, position_name_from:String) -> PackedStringArray:
 		var directions:PackedVector2Array = [Vector2i(-1, -1), Vector2i(-1, 0), Vector2i(-1, 1), Vector2i(0, -1), Vector2i(0, 1), Vector2i(1, -1), Vector2i(1, 0), Vector2i(1, 1)]
 		var answer:PackedStringArray = []
 		for iter:Vector2i in directions:
 			var position_name_to:String = Chess.direction_to(position_name_from, iter)
-			if !position_name_to || state.has_piece(position_name_to) && state.get_piece(position_name_from).group == state.get_piece(position_name_to).group || state.has_attack(position_name_to, state.get_piece(position_name_from).group):
+			if !position_name_to || state.has_piece(position_name_to) && state.get_piece(position_name_from).group == state.get_piece(position_name_to).group:
 				continue
 			answer.push_back(position_name_to)
 		return answer
@@ -64,10 +66,12 @@ class PieceQueen extends PieceInterface:
 		instance.group = group
 		return instance
 
-	static func execute_move(state:ChessState, position_name_from:String, position_name_to:String) -> void:
+	static func get_move_event(state:ChessState, position_name_from:String, position_name_to:String) -> Array[ChessEvent]:
+		var output:Array[ChessEvent]
 		if state.has_piece(position_name_to):
-			state.capture_piece(position_name_to)
-		state.move_piece(position_name_from, position_name_to)
+			output.push_back(Chess.create_chess_event_capture(position_name_to, state.get_piece(position_name_to)))
+		output.push_back(Chess.create_chess_event_move(position_name_from, position_name_to))
+		return output
 
 	static func get_valid_move(state:ChessState, position_name_from:String) -> PackedStringArray:
 		var directions:PackedVector2Array = [Vector2i(-1, -1), Vector2i(-1, 0), Vector2i(-1, 1), Vector2i(0, -1), Vector2i(0, 1), Vector2i(1, -1), Vector2i(1, 0), Vector2i(1, 1)]
@@ -102,10 +106,12 @@ class PieceRook extends PieceInterface:
 		instance.group = group
 		return instance
 
-	static func execute_move(state:ChessState, position_name_from:String, position_name_to:String) -> void:
+	static func get_move_event(state:ChessState, position_name_from:String, position_name_to:String) -> Array[ChessEvent]:
+		var output:Array[ChessEvent]
 		if state.has_piece(position_name_to):
-			state.capture_piece(position_name_to)
-		state.move_piece(position_name_from, position_name_to)
+			output.push_back(Chess.create_chess_event_capture(position_name_to, state.get_piece(position_name_to)))
+		output.push_back(Chess.create_chess_event_move(position_name_from, position_name_to))
+		return output
 
 	static func get_valid_move(state:ChessState, position_name_from:String) -> PackedStringArray:
 		var directions:PackedVector2Array = [Vector2i(-1, 0), Vector2i(0, -1), Vector2i(0, 1), Vector2i(1, 0)]
@@ -140,10 +146,12 @@ class PieceBishop extends PieceInterface:
 		instance.group = group
 		return instance
 
-	static func execute_move(state:ChessState, position_name_from:String, position_name_to:String) -> void:
+	static func get_move_event(state:ChessState, position_name_from:String, position_name_to:String) -> Array[ChessEvent]:
+		var output:Array[ChessEvent]
 		if state.has_piece(position_name_to):
-			state.capture_piece(position_name_to)
-		state.move_piece(position_name_from, position_name_to)
+			output.push_back(Chess.create_chess_event_capture(position_name_to, state.get_piece(position_name_to)))
+		output.push_back(Chess.create_chess_event_move(position_name_from, position_name_to))
+		return output
 
 	static func get_valid_move(state:ChessState, position_name_from:String) -> PackedStringArray:
 		var directions:PackedVector2Array = [Vector2i(-1, -1), Vector2i(-1, 1), Vector2i(1, -1), Vector2i(1, 1)]
@@ -178,10 +186,12 @@ class PieceKnight extends PieceInterface:
 		instance.group = group
 		return instance
 
-	static func execute_move(state:ChessState, position_name_from:String, position_name_to:String) -> void:
+	static func get_move_event(state:ChessState, position_name_from:String, position_name_to:String) -> Array[ChessEvent]:
+		var output:Array[ChessEvent]
 		if state.has_piece(position_name_to):
-			state.capture_piece(position_name_to)
-		state.move_piece(position_name_from, position_name_to)
+			output.push_back(Chess.create_chess_event_capture(position_name_to, state.get_piece(position_name_to)))
+		output.push_back(Chess.create_chess_event_move(position_name_from, position_name_to))
+		return output
 
 	static func get_valid_move(state:ChessState, position_name_from:String) -> PackedStringArray:
 		var directions:PackedVector2Array = [Vector2i(1, 2), Vector2i(2, 1), Vector2i(-1, 2), Vector2i(-2, 1), Vector2i(1, -2), Vector2i(2, -1), Vector2i(-1, -2), Vector2i(-2, -1)]
@@ -212,10 +222,12 @@ class PiecePawn extends PieceInterface:
 		instance.group = group
 		return instance
 
-	static func execute_move(state:ChessState, position_name_from:String, position_name_to:String) -> void:
+	static func get_move_event(state:ChessState, position_name_from:String, position_name_to:String) -> Array[ChessEvent]:
+		var output:Array[ChessEvent]
 		if state.has_piece(position_name_to):
-			state.capture_piece(position_name_to)
-		state.move_piece(position_name_from, position_name_to)
+			output.push_back(Chess.create_chess_event_capture(position_name_to, state.get_piece(position_name_to)))
+		output.push_back(Chess.create_chess_event_move(position_name_from, position_name_to))
+		return output
 
 	static func get_valid_move(state:ChessState, position_name_from:String) -> PackedStringArray:
 		var answer:PackedStringArray = []
@@ -251,7 +263,7 @@ class PiecePawn extends PieceInterface:
 		return 1
 
 class ChessEvent:
-	var step:int = 0	# 步数
+	pass
 
 class ChessEventMove extends ChessEvent:
 	var position_name_from:String = ""
@@ -261,30 +273,51 @@ class ChessEventCapture extends ChessEvent:	# 记录被删除的棋子，方便�
 	var position_name:String = ""
 	var captured_piece:Piece = null
 
-func create_chess_event_move(_step:int, _position_name_from:String, _position_name_to:String) -> ChessEventMove:
+func create_chess_event_move(_position_name_from:String, _position_name_to:String) -> ChessEventMove:
 	var new_event:ChessEventMove = ChessEventMove.new()
-	new_event.step = _step
 	new_event.position_name_from = _position_name_from
 	new_event.position_name_to = _position_name_to
 	return new_event
 
-func create_chess_event_capture(_step:int, _position_name:String, _captured_piece:Piece) -> ChessEventCapture:
+func create_chess_event_capture(_position_name:String, _captured_piece:Piece) -> ChessEventCapture:
 	var new_event:ChessEventCapture = ChessEventCapture.new()
-	new_event.step = _step
 	new_event.position_name = _position_name
 	new_event.captured_piece = _captured_piece
 	return new_event
 
+class ChessMoveBranch:
+	var state:ChessState = null
+	var branch:ChessMoveBranchNode = null	# 树形结构，只包含步数
+	var current_move:ChessMoveBranchNode = null
+
+	func _init() -> void:
+		branch = ChessMoveBranchNode.new()
+		current_move = branch
+
+	func get_move_event(position_name_from:String, position_name_to:String) -> void:
+		var next_move:ChessMoveBranchNode = ChessMoveBranchNode.new()
+		next_move.events = state.get_move_event(position_name_from, position_name_to)
+		next_move.parent = current_move
+		state.execute_move_event(next_move.events)
+		current_move.children[position_name_from + position_name_to] = next_move
+		current_move = next_move	# 来到下一个节点
+	
+	func rollback() -> void:
+		var last_node:ChessMoveBranchNode = current_move.parent
+		if !last_node:
+			return
+		state.rollback_move_event(current_move.events)
+		current_move = last_node
+
+class ChessMoveBranchNode:
+	var events:Array[ChessEvent] = []	# 父节点通过什么操作发展到这个节点的
+	var children:Dictionary[String, ChessMoveBranchNode] = {}
+	var parent:ChessMoveBranchNode = null
+
 class ChessState:
 	signal piece_moved(position_name_from:String, position_name_to:String)
 	signal piece_removed(position_name:String)
-	var state_name:String = "test"
 	var current:Dictionary[String, Piece] = {}
-	var history:PackedStringArray = []	# 仅记录着法
-	var history_buffer:Array = []	# 详细记录所有变动
-	var attack_count:Dictionary[String, int] = {}	# 分两位：黑方攻击和白方攻击
-	var piece_value_sum:float = 0
-	var move_dict:Dictionary[String, Dictionary] = {}	# 起点到终点
 	func _init() -> void:
 		current = {
 			"a1": Chess.create_piece(PieceRook, 0),
@@ -320,8 +353,6 @@ class ChessState:
 			"g7": Chess.create_piece(PiecePawn, 1),
 			"h7": Chess.create_piece(PiecePawn, 1),
 		}
-		update_attack()
-		piece_value_sum = evaluate_state()
 	func get_piece_instance(position_name:String) -> PieceInstance:
 		return current[position_name].class_type.create_instance(position_name, current[position_name].group)
 
@@ -329,6 +360,9 @@ class ChessState:
 		if !position_name || !current.has(position_name):
 			return null
 		return current[position_name]
+
+	func has_piece(position_name:String) -> bool:
+		return current.has(position_name)
 
 	func is_move_valid(position_name_from:String, position_name_to:String) -> bool:
 		if !position_name_from || !position_name_to || !current.has(position_name_from):
@@ -340,40 +374,37 @@ class ChessState:
 			return current[position_name_from].class_type.get_valid_move(self, position_name_from)
 		return []
 
-	func execute_move(position_name_from:String, position_name_to:String) -> void:
+	func get_move_event(position_name_from:String, position_name_to:String) -> Array[ChessEvent]:
 		if has_piece(position_name_from):
-			current[position_name_from].class_type.execute_move(self, position_name_from, position_name_to)
-		history.push_back(position_name_from + "->" + position_name_to)
-		piece_value_sum = evaluate_state()
+			return current[position_name_from].class_type.get_move_event(self, position_name_from, position_name_to)
+		return []
 
-	func has_piece(position_name:String) -> bool:
-		return current.has(position_name)
+	func execute_move_event(events:Array[ChessEvent]) -> void:
+		for i in range(events.size()):	# 严格按照从前到后顺序，不使用迭代器以方便控制顺序
+			if events[i] is ChessEventMove:
+				move_piece(events[i].position_name_from, events[i].position_name_to)
+			elif events[i] is ChessEventCapture:
+				capture_piece(events[i].position_name)
+	
+	func rollback_move_event(events:Array[ChessEvent]) -> void:
+		for i in range(events.size() - 1, -1, -1):	# 从后到前还原
+			if events[i] is ChessEventMove:
+				move_piece(events[i].position_name_to, events[i].position_name_from)	# 移动的逆运算就是移回来
+			elif events[i] is ChessEventCapture:
+				add_piece(events[i].position_name, events[i].captured_piece)	# 吃子的逆运算是加回去
+
+	func add_piece(position_name:String, piece:Piece) -> void:	# 作为吃子的逆运算
+		current[position_name] = piece
 
 	func capture_piece(position_name:String) -> void:
-		history_buffer.push_back(Chess.create_chess_event_capture(history.size(), position_name, current[position_name]))
+		current.erase(position_name)	# 虽然大多数情况是攻击者移到被攻击者上，但是吃过路兵是例外，后续可能会出现类似情况，所以还是得手多一下
 		piece_removed.emit(position_name)
 
 	func move_piece(position_name_from:String, position_name_to:String) -> void:
-		history_buffer.push_back(Chess.create_chess_event_move(history.size(), position_name_from, position_name_to))
 		var piece:Piece = get_piece(position_name_from)
 		current.erase(position_name_from)
 		current[position_name_to] = piece
-		update_attack()
 		piece_moved.emit(position_name_from, position_name_to)
-	
-	func update_attack() -> void:
-		attack_count.clear()
-		for key:String in current:
-			var attack_position:PackedStringArray = current[key].class_type.get_attack_position(self, key)
-			for iter:String in attack_position:
-				if !attack_count.has(iter):
-					attack_count[iter] = 0
-				attack_count[iter] += 1 << (0 if current[key].group == 0 else 6)
-
-	func has_attack(position_name:String, group:int) -> bool:
-		if !attack_count.has(position_name):
-			return false
-		return group == 0 && (attack_count[position_name] >> 6) || group == 1 && (attack_count[position_name] & 0x3F)
 
 	func evaluate_state() -> float:
 		var sum:float = 0
@@ -384,7 +415,7 @@ class ChessState:
 	func next_state(position_name_from:String, position_name_to:String) -> ChessState:
 		var new_state:ChessState = ChessState.new()
 		new_state.current = current.duplicate(false)
-		new_state.execute_move(position_name_from, position_name_to)
+		new_state.get_move_event(position_name_from, position_name_to)
 		return new_state
 	
 	func evaluate_move(depth:int = 1) -> void:
@@ -394,10 +425,6 @@ class ChessState:
 			var move_list:PackedStringArray = current[piece].class_type.get_valid_move(self, piece)
 			for move:String in move_list:
 				var next:ChessState = next_state(piece, move)
-				move_dict[piece + move] = {
-					"value": next.piece_value_sum,
-					"move": {}
-				}
 				next.evaluate_move(depth - 1)
 
 var current_chessboard:Chessboard = null

@@ -17,7 +17,7 @@ func _ready() -> void:
 		instance.chessboard = self
 		piece_instance[key] = instance
 		$pieces.add_child(instance)
-	draw_attack_position()
+#	draw_attack_position()
 
 func get_position_name(_position:Vector3) -> String:
 	var chess_pos:Vector2i = Vector2i(int(_position.x + 4) / 1, int(_position.z + 4) / 1)
@@ -51,20 +51,20 @@ func finger_up() -> void:
 func confirm_move(position_name_from:String, position_name_to:String) -> void:
 	if !position_name_from || !position_name_to || !chess_state.is_move_valid(position_name_from, position_name_to):
 		return
-	chess_state.execute_move(position_name_from, position_name_to)
+	chess_state.execute_move_event(chess_state.get_move_event(position_name_from, position_name_to))
 	$canvas.clear_select_position()
-	draw_attack_position()
+#	draw_attack_position()
 	move_played.emit(position_name_from, position_name_to)
 
-func draw_attack_position() -> void:
-	$canvas.clear_attack_position()
-	for i:int in range(8):
-		for j:int in range(8):
-			var position_name:String = "%c%d" % [i + 97, j + 1]
-			if !chess_state.attack_count.has(position_name):
-				continue
-			var count:int = chess_state.attack_count[position_name]
-			$canvas.draw_attack_position($canvas.convert_name_to_position(position_name), count)
+#func draw_attack_position() -> void:
+#	$canvas.clear_attack_position()
+#	for i:int in range(8):
+#		for j:int in range(8):
+#			var position_name:String = "%c%d" % [i + 97, j + 1]
+#			if !chess_state.attack_count.has(position_name):
+#				continue
+#			var count:int = chess_state.attack_count[position_name]
+#			$canvas.draw_attack_position($canvas.convert_name_to_position(position_name), count)
 
 func move_piece_instance(position_name_from:String, position_name_to:String) -> void:
 	var instance:PieceInstance = piece_instance[position_name_from]
