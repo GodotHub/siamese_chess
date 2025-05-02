@@ -11,6 +11,7 @@ config_version=5
 [application]
 
 config/name="SiameseChess"
+config/tags=PackedStringArray("a_lone_flower", "puzzle", "siamese")
 run/main_scene="uid://d1s6qj7aofldk"
 config/features=PackedStringArray("4.4", "GL Compatibility")
 config/icon="uid://gdemlmk1r3x4"
