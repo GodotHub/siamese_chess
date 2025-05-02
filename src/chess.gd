@@ -268,6 +268,28 @@ class PiecePawn extends PieceInterface:
 	static func get_value() -> float:
 		return 1
 
+class RuleInterface:
+	static func is_move_valid(_state:ChessState, _position_name_from:String, _position_name_to:String) -> bool:
+		return true
+
+class RuleStandard extends RuleInterface:
+	static func is_move_valid(state:ChessState, position_name_from:String, position_name_to:String) -> bool:
+		var test_move_event:Array[ChessEvent] = state.get_move_event(position_name_from, position_name_to)
+		state.execute_move_event(test_move_event)	# 假设自己走了一步棋
+		var move_list:PackedStringArray = state.get_all_move()	# 小心俩国王互相影响以至于无限嵌套
+		for move:String in move_list:
+			var test_move_event_2:Array[ChessEvent] = state.get_move_event(move.substr(0, 2), move.substr(2, 2))
+			state.execute_move_event(test_move_event_2)
+			var score:float = state.score_state()	# 对手走一步棋之后评价
+			# 如果下一步国王可以被攻击，那么说明这一步是非法的
+			if score >= 100 || score <= -100:	# 国王设置的数值非常大，一般超出100这个阈值就算是被判定吃掉了
+				state.rollback_move_event(test_move_event_2)
+				state.rollback_move_event(test_move_event)
+				return false
+			state.rollback_move_event(test_move_event_2)
+		state.rollback_move_event(test_move_event)
+		return true
+
 class ChessEvent:
 	pass
 
@@ -355,6 +377,7 @@ class ChessState:
 	var current:Dictionary[String, Piece] = {}
 	var notation:PackedStringArray = []
 	var step:int = 0
+	var rule:Object = RuleInterface
 	func _init() -> void:
 		current = {
 			"a1": Chess.create_piece(PieceRook, 0),
@@ -390,6 +413,16 @@ class ChessState:
 			"g7": Chess.create_piece(PiecePawn, 1),
 			"h7": Chess.create_piece(PiecePawn, 1),
 		}
+		rule = RuleStandard	# 标准规则
+	
+	func duplicate() -> ChessState:
+		var new_state:ChessState = ChessState.new()
+		new_state.current = current.duplicate(true)
+		new_state.notation = notation.duplicate()
+		new_state.step = step
+		new_state.rule = rule
+		return new_state
+	
 	func get_piece_instance(position_name:String) -> PieceInstance:
 		return current[position_name].class_type.create_instance(position_name, current[position_name].group)
 
@@ -461,11 +494,15 @@ class ChessState:
 			sum += current[key].class_type.get_value() * (1 if current[key].group == 0 else -1)
 		return sum
 	
-	func get_all_move() -> PackedStringArray:
+	func get_all_move(rule_filter:bool = false) -> PackedStringArray:
 		var move_list:PackedStringArray = []
-		for position_name:String in current:
-			if step % 2 == current[position_name].group:	# 得是其中轮到的一方
-				move_list.append_array(position_name + current[position_name].class_type.get_valid_move(self, position_name))
+		var test_state:ChessState = self.duplicate()
+		for position_name_from:String in current:
+			if step % 2 == current[position_name_from].group:	# 得是其中轮到的一方
+				var piece_move_list:PackedStringArray = current[position_name_from].class_type.get_valid_move(test_state, position_name_from)
+				for position_name_to:String in piece_move_list:
+					if !rule_filter || rule.is_move_valid(test_state, position_name_from, position_name_to):
+						move_list.push_back(position_name_from + position_name_to)
 		return move_list
 
 var current_chessboard:Chessboard = null

@@ -4,6 +4,7 @@ class_name Chessboard
 signal move_played(position_name_from:String, position_name_to:String)
 
 var chess_state:Chess.ChessState = null
+var valid_move:Dictionary[String, PackedStringArray] = {}
 var selected_position_name:String = ""
 var piece_instance:Dictionary[String, PieceInstance] = {}
 
@@ -17,6 +18,7 @@ func _ready() -> void:
 		instance.chessboard = self
 		piece_instance[key] = instance
 		$pieces.add_child(instance)
+	update_valid_move()
 #	draw_attack_position()
 
 func get_position_name(_position:Vector3) -> String:
@@ -32,10 +34,9 @@ func tap_position(position_name:String) -> void:
 		confirm_move(selected_position_name, position_name)
 		selected_position_name = ""
 		return
-	if !chess_state.has_piece(position_name):
+	if !chess_state.has_piece(position_name) || !valid_move.has(position_name):
 		return
-	var valid_move:PackedStringArray = chess_state.get_valid_move(position_name)
-	for iter:String in valid_move:
+	for iter:String in valid_move[position_name]:
 		$canvas.draw_select_position($canvas.convert_name_to_position(iter))
 	selected_position_name = position_name
 
@@ -49,12 +50,13 @@ func finger_up() -> void:
 	$canvas.clear_pointer_position()
 
 func confirm_move(position_name_from:String, position_name_to:String) -> void:
-	if !position_name_from || !position_name_to || !chess_state.is_move_valid(position_name_from, position_name_to):
+	if !position_name_from || !position_name_to || !valid_move.has(position_name_from) || !valid_move[position_name_from].has(position_name_to):
 		return
 	chess_state.execute_move_event(chess_state.get_move_event(position_name_from, position_name_to))
 	$canvas.clear_select_position()
 #	draw_attack_position()
 	move_played.emit(position_name_from, position_name_to)
+	update_valid_move()
 
 #func draw_attack_position() -> void:
 #	$canvas.clear_attack_position()
@@ -65,6 +67,16 @@ func confirm_move(position_name_from:String, position_name_to:String) -> void:
 #				continue
 #			var count:int = chess_state.attack_count[position_name]
 #			$canvas.draw_attack_position($canvas.convert_name_to_position(position_name), count)
+
+func update_valid_move() -> void:
+	valid_move.clear()
+	var move_list:PackedStringArray = chess_state.get_all_move(true)
+	for move:String in move_list:
+		var position_name_from:String = move.substr(0, 2)
+		var position_name_to:String = move.substr(2, 2)
+		if !valid_move.has(position_name_from):
+			valid_move[position_name_from] = PackedStringArray()
+		valid_move[position_name_from].push_back(position_name_to)
 
 func move_piece_instance(position_name_from:String, position_name_to:String) -> void:
 	var instance:PieceInstance = piece_instance[position_name_from]
