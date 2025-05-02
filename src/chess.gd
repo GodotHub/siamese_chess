@@ -302,33 +302,51 @@ func create_chess_event_notation(expression:String) -> ChessEventNotation:
 class ChessMoveBranch:
 	var state:ChessState = null
 	var branch:ChessMoveBranchNode = null	# 树形结构，只包含步数
-	var current_move:ChessMoveBranchNode = null
+	var current_node:ChessMoveBranchNode = null
 
 	func _init() -> void:
 		branch = ChessMoveBranchNode.new()
-		current_move = branch
-		current_move.time = Time.get_unix_time_from_system()
+		current_node = branch
+		current_node.time = Time.get_unix_time_from_system()
 
 	func execute_move(position_name_from:String, position_name_to:String) -> void:
 		var next_move:ChessMoveBranchNode = ChessMoveBranchNode.new()
 		next_move.events = state.get_move_event(position_name_from, position_name_to)
 		next_move.time = Time.get_unix_time_from_system()
-		next_move.parent = current_move
+		next_move.parent = current_node
 		state.execute_move_event(next_move.events)
-		current_move.children[position_name_from + position_name_to] = next_move
-		current_move = next_move	# 来到下一个节点
+		current_node.children[position_name_from + position_name_to] = next_move
+		current_node = next_move	# 来到下一个节点
 
 	func rollback() -> void:
-		var last_node:ChessMoveBranchNode = current_move.parent
+		var last_node:ChessMoveBranchNode = current_node.parent
 		if !last_node:
 			return
-		state.rollback_move_event(current_move.events)
-		current_move = last_node
+		state.rollback_move_event(current_node.events)
+		current_node = last_node
+	
+	func dfs(forward_step:int = 10) -> void:
+		if forward_step <= 0:
+			state.score = state.score_state()	# 叶子节点
+			return
+		var move_list:PackedStringArray = state.get_all_move()
+		var best_score:float = 0
+		for move:String in move_list:
+			state.execute_move(move.substr(0, 2), move.substr(2, 2))
+			dfs(forward_step - 1)
+			# 当前分支评价完分数后，跟其他分支比较一下
+			if state.step % 2 == 1:	# 子分支位置是轮到对方下棋，意味着余数为1时则是白方造成的结果
+				best_score = max(state.score, best_score)	# 这个结果对于白方来讲是score越大越好
+			else:
+				best_score = min(state.score, best_score)	# 黑方反之
+			state.rollback()	# DFS回溯，共享资源需要回到原先状态
+		state.score = best_score
 
 class ChessMoveBranchNode:
 	var events:Array[ChessEvent] = []	# 父节点通过什么操作发展到这个节点的
 	var time:float = 0	# 节点添加时的时间，可以根据父节点和当前节点的时间差来求出思考时间
 	var children:Dictionary[String, ChessMoveBranchNode] = {}
+	var score:float = 0
 	var parent:ChessMoveBranchNode = null
 
 class ChessState:
@@ -437,7 +455,7 @@ class ChessState:
 	func pop_notation() -> void:
 		notation.resize(notation.size() - 1)
 
-	func evaluate_state() -> float:
+	func score_state() -> float:
 		var sum:float = 0
 		for key:String in current:
 			sum += current[key].class_type.get_value() * (1 if current[key].group == 0 else -1)
@@ -445,8 +463,9 @@ class ChessState:
 	
 	func get_all_move() -> PackedStringArray:
 		var move_list:PackedStringArray = []
-		for piece:String in current:
-			move_list.append_array(current[piece].class_type.get_valid_move(self, piece))
+		for position_name:String in current:
+			if step % 2 == current[position_name].group:	# 得是其中轮到的一方
+				move_list.append_array(position_name + current[position_name].class_type.get_valid_move(self, position_name))
 		return move_list
 
 var current_chessboard:Chessboard = null
