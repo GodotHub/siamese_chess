@@ -17,8 +17,6 @@ class PieceInterface:
 		return []
 	static func get_valid_move(_state:ChessState, _position_name_from:String) -> PackedStringArray:
 		return []
-	static func get_attack_position(_state:ChessState, _position_name_from:String) -> PackedStringArray:
-		return []
 	static func get_value() -> float:
 		return 0
 
@@ -47,15 +45,6 @@ class PieceKing extends PieceInterface:
 				continue
 			answer.push_back(position_name_to)
 		return answer
-	static func get_attack_position(_state:ChessState, position_name_from:String) -> PackedStringArray:
-		var directions:PackedVector2Array = [Vector2i(-1, -1), Vector2i(-1, 0), Vector2i(-1, 1), Vector2i(0, -1), Vector2i(0, 1), Vector2i(1, -1), Vector2i(1, 0), Vector2i(1, 1)]
-		var answer:PackedStringArray = []
-		for iter:Vector2i in directions:
-			var position_name_to:String = Chess.direction_to(position_name_from, iter)
-			if !position_name_to:
-				continue
-			answer.push_back(position_name_to)
-		return answer
 	static func get_value() -> float:
 		return 1000
 
@@ -75,28 +64,6 @@ class PieceQueen extends PieceInterface:
 		output.push_back(Chess.create_chess_event_notation(position_name_from + " Queen to " + position_name_to))
 		return output
 
-	static func get_valid_move(state:ChessState, position_name_from:String) -> PackedStringArray:
-		var directions:PackedVector2Array = [Vector2i(-1, -1), Vector2i(-1, 0), Vector2i(-1, 1), Vector2i(0, -1), Vector2i(0, 1), Vector2i(1, -1), Vector2i(1, 0), Vector2i(1, 1)]
-		var answer:PackedStringArray = []
-		for iter:Vector2i in directions:
-			var position_name_to:String = Chess.direction_to(position_name_from, iter)
-			while position_name_to && (!state.has_piece(position_name_to) || state.get_piece(position_name_from).group != state.get_piece(position_name_to).group):
-				answer.push_back(position_name_to)
-				if state.has_piece(position_name_to) && state.get_piece(position_name_from).group != state.get_piece(position_name_to).group:
-					break
-				position_name_to = Chess.direction_to(position_name_to, iter)
-		return answer
-	static func get_attack_position(state:ChessState, position_name_from:String) -> PackedStringArray:
-		var directions:PackedVector2Array = [Vector2i(-1, -1), Vector2i(-1, 0), Vector2i(-1, 1), Vector2i(0, -1), Vector2i(0, 1), Vector2i(1, -1), Vector2i(1, 0), Vector2i(1, 1)]
-		var answer:PackedStringArray = []
-		for iter:Vector2i in directions:
-			var position_name_to:String = Chess.direction_to(position_name_from, iter)
-			while position_name_to:
-				answer.push_back(position_name_to)
-				if state.has_piece(position_name_to):
-					break
-				position_name_to = Chess.direction_to(position_name_to, iter)
-		return answer
 	static func get_value() -> float:
 		return 9
 
@@ -127,17 +94,7 @@ class PieceRook extends PieceInterface:
 					break
 				position_name_to = Chess.direction_to(position_name_to, iter)
 		return answer
-	static func get_attack_position(state:ChessState, position_name_from:String) -> PackedStringArray:
-		var directions:PackedVector2Array = [Vector2i(-1, 0), Vector2i(0, -1), Vector2i(0, 1), Vector2i(1, 0)]
-		var answer:PackedStringArray = []
-		for iter:Vector2i in directions:
-			var position_name_to:String = Chess.direction_to(position_name_from, iter)
-			while position_name_to:
-				answer.push_back(position_name_to)
-				if state.has_piece(position_name_to):
-					break
-				position_name_to = Chess.direction_to(position_name_to, iter)
-		return answer
+
 	static func get_value() -> float:
 		return 5
 
@@ -168,17 +125,7 @@ class PieceBishop extends PieceInterface:
 					break
 				position_name_to = Chess.direction_to(position_name_to, iter)
 		return answer
-	static func get_attack_position(state:ChessState, position_name_from:String) -> PackedStringArray:
-		var directions:PackedVector2Array = [Vector2i(-1, -1), Vector2i(-1, 1), Vector2i(1, -1), Vector2i(1, 1)]
-		var answer:PackedStringArray = []
-		for iter:Vector2i in directions:
-			var position_name_to:String = Chess.direction_to(position_name_from, iter)
-			while position_name_to:
-				answer.push_back(position_name_to)
-				if state.has_piece(position_name_to):
-					break
-				position_name_to = Chess.direction_to(position_name_to, iter)
-		return answer
+
 	static func get_value() -> float:
 		return 3.5
 
@@ -207,15 +154,7 @@ class PieceKnight extends PieceInterface:
 				continue
 			answer.push_back(position_name_to)
 		return answer
-	static func get_attack_position(_state:ChessState, position_name_from:String) -> PackedStringArray:
-		var directions:PackedVector2Array = [Vector2i(1, 2), Vector2i(2, 1), Vector2i(-1, 2), Vector2i(-2, 1), Vector2i(1, -2), Vector2i(2, -1), Vector2i(-1, -2), Vector2i(-2, -1)]
-		var answer:PackedStringArray = []
-		for iter:Vector2i in directions:
-			var position_name_to:String = Chess.direction_to(position_name_from, iter)
-			if !position_name_to:
-				continue
-			answer.push_back(position_name_to)
-		return answer
+
 	static func get_value() -> float:
 		return 3.5
 
@@ -250,19 +189,6 @@ class PiecePawn extends PieceInterface:
 		if state.has_piece(position_name_to_l) && state.get_piece(position_name_from).group != state.get_piece(position_name_to_l).group:
 			answer.push_back(position_name_to_l)
 		if state.has_piece(position_name_to_r) && state.get_piece(position_name_from).group != state.get_piece(position_name_to_r).group:
-			answer.push_back(position_name_to_r)
-		return answer
-	static func get_attack_position(state:ChessState, position_name_from:String) -> PackedStringArray:
-		var forward:Vector2i = Vector2i(0, 1) if state.get_piece(position_name_from).group == 0 else Vector2i(0, -1)
-		var position_name_to:String = Chess.direction_to(position_name_from, forward)
-		if !position_name_to:
-			return []
-		var position_name_to_l:String = Chess.direction_to(position_name_to, Vector2i(1, 0))
-		var position_name_to_r:String = Chess.direction_to(position_name_to, Vector2i(-1, 0))
-		var answer:PackedStringArray = []
-		if position_name_to_l:
-			answer.push_back(position_name_to_l)
-		if position_name_to_r:
 			answer.push_back(position_name_to_r)
 		return answer
 	static func get_value() -> float:
