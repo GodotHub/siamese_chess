@@ -52,7 +52,7 @@ func finger_up() -> void:
 func confirm_move(position_name_from:String, position_name_to:String) -> void:
 	if !position_name_from || !position_name_to || !valid_move.has(position_name_from) || !valid_move[position_name_from].has(position_name_to):
 		return
-	chess_state.execute_move_event(chess_state.get_move_event(position_name_from, position_name_to))
+	chess_state.execute_move(position_name_from, position_name_to)
 	$canvas.clear_select_position()
 #	draw_attack_position()
 	move_played.emit(position_name_from, position_name_to)
