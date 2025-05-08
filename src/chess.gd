@@ -50,6 +50,15 @@ class PieceKing extends PieceInterface:
 	static func execute_move(state:ChessState, move:Move) -> void:
 		if state.has_piece(move.position_name_to):
 			state.capture_piece(move.position_name_to)
+		if move.position_name_to in state.king_passant:
+			# 直接拿下国王判定胜利吧（唉）
+			if state.get_piece(move.position_name_from).group == 0:
+				state.capture_piece("c8")
+				state.capture_piece("g8")	# 两边全吃了也行，虽然不够优雅
+			else:
+				state.capture_piece("c1")
+				state.capture_piece("g1")
+
 		if state.get_piece(move.position_name_from).group == 0:
 			state.castle &= 3
 		else:
@@ -64,6 +73,13 @@ class PieceKing extends PieceInterface:
 				state.move_piece(move.extra, "f8")
 			if move.position_name_to == "c8":
 				state.move_piece(move.extra, "d8")
+			# 在move.position_name_from到move.position_name_to之间设置king_passant
+			var piece_position_from:Vector2i = Chess.to_piece_position(move.position_name_from)
+			var piece_position_to:Vector2i = Chess.to_piece_position(move.position_name_to)
+			state.king_passant = []
+			for i:int in range(piece_position_from.x, piece_position_to.x + (1 if piece_position_from.x < piece_position_to.x else -1), 1 if piece_position_from.x < piece_position_to.x else -1):
+				for j:int in range(piece_position_from.y, piece_position_to.y + (1 if piece_position_from.y < piece_position_to.y else -1), 1 if piece_position_from.y < piece_position_to.y else -1):
+					state.king_passant.push_back(Chess.to_position_name(Vector2(i, j)))
 
 	static func get_valid_move(state:ChessState, position_name_from:String) -> Array[Move]:
 		var directions:PackedVector2Array = [Vector2i(-1, -1), Vector2i(-1, 0), Vector2i(-1, 1), Vector2i(0, -1), Vector2i(0, 1), Vector2i(1, -1), Vector2i(1, 0), Vector2i(1, 1)]
@@ -74,6 +90,7 @@ class PieceKing extends PieceInterface:
 				continue
 			output.push_back(Chess.create_move(position_name_from, position_name_to, ""))
 		return output
+
 	static func get_value() -> float:
 		return 1000
 
@@ -91,6 +108,15 @@ class PieceQueen extends PieceInterface:
 	static func execute_move(state:ChessState, move:Move) -> void:
 		if state.has_piece(move.position_name_to):
 			state.capture_piece(move.position_name_to)
+		if move.position_name_to in state.king_passant:
+			# 直接拿下国王判定胜利吧（唉）
+			if state.get_piece(move.position_name_from).group == 0:
+				state.capture_piece("c8")
+				state.capture_piece("g8")
+			else:
+				state.capture_piece("c1")
+				state.capture_piece("g1")
+
 		state.move_piece(move.position_name_from, move.position_name_to)
 
 	static func get_valid_move(state:ChessState, position_name_from:String) -> Array[Move]:
@@ -126,6 +152,14 @@ class PieceRook extends PieceInterface:
 			state.castle &= 11 if state.get_piece(move.position_name_from).group == 0 else 15
 		if state.has_piece(move.position_name_to):
 			state.capture_piece(move.position_name_to)
+		if move.position_name_to in state.king_passant:
+			# 直接拿下国王判定胜利吧（唉）
+			if state.get_piece(move.position_name_from).group == 0:
+				state.capture_piece("c8")
+				state.capture_piece("g8")
+			else:
+				state.capture_piece("c1")
+				state.capture_piece("g1")
 		state.move_piece(move.position_name_from, move.position_name_to)
 
 	static func get_valid_move(state:ChessState, position_name_from:String) -> Array[Move]:
@@ -163,6 +197,14 @@ class PieceBishop extends PieceInterface:
 	static func execute_move(state:ChessState, move:Move) -> void:
 		if state.has_piece(move.position_name_to):
 			state.capture_piece(move.position_name_to)
+		if move.position_name_to in state.king_passant:
+			# 直接拿下国王判定胜利吧（唉）
+			if state.get_piece(move.position_name_from).group == 0:
+				state.capture_piece("c8")
+				state.capture_piece("g8")
+			else:
+				state.capture_piece("c1")
+				state.capture_piece("g1")
 		state.move_piece(move.position_name_from, move.position_name_to)
 
 	static func get_valid_move(state:ChessState, position_name_from:String) -> Array[Move]:
@@ -194,6 +236,14 @@ class PieceKnight extends PieceInterface:
 	static func execute_move(state:ChessState, move:Move) -> void:
 		if state.has_piece(move.position_name_to):
 			state.capture_piece(move.position_name_to)
+		if move.position_name_to in state.king_passant:
+			# 直接拿下国王判定胜利吧（唉）
+			if state.get_piece(move.position_name_from).group == 0:
+				state.capture_piece("c8")
+				state.capture_piece("g8")
+			else:
+				state.capture_piece("c1")
+				state.capture_piece("g1")
 		state.move_piece(move.position_name_from, move.position_name_to)
 
 	static func get_valid_move(state:ChessState, position_name_from:String) -> Array[Move]:
@@ -229,6 +279,14 @@ class PiecePawn extends PieceInterface:
 		if move.position_name_to == state.en_passant:
 			var captured_position_name:String = Chess.direction_to(move.position_name_to, -forward)
 			state.capture_piece(captured_position_name)
+		if move.position_name_to in state.king_passant:
+			# 直接拿下国王判定胜利吧（唉）
+			if state.get_piece(move.position_name_from).group == 0:
+				state.capture_piece("c8")
+				state.capture_piece("g8")
+			else:
+				state.capture_piece("c1")
+				state.capture_piece("g1")
 		state.move_piece(move.position_name_from, move.position_name_to)
 
 	static func get_valid_move(state:ChessState, position_name_from:String) -> Array[Move]:
@@ -356,7 +414,7 @@ class ChessState:
 		new_state.step = step
 		new_state.castle = castle
 		new_state.en_passant = en_passant
-		new_state.king_passant = king_passant
+		new_state.king_passant = king_passant.duplicate()
 		new_state.rule = rule
 		return new_state
 	
@@ -384,17 +442,21 @@ class ChessState:
 	func execute_move(move:Move) -> void:
 		step += 1
 		var last_en_passant:String = en_passant
+		var last_king_passant:PackedStringArray = king_passant.duplicate()
 		if has_piece(move.position_name_from):
 			current[move.position_name_from].class_type.execute_move(self, move)
 		if last_en_passant == en_passant:
 			en_passant = ""
+		if last_king_passant == king_passant:
+			king_passant = []
 
 	func add_piece(position_name:String, piece:Piece) -> void:	# 作为吃子的逆运算
 		current[position_name] = piece
 
 	func capture_piece(position_name:String) -> void:
-		current.erase(position_name)	# 虽然大多数情况是攻击者移到被攻击者上，但是吃过路兵是例外，后续可能会出现类似情况，所以还是得手多一下
-		piece_removed.emit(position_name)
+		if current.has(position_name):
+			current.erase(position_name)	# 虽然大多数情况是攻击者移到被攻击者上，但是吃过路兵是例外，后续可能会出现类似情况，所以还是得手多一下
+			piece_removed.emit(position_name)
 
 	func move_piece(position_name_from:String, position_name_to:String) -> void:
 		var piece:Piece = get_piece(position_name_from)
