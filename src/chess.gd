@@ -216,7 +216,7 @@ class PiecePawn extends PieceInterface:
 
 	static func execute_move(state:ChessState, move:Move) -> void:
 		var forward:Vector2i = Vector2i(0, 1) if state.get_piece(move.position_name_from).group == 0 else Vector2i(0, -1)
-		if abs(Chess.to_piece_position(move.position_name_to) - Chess.to_piece_position(move.position_name_from)) == forward * 2:
+		if Chess.to_piece_position(move.position_name_to) - Chess.to_piece_position(move.position_name_from) == forward * 2:
 			state.en_passant = Chess.direction_to(move.position_name_from, forward)
 		if state.has_piece(move.position_name_to):
 			state.capture_piece(move.position_name_to)
@@ -237,9 +237,9 @@ class PiecePawn extends PieceInterface:
 			output.push_back(Chess.create_move(position_name_from, position_name_to, ""))
 			if on_start && !state.has_piece(position_name_to_2):
 				output.push_back(Chess.create_move(position_name_from, position_name_to_2, ""))
-		if state.has_piece(position_name_to_l) && state.get_piece(position_name_from).group != state.get_piece(position_name_to_l).group || position_name_to_l == state.en_passant:
+		if position_name_to_l && (state.has_piece(position_name_to_l) && state.get_piece(position_name_from).group != state.get_piece(position_name_to_l).group || position_name_to_l == state.en_passant):
 			output.push_back(Chess.create_move(position_name_from, position_name_to_l, ""))
-		if state.has_piece(position_name_to_r) && state.get_piece(position_name_from).group != state.get_piece(position_name_to_r).group || position_name_to_l == state.en_passant:
+		if position_name_to_r && (state.has_piece(position_name_to_r) && state.get_piece(position_name_from).group != state.get_piece(position_name_to_r).group || position_name_to_r == state.en_passant):
 			output.push_back(Chess.create_move(position_name_from, position_name_to_r, ""))
 		return output
 	static func get_value() -> float:
@@ -377,8 +377,11 @@ class ChessState:
 
 	func execute_move(move:Move) -> void:
 		step += 1
+		var last_en_passant:String = en_passant
 		if has_piece(move.position_name_from):
 			current[move.position_name_from].class_type.execute_move(self, move)
+		if last_en_passant == en_passant:
+			en_passant = ""
 
 	func add_piece(position_name:String, piece:Piece) -> void:	# 作为吃子的逆运算
 		current[position_name] = piece
