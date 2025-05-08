@@ -3,11 +3,13 @@ extends Node
 class Piece:
 	var class_type:Object = PieceInterface
 	var group:int = 0
+	var extra:Dictionary = {}
 
-func create_piece(_class_type:Object, _group:int) -> Piece:
+func create_piece(_class_type:Object, _group:int, _extra:Dictionary) -> Piece:
 	var new_piece:Piece = Piece.new()
 	new_piece.class_type = _class_type
 	new_piece.group = _group
+	new_piece.extra = _extra
 	return new_piece
 
 class Move:
@@ -49,9 +51,9 @@ class PieceKing extends PieceInterface:
 		if state.has_piece(move.position_name_to):
 			state.capture_piece(move.position_name_to)
 		if state.get_piece(move.position_name_from).group == 0:
-			state.castle |= 3
+			state.castle &= 3
 		else:
-			state.castle |= 12
+			state.castle &= 12
 		state.move_piece(move.position_name_from, move.position_name_to)
 		if move.extra:
 			if move.position_name_to == "g1":
@@ -118,6 +120,10 @@ class PieceRook extends PieceInterface:
 		return instance
 
 	static func execute_move(state:ChessState, move:Move) -> void:
+		if state.get_piece(move.position_name_from).extra["side"] == "K":
+			state.castle &= 7 if state.get_piece(move.position_name_from).group == 0 else 13
+		elif state.get_piece(move.position_name_from).extra["side"] == "Q":
+			state.castle &= 11 if state.get_piece(move.position_name_from).group == 0 else 15
 		if state.has_piece(move.position_name_to):
 			state.capture_piece(move.position_name_to)
 		state.move_piece(move.position_name_from, move.position_name_to)
@@ -134,9 +140,9 @@ class PieceRook extends PieceInterface:
 				position_name_to = Chess.direction_to(position_name_to, iter)
 				if state.has_piece(position_name_to) && state.get_piece(position_name_from).group == state.get_piece(position_name_to).group && state.get_piece(position_name_to).class_type.get_name() == "King":
 					var group:int = state.get_piece(position_name_to).group
-					if iter == Vector2i(-1, 0) && (group == 0 && (state.castle & 0x8) || group == 1 && (state.castle & 0x2)):
+					if state.get_piece(position_name_from).extra["side"] == "K" && (group == 0 && (state.castle & 0x8) || group == 1 && (state.castle & 0x2)):
 						output.push_back(Chess.create_move(position_name_to, "g" + ("1" if group == 0 else "8"), position_name_from))
-					elif iter == Vector2i(1, 0) && (group == 0 && (state.castle & 0x4) || group == 1 && (state.castle & 0x1)):
+					elif state.get_piece(position_name_from).extra["side"] == "Q" && (group == 0 && (state.castle & 0x4) || group == 1 && (state.castle & 0x1)):
 						output.push_back(Chess.create_move(position_name_to, "c" + ("1" if group == 0 else "8"), position_name_from))
 		return output
 
@@ -308,38 +314,38 @@ class ChessState:
 	var rule:Object = RuleInterface
 	func _init() -> void:
 		current = {
-			"a1": Chess.create_piece(PieceRook, 0),
-			"b1": Chess.create_piece(PieceKnight, 0),
-			"c1": Chess.create_piece(PieceBishop, 0),
-			"d1": Chess.create_piece(PieceQueen, 0),
-			"e1": Chess.create_piece(PieceKing, 0),
-			"f1": Chess.create_piece(PieceBishop, 0),
-			"g1": Chess.create_piece(PieceKnight, 0),
-			"h1": Chess.create_piece(PieceRook, 0),
-			"a2": Chess.create_piece(PiecePawn, 0),
-			"b2": Chess.create_piece(PiecePawn, 0),
-			"c2": Chess.create_piece(PiecePawn, 0),
-			"d2": Chess.create_piece(PiecePawn, 0),
-			"e2": Chess.create_piece(PiecePawn, 0),
-			"f2": Chess.create_piece(PiecePawn, 0),
-			"g2": Chess.create_piece(PiecePawn, 0),
-			"h2": Chess.create_piece(PiecePawn, 0),
-			"a8": Chess.create_piece(PieceRook, 1),
-			"b8": Chess.create_piece(PieceKnight, 1),
-			"c8": Chess.create_piece(PieceBishop, 1),
-			"d8": Chess.create_piece(PieceQueen, 1),
-			"e8": Chess.create_piece(PieceKing, 1),
-			"f8": Chess.create_piece(PieceBishop, 1),
-			"g8": Chess.create_piece(PieceKnight, 1),
-			"h8": Chess.create_piece(PieceRook, 1),
-			"a7": Chess.create_piece(PiecePawn, 1),
-			"b7": Chess.create_piece(PiecePawn, 1),
-			"c7": Chess.create_piece(PiecePawn, 1),
-			"d7": Chess.create_piece(PiecePawn, 1),
-			"e7": Chess.create_piece(PiecePawn, 1),
-			"f7": Chess.create_piece(PiecePawn, 1),
-			"g7": Chess.create_piece(PiecePawn, 1),
-			"h7": Chess.create_piece(PiecePawn, 1),
+			"a1": Chess.create_piece(PieceRook, 0, {"side": "Q"}),
+			"b1": Chess.create_piece(PieceKnight, 0, {}),
+			"c1": Chess.create_piece(PieceBishop, 0, {}),
+			"d1": Chess.create_piece(PieceQueen, 0, {}),
+			"e1": Chess.create_piece(PieceKing, 0, {}),
+			"f1": Chess.create_piece(PieceBishop, 0, {}),
+			"g1": Chess.create_piece(PieceKnight, 0, {}),
+			"h1": Chess.create_piece(PieceRook, 0, {"side": "K"}),
+			"a2": Chess.create_piece(PiecePawn, 0, {}),
+			"b2": Chess.create_piece(PiecePawn, 0, {}),
+			"c2": Chess.create_piece(PiecePawn, 0, {}),
+			"d2": Chess.create_piece(PiecePawn, 0, {}),
+			"e2": Chess.create_piece(PiecePawn, 0, {}),
+			"f2": Chess.create_piece(PiecePawn, 0, {}),
+			"g2": Chess.create_piece(PiecePawn, 0, {}),
+			"h2": Chess.create_piece(PiecePawn, 0, {}),
+			"a8": Chess.create_piece(PieceRook, 1, {"side": "Q"}),
+			"b8": Chess.create_piece(PieceKnight, 1, {}),
+			"c8": Chess.create_piece(PieceBishop, 1, {}),
+			"d8": Chess.create_piece(PieceQueen, 1, {}),
+			"e8": Chess.create_piece(PieceKing, 1, {}),
+			"f8": Chess.create_piece(PieceBishop, 1, {}),
+			"g8": Chess.create_piece(PieceKnight, 1, {}),
+			"h8": Chess.create_piece(PieceRook, 1, {"side": "K"}),
+			"a7": Chess.create_piece(PiecePawn, 1, {}),
+			"b7": Chess.create_piece(PiecePawn, 1, {}),
+			"c7": Chess.create_piece(PiecePawn, 1, {}),
+			"d7": Chess.create_piece(PiecePawn, 1, {}),
+			"e7": Chess.create_piece(PiecePawn, 1, {}),
+			"f7": Chess.create_piece(PiecePawn, 1, {}),
+			"g7": Chess.create_piece(PiecePawn, 1, {}),
+			"h7": Chess.create_piece(PiecePawn, 1, {}),
 		}
 		rule = RuleStandard	# 标准规则
 	
