@@ -287,7 +287,19 @@ class PiecePawn extends PieceInterface:
 			else:
 				state.capture_piece("c1")
 				state.capture_piece("g1")
-		state.move_piece(move.position_name_from, move.position_name_to)
+		if move.extra:
+			match move.extra:
+				"Q":
+					state.add_piece(move.position_name_to, Chess.create_piece(PieceQueen, state.get_piece(move.position_name_from).group, {}))
+				"R":
+					state.add_piece(move.position_name_to, Chess.create_piece(PieceRook, state.get_piece(move.position_name_from).group, {"side": " "}))
+				"N":
+					state.add_piece(move.position_name_to, Chess.create_piece(PieceKnight, state.get_piece(move.position_name_from).group, {}))
+				"B":
+					state.add_piece(move.position_name_to, Chess.create_piece(PieceBishop, state.get_piece(move.position_name_from).group, {}))
+			state.capture_piece(move.position_name_from)
+		else:
+			state.move_piece(move.position_name_from, move.position_name_to)
 
 	static func get_valid_move(state:ChessState, position_name_from:String) -> Array[Move]:
 		var output:Array[Move] = []
@@ -297,14 +309,32 @@ class PiecePawn extends PieceInterface:
 		var position_name_to_2:String = Chess.direction_to(position_name_from, forward * 2)
 		var position_name_to_l:String = Chess.direction_to(position_name_to, Vector2i(1, 0))
 		var position_name_to_r:String = Chess.direction_to(position_name_to, Vector2i(-1, 0))
-		if !state.has_piece(position_name_to):
-			output.push_back(Chess.create_move(position_name_from, position_name_to, ""))
+		if position_name_to && !state.has_piece(position_name_to):
+			if state.get_piece(position_name_from).group == 0 && position_name_to[1] == "8" || state.get_piece(position_name_from).group == 1 && position_name_to[1] == "1":
+				output.push_back(Chess.create_move(position_name_from, position_name_to, "Q"))
+				output.push_back(Chess.create_move(position_name_from, position_name_to, "R"))
+				output.push_back(Chess.create_move(position_name_from, position_name_to, "N"))
+				output.push_back(Chess.create_move(position_name_from, position_name_to, "B"))
+			else:
+				output.push_back(Chess.create_move(position_name_from, position_name_to, ""))
 			if on_start && !state.has_piece(position_name_to_2):
 				output.push_back(Chess.create_move(position_name_from, position_name_to_2, ""))
 		if position_name_to_l && (state.has_piece(position_name_to_l) && state.get_piece(position_name_from).group != state.get_piece(position_name_to_l).group || position_name_to_l == state.en_passant):
-			output.push_back(Chess.create_move(position_name_from, position_name_to_l, ""))
+			if state.get_piece(position_name_from).group == 0 && position_name_to_l[1] == "8" || state.get_piece(position_name_from).group == 1 && position_name_to_l[1] == "1":
+				output.push_back(Chess.create_move(position_name_from, position_name_to_l, "Q"))
+				output.push_back(Chess.create_move(position_name_from, position_name_to_l, "R"))
+				output.push_back(Chess.create_move(position_name_from, position_name_to_l, "N"))
+				output.push_back(Chess.create_move(position_name_from, position_name_to_l, "B"))
+			else:
+				output.push_back(Chess.create_move(position_name_from, position_name_to_l, ""))
 		if position_name_to_r && (state.has_piece(position_name_to_r) && state.get_piece(position_name_from).group != state.get_piece(position_name_to_r).group || position_name_to_r == state.en_passant):
-			output.push_back(Chess.create_move(position_name_from, position_name_to_r, ""))
+			if state.get_piece(position_name_from).group == 0 && position_name_to_r[1] == "8" || state.get_piece(position_name_from).group == 1 && position_name_to_r[1] == "1":
+				output.push_back(Chess.create_move(position_name_from, position_name_to_r, "Q"))
+				output.push_back(Chess.create_move(position_name_from, position_name_to_r, "R"))
+				output.push_back(Chess.create_move(position_name_from, position_name_to_r, "N"))
+				output.push_back(Chess.create_move(position_name_from, position_name_to_r, "B"))
+			else:
+				output.push_back(Chess.create_move(position_name_from, position_name_to_r, ""))
 		return output
 	static func get_value() -> float:
 		return 1
@@ -371,6 +401,7 @@ class ChessMoveBranchNode:
 	var parent:ChessMoveBranchNode = null
 
 class ChessState:
+	signal piece_added(position_name:String)
 	signal piece_moved(position_name_from:String, position_name_to:String)
 	signal piece_removed(position_name:String)
 	var current:Dictionary[String, Piece] = {}
@@ -462,6 +493,7 @@ class ChessState:
 
 	func add_piece(position_name:String, piece:Piece) -> void:	# 作为吃子的逆运算
 		current[position_name] = piece
+		piece_added.emit(position_name)
 
 	func capture_piece(position_name:String) -> void:
 		if current.has(position_name):
@@ -501,8 +533,9 @@ var current_chessboard:Chessboard = null
 @onready var test_state:ChessState = ChessState.new()
 
 func to_piece_position(position_name:String) -> Vector2i:
-	var position_name_buffer:PackedByteArray = position_name.to_ascii_buffer()
-	return Vector2i(position_name_buffer[0] - 97, position_name_buffer[1] - 49)
+	if !position_name:
+		return Vector2i(-1, -1)
+	return Vector2i(position_name.unicode_at(0) - 97, position_name.unicode_at(1) - 49)
 
 func to_position_name(piece_position:Vector2i) -> String:
 	if piece_position.x < 0 || piece_position.x > 7 || piece_position.y < 0 || piece_position.y > 7:

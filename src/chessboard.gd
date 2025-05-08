@@ -6,10 +6,12 @@ signal move_played(position_name_from:String, position_name_to:String)
 var chess_state:Chess.ChessState = null
 var valid_move:Dictionary[String, Array] = {}
 var selected_position_name:String = ""
+var selected_extra:int = 0
 var piece_instance:Dictionary[String, PieceInstance] = {}
 
 func _ready() -> void:
 	chess_state = Chess.ChessState.new()
+	chess_state.connect("piece_added", add_piece_instance)
 	chess_state.connect("piece_moved", move_piece_instance)
 	chess_state.connect("piece_removed", remove_piece_instance)
 	var pieces:Dictionary = chess_state.current
@@ -55,9 +57,18 @@ func confirm_move(position_name_from:String, position_name_to:String) -> void:
 	var move_list:Array = valid_move[position_name_from].filter(func (move:Chess.Move) -> bool: return position_name_to == move.position_name_to)
 	if move_list.size() == 0:
 		return
-	if move_list.size() > 1:
-		return
-	chess_state.execute_move(move_list[0])
+	elif move_list.size() > 1:
+		var accept_dialog:AcceptDialog = AcceptDialog.new()
+		for i:int in range(move_list.size()):
+			accept_dialog.add_button(move_list[i].extra, true, "%d" % i)
+		accept_dialog.connect("custom_action", set_action)
+		add_child(accept_dialog)
+		accept_dialog.popup_centered()
+		await accept_dialog.confirmed
+		chess_state.execute_move(move_list[selected_extra])
+		accept_dialog.queue_free()
+	else:
+		chess_state.execute_move(move_list[0])
 	$canvas.clear_select_position()
 #	draw_attack_position()
 	move_played.emit(position_name_from, position_name_to)
@@ -73,6 +84,9 @@ func confirm_move(position_name_from:String, position_name_to:String) -> void:
 #			var count:int = chess_state.attack_count[position_name]
 #			$canvas.draw_attack_position($canvas.convert_name_to_position(position_name), count)
 
+func set_action(action:String) -> void:
+	selected_extra = action.to_int()
+
 func update_valid_move() -> void:
 	valid_move.clear()
 	var move_list:Array[Chess.Move] = chess_state.get_all_move(true)
@@ -80,6 +94,12 @@ func update_valid_move() -> void:
 		if !valid_move.has(move.position_name_from):
 			valid_move[move.position_name_from] = []
 		valid_move[move.position_name_from].push_back(move)
+
+func add_piece_instance(position_name:String) -> void:
+	var instance:PieceInstance = chess_state.get_piece_instance(position_name)
+	instance.chessboard = self
+	piece_instance[position_name] = instance
+	$pieces.add_child(instance)
 
 func move_piece_instance(position_name_from:String, position_name_to:String) -> void:
 	var instance:PieceInstance = piece_instance[position_name_from]
