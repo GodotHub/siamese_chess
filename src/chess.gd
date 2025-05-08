@@ -314,7 +314,17 @@ class RuleInterface:
 		return true
 
 class RuleStandard extends RuleInterface:
-	static func is_move_valid(_state:ChessState, _move:Move) -> bool:
+	static func is_move_valid(state:ChessState, move:Move) -> bool:
+		var test_state = state.duplicate()
+		test_state.execute_move(move)	# 假设自己走了一步棋
+		var move_list:Array[Move] = test_state.get_all_move()	# 小心俩国王互相影响以至于无限嵌套
+		for iter:Move in move_list:
+			var test_state_2 = test_state.duplicate()
+			test_state_2.execute_move(iter)
+			var score:float = test_state_2.score_state()	# 对手走一步棋之后评价
+			# 如果下一步国王可以被攻击，那么说明这一步是非法的
+			if score >= 100 || score <= -100:	# 国王设置的数值非常大，一般超出100这个阈值就算是被判定吃掉了
+				return false
 		return true
 
 class ChessMoveBranch:
