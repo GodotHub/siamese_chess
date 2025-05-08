@@ -23,6 +23,8 @@ func create_move(position_name_from:String, position_name_to:String, extra:Strin
 	return new_move
 
 class PieceInterface:
+	static func get_name() -> String:
+		return "Null"
 	static func create_instance(_position_name:String, _group:int) -> PieceInstance:
 		return null
 	static func execute_move(_state:ChessState, _move:Move) -> void:
@@ -33,6 +35,9 @@ class PieceInterface:
 		return 0
 
 class PieceKing extends PieceInterface:
+	static func get_name() -> String:
+		return "King"
+
 	static func create_instance(position_name:String, group:int) -> PieceInstance:
 		var packed_scene:PackedScene = load("res://scene/piece_king.tscn")
 		var instance:PieceInstance = packed_scene.instantiate()
@@ -43,7 +48,20 @@ class PieceKing extends PieceInterface:
 	static func execute_move(state:ChessState, move:Move) -> void:
 		if state.has_piece(move.position_name_to):
 			state.capture_piece(move.position_name_to)
+		if state.get_piece(move.position_name_from).group == 0:
+			state.castle |= 3
+		else:
+			state.castle |= 12
 		state.move_piece(move.position_name_from, move.position_name_to)
+		if move.extra:
+			if move.position_name_to == "g1":
+				state.move_piece(move.extra, "f1")
+			if move.position_name_to == "c1":
+				state.move_piece(move.extra, "d1")
+			if move.position_name_to == "g8":
+				state.move_piece(move.extra, "f8")
+			if move.position_name_to == "c8":
+				state.move_piece(move.extra, "d8")
 
 	static func get_valid_move(state:ChessState, position_name_from:String) -> Array[Move]:
 		var directions:PackedVector2Array = [Vector2i(-1, -1), Vector2i(-1, 0), Vector2i(-1, 1), Vector2i(0, -1), Vector2i(0, 1), Vector2i(1, -1), Vector2i(1, 0), Vector2i(1, 1)]
@@ -58,6 +76,9 @@ class PieceKing extends PieceInterface:
 		return 1000
 
 class PieceQueen extends PieceInterface:
+	static func get_name() -> String:
+		return "Queen"
+
 	static func create_instance(position_name:String, group:int) -> PieceInstance:
 		var packed_scene:PackedScene = load("res://scene/piece_queen.tscn")
 		var instance:PieceInstance = packed_scene.instantiate()
@@ -86,6 +107,9 @@ class PieceQueen extends PieceInterface:
 		return 9
 
 class PieceRook extends PieceInterface:
+	static func get_name() -> String:
+		return "Rook"
+
 	static func create_instance(position_name:String, group:int) -> PieceInstance:
 		var packed_scene:PackedScene = load("res://scene/piece_rook.tscn")
 		var instance:PieceInstance = packed_scene.instantiate()
@@ -108,18 +132,21 @@ class PieceRook extends PieceInterface:
 				if state.has_piece(position_name_to) && state.get_piece(position_name_from).group != state.get_piece(position_name_to).group:
 					break
 				position_name_to = Chess.direction_to(position_name_to, iter)
-				if state.has_piece(position_name_to) && state.get_piece(position_name_from).group == state.get_piece(position_name_to).group && state.get_piece(position_name_to).class_type is PieceKing:
-					var group = state.get_piece(position_name_to).group
-					if iter == Vector2i(-1, 0) && (group == 0 && (state.castle & 0x4) || group == 1 && (state.castle & 0x1)):
-						output.push_back(Chess.create_move(position_name_to, "C" + ("1" if group == 0 else "8"), "Q"))
-					elif iter == Vector2i(1, 0) && (group == 0 && (state.castle & 0x8) || group == 1 && (state.castle & 0x2)):
-						output.push_back(Chess.create_move(position_name_to, "G" + ("1" if group == 0 else "8"), "K"))
+				if state.has_piece(position_name_to) && state.get_piece(position_name_from).group == state.get_piece(position_name_to).group && state.get_piece(position_name_to).class_type.get_name() == "King":
+					var group:int = state.get_piece(position_name_to).group
+					if iter == Vector2i(-1, 0) && (group == 0 && (state.castle & 0x8) || group == 1 && (state.castle & 0x2)):
+						output.push_back(Chess.create_move(position_name_to, "g" + ("1" if group == 0 else "8"), position_name_from))
+					elif iter == Vector2i(1, 0) && (group == 0 && (state.castle & 0x4) || group == 1 && (state.castle & 0x1)):
+						output.push_back(Chess.create_move(position_name_to, "c" + ("1" if group == 0 else "8"), position_name_from))
 		return output
 
 	static func get_value() -> float:
 		return 5
 
 class PieceBishop extends PieceInterface:
+	static func get_name() -> String:
+		return "Bishop"
+
 	static func create_instance(position_name:String, group:int) -> PieceInstance:
 		var packed_scene:PackedScene = load("res://scene/piece_bishop.tscn")
 		var instance:PieceInstance = packed_scene.instantiate()
@@ -148,6 +175,9 @@ class PieceBishop extends PieceInterface:
 		return 3.5
 
 class PieceKnight extends PieceInterface:
+	static func get_name() -> String:
+		return "Knight"
+
 	static func create_instance(position_name:String, group:int) -> PieceInstance:
 		var packed_scene:PackedScene = load("res://scene/piece_knight.tscn")
 		var instance:PieceInstance = packed_scene.instantiate()
@@ -174,6 +204,9 @@ class PieceKnight extends PieceInterface:
 		return 3.5
 
 class PiecePawn extends PieceInterface:
+	static func get_name() -> String:
+		return "Pawn"
+
 	static func create_instance(position_name:String, group:int) -> PieceInstance:
 		var packed_scene:PackedScene = load("res://scene/piece_pawn.tscn")
 		var instance:PieceInstance = packed_scene.instantiate()
@@ -269,7 +302,7 @@ class ChessState:
 	var current:Dictionary[String, Piece] = {}
 	var notation:PackedStringArray = []
 	var step:int = 0
-	var castle:int = 7
+	var castle:int = 15
 	var en_passant:String = ""
 	var king_passant:PackedStringArray = []	# 易位时经过的格子，由于王车易位的起始位置比较多变，有可能会让王经过更多或更少的格子
 	var rule:Object = RuleInterface
