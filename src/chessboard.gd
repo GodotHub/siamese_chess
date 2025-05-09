@@ -58,15 +58,14 @@ func confirm_move(position_name_from:String, position_name_to:String) -> void:
 	if move_list.size() == 0:
 		return
 	elif move_list.size() > 1:
-		var accept_dialog:AcceptDialog = AcceptDialog.new()
-		for i:int in range(move_list.size()):
-			accept_dialog.add_button(move_list[i].extra, true, "%d" % i)
-		accept_dialog.connect("custom_action", set_action)
-		add_child(accept_dialog)
-		accept_dialog.popup_centered()
-		await accept_dialog.confirmed
+		var decision_list:PackedStringArray = []
+		for iter:Chess.Move in move_list:
+			decision_list.push_back(iter.extra)
+		var decision_instance:Decision = Decision.create_decision_instance(decision_list)
+		decision_instance.connect("decided", set_action)
+		add_child(decision_instance)
+		await decision_instance.decided
 		chess_state.execute_move(move_list[selected_extra])
-		accept_dialog.queue_free()
 	else:
 		chess_state.execute_move(move_list[0])
 	$canvas.clear_select_position()
@@ -84,8 +83,8 @@ func confirm_move(position_name_from:String, position_name_to:String) -> void:
 #			var count:int = chess_state.attack_count[position_name]
 #			$canvas.draw_attack_position($canvas.convert_name_to_position(position_name), count)
 
-func set_action(action:String) -> void:
-	selected_extra = action.to_int()
+func set_action(action:int) -> void:
+	selected_extra = action
 
 func update_valid_move() -> void:
 	valid_move.clear()
