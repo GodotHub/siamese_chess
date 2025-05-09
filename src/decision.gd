@@ -41,7 +41,6 @@ func _ready() -> void:
 	cancel_button.add_theme_stylebox_override("pressed", StyleBoxEmpty.new())
 	cancel_button.connect("button_up", button_pressed.bind(-1))
 	$texture_rect/v_box_container.add_child(cancel_button)
-	
 	$texture_rect/v_box_container.hide()
 	var tween:Tween = create_tween()
 	tween.tween_interval(0.3)

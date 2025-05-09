@@ -60,11 +60,13 @@ func confirm_move(position_name_from:String, position_name_to:String) -> void:
 	elif move_list.size() > 1:
 		var decision_list:PackedStringArray = []
 		for iter:Chess.Move in move_list:
-			decision_list.push_back(iter.extra)
+			decision_list.push_back(iter.comment)
 		var decision_instance:Decision = Decision.create_decision_instance(decision_list)
 		decision_instance.connect("decided", set_action)
 		add_child(decision_instance)
 		await decision_instance.decided
+		if selected_extra == -1:
+			return
 		chess_state.execute_move(move_list[selected_extra])
 	else:
 		chess_state.execute_move(move_list[0])

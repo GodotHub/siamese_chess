@@ -16,12 +16,14 @@ class Move:
 	var position_name_from:String
 	var position_name_to:String
 	var extra:String
+	var comment:String
 
-func create_move(position_name_from:String, position_name_to:String, extra:String) -> Move:
+func create_move(position_name_from:String, position_name_to:String, extra:String, comment:String) -> Move:
 	var new_move:Move = Move.new()
 	new_move.position_name_from = position_name_from
 	new_move.position_name_to = position_name_to
 	new_move.extra = extra
+	new_move.comment = comment
 	return new_move
 
 class PieceInterface:
@@ -88,7 +90,7 @@ class PieceKing extends PieceInterface:
 			var position_name_to:String = Chess.direction_to(position_name_from, iter)
 			if !position_name_to || state.has_piece(position_name_to) && state.get_piece(position_name_from).group == state.get_piece(position_name_to).group:
 				continue
-			output.push_back(Chess.create_move(position_name_from, position_name_to, ""))
+			output.push_back(Chess.create_move(position_name_from, position_name_to, "", "Default"))
 		return output
 
 	static func get_value() -> float:
@@ -125,7 +127,7 @@ class PieceQueen extends PieceInterface:
 		for iter:Vector2i in directions:
 			var position_name_to:String = Chess.direction_to(position_name_from, iter)
 			while position_name_to && (!state.has_piece(position_name_to) || state.get_piece(position_name_from).group != state.get_piece(position_name_to).group):
-				output.push_back(Chess.create_move(position_name_from, position_name_to, ""))
+				output.push_back(Chess.create_move(position_name_from, position_name_to, "", "Default"))
 				if state.has_piece(position_name_to) && state.get_piece(position_name_from).group != state.get_piece(position_name_to).group:
 					break
 				position_name_to = Chess.direction_to(position_name_to, iter)
@@ -168,16 +170,16 @@ class PieceRook extends PieceInterface:
 		for iter:Vector2i in directions:
 			var position_name_to:String = Chess.direction_to(position_name_from, iter)
 			while position_name_to && (!state.has_piece(position_name_to) || state.get_piece(position_name_from).group != state.get_piece(position_name_to).group):
-				output.push_back(Chess.create_move(position_name_from, position_name_to, ""))
+				output.push_back(Chess.create_move(position_name_from, position_name_to, "", "Default"))
 				if state.has_piece(position_name_to) && state.get_piece(position_name_from).group != state.get_piece(position_name_to).group:
 					break
 				position_name_to = Chess.direction_to(position_name_to, iter)
 				if state.has_piece(position_name_to) && state.get_piece(position_name_from).group == state.get_piece(position_name_to).group && state.get_piece(position_name_to).class_type.get_name() == "King":
 					var group:int = state.get_piece(position_name_to).group
 					if state.get_piece(position_name_from).extra["side"] == "K" && (group == 0 && (state.castle & 0x8) || group == 1 && (state.castle & 0x2)):
-						output.push_back(Chess.create_move(position_name_to, "g" + ("1" if group == 0 else "8"), position_name_from))
+						output.push_back(Chess.create_move(position_name_to, "g" + ("1" if group == 0 else "8"), position_name_from, "Short Castling"))
 					elif state.get_piece(position_name_from).extra["side"] == "Q" && (group == 0 && (state.castle & 0x4) || group == 1 && (state.castle & 0x1)):
-						output.push_back(Chess.create_move(position_name_to, "c" + ("1" if group == 0 else "8"), position_name_from))
+						output.push_back(Chess.create_move(position_name_to, "c" + ("1" if group == 0 else "8"), position_name_from, "Long Castling"))
 		return output
 
 	static func get_value() -> float:
@@ -213,7 +215,7 @@ class PieceBishop extends PieceInterface:
 		for iter:Vector2i in directions:
 			var position_name_to:String = Chess.direction_to(position_name_from, iter)
 			while position_name_to && (!state.has_piece(position_name_to) || state.get_piece(position_name_from).group != state.get_piece(position_name_to).group):
-				output.push_back(Chess.create_move(position_name_from, position_name_to, ""))
+				output.push_back(Chess.create_move(position_name_from, position_name_to, "", "Default"))
 				if state.has_piece(position_name_to) && state.get_piece(position_name_from).group != state.get_piece(position_name_to).group:
 					break
 				position_name_to = Chess.direction_to(position_name_to, iter)
@@ -253,7 +255,7 @@ class PieceKnight extends PieceInterface:
 			var position_name_to:String = Chess.direction_to(position_name_from, iter)
 			if !position_name_to || state.has_piece(position_name_to) && state.get_piece(position_name_from).group == state.get_piece(position_name_to).group:
 				continue
-			output.push_back(Chess.create_move(position_name_from, position_name_to, ""))
+			output.push_back(Chess.create_move(position_name_from, position_name_to, "", "Default"))
 		return output
 
 	static func get_value() -> float:
@@ -311,30 +313,30 @@ class PiecePawn extends PieceInterface:
 		var position_name_to_r:String = Chess.direction_to(position_name_to, Vector2i(-1, 0))
 		if position_name_to && !state.has_piece(position_name_to):
 			if state.get_piece(position_name_from).group == 0 && position_name_to[1] == "8" || state.get_piece(position_name_from).group == 1 && position_name_to[1] == "1":
-				output.push_back(Chess.create_move(position_name_from, position_name_to, "Q"))
-				output.push_back(Chess.create_move(position_name_from, position_name_to, "R"))
-				output.push_back(Chess.create_move(position_name_from, position_name_to, "N"))
-				output.push_back(Chess.create_move(position_name_from, position_name_to, "B"))
+				output.push_back(Chess.create_move(position_name_from, position_name_to, "Q", "Promote to Queen"))
+				output.push_back(Chess.create_move(position_name_from, position_name_to, "R", "Promote to Rook"))
+				output.push_back(Chess.create_move(position_name_from, position_name_to, "N", "Promote to Knight"))
+				output.push_back(Chess.create_move(position_name_from, position_name_to, "B", "Promote to Bishop"))
 			else:
-				output.push_back(Chess.create_move(position_name_from, position_name_to, ""))
+				output.push_back(Chess.create_move(position_name_from, position_name_to, "", "Default"))
 			if on_start && !state.has_piece(position_name_to_2):
-				output.push_back(Chess.create_move(position_name_from, position_name_to_2, ""))
+				output.push_back(Chess.create_move(position_name_from, position_name_to_2, "", "Default"))
 		if position_name_to_l && (state.has_piece(position_name_to_l) && state.get_piece(position_name_from).group != state.get_piece(position_name_to_l).group || position_name_to_l == state.en_passant):
 			if state.get_piece(position_name_from).group == 0 && position_name_to_l[1] == "8" || state.get_piece(position_name_from).group == 1 && position_name_to_l[1] == "1":
-				output.push_back(Chess.create_move(position_name_from, position_name_to_l, "Q"))
-				output.push_back(Chess.create_move(position_name_from, position_name_to_l, "R"))
-				output.push_back(Chess.create_move(position_name_from, position_name_to_l, "N"))
-				output.push_back(Chess.create_move(position_name_from, position_name_to_l, "B"))
+				output.push_back(Chess.create_move(position_name_from, position_name_to_l, "Q", "Promote to Queen"))
+				output.push_back(Chess.create_move(position_name_from, position_name_to_l, "R", "Promote to Rook"))
+				output.push_back(Chess.create_move(position_name_from, position_name_to_l, "N", "Promote to Knight"))
+				output.push_back(Chess.create_move(position_name_from, position_name_to_l, "B", "Promote to Bishop"))
 			else:
-				output.push_back(Chess.create_move(position_name_from, position_name_to_l, ""))
+				output.push_back(Chess.create_move(position_name_from, position_name_to_l, "", "Default"))
 		if position_name_to_r && (state.has_piece(position_name_to_r) && state.get_piece(position_name_from).group != state.get_piece(position_name_to_r).group || position_name_to_r == state.en_passant):
 			if state.get_piece(position_name_from).group == 0 && position_name_to_r[1] == "8" || state.get_piece(position_name_from).group == 1 && position_name_to_r[1] == "1":
-				output.push_back(Chess.create_move(position_name_from, position_name_to_r, "Q"))
-				output.push_back(Chess.create_move(position_name_from, position_name_to_r, "R"))
-				output.push_back(Chess.create_move(position_name_from, position_name_to_r, "N"))
-				output.push_back(Chess.create_move(position_name_from, position_name_to_r, "B"))
+				output.push_back(Chess.create_move(position_name_from, position_name_to_r, "Q", "Promote to Queen"))
+				output.push_back(Chess.create_move(position_name_from, position_name_to_r, "R", "Promote to Rook"))
+				output.push_back(Chess.create_move(position_name_from, position_name_to_r, "N", "Promote to Knight"))
+				output.push_back(Chess.create_move(position_name_from, position_name_to_r, "B", "Promote to Bishop"))
 			else:
-				output.push_back(Chess.create_move(position_name_from, position_name_to_r, ""))
+				output.push_back(Chess.create_move(position_name_from, position_name_to_r, "", "Default"))
 		return output
 	static func get_value() -> float:
 		return 1
