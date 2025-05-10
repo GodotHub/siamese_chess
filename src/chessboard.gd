@@ -4,6 +4,7 @@ class_name Chessboard
 signal move_played(position_name_from:String, position_name_to:String)
 
 var chess_state:Chess.ChessState = null
+var chess_branch:Chess.ChessMoveBranch = null
 var valid_move:Dictionary[String, Array] = {}
 var selected_position_name:String = ""
 var selected_extra:int = 0
@@ -11,6 +12,8 @@ var piece_instance:Dictionary[String, PieceInstance] = {}
 
 func _ready() -> void:
 	chess_state = Chess.ChessState.new()
+	chess_branch = Chess.ChessMoveBranch.new()
+	chess_branch.current_node.state = chess_state.duplicate()
 	chess_state.connect("piece_added", add_piece_instance)
 	chess_state.connect("piece_moved", move_piece_instance)
 	chess_state.connect("piece_removed", remove_piece_instance)
@@ -20,6 +23,7 @@ func _ready() -> void:
 		instance.chessboard = self
 		piece_instance[key] = instance
 		$pieces.add_child(instance)
+	white_move()
 	update_valid_move()
 #	draw_attack_position()
 
@@ -67,12 +71,15 @@ func confirm_move(position_name_from:String, position_name_to:String) -> void:
 		await decision_instance.decided
 		if selected_extra == -1:
 			return
+		chess_branch.execute_move(move_list[selected_extra])
 		chess_state.execute_move(move_list[selected_extra])
 	else:
+		chess_branch.execute_move(move_list[0])
 		chess_state.execute_move(move_list[0])
 	$canvas.clear_select_position()
 #	draw_attack_position()
-	move_played.emit(position_name_from, position_name_to)
+#	move_played.emit(position_name_from, position_name_to)
+	white_move()
 	update_valid_move()
 
 #func draw_attack_position() -> void:
@@ -112,3 +119,9 @@ func remove_piece_instance(position_name:String) -> void:
 	var instance:PieceInstance = piece_instance[position_name]
 	piece_instance.erase(position_name)
 	instance.queue_free()
+
+func white_move() -> void:
+	chess_branch.search()
+	var move:Chess.Move = chess_branch.get_best_move()
+	chess_branch.execute_move(move)
+	chess_state.execute_move(move)

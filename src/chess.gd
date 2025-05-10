@@ -349,57 +349,72 @@ class RuleStandard extends RuleInterface:
 	static func is_move_valid(state:ChessState, move:Move) -> bool:
 		var test_state = state.duplicate()
 		test_state.execute_move(move)	# 假设自己走了一步棋
-		var move_list:Array[Move] = test_state.get_all_move()	# 小心俩国王互相影响以至于无限嵌套
+		var move_list:Array[Move] = test_state.get_all_move()
 		for iter:Move in move_list:
 			var test_state_2 = test_state.duplicate()
 			test_state_2.execute_move(iter)
-			var score:float = test_state_2.score_state()	# 对手走一步棋之后评价
+			var score:float = test_state_2.get_score()	# 对手走一步棋之后评价
 			# 如果下一步国王可以被攻击，那么说明这一步是非法的
 			if score >= 100 || score <= -100:	# 国王设置的数值非常大，一般超出100这个阈值就算是被判定吃掉了
 				return false
 		return true
-
+	
 class ChessMoveBranch:
-	var state:ChessState = null
 	var branch:ChessMoveBranchNode = null	# 树形结构，只包含步数
 	var current_node:ChessMoveBranchNode = null
-
 	func _init() -> void:
 		branch = ChessMoveBranchNode.new()
 		current_node = branch
 		current_node.time = Time.get_unix_time_from_system()
 
 	func execute_move(move:Move) -> void:
-		var next_move:ChessMoveBranchNode = ChessMoveBranchNode.new()
-		next_move.state = state.duplicate()
-		next_move.time = Time.get_unix_time_from_system()
-		next_move.parent = current_node
-		next_move.state.execute_move(move)
-		current_node.children[move] = next_move
-		current_node = next_move	# 来到下一个节点
+		var next_branch_node:ChessMoveBranchNode = ChessMoveBranchNode.new()
+		next_branch_node.state = current_node.state.duplicate()
+		next_branch_node.time = Time.get_unix_time_from_system()
+		next_branch_node.parent = current_node
+		next_branch_node.state.execute_move(move)
+		current_node.children[move] = next_branch_node
+		current_node = next_branch_node	# 来到下一个节点
 	
-	func dfs(forward_step:int = 10) -> void:
-		if forward_step <= 0:
-			state.score = state.score_state()	# 叶子节点
-			return
-		var move_list:Array[Move] = state.get_all_move()
-		var best_score:float = 0
-		for move:Move in move_list:
-			state.execute_move(move)
-			dfs(forward_step - 1)
-			# 当前分支评价完分数后，跟其他分支比较一下
-			if state.step % 2 == 1:	# 子分支位置是轮到对方下棋，意味着余数为1时则是白方造成的结果
-				best_score = max(state.score, best_score)	# 这个结果对于白方来讲是score越大越好
-			else:
-				best_score = min(state.score, best_score)	# 黑方反之
-			state.rollback()	# DFS回溯，共享资源需要回到原先状态
-		state.score = best_score
+	func search() -> void:	# 持续搜索的过程，需要一个线程
+		var queue:Array[ChessMoveBranchNode] = [current_node]
+		for i:int in range(100):
+			if !queue.size():
+				break
+			var current_branch_node:ChessMoveBranchNode = queue[-1]
+			queue.pop_back()
+			var move_list:Array[Move] = current_branch_node.state.get_all_move()
+			for move:Move in move_list:
+				var next_branch_node:ChessMoveBranchNode = ChessMoveBranchNode.new()
+				next_branch_node.state = current_branch_node.state.duplicate()
+				next_branch_node.time = Time.get_unix_time_from_system()
+				next_branch_node.parent = current_branch_node
+				current_branch_node.children[move] = next_branch_node
+				next_branch_node.state.execute_move(move)
+				set_score(next_branch_node, next_branch_node.state.get_score())
+				var index:int = queue.bsearch_custom(next_branch_node, func (a:ChessMoveBranchNode, b:ChessMoveBranchNode) -> bool: return a.score < b.score)
+				queue.insert(index, next_branch_node)
+
+	func set_score(branch_node:ChessMoveBranchNode, score:float) -> void:
+		var flag:bool = false
+		if branch_node.state.step % 2 == 1 && branch_node.score < score || branch_node.state.step % 2 == 0 && branch_node.score > score:
+			branch_node.score = score
+			flag = true
+		if flag && is_instance_valid(branch_node.parent):
+			set_score(branch_node.parent, score)
+	
+	func get_best_move() -> Move:
+		var best_move:Move = null
+		for iter:Move in current_node.children:
+			if !is_instance_valid(best_move) || current_node.state.step % 2 == 1 && current_node.children[iter].score < current_node.children[best_move].score || current_node.state.step % 2 == 0 && current_node.children[iter].score > current_node.children[best_move].score:
+				best_move = iter
+		return best_move
 
 class ChessMoveBranchNode:
 	var state:ChessState = null
 	var time:float = 0	# 节点添加时的时间，可以根据父节点和当前节点的时间差来求出思考时间
 	var children:Dictionary[Move, ChessMoveBranchNode] = {}
-	var score:float = 0
+	var score:float = 0	# 这里的score并非ChessState的Score，是经过搜索后相对不片面的评分
 	var parent:ChessMoveBranchNode = null
 
 class ChessState:
@@ -411,43 +426,42 @@ class ChessState:
 	var step:int = 0
 	var castle:int = 15
 	var en_passant:String = ""
+	var score:int = 0
 	var king_passant:PackedStringArray = []	# 易位时经过的格子，由于王车易位的起始位置比较多变，有可能会让王经过更多或更少的格子
 	var rule:Object = RuleInterface
 	func _init() -> void:
-		current = {
-			"a1": Chess.create_piece(PieceRook, 0, {"side": "Q"}),
-			"b1": Chess.create_piece(PieceKnight, 0, {}),
-			"c1": Chess.create_piece(PieceBishop, 0, {}),
-			"d1": Chess.create_piece(PieceQueen, 0, {}),
-			"e1": Chess.create_piece(PieceKing, 0, {}),
-			"f1": Chess.create_piece(PieceBishop, 0, {}),
-			"g1": Chess.create_piece(PieceKnight, 0, {}),
-			"h1": Chess.create_piece(PieceRook, 0, {"side": "K"}),
-			"a2": Chess.create_piece(PiecePawn, 0, {}),
-			"b2": Chess.create_piece(PiecePawn, 0, {}),
-			"c2": Chess.create_piece(PiecePawn, 0, {}),
-			"d2": Chess.create_piece(PiecePawn, 0, {}),
-			"e2": Chess.create_piece(PiecePawn, 0, {}),
-			"f2": Chess.create_piece(PiecePawn, 0, {}),
-			"g2": Chess.create_piece(PiecePawn, 0, {}),
-			"h2": Chess.create_piece(PiecePawn, 0, {}),
-			"a8": Chess.create_piece(PieceRook, 1, {"side": "Q"}),
-			"b8": Chess.create_piece(PieceKnight, 1, {}),
-			"c8": Chess.create_piece(PieceBishop, 1, {}),
-			"d8": Chess.create_piece(PieceQueen, 1, {}),
-			"e8": Chess.create_piece(PieceKing, 1, {}),
-			"f8": Chess.create_piece(PieceBishop, 1, {}),
-			"g8": Chess.create_piece(PieceKnight, 1, {}),
-			"h8": Chess.create_piece(PieceRook, 1, {"side": "K"}),
-			"a7": Chess.create_piece(PiecePawn, 1, {}),
-			"b7": Chess.create_piece(PiecePawn, 1, {}),
-			"c7": Chess.create_piece(PiecePawn, 1, {}),
-			"d7": Chess.create_piece(PiecePawn, 1, {}),
-			"e7": Chess.create_piece(PiecePawn, 1, {}),
-			"f7": Chess.create_piece(PiecePawn, 1, {}),
-			"g7": Chess.create_piece(PiecePawn, 1, {}),
-			"h7": Chess.create_piece(PiecePawn, 1, {}),
-		}
+		add_piece("a1", Chess.create_piece(PieceRook, 0, {"side": "Q"}))
+		add_piece("b1", Chess.create_piece(PieceKnight, 0, {}))
+		add_piece("c1", Chess.create_piece(PieceBishop, 0, {}))
+		add_piece("d1", Chess.create_piece(PieceQueen, 0, {}))
+		add_piece("e1", Chess.create_piece(PieceKing, 0, {}))
+		add_piece("f1", Chess.create_piece(PieceBishop, 0, {}))
+		add_piece("g1", Chess.create_piece(PieceKnight, 0, {}))
+		add_piece("h1", Chess.create_piece(PieceRook, 0, {"side": "K"}))
+		add_piece("a2", Chess.create_piece(PiecePawn, 0, {}))
+		add_piece("b2", Chess.create_piece(PiecePawn, 0, {}))
+		add_piece("c2", Chess.create_piece(PiecePawn, 0, {}))
+		add_piece("d2", Chess.create_piece(PiecePawn, 0, {}))
+		add_piece("e2", Chess.create_piece(PiecePawn, 0, {}))
+		add_piece("f2", Chess.create_piece(PiecePawn, 0, {}))
+		add_piece("g2", Chess.create_piece(PiecePawn, 0, {}))
+		add_piece("h2", Chess.create_piece(PiecePawn, 0, {}))
+		add_piece("a8", Chess.create_piece(PieceRook, 1, {"side": "Q"}))
+		add_piece("b8", Chess.create_piece(PieceKnight, 1, {}))
+		add_piece("c8", Chess.create_piece(PieceBishop, 1, {}))
+		add_piece("d8", Chess.create_piece(PieceQueen, 1, {}))
+		add_piece("e8", Chess.create_piece(PieceKing, 1, {}))
+		add_piece("f8", Chess.create_piece(PieceBishop, 1, {}))
+		add_piece("g8", Chess.create_piece(PieceKnight, 1, {}))
+		add_piece("h8", Chess.create_piece(PieceRook, 1, {"side": "K"}))
+		add_piece("a7", Chess.create_piece(PiecePawn, 1, {}))
+		add_piece("b7", Chess.create_piece(PiecePawn, 1, {}))
+		add_piece("c7", Chess.create_piece(PiecePawn, 1, {}))
+		add_piece("d7", Chess.create_piece(PiecePawn, 1, {}))
+		add_piece("e7", Chess.create_piece(PiecePawn, 1, {}))
+		add_piece("f7", Chess.create_piece(PiecePawn, 1, {}))
+		add_piece("g7", Chess.create_piece(PiecePawn, 1, {}))
+		add_piece("h7", Chess.create_piece(PiecePawn, 1, {}))
 		rule = RuleStandard	# 标准规则
 	
 	func duplicate() -> ChessState:
@@ -458,6 +472,7 @@ class ChessState:
 		new_state.castle = castle
 		new_state.en_passant = en_passant
 		new_state.king_passant = king_passant.duplicate()
+		new_state.score = score
 		new_state.rule = rule
 		return new_state
 	
@@ -495,10 +510,12 @@ class ChessState:
 
 	func add_piece(position_name:String, piece:Piece) -> void:	# 作为吃子的逆运算
 		current[position_name] = piece
+		score += piece.class_type.get_value() * (1 if piece.group else -1)
 		piece_added.emit(position_name)
 
 	func capture_piece(position_name:String) -> void:
 		if current.has(position_name):
+			score -= current[position_name].class_type.get_value() * (1 if current[position_name].group else -1)
 			current.erase(position_name)	# 虽然大多数情况是攻击者移到被攻击者上，但是吃过路兵是例外，后续可能会出现类似情况，所以还是得手多一下
 			piece_removed.emit(position_name)
 
@@ -514,11 +531,8 @@ class ChessState:
 	func pop_notation() -> void:
 		notation.resize(notation.size() - 1)
 
-	func score_state() -> float:
-		var sum:float = 0
-		for key:String in current:
-			sum += current[key].class_type.get_value() * (1 if current[key].group == 0 else -1)
-		return sum
+	func get_score() -> float:
+		return score
 	
 	func get_all_move(rule_filter:bool = false) -> Array[Move]:
 		var output:Array[Move] = []
