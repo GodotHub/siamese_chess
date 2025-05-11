@@ -1,6 +1,0 @@
-[gd_scene load_steps=2 format=3 uid="uid://b7yu8v58lgvkt"]
-
-[ext_resource type="Script" uid="uid://f61jpl3au36o" path="res://src/navi.gd" id="1_ur2kn"]
-
-[node name="navi" type="Node3D"]
-script = ExtResource("1_ur2kn")
