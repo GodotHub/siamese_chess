@@ -347,18 +347,18 @@ class RuleInterface:
 
 class RuleStandard extends RuleInterface:
 	static func is_move_valid(state:ChessState, move:Move) -> bool:
-		var test_state = state.duplicate()
-		test_state.execute_move(move)	# 假设自己走了一步棋
-		var move_list:Array[Move] = test_state.get_all_move()
-		for iter:Move in move_list:
-			var test_state_2 = test_state.duplicate()
-			test_state_2.execute_move(iter)
-			var score:float = test_state_2.get_score()	# 对手走一步棋之后评价
-			# 如果下一步国王可以被攻击，那么说明这一步是非法的
-			if score >= 100 || score <= -100:	# 国王设置的数值非常大，一般超出100这个阈值就算是被判定吃掉了
-				return false
+		#var test_state = state.duplicate()
+		#test_state.execute_move(move)	# 假设自己走了一步棋
+		#var move_list:Array[Move] = test_state.get_all_move()
+		#for iter:Move in move_list:
+		#	var test_state_2 = test_state.duplicate()
+		#	test_state_2.execute_move(iter)
+		#	var score:float = test_state_2.get_score()	# 对手走一步棋之后评价
+		#	# 如果下一步国王可以被攻击，那么说明这一步是非法的
+		#	if score >= 100 || score <= -100:	# 国王设置的数值非常大，一般超出100这个阈值就算是被判定吃掉了
+		#		return false
 		return true
-	
+
 class ChessMoveBranch:
 	var branch:ChessMoveBranchNode = null	# 树形结构，只包含步数
 	var current_node:ChessMoveBranchNode = null
@@ -378,13 +378,15 @@ class ChessMoveBranch:
 	
 	func search() -> void:	# 持续搜索的过程，需要一个线程
 		var queue:Array[ChessMoveBranchNode] = [current_node]
-		for i:int in range(100):
+		for i:int in range(500):
 			if !queue.size():
 				break
-			var current_branch_node:ChessMoveBranchNode = queue[-1]
-			queue.pop_back()
+			var current_branch_node:ChessMoveBranchNode = queue[0]
+			queue.pop_front()
 			var move_list:Array[Move] = current_branch_node.state.get_all_move()
 			for move:Move in move_list:
+				if queue.size() > 15:
+					break;
 				var next_branch_node:ChessMoveBranchNode = ChessMoveBranchNode.new()
 				next_branch_node.state = current_branch_node.state.duplicate()
 				next_branch_node.time = Time.get_unix_time_from_system()
@@ -393,12 +395,12 @@ class ChessMoveBranch:
 				next_branch_node.state.execute_move(move)
 				next_branch_node.score = next_branch_node.state.get_score()
 				set_score(next_branch_node, next_branch_node.state.get_score())
-				var index:int = queue.bsearch_custom(next_branch_node, func (a:ChessMoveBranchNode, b:ChessMoveBranchNode) -> bool: return a.score < b.score)
-				queue.insert(index, next_branch_node)
+				#var index:int = queue.bsearch_custom(next_branch_node, func (a:ChessMoveBranchNode, b:ChessMoveBranchNode) -> bool: return a.score < b.score)
+				queue.push_back(next_branch_node)
 
 	func set_score(branch_node:ChessMoveBranchNode, score:float) -> void:
 		var flag:bool = false
-		if branch_node.state.step % 2 == 1 && branch_node.score < score || branch_node.state.step % 2 == 0 && branch_node.score > score:
+		if branch_node.state.step % 2 == 0 && branch_node.score < score || branch_node.state.step % 2 == 1 && branch_node.score > score:
 			branch_node.score = score
 			flag = true
 		if flag && is_instance_valid(branch_node.parent):
@@ -409,7 +411,7 @@ class ChessMoveBranch:
 		for iter:Move in current_node.children:
 			if !is_instance_valid(best_move) || current_node.state.step % 2 == 1 && current_node.children[iter].score < current_node.children[best_move].score || current_node.state.step % 2 == 0 && current_node.children[iter].score > current_node.children[best_move].score:
 				best_move = iter
-		#print_score(current_node)
+		print_score(current_node)
 		return best_move
 	
 	func print_score(branch_node:ChessMoveBranchNode) -> void:
