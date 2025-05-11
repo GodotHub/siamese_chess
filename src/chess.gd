@@ -391,6 +391,7 @@ class ChessMoveBranch:
 				next_branch_node.parent = current_branch_node
 				current_branch_node.children[move] = next_branch_node
 				next_branch_node.state.execute_move(move)
+				next_branch_node.score = next_branch_node.state.get_score()
 				set_score(next_branch_node, next_branch_node.state.get_score())
 				var index:int = queue.bsearch_custom(next_branch_node, func (a:ChessMoveBranchNode, b:ChessMoveBranchNode) -> bool: return a.score < b.score)
 				queue.insert(index, next_branch_node)
@@ -408,7 +409,13 @@ class ChessMoveBranch:
 		for iter:Move in current_node.children:
 			if !is_instance_valid(best_move) || current_node.state.step % 2 == 1 && current_node.children[iter].score < current_node.children[best_move].score || current_node.state.step % 2 == 0 && current_node.children[iter].score > current_node.children[best_move].score:
 				best_move = iter
+		#print_score(current_node)
 		return best_move
+	
+	func print_score(branch_node:ChessMoveBranchNode) -> void:
+		for iter:Move in branch_node.children:
+			print(iter.position_name_to + ": " + ("%f" % branch_node.children[iter].score))
+
 
 class ChessMoveBranchNode:
 	var state:ChessState = null
@@ -510,12 +517,12 @@ class ChessState:
 
 	func add_piece(position_name:String, piece:Piece) -> void:	# 作为吃子的逆运算
 		current[position_name] = piece
-		score += piece.class_type.get_value() * (1 if piece.group else -1)
+		score += piece.class_type.get_value() * (1 if piece.group == 0 else -1)
 		piece_added.emit(position_name)
 
 	func capture_piece(position_name:String) -> void:
 		if current.has(position_name):
-			score -= current[position_name].class_type.get_value() * (1 if current[position_name].group else -1)
+			score -= current[position_name].class_type.get_value() * (1 if current[position_name].group == 0 else -1)
 			current.erase(position_name)	# 虽然大多数情况是攻击者移到被攻击者上，但是吃过路兵是例外，后续可能会出现类似情况，所以还是得手多一下
 			piece_removed.emit(position_name)
 
