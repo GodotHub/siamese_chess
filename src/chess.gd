@@ -341,24 +341,6 @@ class PiecePawn extends PieceInterface:
 	static func get_value() -> float:
 		return 1
 
-class RuleInterface:
-	static func is_move_valid(_state:ChessState, _move:Move) -> bool:
-		return true
-
-class RuleStandard extends RuleInterface:
-	static func is_move_valid(state:ChessState, move:Move) -> bool:
-		#var test_state = state.duplicate()
-		#test_state.execute_move(move)	# 假设自己走了一步棋
-		#var move_list:Array[Move] = test_state.get_all_move()
-		#for iter:Move in move_list:
-		#	var test_state_2 = test_state.duplicate()
-		#	test_state_2.execute_move(iter)
-		#	var score:float = test_state_2.get_score()	# 对手走一步棋之后评价
-		#	# 如果下一步国王可以被攻击，那么说明这一步是非法的
-		#	if score >= 100 || score <= -100:	# 国王设置的数值非常大，一般超出100这个阈值就算是被判定吃掉了
-		#		return false
-		return true
-
 class ChessMoveBranch:
 	var branch:ChessMoveBranchNode = null	# 树形结构，只包含步数
 	var current_node:ChessMoveBranchNode = null
@@ -367,15 +349,23 @@ class ChessMoveBranch:
 		current_node = branch
 		current_node.time = Time.get_unix_time_from_system()
 
-	func execute_move(move:Move) -> void:
+	func create_branch(node:ChessMoveBranchNode, move:Move) -> ChessMoveBranchNode:
 		var next_branch_node:ChessMoveBranchNode = ChessMoveBranchNode.new()
-		next_branch_node.state = current_node.state.duplicate()
+		next_branch_node.state = node.state.duplicate()
 		next_branch_node.time = Time.get_unix_time_from_system()
-		next_branch_node.parent = current_node
+		next_branch_node.parent = node
+		node.children[move] = next_branch_node
 		next_branch_node.state.execute_move(move)
-		current_node.children[move] = next_branch_node
-		current_node = next_branch_node	# 来到下一个节点
-	
+		next_branch_node.score = next_branch_node.state.get_score()
+		set_score(next_branch_node, next_branch_node.score)
+		return next_branch_node
+
+	func execute_move(move:Move) -> void:
+		if current_node.children.has(move):
+			current_node = current_node.children[move]
+		else:
+			current_node = create_branch(current_node, move)
+
 	func search() -> void:	# 持续搜索的过程，需要一个线程
 		var queue:Array[ChessMoveBranchNode] = [current_node]
 		for i:int in range(500):
@@ -383,24 +373,17 @@ class ChessMoveBranch:
 				break
 			var current_branch_node:ChessMoveBranchNode = queue[0]
 			queue.pop_front()
-			var move_list:Array[Move] = current_branch_node.state.get_all_move()
+			var move_list:Array[Move] = current_branch_node.state.get_all_move(current_branch_node.group)
 			for move:Move in move_list:
 				if queue.size() > 15:
 					break;
-				var next_branch_node:ChessMoveBranchNode = ChessMoveBranchNode.new()
-				next_branch_node.state = current_branch_node.state.duplicate()
-				next_branch_node.time = Time.get_unix_time_from_system()
-				next_branch_node.parent = current_branch_node
-				current_branch_node.children[move] = next_branch_node
-				next_branch_node.state.execute_move(move)
-				next_branch_node.score = next_branch_node.state.get_score()
-				set_score(next_branch_node, next_branch_node.state.get_score())
+				var next_branch_node:ChessMoveBranchNode = create_branch(current_branch_node, move)
 				#var index:int = queue.bsearch_custom(next_branch_node, func (a:ChessMoveBranchNode, b:ChessMoveBranchNode) -> bool: return a.score < b.score)
 				queue.push_back(next_branch_node)
 
 	func set_score(branch_node:ChessMoveBranchNode, score:float) -> void:
 		var flag:bool = false
-		if branch_node.state.step % 2 == 0 && branch_node.score < score || branch_node.state.step % 2 == 1 && branch_node.score > score:
+		if branch_node.group == 0 && branch_node.score < score || branch_node.group == 1 && branch_node.score > score:
 			branch_node.score = score
 			flag = true
 		if flag && is_instance_valid(branch_node.parent):
@@ -409,7 +392,7 @@ class ChessMoveBranch:
 	func get_best_move() -> Move:
 		var best_move:Move = null
 		for iter:Move in current_node.children:
-			if !is_instance_valid(best_move) || current_node.state.step % 2 == 1 && current_node.children[iter].score < current_node.children[best_move].score || current_node.state.step % 2 == 0 && current_node.children[iter].score > current_node.children[best_move].score:
+			if !is_instance_valid(best_move) || current_node.group == 0 && current_node.children[iter].score < current_node.children[best_move].score || current_node.group == 1 && current_node.children[iter].score > current_node.children[best_move].score:
 				best_move = iter
 		print_score(current_node)
 		return best_move
@@ -421,6 +404,7 @@ class ChessMoveBranch:
 
 class ChessMoveBranchNode:
 	var state:ChessState = null
+	var group:int = 0
 	var time:float = 0	# 节点添加时的时间，可以根据父节点和当前节点的时间差来求出思考时间
 	var children:Dictionary[Move, ChessMoveBranchNode] = {}
 	var score:float = 0	# 这里的score并非ChessState的Score，是经过搜索后相对不片面的评分
@@ -437,7 +421,6 @@ class ChessState:
 	var en_passant:String = ""
 	var score:int = 0
 	var king_passant:PackedStringArray = []	# 易位时经过的格子，由于王车易位的起始位置比较多变，有可能会让王经过更多或更少的格子
-	var rule:Object = RuleInterface
 	func _init() -> void:
 		add_piece("a1", Chess.create_piece(PieceRook, 0, {"side": "Q"}))
 		add_piece("b1", Chess.create_piece(PieceKnight, 0, {}))
@@ -471,7 +454,6 @@ class ChessState:
 		add_piece("f7", Chess.create_piece(PiecePawn, 1, {}))
 		add_piece("g7", Chess.create_piece(PiecePawn, 1, {}))
 		add_piece("h7", Chess.create_piece(PiecePawn, 1, {}))
-		rule = RuleStandard	# 标准规则
 	
 	func duplicate() -> ChessState:
 		var new_state:ChessState = ChessState.new()
@@ -482,7 +464,6 @@ class ChessState:
 		new_state.en_passant = en_passant
 		new_state.king_passant = king_passant.duplicate()
 		new_state.score = score
-		new_state.rule = rule
 		return new_state
 	
 	func get_piece_instance(position_name:String) -> PieceInstance:
@@ -543,15 +524,13 @@ class ChessState:
 	func get_score() -> float:
 		return score
 	
-	func get_all_move(rule_filter:bool = false) -> Array[Move]:
+	func get_all_move(group:int) -> Array[Move]:	# 指定阵营
 		var output:Array[Move] = []
-		var test_state:ChessState = self.duplicate()
 		for position_name_from:String in current:
-			if step % 2 == current[position_name_from].group:	# 得是其中轮到的一方
-				var piece_move_list:Array[Move] = current[position_name_from].class_type.get_valid_move(test_state, position_name_from)
+			if group == current[position_name_from].group:	# 当前阵营
+				var piece_move_list:Array[Move] = current[position_name_from].class_type.get_valid_move(self, position_name_from)
 				for move:Move in piece_move_list:
-					if !rule_filter || rule.is_move_valid(test_state, move):
-						output.push_back(move)
+					output.push_back(move)
 		return output
 
 var current_chessboard:Chessboard = null
