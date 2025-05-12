@@ -29,7 +29,7 @@ shadow_enabled = true
 environment = SubResource("Environment_7r8ay")
 
 [node name="chessboard" parent="." index="10" instance=ExtResource("2_3p4nk")]
-transform = Transform3D(-1.85773e-08, 0, -0.425, 0, 0.425, 0, 0.425, 0, -1.85773e-08, 0, 0.889148, 0)
+transform = Transform3D(-1.85773e-08, 0, -0.425, 0, 0.425, 0, 0.425, 0, -1.85773e-08, 0, 0.870713, 0)
 
 [node name="player" parent="." index="12" instance=ExtResource("3_1vcsq")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.894237, 0)
