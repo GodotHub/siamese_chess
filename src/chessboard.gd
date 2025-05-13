@@ -1,10 +1,9 @@
 extends Node3D
 class_name Chessboard
 
-signal move_played(position_name_from:String, position_name_to:String)
+signal move_played(move:Chess.Move)
 
 var chess_state:Chess.ChessState = null
-var chess_branch:Chess.ChessMoveBranch = null
 var valid_move:Dictionary[String, Array] = {}
 var selected_position_name:String = ""
 var selected_extra:int = 0
@@ -12,8 +11,6 @@ var piece_instance:Dictionary[String, PieceInstance] = {}
 
 func _ready() -> void:
 	chess_state = Chess.ChessState.new()
-	chess_branch = Chess.ChessMoveBranch.new()
-	chess_branch.current_node.state = chess_state.duplicate()
 	chess_state.connect("piece_added", add_piece_instance)
 	chess_state.connect("piece_moved", move_piece_instance)
 	chess_state.connect("piece_removed", remove_piece_instance)
@@ -23,7 +20,6 @@ func _ready() -> void:
 		instance.chessboard = self
 		piece_instance[key] = instance
 		$pieces.add_child(instance)
-	white_move()
 	update_valid_move()
 #	draw_attack_position()
 
@@ -36,6 +32,8 @@ func convert_name_to_position(_position_name:String) -> Vector3:
 
 func tap_position(position_name:String) -> void:
 	$canvas.clear_select_position()
+	if chess_state.step % 2 == 0:
+		return
 	if selected_position_name:
 		confirm_move(selected_position_name, position_name)
 		selected_position_name = ""
@@ -71,29 +69,18 @@ func confirm_move(position_name_from:String, position_name_to:String) -> void:
 		await decision_instance.decided
 		if selected_extra == -1:
 			return
-		chess_branch.execute_move(move_list[selected_extra])
-		chess_state.execute_move(move_list[selected_extra])
+		execute_move(move_list[selected_extra])
 	else:
-		chess_branch.execute_move(move_list[0])
-		chess_state.execute_move(move_list[0])
+		execute_move(move_list[selected_extra])
 	$canvas.clear_select_position()
-#	draw_attack_position()
-#	move_played.emit(position_name_from, position_name_to)
-	white_move()
-	update_valid_move()
-
-#func draw_attack_position() -> void:
-#	$canvas.clear_attack_position()
-#	for i:int in range(8):
-#		for j:int in range(8):
-#			var position_name:String = "%c%d" % [i + 97, j + 1]
-#			if !chess_state.attack_count.has(position_name):
-#				continue
-#			var count:int = chess_state.attack_count[position_name]
-#			$canvas.draw_attack_position($canvas.convert_name_to_position(position_name), count)
 
 func set_action(action:int) -> void:
 	selected_extra = action
+
+func execute_move(move:Chess.Move) -> void:
+	chess_state.execute_move(move)
+	move_played.emit(move)
+	update_valid_move()
 
 func update_valid_move() -> void:
 	valid_move.clear()
@@ -119,9 +106,3 @@ func remove_piece_instance(position_name:String) -> void:
 	var instance:PieceInstance = piece_instance[position_name]
 	piece_instance.erase(position_name)
 	instance.queue_free()
-
-func white_move() -> void:
-	chess_branch.search()
-	var move:Chess.Move = chess_branch.get_best_move()
-	chess_branch.execute_move(move)
-	chess_state.execute_move(move)

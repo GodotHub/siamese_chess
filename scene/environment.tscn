@@ -1,10 +1,11 @@
-[gd_scene load_steps=9 format=3 uid="uid://fpd8ogg7714f"]
+[gd_scene load_steps=10 format=3 uid="uid://fpd8ogg7714f"]
 
 [ext_resource type="PackedScene" uid="uid://gdof8yy8yrjv" path="res://assets/model/environment.glb" id="1_b3374"]
 [ext_resource type="PackedScene" uid="uid://d1s6qj7aofldk" path="res://scene/chessboard.tscn" id="2_3p4nk"]
 [ext_resource type="Script" uid="uid://b5tdvskepo5dh" path="res://src/environment.gd" id="2_7r8ay"]
 [ext_resource type="PackedScene" uid="uid://b3ml34bssywkr" path="res://scene/player.tscn" id="3_1vcsq"]
 [ext_resource type="PackedScene" uid="uid://b0ots07uggqyg" path="res://scene/history.tscn" id="5_4qusu"]
+[ext_resource type="PackedScene" uid="uid://cispm4sihu5b3" path="res://scene/pastor.tscn" id="6_uwfkk"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_3p4nk"]
 sky_horizon_color = Color(0.662243, 0.671743, 0.686743, 1)
@@ -21,18 +22,20 @@ tonemap_mode = 2
 [node name="environment" instance=ExtResource("1_b3374")]
 script = ExtResource("2_7r8ay")
 
-[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." index="0"]
-transform = Transform3D(-0.866023, -0.433016, 0.250001, 0, 0.499998, 0.866027, -0.500003, 0.749999, -0.43301, 0, 0, 0)
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." index="16"]
+transform = Transform3D(-0.866024, -0.433016, 0.250001, 0, 0.499998, 0.866026, -0.500003, 0.749999, -0.43301, 0, 0, 0)
 shadow_enabled = true
 
-[node name="WorldEnvironment" type="WorldEnvironment" parent="." index="1"]
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." index="17"]
 environment = SubResource("Environment_7r8ay")
 
-[node name="chessboard" parent="." index="10" instance=ExtResource("2_3p4nk")]
-transform = Transform3D(-1.85773e-08, 0, -0.425, 0, 0.425, 0, 0.425, 0, -1.85773e-08, 0, 0.870713, 0)
+[node name="chessboard" parent="." index="18" instance=ExtResource("2_3p4nk")]
+transform = Transform3D(-1.85773e-08, 0, -0.425, 0, 0.425, 0, 0.425, 0, -1.85773e-08, 0, 0.870713, 2.7152)
 
-[node name="player" parent="." index="12" instance=ExtResource("3_1vcsq")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.894237, 0)
+[node name="player" parent="." index="19" instance=ExtResource("3_1vcsq")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.894237, 2.7152)
 
-[node name="history" parent="." index="13" instance=ExtResource("5_4qusu")]
-transform = Transform3D(-0.448648, 0, -0.893708, 0, 1, 0, 0.893708, 0, -0.448648, -0.329404, 0.8601, 0.372051)
+[node name="history" parent="." index="20" instance=ExtResource("5_4qusu")]
+transform = Transform3D(-0.448648, 0, -0.893708, 0, 1, 0, 0.893708, 0, -0.448648, -0.329404, 0.8601, 3.08725)
+
+[node name="pastor" parent="." index="21" instance=ExtResource("6_uwfkk")]

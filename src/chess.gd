@@ -350,14 +350,16 @@ class ChessMoveBranch:
 		current_node.time = Time.get_unix_time_from_system()
 
 	func create_branch(node:ChessMoveBranchNode, move:Move) -> ChessMoveBranchNode:
+		var test_state:ChessState = node.state.duplicate()
+		test_state.execute_move(move)
 		var next_branch_node:ChessMoveBranchNode = ChessMoveBranchNode.new()
-		next_branch_node.state = node.state.duplicate()
+		next_branch_node.state = test_state
 		next_branch_node.time = Time.get_unix_time_from_system()
 		next_branch_node.parent = node
+		next_branch_node.group = 1 if node.group == 0 else 0
 		node.children[move] = next_branch_node
-		next_branch_node.state.execute_move(move)
 		next_branch_node.score = next_branch_node.state.get_score()
-		set_score(next_branch_node, next_branch_node.score)
+		set_score(next_branch_node, test_state.score)
 		return next_branch_node
 
 	func execute_move(move:Move) -> void:
@@ -375,15 +377,13 @@ class ChessMoveBranch:
 			queue.pop_front()
 			var move_list:Array[Move] = current_branch_node.state.get_all_move(current_branch_node.group)
 			for move:Move in move_list:
-				if queue.size() > 15:
-					break;
 				var next_branch_node:ChessMoveBranchNode = create_branch(current_branch_node, move)
-				#var index:int = queue.bsearch_custom(next_branch_node, func (a:ChessMoveBranchNode, b:ChessMoveBranchNode) -> bool: return a.score < b.score)
-				queue.push_back(next_branch_node)
+				if is_instance_valid(next_branch_node):
+					queue.push_back(next_branch_node)
 
 	func set_score(branch_node:ChessMoveBranchNode, score:float) -> void:
 		var flag:bool = false
-		if branch_node.group == 0 && branch_node.score < score || branch_node.group == 1 && branch_node.score > score:
+		if branch_node.group == 1 && branch_node.score < score || branch_node.group == 0 && branch_node.score > score:
 			branch_node.score = score
 			flag = true
 		if flag && is_instance_valid(branch_node.parent):
@@ -392,14 +392,15 @@ class ChessMoveBranch:
 	func get_best_move() -> Move:
 		var best_move:Move = null
 		for iter:Move in current_node.children:
-			if !is_instance_valid(best_move) || current_node.group == 0 && current_node.children[iter].score < current_node.children[best_move].score || current_node.group == 1 && current_node.children[iter].score > current_node.children[best_move].score:
+			if !is_instance_valid(best_move) || current_node.group == 1 && current_node.children[iter].score < current_node.children[best_move].score || current_node.group == 0 && current_node.children[iter].score > current_node.children[best_move].score:
 				best_move = iter
 		print_score(current_node)
 		return best_move
 	
-	func print_score(branch_node:ChessMoveBranchNode) -> void:
+	func print_score(branch_node:ChessMoveBranchNode, depth:int = 0) -> void:
 		for iter:Move in branch_node.children:
-			print(iter.position_name_to + ": " + ("%f" % branch_node.children[iter].score))
+			print(" ".repeat(depth) + iter.position_name_to + ": " + ("%f" % branch_node.children[iter].score))
+			print_score(branch_node.children[iter], depth + 1)
 
 
 class ChessMoveBranchNode:

@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://cispm4sihu5b3"]
+
+[ext_resource type="Script" uid="uid://d37nkxik3au1i" path="res://src/pastor.gd" id="1_p0cd1"]
+
+[node name="pastor" type="Node3D"]
+script = ExtResource("1_p0cd1")

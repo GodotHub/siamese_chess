@@ -3,8 +3,8 @@ extends Node3D
 var history:PackedStringArray = ["", ""]
 var state:Chess.ChessState = null
 
-func push_move(position_name_from:String, position_name_to:String) -> void:
-	history.push_back(position_name_from + "->" + position_name_to)
+func push_move(move:Chess.Move) -> void:
+	history.push_back(move.position_name_from + "->" + move.position_name_to + " " + move.comment)
 	update_table()
 
 func update_table() -> void:
