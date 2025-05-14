@@ -3,13 +3,11 @@ extends Node
 class Piece:
 	var class_type:Object = PieceInterface
 	var group:int = 0
-	var extra:Dictionary = {}
 
-func create_piece(_class_type:Object, _group:int, _extra:Dictionary) -> Piece:
+func create_piece(_class_type:Object, _group:int) -> Piece:
 	var new_piece:Piece = Piece.new()
 	new_piece.class_type = _class_type
 	new_piece.group = _group
-	new_piece.extra = _extra
 	return new_piece
 
 class Move:
@@ -31,6 +29,10 @@ func create_move(position_name_from:String, position_name_to:String, extra:Strin
 	new_move.extra = extra
 	new_move.comment = comment
 	return new_move
+
+func create_state_from_fen(fen:String) -> void:
+	for i:int in range(fen.length()):
+		pass
 
 class PieceInterface:
 	static func get_name() -> String:
@@ -154,9 +156,9 @@ class PieceRook extends PieceInterface:
 		return instance
 
 	static func execute_move(state:ChessState, move:Move) -> void:
-		if state.get_piece(move.position_name_from).extra["side"] == "K":
+		if Chess.to_piece_position(move.position_name_from).x >= 4:
 			state.castle &= 7 if state.get_piece(move.position_name_from).group == 0 else 13
-		elif state.get_piece(move.position_name_from).extra["side"] == "Q":
+		elif Chess.to_piece_position(move.position_name_from).x <= 3:
 			state.castle &= 11 if state.get_piece(move.position_name_from).group == 0 else 15
 		if state.has_piece(move.position_name_to):
 			state.capture_piece(move.position_name_to)
@@ -182,9 +184,9 @@ class PieceRook extends PieceInterface:
 				position_name_to = Chess.direction_to(position_name_to, iter)
 				if state.has_piece(position_name_to) && state.get_piece(position_name_from).group == state.get_piece(position_name_to).group && state.get_piece(position_name_to).class_type.get_name() == "King":
 					var group:int = state.get_piece(position_name_to).group
-					if state.get_piece(position_name_from).extra["side"] == "K" && (group == 0 && (state.castle & 0x8) || group == 1 && (state.castle & 0x2)):
+					if Chess.to_piece_position(position_name_from).x >= 4 && (group == 0 && (state.castle & 0x8) || group == 1 && (state.castle & 0x2)):
 						output.push_back(Chess.create_move(position_name_to, "g" + ("1" if group == 0 else "8"), position_name_from, "Short Castling"))
-					elif state.get_piece(position_name_from).extra["side"] == "Q" && (group == 0 && (state.castle & 0x4) || group == 1 && (state.castle & 0x1)):
+					elif Chess.to_piece_position(position_name_from).x <= 3 && (group == 0 && (state.castle & 0x4) || group == 1 && (state.castle & 0x1)):
 						output.push_back(Chess.create_move(position_name_to, "c" + ("1" if group == 0 else "8"), position_name_from, "Long Castling"))
 		return output
 
@@ -298,13 +300,13 @@ class PiecePawn extends PieceInterface:
 		if move.extra:
 			match move.extra:
 				"Q":
-					state.add_piece(move.position_name_to, Chess.create_piece(PieceQueen, state.get_piece(move.position_name_from).group, {}))
+					state.add_piece(move.position_name_to, Chess.create_piece(PieceQueen, state.get_piece(move.position_name_from).group))
 				"R":
-					state.add_piece(move.position_name_to, Chess.create_piece(PieceRook, state.get_piece(move.position_name_from).group, {"side": " "}))
+					state.add_piece(move.position_name_to, Chess.create_piece(PieceRook, state.get_piece(move.position_name_from).group))
 				"N":
-					state.add_piece(move.position_name_to, Chess.create_piece(PieceKnight, state.get_piece(move.position_name_from).group, {}))
+					state.add_piece(move.position_name_to, Chess.create_piece(PieceKnight, state.get_piece(move.position_name_from).group))
 				"B":
-					state.add_piece(move.position_name_to, Chess.create_piece(PieceBishop, state.get_piece(move.position_name_from).group, {}))
+					state.add_piece(move.position_name_to, Chess.create_piece(PieceBishop, state.get_piece(move.position_name_from).group))
 			state.capture_piece(move.position_name_from)
 		else:
 			state.move_piece(move.position_name_from, move.position_name_to)
@@ -428,41 +430,41 @@ class ChessState:
 	var step:int = 0
 	var castle:int = 15
 	var en_passant:String = ""
-	var score:int = 0
 	var king_passant:PackedStringArray = []	# 易位时经过的格子，由于王车易位的起始位置比较多变，有可能会让王经过更多或更少的格子
+	var score:int = 0
 	func _init() -> void:
-		add_piece("a1", Chess.create_piece(PieceRook, 0, {"side": "Q"}))
-		add_piece("b1", Chess.create_piece(PieceKnight, 0, {}))
-		add_piece("c1", Chess.create_piece(PieceBishop, 0, {}))
-		add_piece("d1", Chess.create_piece(PieceQueen, 0, {}))
-		add_piece("e1", Chess.create_piece(PieceKing, 0, {}))
-		add_piece("f1", Chess.create_piece(PieceBishop, 0, {}))
-		add_piece("g1", Chess.create_piece(PieceKnight, 0, {}))
-		add_piece("h1", Chess.create_piece(PieceRook, 0, {"side": "K"}))
-		add_piece("a2", Chess.create_piece(PiecePawn, 0, {}))
-		add_piece("b2", Chess.create_piece(PiecePawn, 0, {}))
-		add_piece("c2", Chess.create_piece(PiecePawn, 0, {}))
-		add_piece("d2", Chess.create_piece(PiecePawn, 0, {}))
-		add_piece("e2", Chess.create_piece(PiecePawn, 0, {}))
-		add_piece("f2", Chess.create_piece(PiecePawn, 0, {}))
-		add_piece("g2", Chess.create_piece(PiecePawn, 0, {}))
-		add_piece("h2", Chess.create_piece(PiecePawn, 0, {}))
-		add_piece("a8", Chess.create_piece(PieceRook, 1, {"side": "Q"}))
-		add_piece("b8", Chess.create_piece(PieceKnight, 1, {}))
-		add_piece("c8", Chess.create_piece(PieceBishop, 1, {}))
-		add_piece("d8", Chess.create_piece(PieceQueen, 1, {}))
-		add_piece("e8", Chess.create_piece(PieceKing, 1, {}))
-		add_piece("f8", Chess.create_piece(PieceBishop, 1, {}))
-		add_piece("g8", Chess.create_piece(PieceKnight, 1, {}))
-		add_piece("h8", Chess.create_piece(PieceRook, 1, {"side": "K"}))
-		add_piece("a7", Chess.create_piece(PiecePawn, 1, {}))
-		add_piece("b7", Chess.create_piece(PiecePawn, 1, {}))
-		add_piece("c7", Chess.create_piece(PiecePawn, 1, {}))
-		add_piece("d7", Chess.create_piece(PiecePawn, 1, {}))
-		add_piece("e7", Chess.create_piece(PiecePawn, 1, {}))
-		add_piece("f7", Chess.create_piece(PiecePawn, 1, {}))
-		add_piece("g7", Chess.create_piece(PiecePawn, 1, {}))
-		add_piece("h7", Chess.create_piece(PiecePawn, 1, {}))
+		add_piece("a1", Chess.create_piece(PieceRook, 0))
+		add_piece("b1", Chess.create_piece(PieceKnight, 0))
+		add_piece("c1", Chess.create_piece(PieceBishop, 0))
+		add_piece("d1", Chess.create_piece(PieceQueen, 0))
+		add_piece("e1", Chess.create_piece(PieceKing, 0))
+		add_piece("f1", Chess.create_piece(PieceBishop, 0))
+		add_piece("g1", Chess.create_piece(PieceKnight, 0))
+		add_piece("h1", Chess.create_piece(PieceRook, 0))
+		add_piece("a2", Chess.create_piece(PiecePawn, 0))
+		add_piece("b2", Chess.create_piece(PiecePawn, 0))
+		add_piece("c2", Chess.create_piece(PiecePawn, 0))
+		add_piece("d2", Chess.create_piece(PiecePawn, 0))
+		add_piece("e2", Chess.create_piece(PiecePawn, 0))
+		add_piece("f2", Chess.create_piece(PiecePawn, 0))
+		add_piece("g2", Chess.create_piece(PiecePawn, 0))
+		add_piece("h2", Chess.create_piece(PiecePawn, 0))
+		add_piece("a8", Chess.create_piece(PieceRook, 1))
+		add_piece("b8", Chess.create_piece(PieceKnight, 1))
+		add_piece("c8", Chess.create_piece(PieceBishop, 1))
+		add_piece("d8", Chess.create_piece(PieceQueen, 1))
+		add_piece("e8", Chess.create_piece(PieceKing, 1))
+		add_piece("f8", Chess.create_piece(PieceBishop, 1))
+		add_piece("g8", Chess.create_piece(PieceKnight, 1))
+		add_piece("h8", Chess.create_piece(PieceRook, 1))
+		add_piece("a7", Chess.create_piece(PiecePawn, 1))
+		add_piece("b7", Chess.create_piece(PiecePawn, 1))
+		add_piece("c7", Chess.create_piece(PiecePawn, 1))
+		add_piece("d7", Chess.create_piece(PiecePawn, 1))
+		add_piece("e7", Chess.create_piece(PiecePawn, 1))
+		add_piece("f7", Chess.create_piece(PiecePawn, 1))
+		add_piece("g7", Chess.create_piece(PiecePawn, 1))
+		add_piece("h7", Chess.create_piece(PiecePawn, 1))
 	
 	func duplicate() -> ChessState:
 		var new_state:ChessState = ChessState.new()
