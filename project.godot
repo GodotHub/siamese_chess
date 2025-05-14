@@ -12,7 +12,7 @@ config_version=5
 
 config/name="SiameseChess"
 config/tags=PackedStringArray("a_lone_flower", "puzzle", "siamese")
-run/main_scene="uid://d1s6qj7aofldk"
+run/main_scene="uid://fpd8ogg7714f"
 config/features=PackedStringArray("4.4", "GL Compatibility")
 config/icon="uid://gdemlmk1r3x4"
 
