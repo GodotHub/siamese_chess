@@ -7,3 +7,4 @@ func _ready() -> void:
 	$chessboard.connect("move_played", $history.push_move)
 	$chessboard.connect("move_played", $pastor.receive_move)
 	$pastor.connect("decided_move", $chessboard.execute_move)
+	$pastor.connect("send_opponent_move", $chessboard.set_valid_move)

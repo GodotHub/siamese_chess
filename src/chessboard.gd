@@ -20,7 +20,6 @@ func _ready() -> void:
 		instance.chessboard = self
 		piece_instance[key] = instance
 		$pieces.add_child(instance)
-	update_valid_move()
 #	draw_attack_position()
 
 func get_position_name(_position:Vector3) -> String:
@@ -80,11 +79,9 @@ func set_action(action:int) -> void:
 func execute_move(move:Chess.Move) -> void:
 	chess_state.execute_move(move)
 	move_played.emit(move)
-	update_valid_move()
 
-func update_valid_move() -> void:
+func set_valid_move(move_list:Array[Chess.Move]) -> void:
 	valid_move.clear()
-	var move_list:Array[Chess.Move] = chess_state.get_all_move(true)
 	for move:Chess.Move in move_list:
 		if !valid_move.has(move.position_name_from):
 			valid_move[move.position_name_from] = []

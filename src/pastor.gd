@@ -1,7 +1,11 @@
+# 使用Node3D节点，除了AI逻辑判断以外还包含了角色动作控制
+# 除了搜索着法以外还充当裁判，管理对方的规则内着法，以及胜负判定
+
 extends Node3D
 class_name Pastor
 
 signal decided_move(move:Chess.Move)
+signal send_opponent_move(move_list:Array[Chess.Move])
 
 var chess_branch:Chess.ChessMoveBranch = null
 var thread:Thread = null
@@ -18,8 +22,28 @@ func receive_move(move:Chess.Move) -> void:
 	if chess_branch.current_node.group == 0:
 		thread.wait_to_finish()
 		thread.start(decision)
+	else:
+		send_opponent_valid_move()
 
 func decision() -> void:
 	chess_branch.search()
 	var move:Chess.Move = chess_branch.get_best_move()
+	if !is_instance_valid(move):
+		# 判定棋局结束
+		# var decision_instance:Decision = Decision.create_decision_instance(["Retry", "Quit"])
+		# decision_instance.connect("decided", set_action)
+		# add_child(decision_instance)
+		# await decision_instance.decided
+		return
 	decided_move.emit.call_deferred(move)
+
+func send_opponent_valid_move() -> void:	# 仅限轮到对方时使用
+	var output:Array[Chess.Move] = []
+	for iter:String in chess_branch.current_node.children:
+		if chess_branch.current_node.children[iter].dead:
+			continue
+		output.push_back(Chess.parse_move(iter))
+	if output.size() == 0:
+		# 也是棋局结束
+		return
+	send_opponent_move.emit.call_deferred(output)
