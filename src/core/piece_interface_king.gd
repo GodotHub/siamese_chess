@@ -24,11 +24,15 @@ static func execute_move(state:ChessState, move:Move) -> void:
 			state.capture_piece("g1")
 
 	if state.get_piece(move.position_name_from).group == 0:
-		state.extra[1].erase(state.extra[1].find("K"), 1)
-		state.extra[1].erase(state.extra[1].find("Q"), 1)
+		if state.extra[1].find("K") != -1:
+			state.extra[1] = state.extra[1].erase(state.extra[1].find("K"), 1)
+		if state.extra[1].find("Q") != -1:
+			state.extra[1] = state.extra[1].erase(state.extra[1].find("Q"), 1)
 	else:
-		state.extra[1].erase(state.extra[1].find("k"), 1)
-		state.extra[1].erase(state.extra[1].find("q"), 1)
+		if state.extra[1].find("k") != -1:
+			state.extra[1] = state.extra[1].erase(state.extra[1].find("k"), 1)
+		if state.extra[1].find("q") != -1:
+			state.extra[1] = state.extra[1].erase(state.extra[1].find("q"), 1)
 	state.move_piece(move.position_name_from, move.position_name_to)
 	if move.extra:
 		if move.position_name_to == "g1":

@@ -15,7 +15,7 @@ func set_state(_state:ChessState) -> void:
 	chess_state.connect("piece_added", add_piece_instance)
 	chess_state.connect("piece_moved", move_piece_instance)
 	chess_state.connect("piece_removed", remove_piece_instance)
-	var pieces:Dictionary = chess_state.piece
+	var pieces:Dictionary = chess_state.pieces
 	for key:String in pieces:
 		var instance:PieceInstance = chess_state.get_piece_instance(key)
 		instance.chessboard = self

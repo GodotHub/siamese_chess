@@ -4,7 +4,7 @@ class_name ChessState
 signal piece_added(position_name:String)
 signal piece_moved(position_name_from:String, position_name_to:String)
 signal piece_removed(position_name:String)
-var piece:Dictionary[String, Piece] = {}
+var pieces:Dictionary[String, Piece] = {}
 var extra:PackedStringArray = ["w", "KQkq", "-", "0", "1", "-"]
 var score:int = 0
 
@@ -44,7 +44,7 @@ static func create_from_fen(fen:String) -> ChessState:
 		elif fen_splited[0][i].is_valid_int():
 			pointer.x += fen_splited[0][i].to_int()
 		elif piece_mapping.has(fen_splited[0][i]):
-			state.piece[Chess.to_position_name(pointer)] = Piece.create(load(piece_mapping[fen_splited[0][i]]["class"]), piece_mapping[fen_splited[0][i]]["group"])
+			state.pieces[Chess.to_position_name(pointer)] = Piece.create(load(piece_mapping[fen_splited[0][i]]["class"]), piece_mapping[fen_splited[0][i]]["group"])
 			pointer.x += 1
 		else:
 			return null
@@ -62,59 +62,62 @@ static func create_from_fen(fen:String) -> ChessState:
 
 func duplicate() -> ChessState:
 	var new_state:ChessState = ChessState.new()
-	new_state.piece = piece.duplicate(true)
+	new_state.pieces = pieces.duplicate(true)
 	new_state.extra = extra.duplicate()
 	new_state.score = score
 	return new_state
 
 func get_piece_instance(position_name:String) -> PieceInstance:
-	return piece[position_name].class_type.create_instance(position_name, piece[position_name].group)
+	return pieces[position_name].class_type.create_instance(position_name, pieces[position_name].group)
 
 func get_piece(position_name:String) -> Piece:
-	if !position_name || !piece.has(position_name):
+	if !position_name || !pieces.has(position_name):
 		return null
-	return piece[position_name]
+	return pieces[position_name]
 
 func has_piece(position_name:String) -> bool:
-	return piece.has(position_name)
+	return pieces.has(position_name)
 
 func is_move_valid(position_name_from:String, position_name_to:String) -> bool:
-	if !position_name_from || !position_name_to || !piece.has(position_name_from):
+	if !position_name_from || !position_name_to || !pieces.has(position_name_from):
 		return false
 	return get_valid_move(position_name_from).has(position_name_to)
 
 func get_valid_move(position_name_from:String) -> Array[Move]:
 	if has_piece(position_name_from):
-		return piece[position_name_from].class_type.get_valid_move(self, position_name_from)
+		return pieces[position_name_from].class_type.get_valid_move(self, position_name_from)
 	return []
 
 func execute_move(move:Move) -> void:
 	if extra[0] == "b":
 		extra[5] = "%d" % (extra[5].to_int() + 1)
+		extra[0] = "w"
+	elif extra[0] == "w":
+		extra[0] = "b"
 	var last_en_passant:String = extra[3]
 	var last_king_passant:String = extra[6]
 	if has_piece(move.position_name_from):
-		piece[move.position_name_from].class_type.execute_move(self, move)
+		pieces[move.position_name_from].class_type.execute_move(self, move)
 	if last_en_passant == extra[3]:
 		extra[3] = "-"
 	if last_king_passant == extra[6]:
 		extra[6] = "-"
 
 func add_piece(_position_name:String, _piece:Piece) -> void:	# 作为吃子的逆运算
-	piece[_position_name] = _piece
+	pieces[_position_name] = _piece
 	score += _piece.class_type.get_value() * (1 if _piece.group == 0 else -1)
 	piece_added.emit(_position_name)
 
 func capture_piece(_position_name:String) -> void:
-	if piece.has(_position_name):
-		score -= piece[_position_name].class_type.get_value() * (1 if piece[_position_name].group == 0 else -1)
-		piece.erase(_position_name)	# 虽然大多数情况是攻击者移到被攻击者上，但是吃过路兵是例外，后续可能会出现类似情况，所以还是得手多一下
+	if pieces.has(_position_name):
+		score -= pieces[_position_name].class_type.get_value() * (1 if pieces[_position_name].group == 0 else -1)
+		pieces.erase(_position_name)	# 虽然大多数情况是攻击者移到被攻击者上，但是吃过路兵是例外，后续可能会出现类似情况，所以还是得手多一下
 		piece_removed.emit(_position_name)
 
 func move_piece(_position_name_from:String, _position_name_to:String) -> void:
 	var _piece:Piece = get_piece(_position_name_from)
-	piece.erase(_position_name_from)
-	piece[_position_name_to] = _piece
+	pieces.erase(_position_name_from)
+	pieces[_position_name_to] = _piece
 	piece_moved.emit(_position_name_from, _position_name_to)
 
 func get_score() -> float:
@@ -122,9 +125,9 @@ func get_score() -> float:
 
 func get_all_move(group:int) -> Array[Move]:	# 指定阵营
 	var output:Array[Move] = []
-	for position_name_from:String in piece:
-		if group == piece[position_name_from].group:	# 当前阵营
-			var piece_move_list:Array[Move] = piece[position_name_from].class_type.get_valid_move(self, position_name_from)
+	for position_name_from:String in pieces:
+		if group == pieces[position_name_from].group:	# 当前阵营
+			var piece_move_list:Array[Move] = pieces[position_name_from].class_type.get_valid_move(self, position_name_from)
 			for move:Move in piece_move_list:
 				output.push_back(move)
 	return output

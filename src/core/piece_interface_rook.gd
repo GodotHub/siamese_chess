@@ -13,15 +13,15 @@ static func create_instance(position_name:String, group:int) -> PieceInstance:
 
 static func execute_move(state:ChessState, move:Move) -> void:
 	if Chess.to_piece_position(move.position_name_from).x >= 4:
-		if state.get_piece(move.position_name_from).group == 0:
-			state.extra[1].erase(state.extra[1].find("K"), 1)
-		else:
-			state.extra[1].erase(state.extra[1].find("k"), 1)
+		if state.get_piece(move.position_name_from).group == 0 && state.extra[1].find("K") != -1:
+			state.extra[1] = state.extra[1].erase(state.extra[1].find("K"), 1)
+		elif state.extra[1].find("k") != -1:
+			state.extra[1] = state.extra[1].erase(state.extra[1].find("k"), 1)
 	elif Chess.to_piece_position(move.position_name_from).x <= 3:
-		if state.get_piece(move.position_name_from).group == 0:
-			state.extra[1].erase(state.extra[1].find("Q"), 1)
-		else:
-			state.extra[1].erase(state.extra[1].find("q"), 1)
+		if state.get_piece(move.position_name_from).group == 0 && state.extra[1].find("Q") != -1:
+			state.extra[1] = state.extra[1].erase(state.extra[1].find("Q"), 1)
+		elif state.extra[1].find("q") != -1:
+			state.extra[1] = state.extra[1].erase(state.extra[1].find("q"), 1)
 	if state.has_piece(move.position_name_to):
 		state.capture_piece(move.position_name_to)
 	if move.position_name_to in state.extra[6]:
