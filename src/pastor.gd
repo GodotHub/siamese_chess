@@ -31,6 +31,8 @@ func receive_move(move:Chess.Move) -> void:
 	if chess_branch.current_node.group == 0:
 		thread.wait_to_finish()
 		thread.start(decision)
+	else:
+		send_opponent_valid_move()
 
 func decision() -> void:
 	chess_branch.search()
