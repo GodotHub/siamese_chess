@@ -19,24 +19,24 @@ func _ready() -> void:
 func create_state() -> void:
 	chess_branch = Chess.ChessMoveBranch.new()
 	if DisplayServer.clipboard_has():
-		chess_branch.current_node.state = Chess.create_state_from_fen(DisplayServer.clipboard_get())
-	if !is_instance_valid(chess_branch.current_node.state):
-		chess_branch.current_node.state = Chess.create_state_from_fen("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
-	send_initial_state.emit(chess_branch.current_node.state.duplicate())
+		chess_branch.set_state(Chess.create_state_from_fen(DisplayServer.clipboard_get()))
+	if !is_instance_valid(chess_branch.get_state()):
+		chess_branch.set_state(Chess.create_state_from_fen("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"))
+	send_initial_state.emit(chess_branch.get_state().duplicate())
 	thread = Thread.new()
-	if chess_branch.current_node.group == 0:
-		thread.start(decision)
+	thread.start(decision)
 
 func receive_move(move:Chess.Move) -> void:
 	chess_branch.execute_move(move)
 	if chess_branch.current_node.group == 0:
 		thread.wait_to_finish()
 		thread.start(decision)
-	else:
-		send_opponent_valid_move()
 
 func decision() -> void:
 	chess_branch.search()
+	if chess_branch.current_node.group == 1:
+		send_opponent_valid_move()
+		return
 	var move:Chess.Move = chess_branch.get_best_move()
 	if !is_instance_valid(move):
 		# 判定棋局结束

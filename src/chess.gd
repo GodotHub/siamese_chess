@@ -399,6 +399,15 @@ class ChessMoveBranch:
 		current_node = branch
 		current_node.time = Time.get_unix_time_from_system()
 
+	func set_state(_state:ChessState) -> void:
+		if !is_instance_valid(_state):
+			return
+		current_node.state = _state
+		current_node.group = _state.step % 2
+	
+	func get_state() -> ChessState:
+		return current_node.state
+
 	func create_branch(node:ChessMoveBranchNode, move:Move) -> ChessMoveBranchNode:
 		var test_state:ChessState = node.state.duplicate()
 		var group:int = test_state.get_piece(move.position_name_from).group
