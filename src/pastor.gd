@@ -18,7 +18,10 @@ func _ready() -> void:
 
 func create_state() -> void:
 	chess_branch = Chess.ChessMoveBranch.new()
-	chess_branch.current_node.state = Chess.ChessState.new()
+	if DisplayServer.clipboard_has():
+		chess_branch.current_node.state = Chess.create_state_from_fen(DisplayServer.clipboard_get())
+	if !is_instance_valid(chess_branch.current_node.state):
+		chess_branch.current_node.state = Chess.create_state_from_fen("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
 	send_initial_state.emit(chess_branch.current_node.state.duplicate())
 	thread = Thread.new()
 	if chess_branch.current_node.group == 0:

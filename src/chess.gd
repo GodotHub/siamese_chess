@@ -30,9 +30,51 @@ func create_move(position_name_from:String, position_name_to:String, extra:Strin
 	new_move.comment = comment
 	return new_move
 
-func create_state_from_fen(fen:String) -> void:
-	for i:int in range(fen.length()):
-		pass
+func create_state_from_fen(fen:String) -> ChessState:
+	var piece_mapping:Dictionary = {
+		"K": Chess.create_piece(PieceKing, 0),
+		"Q": Chess.create_piece(PieceQueen, 0),
+		"R": Chess.create_piece(PieceRook, 0),
+		"N": Chess.create_piece(PieceKnight, 0),
+		"B": Chess.create_piece(PieceBishop, 0),
+		"P": Chess.create_piece(PiecePawn, 0),
+		"k": Chess.create_piece(PieceKing, 1),
+		"q": Chess.create_piece(PieceQueen, 1),
+		"r": Chess.create_piece(PieceRook, 1),
+		"n": Chess.create_piece(PieceKnight, 1),
+		"b": Chess.create_piece(PieceBishop, 1),
+		"p": Chess.create_piece(PiecePawn, 1),
+	}
+	var state:ChessState = ChessState.new()
+	var pointer:Vector2i = Vector2i(0, 7)
+	var fen_splited:PackedStringArray = fen.split(" ")
+	if fen_splited.size() < 6:
+		return null
+	for i:int in range(fen_splited[0].length()):
+		if fen_splited[0][i] == "/":
+			pointer.x = 0
+			pointer.y -= 1
+		elif fen_splited[0][i].is_valid_int():
+			pointer.x += fen_splited[0][i].to_int()
+		elif piece_mapping.has(fen_splited[0][i]):
+			state.current[Chess.to_position_name(pointer)] = piece_mapping[fen_splited[0][i]]
+			pointer.x += 1
+		else:
+			return null
+	if pointer.x != 8 || pointer.y != 0:
+		return null
+	if fen_splited[1] == "w":
+		state.step = 0
+	elif fen_splited[1] == "b":
+		state.step = 1
+	else:
+		return null
+	state.castle = (int(fen_splited[2].contains("K")) << 3) + (int(fen_splited[2].contains("Q")) << 2) + (int(fen_splited[2].contains("k")) << 1) + (int(fen_splited[2].contains("q")) << 0)
+	state.en_passant = fen_splited[3]
+	if !fen_splited[5].is_valid_int():
+		return null
+	state.step += fen_splited[5].to_int() * 2 - 2
+	return state
 
 class PieceInterface:
 	static func get_name() -> String:
@@ -432,39 +474,6 @@ class ChessState:
 	var en_passant:String = ""
 	var king_passant:PackedStringArray = []	# 易位时经过的格子，由于王车易位的起始位置比较多变，有可能会让王经过更多或更少的格子
 	var score:int = 0
-	func _init() -> void:
-		add_piece("a1", Chess.create_piece(PieceRook, 0))
-		add_piece("b1", Chess.create_piece(PieceKnight, 0))
-		add_piece("c1", Chess.create_piece(PieceBishop, 0))
-		add_piece("d1", Chess.create_piece(PieceQueen, 0))
-		add_piece("e1", Chess.create_piece(PieceKing, 0))
-		add_piece("f1", Chess.create_piece(PieceBishop, 0))
-		add_piece("g1", Chess.create_piece(PieceKnight, 0))
-		add_piece("h1", Chess.create_piece(PieceRook, 0))
-		add_piece("a2", Chess.create_piece(PiecePawn, 0))
-		add_piece("b2", Chess.create_piece(PiecePawn, 0))
-		add_piece("c2", Chess.create_piece(PiecePawn, 0))
-		add_piece("d2", Chess.create_piece(PiecePawn, 0))
-		add_piece("e2", Chess.create_piece(PiecePawn, 0))
-		add_piece("f2", Chess.create_piece(PiecePawn, 0))
-		add_piece("g2", Chess.create_piece(PiecePawn, 0))
-		add_piece("h2", Chess.create_piece(PiecePawn, 0))
-		add_piece("a8", Chess.create_piece(PieceRook, 1))
-		add_piece("b8", Chess.create_piece(PieceKnight, 1))
-		add_piece("c8", Chess.create_piece(PieceBishop, 1))
-		add_piece("d8", Chess.create_piece(PieceQueen, 1))
-		add_piece("e8", Chess.create_piece(PieceKing, 1))
-		add_piece("f8", Chess.create_piece(PieceBishop, 1))
-		add_piece("g8", Chess.create_piece(PieceKnight, 1))
-		add_piece("h8", Chess.create_piece(PieceRook, 1))
-		add_piece("a7", Chess.create_piece(PiecePawn, 1))
-		add_piece("b7", Chess.create_piece(PiecePawn, 1))
-		add_piece("c7", Chess.create_piece(PiecePawn, 1))
-		add_piece("d7", Chess.create_piece(PiecePawn, 1))
-		add_piece("e7", Chess.create_piece(PiecePawn, 1))
-		add_piece("f7", Chess.create_piece(PiecePawn, 1))
-		add_piece("g7", Chess.create_piece(PiecePawn, 1))
-		add_piece("h7", Chess.create_piece(PiecePawn, 1))
 	
 	func duplicate() -> ChessState:
 		var new_state:ChessState = ChessState.new()
