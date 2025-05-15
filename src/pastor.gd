@@ -4,11 +4,11 @@
 extends Node3D
 class_name Pastor
 
-signal send_initial_state(state:Chess.ChessState)
-signal decided_move(move:Chess.Move)
-signal send_opponent_move(move_list:Array[Chess.Move])
+signal send_initial_state(state:ChessState)
+signal decided_move(move:Move)
+signal send_opponent_move(move_list:Array[Move])
 
-var chess_branch:Chess.ChessMoveBranch = null
+var chess_branch:ChessBranch = null
 var thread:Thread = null
 
 func _ready() -> void:
@@ -17,16 +17,16 @@ func _ready() -> void:
 	tween.tween_callback(create_state)
 
 func create_state() -> void:
-	chess_branch = Chess.ChessMoveBranch.new()
+	chess_branch = ChessBranch.new()
 	if DisplayServer.clipboard_has():
-		chess_branch.set_state(Chess.create_state_from_fen(DisplayServer.clipboard_get()))
+		chess_branch.set_state(ChessState.create_from_fen(DisplayServer.clipboard_get()))
 	if !is_instance_valid(chess_branch.get_state()):
-		chess_branch.set_state(Chess.create_state_from_fen("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"))
+		chess_branch.set_state(ChessState.create_from_fen("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"))
 	send_initial_state.emit(chess_branch.get_state().duplicate())
 	thread = Thread.new()
 	thread.start(decision)
 
-func receive_move(move:Chess.Move) -> void:
+func receive_move(move:Move) -> void:
 	chess_branch.execute_move(move)
 	if chess_branch.current_node.group == 0:
 		thread.wait_to_finish()
@@ -39,7 +39,7 @@ func decision() -> void:
 	if chess_branch.current_node.group == 1:
 		send_opponent_valid_move()
 		return
-	var move:Chess.Move = chess_branch.get_best_move()
+	var move:Move = chess_branch.get_best_move()
 	if !is_instance_valid(move):
 		# 判定棋局结束
 		# var decision_instance:Decision = Decision.create_decision_instance(["Retry", "Quit"])
@@ -50,11 +50,11 @@ func decision() -> void:
 	decided_move.emit.call_deferred(move)
 
 func send_opponent_valid_move() -> void:	# 仅限轮到对方时使用
-	var output:Array[Chess.Move] = []
+	var output:Array[Move] = []
 	for iter:String in chess_branch.current_node.children:
 		if chess_branch.current_node.children[iter].dead:
 			continue
-		output.push_back(Chess.parse_move(iter))
+		output.push_back(Move.parse(iter))
 	if output.size() == 0:
 		# 也是棋局结束
 		return

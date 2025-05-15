@@ -1,4 +1,4 @@
-extends Chess.PieceInterface
+extends PieceInterface
 class_name PieceInterfaceKing
 
 static func get_name() -> String:
@@ -11,7 +11,7 @@ static func create_instance(position_name:String, group:int) -> PieceInstance:
 	instance.group = group
 	return instance
 
-static func execute_move(state:Chess.ChessState, move:Chess.Move) -> void:
+static func execute_move(state:ChessState, move:Move) -> void:
 	if state.has_piece(move.position_name_to):
 		state.capture_piece(move.position_name_to)
 	if move.position_name_to in state.king_passant:
@@ -45,14 +45,14 @@ static func execute_move(state:Chess.ChessState, move:Chess.Move) -> void:
 			for j:int in range(piece_position_from.y, piece_position_to.y + (1 if piece_position_from.y < piece_position_to.y else -1), 1 if piece_position_from.y < piece_position_to.y else -1):
 				state.king_passant.push_back(Chess.to_position_name(Vector2(i, j)))
 
-static func get_valid_move(state:Chess.ChessState, position_name_from:String) -> Array[Move]:
+static func get_valid_move(state:ChessState, position_name_from:String) -> Array[Move]:
 	var directions:PackedVector2Array = [Vector2i(-1, -1), Vector2i(-1, 0), Vector2i(-1, 1), Vector2i(0, -1), Vector2i(0, 1), Vector2i(1, -1), Vector2i(1, 0), Vector2i(1, 1)]
 	var output:Array[Move] = []
 	for iter:Vector2i in directions:
 		var position_name_to:String = Chess.direction_to(position_name_from, iter)
 		if !position_name_to || state.has_piece(position_name_to) && state.get_piece(position_name_from).group == state.get_piece(position_name_to).group:
 			continue
-		output.push_back(Chess.create_move(position_name_from, position_name_to, "", "Default"))
+		output.push_back(Move.create(position_name_from, position_name_to, "", "Default"))
 	return output
 
 static func get_value() -> float:

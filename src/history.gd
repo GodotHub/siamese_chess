@@ -1,9 +1,9 @@
 extends Node3D
 
 var history:PackedStringArray = ["", ""]
-var state:Chess.ChessState = null
+var state:ChessState = null
 
-func push_move(move:Chess.Move) -> void:
+func push_move(move:Move) -> void:
 	history.push_back(move.position_name_from + "->" + move.position_name_to + " " + move.comment)
 	update_table()
 

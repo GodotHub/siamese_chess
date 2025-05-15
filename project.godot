@@ -18,7 +18,7 @@ config/icon="uid://gdemlmk1r3x4"
 
 [autoload]
 
-Chess="*res://src/chess.gd"
+Chess="*res://src/core/chess.gd"
 
 [debug]
 

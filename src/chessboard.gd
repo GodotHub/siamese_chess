@@ -1,16 +1,16 @@
 extends Node3D
 class_name Chessboard
 
-signal move_played(move:Chess.Move)
+signal move_played(move:Move)
 
-var chess_state:Chess.ChessState = null
+var chess_state:ChessState = null
 var valid_move:Dictionary[String, Array] = {}
 var selected_position_name:String = ""
 var selected_extra:int = 0
 var piece_instance:Dictionary[String, PieceInstance] = {}
 
 
-func set_state(_state:Chess.ChessState) -> void:
+func set_state(_state:ChessState) -> void:
 	chess_state = _state
 	chess_state.connect("piece_added", add_piece_instance)
 	chess_state.connect("piece_moved", move_piece_instance)
@@ -39,7 +39,7 @@ func tap_position(position_name:String) -> void:
 		return
 	if !chess_state.has_piece(position_name) || !valid_move.has(position_name):
 		return
-	for iter:Chess.Move in valid_move[position_name]:
+	for iter:Move in valid_move[position_name]:
 		$canvas.draw_select_position($canvas.convert_name_to_position(iter.position_name_to))
 	selected_position_name = position_name
 
@@ -55,12 +55,12 @@ func finger_up() -> void:
 func confirm_move(position_name_from:String, position_name_to:String) -> void:
 	if !position_name_from || !position_name_to || !valid_move.has(position_name_from):
 		return
-	var move_list:Array = valid_move[position_name_from].filter(func (move:Chess.Move) -> bool: return position_name_to == move.position_name_to)
+	var move_list:Array = valid_move[position_name_from].filter(func (move:Move) -> bool: return position_name_to == move.position_name_to)
 	if move_list.size() == 0:
 		return
 	elif move_list.size() > 1:
 		var decision_list:PackedStringArray = []
-		for iter:Chess.Move in move_list:
+		for iter:Move in move_list:
 			decision_list.push_back(iter.comment)
 		var decision_instance:Decision = Decision.create_decision_instance(decision_list)
 		decision_instance.connect("decided", set_action)
@@ -76,13 +76,13 @@ func confirm_move(position_name_from:String, position_name_to:String) -> void:
 func set_action(action:int) -> void:
 	selected_extra = action
 
-func execute_move(move:Chess.Move) -> void:
+func execute_move(move:Move) -> void:
 	chess_state.execute_move(move)
 	move_played.emit(move)
 
-func set_valid_move(move_list:Array[Chess.Move]) -> void:
+func set_valid_move(move_list:Array[Move]) -> void:
 	valid_move.clear()
-	for move:Chess.Move in move_list:
+	for move:Move in move_list:
 		if !valid_move.has(move.position_name_from):
 			valid_move[move.position_name_from] = []
 		valid_move[move.position_name_from].push_back(move)
