@@ -12,22 +12,30 @@ var en_passant:String = ""
 var king_passant:PackedStringArray = []	# 易位时经过的格子，由于王车易位的起始位置比较多变，有可能会让王经过更多或更少的格子
 var score:int = 0
 
-
 static func create_from_fen(fen:String) -> ChessState:
-	var piece_mapping:Dictionary = {
-		"K": {"class": "res://src/core/piece_interface_king.gd", "group": 0},
-		"Q": {"class": "res://src/core/piece_interface_queen.gd", "group": 0},
-		"R": {"class": "res://src/core/piece_interface_rook.gd", "group": 0},
-		"N": {"class": "res://src/core/piece_interface_knight.gd", "group": 0},
-		"B": {"class": "res://src/core/piece_interface_bishop.gd", "group": 0},
-		"P": {"class": "res://src/core/piece_interface_pawn.gd", "group": 0},
-		"k": {"class": "res://src/core/piece_interface_king.gd", "group": 1},
-		"q": {"class": "res://src/core/piece_interface_queen.gd", "group": 1},
-		"r": {"class": "res://src/core/piece_interface_rook.gd", "group": 1},
-		"n": {"class": "res://src/core/piece_interface_knight.gd", "group": 1},
-		"b": {"class": "res://src/core/piece_interface_bishop.gd", "group": 1},
-		"p": {"class": "res://src/core/piece_interface_pawn.gd", "group": 1},
-	}
+	var piece_mapping:Dictionary = {}
+	var file_mapping:FileAccess = FileAccess.open("user://mapping.json", FileAccess.READ)
+	if !is_instance_valid(file_mapping):
+		file_mapping = FileAccess.open("user://mapping.json", FileAccess.WRITE)
+		piece_mapping = {
+			"K": {"class": "res://src/core/piece_interface_king.gd", "group": 0},
+			"Q": {"class": "res://src/core/piece_interface_queen.gd", "group": 0},
+			"R": {"class": "res://src/core/piece_interface_rook.gd", "group": 0},
+			"N": {"class": "res://src/core/piece_interface_knight.gd", "group": 0},
+			"B": {"class": "res://src/core/piece_interface_bishop.gd", "group": 0},
+			"P": {"class": "res://src/core/piece_interface_pawn.gd", "group": 0},
+			"k": {"class": "res://src/core/piece_interface_king.gd", "group": 1},
+			"q": {"class": "res://src/core/piece_interface_queen.gd", "group": 1},
+			"r": {"class": "res://src/core/piece_interface_rook.gd", "group": 1},
+			"n": {"class": "res://src/core/piece_interface_knight.gd", "group": 1},
+			"b": {"class": "res://src/core/piece_interface_bishop.gd", "group": 1},
+			"p": {"class": "res://src/core/piece_interface_pawn.gd", "group": 1},
+		}
+		file_mapping.store_string(JSON.stringify(piece_mapping, "\t"))	# 注意排版，玩家会看的
+		file_mapping.close()
+	else:
+		piece_mapping = JSON.parse_string(file_mapping.get_as_text())
+		file_mapping.close()
 	var state:ChessState = ChessState.new()
 	var pointer:Vector2i = Vector2i(0, 7)
 	var fen_splited:PackedStringArray = fen.split(" ")
