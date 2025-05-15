@@ -5,7 +5,7 @@ signal piece_added(position_name:String)
 signal piece_moved(position_name_from:String, position_name_to:String)
 signal piece_removed(position_name:String)
 var pieces:Dictionary[String, Piece] = {}
-var extra:PackedStringArray = ["w", "KQkq", "-", "0", "1", "-"]
+var extra:PackedStringArray = []
 var score:int = 0
 
 static func create_from_fen(fen:String) -> ChessState:
@@ -94,14 +94,14 @@ func execute_move(move:Move) -> void:
 		extra[0] = "w"
 	elif extra[0] == "w":
 		extra[0] = "b"
-	var last_en_passant:String = extra[3]
-	var last_king_passant:String = extra[6]
+	var last_en_passant:String = extra[2]
+	var last_king_passant:String = extra[5]
 	if has_piece(move.position_name_from):
 		pieces[move.position_name_from].class_type.execute_move(self, move)
-	if last_en_passant == extra[3]:
-		extra[3] = "-"
-	if last_king_passant == extra[6]:
-		extra[6] = "-"
+	if last_en_passant == extra[2]:
+		extra[2] = "-"
+	if last_king_passant == extra[5]:
+		extra[5] = "-"
 
 func add_piece(_position_name:String, _piece:Piece) -> void:	# 作为吃子的逆运算
 	pieces[_position_name] = _piece

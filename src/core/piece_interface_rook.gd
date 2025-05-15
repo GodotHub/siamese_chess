@@ -24,7 +24,7 @@ static func execute_move(state:ChessState, move:Move) -> void:
 			state.extra[1] = state.extra[1].erase(state.extra[1].find("q"), 1)
 	if state.has_piece(move.position_name_to):
 		state.capture_piece(move.position_name_to)
-	if move.position_name_to in state.extra[6]:
+	if move.position_name_to in state.extra[5]:
 		# 直接拿下国王判定胜利吧（唉）
 		if state.get_piece(move.position_name_from).group == 0:
 			state.capture_piece("c8")

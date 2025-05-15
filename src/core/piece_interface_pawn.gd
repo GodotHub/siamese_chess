@@ -20,7 +20,7 @@ static func execute_move(state:ChessState, move:Move) -> void:
 	if move.position_name_to == state.extra[2]:
 		var captured_position_name:String = Chess.direction_to(move.position_name_to, -forward)
 		state.capture_piece(captured_position_name)
-	if move.position_name_to in state.extra[6]:
+	if move.position_name_to in state.extra[5]:
 		# 直接拿下国王判定胜利吧（唉）
 		if state.get_piece(move.position_name_from).group == 0:
 			state.capture_piece("c8")

@@ -32,10 +32,6 @@ naming/default_signal_callback_name="on_{node_name}_{signal_name}"
 naming/default_signal_callback_to_self_name="on_{signal_name}"
 naming/script_name_casing=2
 
-[input_devices]
-
-pointing/emulate_mouse_from_touch=false
-
 [rendering]
 
 renderer/rendering_method="gl_compatibility"
