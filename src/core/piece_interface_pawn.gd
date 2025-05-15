@@ -14,13 +14,13 @@ static func create_instance(position_name:String, group:int) -> PieceInstance:
 static func execute_move(state:ChessState, move:Move) -> void:
 	var forward:Vector2i = Vector2i(0, 1) if state.get_piece(move.position_name_from).group == 0 else Vector2i(0, -1)
 	if Chess.to_piece_position(move.position_name_to) - Chess.to_piece_position(move.position_name_from) == forward * 2:
-		state.en_passant = Chess.direction_to(move.position_name_from, forward)
+		state.extra[2] = Chess.direction_to(move.position_name_from, forward)
 	if state.has_piece(move.position_name_to):
 		state.capture_piece(move.position_name_to)
-	if move.position_name_to == state.en_passant:
+	if move.position_name_to == state.extra[2]:
 		var captured_position_name:String = Chess.direction_to(move.position_name_to, -forward)
 		state.capture_piece(captured_position_name)
-	if move.position_name_to in state.king_passant:
+	if move.position_name_to in state.extra[6]:
 		# 直接拿下国王判定胜利吧（唉）
 		if state.get_piece(move.position_name_from).group == 0:
 			state.capture_piece("c8")
@@ -60,7 +60,7 @@ static func get_valid_move(state:ChessState, position_name_from:String) -> Array
 			output.push_back(Move.create(position_name_from, position_name_to, "", "Default"))
 		if on_start && !state.has_piece(position_name_to_2):
 			output.push_back(Move.create(position_name_from, position_name_to_2, "", "Default"))
-	if position_name_to_l && (state.has_piece(position_name_to_l) && state.get_piece(position_name_from).group != state.get_piece(position_name_to_l).group || position_name_to_l == state.en_passant):
+	if position_name_to_l && (state.has_piece(position_name_to_l) && state.get_piece(position_name_from).group != state.get_piece(position_name_to_l).group || position_name_to_l == state.extra[2]):
 		if state.get_piece(position_name_from).group == 0 && position_name_to_l[1] == "8" || state.get_piece(position_name_from).group == 1 && position_name_to_l[1] == "1":
 			output.push_back(Move.create(position_name_from, position_name_to_l, "Q", "Promote to Queen"))
 			output.push_back(Move.create(position_name_from, position_name_to_l, "R", "Promote to Rook"))
@@ -68,7 +68,7 @@ static func get_valid_move(state:ChessState, position_name_from:String) -> Array
 			output.push_back(Move.create(position_name_from, position_name_to_l, "B", "Promote to Bishop"))
 		else:
 			output.push_back(Move.create(position_name_from, position_name_to_l, "", "Default"))
-	if position_name_to_r && (state.has_piece(position_name_to_r) && state.get_piece(position_name_from).group != state.get_piece(position_name_to_r).group || position_name_to_r == state.en_passant):
+	if position_name_to_r && (state.has_piece(position_name_to_r) && state.get_piece(position_name_from).group != state.get_piece(position_name_to_r).group || position_name_to_r == state.extra[2]):
 		if state.get_piece(position_name_from).group == 0 && position_name_to_r[1] == "8" || state.get_piece(position_name_from).group == 1 && position_name_to_r[1] == "1":
 			output.push_back(Move.create(position_name_from, position_name_to_r, "Q", "Promote to Queen"))
 			output.push_back(Move.create(position_name_from, position_name_to_r, "R", "Promote to Rook"))

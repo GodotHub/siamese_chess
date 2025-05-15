@@ -15,7 +15,7 @@ func set_state(_state:ChessState) -> void:
 	chess_state.connect("piece_added", add_piece_instance)
 	chess_state.connect("piece_moved", move_piece_instance)
 	chess_state.connect("piece_removed", remove_piece_instance)
-	var pieces:Dictionary = chess_state.current
+	var pieces:Dictionary = chess_state.piece
 	for key:String in pieces:
 		var instance:PieceInstance = chess_state.get_piece_instance(key)
 		instance.chessboard = self
@@ -31,7 +31,7 @@ func convert_name_to_position(_position_name:String) -> Vector3:
 
 func tap_position(position_name:String) -> void:
 	$canvas.clear_select_position()
-	if !is_instance_valid(chess_state) || chess_state.step % 2 == 0:
+	if !is_instance_valid(chess_state) || chess_state.extra[0] == "w":
 		return
 	if selected_position_name:
 		confirm_move(selected_position_name, position_name)

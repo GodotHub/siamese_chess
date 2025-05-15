@@ -14,7 +14,7 @@ static func create_instance(position_name:String, group:int) -> PieceInstance:
 static func execute_move(state:ChessState, move:Move) -> void:
 	if state.has_piece(move.position_name_to):
 		state.capture_piece(move.position_name_to)
-	if move.position_name_to in state.king_passant:
+	if move.position_name_to in state.extra[6]:
 		# 直接拿下国王判定胜利吧（唉）
 		if state.get_piece(move.position_name_from).group == 0:
 			state.capture_piece("c8")
@@ -24,9 +24,11 @@ static func execute_move(state:ChessState, move:Move) -> void:
 			state.capture_piece("g1")
 
 	if state.get_piece(move.position_name_from).group == 0:
-		state.castle &= 3
+		state.extra[1].erase(state.extra[1].find("K"), 1)
+		state.extra[1].erase(state.extra[1].find("Q"), 1)
 	else:
-		state.castle &= 12
+		state.extra[1].erase(state.extra[1].find("k"), 1)
+		state.extra[1].erase(state.extra[1].find("q"), 1)
 	state.move_piece(move.position_name_from, move.position_name_to)
 	if move.extra:
 		if move.position_name_to == "g1":
@@ -40,10 +42,10 @@ static func execute_move(state:ChessState, move:Move) -> void:
 		# 在move.position_name_from到move.position_name_to之间设置king_passant
 		var piece_position_from:Vector2i = Chess.to_piece_position(move.position_name_from)
 		var piece_position_to:Vector2i = Chess.to_piece_position(move.position_name_to)
-		state.king_passant = []
+		state.extra[6] = ""
 		for i:int in range(piece_position_from.x, piece_position_to.x + (1 if piece_position_from.x < piece_position_to.x else -1), 1 if piece_position_from.x < piece_position_to.x else -1):
 			for j:int in range(piece_position_from.y, piece_position_to.y + (1 if piece_position_from.y < piece_position_to.y else -1), 1 if piece_position_from.y < piece_position_to.y else -1):
-				state.king_passant.push_back(Chess.to_position_name(Vector2(i, j)))
+				state.extra[6] += Chess.to_position_name(Vector2(i, j))
 
 static func get_valid_move(state:ChessState, position_name_from:String) -> Array[Move]:
 	var directions:PackedVector2Array = [Vector2i(-1, -1), Vector2i(-1, 0), Vector2i(-1, 1), Vector2i(0, -1), Vector2i(0, 1), Vector2i(1, -1), Vector2i(1, 0), Vector2i(1, 1)]

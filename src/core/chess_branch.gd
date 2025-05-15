@@ -21,7 +21,7 @@ func set_state(_state:ChessState) -> void:
 	if !is_instance_valid(_state):
 		return
 	current_node.state = _state
-	current_node.group = _state.step % 2
+	current_node.group = 0 if _state.extra[0] == "w" else 1
 
 func get_state() -> ChessState:
 	return current_node.state

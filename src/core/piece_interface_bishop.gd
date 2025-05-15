@@ -14,7 +14,7 @@ static func create_instance(position_name:String, group:int) -> PieceInstance:
 static func execute_move(state:ChessState, move:Move) -> void:
 	if state.has_piece(move.position_name_to):
 		state.capture_piece(move.position_name_to)
-	if move.position_name_to in state.king_passant:
+	if move.position_name_to in state.extra[6]:
 		# 直接拿下国王判定胜利吧（唉）
 		if state.get_piece(move.position_name_from).group == 0:
 			state.capture_piece("c8")
