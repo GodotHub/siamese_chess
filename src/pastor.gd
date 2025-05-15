@@ -4,6 +4,7 @@
 extends Node3D
 class_name Pastor
 
+signal send_initial_state(state:Chess.ChessState)
 signal decided_move(move:Chess.Move)
 signal send_opponent_move(move_list:Array[Chess.Move])
 
@@ -11,8 +12,14 @@ var chess_branch:Chess.ChessMoveBranch = null
 var thread:Thread = null
 
 func _ready() -> void:
+	var tween:Tween = create_tween()
+	tween.tween_interval(1)
+	tween.tween_callback(create_state)
+
+func create_state() -> void:
 	chess_branch = Chess.ChessMoveBranch.new()
 	chess_branch.current_node.state = Chess.ChessState.new()
+	send_initial_state.emit(chess_branch.current_node.state.duplicate())
 	thread = Thread.new()
 	if chess_branch.current_node.group == 0:
 		thread.start(decision)

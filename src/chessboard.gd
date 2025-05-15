@@ -9,8 +9,9 @@ var selected_position_name:String = ""
 var selected_extra:int = 0
 var piece_instance:Dictionary[String, PieceInstance] = {}
 
-func _ready() -> void:
-	chess_state = Chess.ChessState.new()
+
+func set_state(_state:Chess.ChessState) -> void:
+	chess_state = _state
 	chess_state.connect("piece_added", add_piece_instance)
 	chess_state.connect("piece_moved", move_piece_instance)
 	chess_state.connect("piece_removed", remove_piece_instance)
@@ -20,7 +21,6 @@ func _ready() -> void:
 		instance.chessboard = self
 		piece_instance[key] = instance
 		$pieces.add_child(instance)
-#	draw_attack_position()
 
 func get_position_name(_position:Vector3) -> String:
 	var chess_pos:Vector2i = Vector2i(int(_position.x + 4) / 1, int(_position.z + 4) / 1)
@@ -31,7 +31,7 @@ func convert_name_to_position(_position_name:String) -> Vector3:
 
 func tap_position(position_name:String) -> void:
 	$canvas.clear_select_position()
-	if chess_state.step % 2 == 0:
+	if !is_instance_valid(chess_state) || chess_state.step % 2 == 0:
 		return
 	if selected_position_name:
 		confirm_move(selected_position_name, position_name)
