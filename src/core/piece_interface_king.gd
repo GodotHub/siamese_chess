@@ -46,10 +46,10 @@ static func execute_move(state:ChessState, move:Move) -> void:
 		# 在move.position_name_from到move.position_name_to之间设置king_passant
 		var piece_position_from:Vector2i = Chess.to_piece_position(move.position_name_from)
 		var piece_position_to:Vector2i = Chess.to_piece_position(move.position_name_to)
-		state.extra[6] = ""
+		state.extra[5] = ""
 		for i:int in range(piece_position_from.x, piece_position_to.x + (1 if piece_position_from.x < piece_position_to.x else -1), 1 if piece_position_from.x < piece_position_to.x else -1):
 			for j:int in range(piece_position_from.y, piece_position_to.y + (1 if piece_position_from.y < piece_position_to.y else -1), 1 if piece_position_from.y < piece_position_to.y else -1):
-				state.extra[6] += Chess.to_position_name(Vector2(i, j))
+				state.extra[5] += Chess.to_position_name(Vector2(i, j))
 
 static func get_valid_move(state:ChessState, position_name_from:String) -> Array[Move]:
 	var directions:PackedVector2Array = [Vector2i(-1, -1), Vector2i(-1, 0), Vector2i(-1, 1), Vector2i(0, -1), Vector2i(0, 1), Vector2i(1, -1), Vector2i(1, 0), Vector2i(1, 1)]

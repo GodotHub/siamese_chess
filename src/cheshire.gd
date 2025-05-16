@@ -8,36 +8,52 @@ signal finger_up()
 
 var mouse_moved:bool = false
 var mouse_start_position_name:String = ""
+var inspecting:bool = 0
+var initial_transform:Transform3D = Transform3D()
 
 func _ready() -> void:
-	pass
+	initial_transform = $camera.get_global_transform()
 
 func _unhandled_input(event:InputEvent) -> void:
+	if inspecting:
+		input_chessboard(event)
+	else:
+		input_overview(event)
+
+func input_overview(event:InputEvent) -> void:
 	if event is InputEventMouseButton:
 		if event.pressed && event.button_index == MOUSE_BUTTON_LEFT:
-			var position_name:String = click(event.position)
-			finger_on_position.emit(click(event.position))
+			var inspect_camera:Area3D = click_inspection(event.position)
+			if is_instance_valid(inspect_camera) && inspect_camera.has_node("camera_3d"):
+				inspecting = true
+				move_camera(inspect_camera.get_node("camera_3d").get_global_transform())
+
+func input_chessboard(event:InputEvent) -> void:
+	if event is InputEventMouseButton:
+		if event.pressed && event.button_index == MOUSE_BUTTON_LEFT:
+			var position_name:String = click_chessboard(event.position)
+			finger_on_position.emit(click_chessboard(event.position))
 			tap_position.emit(position_name)
 			mouse_moved = false
 			mouse_start_position_name = position_name
 		elif !event.pressed && mouse_moved && event.button_index == MOUSE_BUTTON_LEFT:
-			var position_name:String = click(event.position)
+			var position_name:String = click_chessboard(event.position)
 			tap_position.emit(position_name)
 			finger_up.emit()
 	if event is InputEventMouseMotion:
-		var position_name:String = click(event.position)
+		var position_name:String = click_chessboard(event.position)
 		if mouse_start_position_name != position_name:
 			mouse_moved = true
 		finger_on_position.emit(position_name)
 
 	#if event is InputEventSingleScreenTouch:
-	#	var position_name:String = click(event.position)
+	#	var position_name:String = click_chessboard(event.position)
 	#	if position_name && event.pressed:
 	#		start_drawing_move.emit(position_name)
 	#	else:
 	#		end_drawing_move.emit()
 	#if event is InputEventSingleScreenTap:
-	#	var position_name:String = click(event.position)
+	#	var position_name:String = click_chessboard(event.position)
 	#	if !inspect_position_name:
 	#		tap_position.emit(position_name)
 	#		inspect_position_name = position_name
@@ -46,26 +62,45 @@ func _unhandled_input(event:InputEvent) -> void:
 	#		inspect_position_name = ""
 		# 查询position_name位置下的状态
 	#if event is InputEventSingleScreenDrag:
-	#	var position_name:String = click(event.position)
+	#	var position_name:String = click_chessboard(event.position)
 	#	if position_name:
 	#	# 在position_name位置上绘制
 	#		drawing_move.emit(position_name)
-	if event is InputEventMultiScreenDrag:
-		#cancel_drawing_move.emit()
-		rotation.y -= event.relative.x / 300
-		$head.rotation.x -= event.relative.y / 300
+	#if event is InputEventMultiScreenDrag:
+	#	#cancel_drawing_move.emit()
+	#	rotation.y -= event.relative.x / 300
+	#	$head.rotation.x -= event.relative.y / 300
 	if event is InputEventScreenPinch:
 		#cancel_drawing_move.emit()
-		$head/camera.position.z -= event.relative / 200
+		if event.relative < 1:
+			inspecting = false
+			move_camera(initial_transform)
+		#$camera.position.z -= event.relative / 200
 	#if event is InputEventKey && event.pressed && event.keycode == KEY_SPACE:
 	#	confirm.emit()
 
-func click(screen_position:Vector2) -> String:
-	var from:Vector3 = $head/camera.project_ray_origin(screen_position)
-	var to:Vector3 = $head/camera.project_ray_normal(screen_position) * 200
+func click_inspection(screen_position:Vector2) -> Area3D:
+	var from:Vector3 = $camera.project_ray_origin(screen_position)
+	var to:Vector3 = $camera.project_ray_normal(screen_position) * 200
 	ray_cast.global_position = from
 	ray_cast.target_position = to
+	ray_cast.collision_mask = 1
+	ray_cast.force_raycast_update()
+	if ray_cast.is_colliding():
+		return ray_cast.get_collider()
+	return null
+
+func click_chessboard(screen_position:Vector2) -> String:
+	var from:Vector3 = $camera.project_ray_origin(screen_position)
+	var to:Vector3 = $camera.project_ray_normal(screen_position) * 200
+	ray_cast.global_position = from
+	ray_cast.target_position = to
+	ray_cast.collision_mask = 2
 	ray_cast.force_raycast_update()
 	if ray_cast.is_colliding():
 		return ray_cast.get_collider().get_name()
 	return ""
+
+func move_camera(transform:Transform3D) -> void:
+	var tween:Tween = create_tween()
+	tween.tween_property($camera, "global_transform", transform, 1).set_trans(Tween.TRANS_SINE)
