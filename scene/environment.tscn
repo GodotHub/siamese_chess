@@ -44,7 +44,7 @@ surface_material_override/1 = SubResource("StandardMaterial3D_uwfkk")
 surface_material_override/1 = SubResource("StandardMaterial3D_po4na")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="." index="16"]
-transform = Transform3D(-0.777775, -0.534302, 0.33104, -0.231734, 0.733336, 0.639154, -0.584265, 0.420404, -0.694186, 0, 0, 0)
+transform = Transform3D(-0.925801, 0.0354592, -0.376346, -0.231734, 0.733336, 0.639154, 0.298653, 0.678941, -0.670705, 0, 0, 0)
 light_color = Color(0.71, 0.65888, 0.5822, 1)
 shadow_enabled = true
 shadow_normal_bias = 0.0
@@ -57,7 +57,7 @@ directional_shadow_blend_splits = true
 environment = SubResource("Environment_7r8ay")
 
 [node name="area_chessboard" type="Area3D" parent="." index="18"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.879749, -0.0371852)
+transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, -0.012351, 0.879749, -0.0123158)
 collision_mask = 0
 monitoring = false
 monitorable = false
@@ -70,19 +70,19 @@ shape = SubResource("BoxShape3D_uwfkk")
 transform = Transform3D(-1.13133e-08, -0.965926, 0.258819, -4.2222e-08, 0.258819, 0.965926, -1, 8.88178e-16, -4.37114e-08, 0.120006, 0.313066, 0)
 
 [node name="chessboard" parent="." index="19" instance=ExtResource("2_3p4nk")]
-transform = Transform3D(-1.85773e-08, 0, -0.425, 0, 0.425, 0, 0.425, 0, -1.85773e-08, 0, 0.870713, -0.0350086)
+transform = Transform3D(5.5732e-08, 0, 0.425, 0, 0.425, 0, -0.425, 0, 5.5732e-08, -0.012351, 0.870713, -0.0144923)
 
 [node name="history" parent="." index="20" instance=ExtResource("5_4qusu")]
-transform = Transform3D(-0.282141, 0, 0.959372, 0, 1, 0, -0.959372, 0, -0.282141, 0.144085, 0.8601, 0.40426)
+transform = Transform3D(0.282141, 0, -0.959372, 0, 1, 0, 0.959372, 0, 0.282141, -0.156436, 0.8601, -0.453761)
 
 [node name="cheshire" parent="." index="21" instance=ExtResource("3_1vcsq")]
-transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0.700565, 1.40416, -0.0350086)
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -0.712916, 1.40416, -0.0144924)
 
 [node name="pastor" parent="." index="22" instance=ExtResource("6_uwfkk")]
-transform = Transform3D(-1.18021e-08, 0, 0.27, 0, 0.27, 0, -0.27, 0, -1.18021e-08, -0.443013, 0.869423, -0.00674599)
+transform = Transform3D(-1.18021e-08, 0, -0.27, 0, 0.27, 0, 0.27, 0, -1.18021e-08, 0.430662, 0.869423, -0.0427549)
 
 [node name="area_history" type="Area3D" parent="." index="23"]
-transform = Transform3D(0.959825, 0, 0.2806, 0, 1, 0, -0.2806, 0, 0.959825, 0.131475, 0.857563, 0.394873)
+transform = Transform3D(-0.959825, 0, -0.2806, 0, 1, 0, 0.2806, 0, -0.959825, -0.143826, 0.857563, -0.444374)
 collision_mask = 0
 monitoring = false
 monitorable = false
