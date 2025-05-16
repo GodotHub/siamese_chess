@@ -4,7 +4,7 @@ var history:PackedStringArray = ["", ""]
 var state:ChessState = null
 
 func push_move(move:Move) -> void:
-	history.push_back(move.position_name_from + "->" + move.position_name_to + " " + move.comment)
+	history.push_back(move.position_name_from + "->" + move.position_name_to + " " + (move.comment if move.extra else ""))
 	update_table()
 
 func update_table() -> void:
