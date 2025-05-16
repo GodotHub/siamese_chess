@@ -1,6 +1,11 @@
-[gd_scene load_steps=2 format=3 uid="uid://cispm4sihu5b3"]
+[gd_scene load_steps=3 format=3 uid="uid://cispm4sihu5b3"]
 
 [ext_resource type="Script" uid="uid://d37nkxik3au1i" path="res://src/pastor.gd" id="1_p0cd1"]
+[ext_resource type="Texture2D" uid="uid://dek8oxeuratus" path="res://assets/texture/pastor.svg" id="2_0fow0"]
 
 [node name="pastor" type="Node3D"]
 script = ExtResource("1_p0cd1")
+
+[node name="sprite_3d" type="Sprite3D" parent="."]
+transform = Transform3D(0.53, 0, 0, 0, 0.53, 0, 0, 0, 0.53, 0, 1.882, 0)
+texture = ExtResource("2_0fow0")

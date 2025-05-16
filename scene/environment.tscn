@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://fpd8ogg7714f"]
+[gd_scene load_steps=10 format=3 uid="uid://bmyf2h17xaxlj"]
 
 [ext_resource type="PackedScene" uid="uid://gdof8yy8yrjv" path="res://assets/model/environment.glb" id="1_b3374"]
 [ext_resource type="PackedScene" uid="uid://d1s6qj7aofldk" path="res://scene/chessboard.tscn" id="2_3p4nk"]
@@ -30,12 +30,13 @@ shadow_enabled = true
 environment = SubResource("Environment_7r8ay")
 
 [node name="chessboard" parent="." index="18" instance=ExtResource("2_3p4nk")]
-transform = Transform3D(-1.85773e-08, 0, -0.425, 0, 0.425, 0, 0.425, 0, -1.85773e-08, 0, 0.870713, 2.7152)
+transform = Transform3D(-1.85773e-08, 0, -0.425, 0, 0.425, 0, 0.425, 0, -1.85773e-08, 0, 0.870713, 0.00515288)
 
 [node name="player" parent="." index="19" instance=ExtResource("3_1vcsq")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.894237, 2.7152)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.894237, 0.00515288)
 
 [node name="history" parent="." index="20" instance=ExtResource("5_4qusu")]
-transform = Transform3D(-0.448648, 0, -0.893708, 0, 1, 0, 0.893708, 0, -0.448648, -0.329404, 0.8601, 3.08725)
+transform = Transform3D(-0.448648, 0, -0.893708, 0, 1, 0, 0.893708, 0, -0.448648, -0.329404, 0.8601, 0.377203)
 
 [node name="pastor" parent="." index="21" instance=ExtResource("6_uwfkk")]
+transform = Transform3D(-1.18021e-08, 0, 0.27, 0, 0.27, 0, -0.27, 0, -1.18021e-08, -0.443013, 0.89, 0.0334155)
