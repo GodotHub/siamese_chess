@@ -12,7 +12,7 @@ config_version=5
 
 config/name="SiameseChess"
 config/tags=PackedStringArray("a_lone_flower", "puzzle", "siamese")
-run/main_scene="uid://fpd8ogg7714f"
+run/main_scene="uid://bmyf2h17xaxlj"
 config/features=PackedStringArray("4.4", "GL Compatibility")
 config/icon="uid://gdemlmk1r3x4"
 
@@ -31,6 +31,11 @@ naming/node_name_casing=2
 naming/default_signal_callback_name="on_{node_name}_{signal_name}"
 naming/default_signal_callback_to_self_name="on_{signal_name}"
 naming/script_name_casing=2
+
+[layer_names]
+
+3d_physics/layer_1="inspection"
+3d_physics/layer_2="chessboard_square"
 
 [rendering]
 
