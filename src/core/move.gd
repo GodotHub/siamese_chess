@@ -11,6 +11,8 @@ func stringify() -> String:
 
 static func parse(move_str:String) -> Move:
 	var str_list:PackedStringArray = move_str.split("|")
+	if !move_str || str_list.size() != 4:
+		return null
 	return Move.create(str_list[0], str_list[1], str_list[2], str_list[3])
 
 static func create(_position_name_from:String, _position_name_to:String, _extra:String, _comment:String) -> Move:

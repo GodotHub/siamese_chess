@@ -8,7 +8,7 @@ var pieces:Dictionary[String, Piece] = {}
 var extra:PackedStringArray = []
 var score:int = 0
 
-static func create_from_fen(fen:String) -> ChessState:
+static func get_piece_mapping() -> Dictionary:
 	var piece_mapping:Dictionary = {}
 	var file_mapping:FileAccess = FileAccess.open("user://mapping.json", FileAccess.READ)
 	if !is_instance_valid(file_mapping):
@@ -32,6 +32,10 @@ static func create_from_fen(fen:String) -> ChessState:
 	else:
 		piece_mapping = JSON.parse_string(file_mapping.get_as_text())
 		file_mapping.close()
+	return piece_mapping
+
+static func create_from_fen(fen:String) -> ChessState:
+	var piece_mapping:Dictionary = get_piece_mapping()
 	var state:ChessState = ChessState.new()
 	var pointer:Vector2i = Vector2i(0, 7)
 	var fen_splited:PackedStringArray = fen.split(" ")
@@ -60,12 +64,43 @@ static func create_from_fen(fen:String) -> ChessState:
 		state.extra.push_back("-")
 	return state
 
+func stringify() -> String:
+	var piece_mapping:Dictionary = get_piece_mapping()
+	var abbrevation_mapping:Dictionary = {}
+	for abbrevation:String in piece_mapping:
+		var path:String = piece_mapping[abbrevation]["class"]
+		var group:int = piece_mapping[abbrevation]["group"]
+		abbrevation_mapping[path + ":%d" % group] = abbrevation
+	var null_counter:int = 0
+	var chessboard:PackedStringArray = []
+	for i:int in range(7, -1, -1):
+		var line:String = ""
+		for j:int in range(8):
+			var position_name:String = Chess.to_position_name(Vector2i(j, i))
+			if pieces.has(position_name):
+				if null_counter:
+					line += "%d" % null_counter
+					null_counter = 0
+				line += abbrevation_mapping[pieces[position_name].class_type.resource_path + ":%d" % pieces[position_name].group]
+			else:
+				null_counter += 1
+		if null_counter:
+			line += "%d" % null_counter
+			null_counter = 0
+		chessboard.append(line)
+	var output:PackedStringArray = ["/".join(chessboard)]
+	output.append_array(extra)
+	return " ".join(output)
+
 func duplicate() -> ChessState:
 	var new_state:ChessState = ChessState.new()
 	new_state.pieces = pieces.duplicate(true)
 	new_state.extra = extra.duplicate()
 	new_state.score = score
 	return new_state
+
+static func is_equal(state_a:ChessState, state_b:ChessState) -> bool:
+	return state_a.pieces == state_b.pieces
 
 func get_piece_instance(position_name:String) -> PieceInstance:
 	return pieces[position_name].class_type.create_instance(position_name, pieces[position_name].group)

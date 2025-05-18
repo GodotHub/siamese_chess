@@ -8,8 +8,11 @@ signal send_initial_state(state:ChessState)
 signal decided_move(move:Move)
 signal send_opponent_move(move_list:Array[Move])
 
+var chess_state:ChessState = null
 var chess_branch:ChessBranch = null
 var thread:Thread = null
+var history:Array[String] = []
+
 
 func _ready() -> void:
 	var tween:Tween = create_tween()
@@ -19,40 +22,51 @@ func _ready() -> void:
 func create_state() -> void:
 	chess_branch = ChessBranch.new()
 	if DisplayServer.clipboard_has():
-		chess_branch.set_state(ChessState.create_from_fen(DisplayServer.clipboard_get()))
-	if !is_instance_valid(chess_branch.get_state()):
-		chess_branch.set_state(ChessState.create_from_fen("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"))
-	send_initial_state.emit(chess_branch.get_state().duplicate())
+		history = [DisplayServer.clipboard_get()]
+	chess_state = ChessState.create_from_fen(history[0])
+	if !is_instance_valid(chess_state):
+		history = ["rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"]
+		chess_state = ChessState.create_from_fen(history[0])
+	send_initial_state.emit(chess_state.duplicate())
 	thread = Thread.new()
 	thread.start(decision)
 
 func receive_move(move:Move) -> void:
-	chess_branch.execute_move(move)
-	if chess_branch.current_node.group == 0:
+	chess_state.execute_move(move)
+	history.push_back(chess_state.stringify())
+	if chess_state.extra[0] == "w":
 		thread.wait_to_finish()
 		thread.start(decision)
 	else:
 		send_opponent_valid_move()
 
 func decision() -> void:
-	chess_branch.search()
-	if chess_branch.current_node.group == 1:
+	var move_list:Dictionary = chess_branch.search(chess_state, 4)
+	print(move_list)
+	if chess_state.extra[0] == "b":
 		send_opponent_valid_move()
 		return
-	var move:Move = chess_branch.get_best_move()
-	if !is_instance_valid(move):
+	var best_str:String = ""
+	for iter:String in move_list:
+		if abs(move_list[iter]) >= 500:
+			continue
+		if !best_str || move_list[iter] > move_list[best_str]:
+			best_str = iter
+	var best:Move = Move.parse(best_str)
+	if !is_instance_valid(best):
 		# 判定棋局结束
 		# var decision_instance:Decision = Decision.create_decision_instance(["Retry", "Quit"])
 		# decision_instance.connect("decided", set_action)
 		# add_child(decision_instance)
 		# await decision_instance.decided
 		return
-	decided_move.emit.call_deferred(move)
+	decided_move.emit.call_deferred(best)
 
 func send_opponent_valid_move() -> void:	# 仅限轮到对方时使用
+	var move_list:Dictionary = chess_branch.search(chess_state, 2)
 	var output:Array[Move] = []
-	for iter:String in chess_branch.current_node.children:
-		if chess_branch.current_node.children[iter].dead:
+	for iter:String in move_list:
+		if abs(move_list[iter]) >= 500:
 			continue
 		output.push_back(Move.parse(iter))
 	if output.size() == 0:
