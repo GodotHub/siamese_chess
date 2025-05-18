@@ -140,17 +140,18 @@ func execute_move(move:Move) -> void:
 
 func add_piece(_position_name:String, _piece:Piece) -> void:	# 作为吃子的逆运算
 	pieces[_position_name] = _piece
-	score += _piece.class_type.get_value() * (1 if _piece.group == 0 else -1)
+	score += _piece.class_type.get_value(_position_name, _piece.group)
 	piece_added.emit(_position_name)
 
 func capture_piece(_position_name:String) -> void:
 	if pieces.has(_position_name):
-		score -= pieces[_position_name].class_type.get_value() * (1 if pieces[_position_name].group == 0 else -1)
+		score -= pieces[_position_name].class_type.get_value(_position_name, pieces[_position_name].group)
 		pieces.erase(_position_name)	# 虽然大多数情况是攻击者移到被攻击者上，但是吃过路兵是例外，后续可能会出现类似情况，所以还是得手多一下
 		piece_removed.emit(_position_name)
 
 func move_piece(_position_name_from:String, _position_name_to:String) -> void:
 	var _piece:Piece = get_piece(_position_name_from)
+	score += _piece.class_type.get_value(_position_name_to, _piece.group) - _piece.class_type.get_value(_position_name_from, _piece.group)
 	pieces.erase(_position_name_from)
 	pieces[_position_name_to] = _piece
 	piece_moved.emit(_position_name_from, _position_name_to)

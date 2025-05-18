@@ -9,5 +9,5 @@ static func execute_move(_state:ChessState, _move:Move) -> void:
 	pass
 static func get_valid_move(_state:ChessState, _position_name_from:String) -> Array[Move]:
 	return []
-static func get_value() -> float:
+static func get_value(_position_name_from:String, _group:int) -> float:
 	return 0

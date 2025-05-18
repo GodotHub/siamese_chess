@@ -34,5 +34,17 @@ static func get_valid_move(state:ChessState, position_name_from:String) -> Array
 		output.push_back(Move.create(position_name_from, position_name_to, "", "Default"))
 	return output
 
-static func get_value() -> float:
-	return 3.5
+static func get_value(position_name:String, group:int) -> float:
+	const position_value:PackedInt32Array = [
+		-66, -53, -75, -75, -10, -55, -58, -70,
+         -3,  -6, 100, -36,   4,  62,  -4, -14,
+         10,  67,   1,  74,  73,  27,  62,  -2,
+         24,  24,  45,  37,  33,  41,  25,  17,
+         -1,   5,  31,  21,  22,  35,   2,   0,
+        -18,  10,  13,  22,  18,  15,  11, -14,
+        -23, -15,   2,   0,   2,   0, -23, -20,
+        -74, -23, -26, -24, -19, -35, -22, -69]
+	var piece_position:Vector2i = Chess.to_piece_position(position_name)
+	if group == 1:
+		piece_position.y = 7 - piece_position.y
+	return (position_value[piece_position.x + (7 - piece_position.y) * 8] / 100.0 + 2.8) * (1 if group == 0 else -1)

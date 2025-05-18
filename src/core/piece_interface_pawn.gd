@@ -77,5 +77,18 @@ static func get_valid_move(state:ChessState, position_name_from:String) -> Array
 		else:
 			output.push_back(Move.create(position_name_from, position_name_to_r, "", "Default"))
 	return output
-static func get_value() -> float:
-	return 1
+
+static func get_value(position_name:String, group:int) -> float:
+	const position_value:PackedInt32Array = [
+		  0,   0,   0,   0,   0,   0,   0,   0,
+		 78,  83,  86,  73, 102,  82,  85,  90,
+		  7,  29,  21,  44,  40,  31,  44,   7,
+		-17,  16,  -2,  15,  14,   0,  15, -13,
+		-26,   3,  10,   9,   6,   1,   0, -23,
+		-22,   9,   5, -11, -10,  -2,   3, -19,
+		-31,   8,  -7, -37, -36, -14,   3, -31,
+		  0,   0,   0,   0,   0,   0,   0,   0]
+	var piece_position:Vector2i = Chess.to_piece_position(position_name)
+	if group == 1:
+		piece_position.y = 7 - piece_position.y
+	return (position_value[piece_position.x + (7 - piece_position.y) * 8] / 100.0 + 1) * (1 if group == 0 else -1)
