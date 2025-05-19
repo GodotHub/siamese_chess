@@ -7,24 +7,32 @@ func alphabeta(_state:ChessState, alpha:float, beta:float, depth:int = 5) -> flo
 	if !depth:
 		return _state.score
 	var group:int = 0 if _state.extra[0] == "w" else 1
+	var move_to_state:Dictionary[Move, ChessState] = {}
+	var move_list:Array[Move] = []
 	if group == 0:
-		var move_list:Array[Move] = _state.get_all_move(group)
+		move_list = _state.get_all_move(group)
 		var value:float = -10000
 		for iter:Move in move_list:
 			var test_state:ChessState = _state.duplicate()
 			test_state.execute_move(iter)
-			value = max(value, alphabeta(test_state, alpha, beta, depth - 1))
+			move_to_state[iter] = test_state
+		move_list.sort_custom(func(a:Move, b:Move) -> bool: return move_to_state[a].score > move_to_state[b].score)
+		for iter:Move in move_list:
+			value = max(value, alphabeta(move_to_state[iter], alpha, beta, depth - 1))
 			alpha = max(alpha, value)
 			if beta <= alpha:
 				break
 		return value
 	else:
-		var move_list:Array[Move] = _state.get_all_move(group)
+		move_list = _state.get_all_move(group)
 		var value:float = 10000
 		for iter:Move in move_list:
 			var test_state:ChessState = _state.duplicate()
 			test_state.execute_move(iter)
-			value = min(value, alphabeta(test_state, alpha, beta, depth - 1))
+			move_to_state[iter] = test_state
+		move_list.sort_custom(func(a:Move, b:Move) -> bool: return move_to_state[a].score < move_to_state[b].score)
+		for iter:Move in move_list:
+			value = min(value, alphabeta(move_to_state[iter], alpha, beta, depth - 1))
 			beta = min(beta, value)
 			if beta <= alpha:
 				break
