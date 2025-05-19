@@ -2,12 +2,12 @@
 
 [ext_resource type="Script" uid="uid://pvk3v6ra2hcg" path="res://src/decision.gd" id="1_j3y3i"]
 
-[sub_resource type="Gradient" id="Gradient_gckm1"]
+[sub_resource type="Gradient" id="Gradient_j3y3i"]
 offsets = PackedFloat32Array(0)
 colors = PackedColorArray(0, 0, 0, 1)
 
 [sub_resource type="GradientTexture1D" id="GradientTexture1D_j3y3i"]
-gradient = SubResource("Gradient_gckm1")
+gradient = SubResource("Gradient_j3y3i")
 
 [node name="decision" type="CanvasLayer"]
 script = ExtResource("1_j3y3i")

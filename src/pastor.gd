@@ -23,7 +23,7 @@ func create_state() -> void:
 	chess_branch = ChessBranch.new()
 	if DisplayServer.clipboard_has():
 		history = [DisplayServer.clipboard_get()]
-	chess_state = ChessState.create_from_fen(history[0])
+		chess_state = ChessState.create_from_fen(history[0])
 	if !is_instance_valid(chess_state):
 		history = ["rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"]
 		chess_state = ChessState.create_from_fen(history[0])

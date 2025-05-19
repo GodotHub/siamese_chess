@@ -17,5 +17,5 @@ collide_with_areas = true
 collide_with_bodies = false
 
 [node name="camera" type="Camera3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0.873713, 0.486442, 0, -0.486442, 0.873713, 0, 0, 0)
+transform = Transform3D(1, 0, 0, 0, 0.945541, 0.325502, 0, -0.325502, 0.945541, 0, 0, 0)
 current = true
