@@ -1,4 +1,4 @@
-extends Object
+extends RefCounted
 class_name Piece
 
 var class_type:Object = PieceInterface

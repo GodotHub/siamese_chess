@@ -1,4 +1,4 @@
-extends Object
+extends RefCounted
 class_name ChessState
 
 signal piece_added(position_name:String)

@@ -1,4 +1,4 @@
-extends Object
+extends RefCounted
 class_name Move
 
 var position_name_from:String
