@@ -6,7 +6,7 @@ signal piece_moved(position_name_from:String, position_name_to:String)
 signal piece_removed(position_name:String)
 var pieces:Dictionary[String, Piece] = {}
 var extra:PackedStringArray = []
-var score:int = 0
+var score:float = 0
 
 static func get_piece_mapping() -> Dictionary:
 	var piece_mapping:Dictionary = {}
