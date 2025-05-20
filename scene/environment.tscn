@@ -28,11 +28,11 @@ background_color = Color(0.88, 0.88, 0.88, 1)
 sky = SubResource("Sky_1vcsq")
 tonemap_mode = 2
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_uwfkk"]
-size = Vector3(0.511902, 0.0298615, 0.512817)
-
 [sub_resource type="BoxShape3D" id="BoxShape3D_po4na"]
 size = Vector3(0.407043, 0.00946045, 0.313843)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_uwfkk"]
+size = Vector3(0.511902, 0.0298615, 0.512817)
 
 [node name="environment" instance=ExtResource("1_b3374")]
 script = ExtResource("2_7r8ay")
@@ -56,40 +56,47 @@ directional_shadow_blend_splits = true
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." index="17"]
 environment = SubResource("Environment_7r8ay")
 
-[node name="area_chessboard" type="Area3D" parent="." index="18"]
-transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, -0.012351, 0.879749, -0.0123158)
-collision_mask = 0
-monitoring = false
-monitorable = false
-
-[node name="collision_shape_3d" type="CollisionShape3D" parent="area_chessboard" index="0"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.0129776, 0)
-shape = SubResource("BoxShape3D_uwfkk")
-
-[node name="camera_3d" type="Camera3D" parent="area_chessboard" index="1"]
-transform = Transform3D(-1.13133e-08, -0.965926, 0.258819, -4.2222e-08, 0.258819, 0.965926, -1, 8.88178e-16, -4.37114e-08, 0.120006, 0.313066, 0)
-
-[node name="chessboard" parent="." index="19" instance=ExtResource("2_3p4nk")]
+[node name="chessboard" parent="." index="18" instance=ExtResource("2_3p4nk")]
 transform = Transform3D(5.5732e-08, 0, 0.425, 0, 0.425, 0, -0.425, 0, 5.5732e-08, -0.012351, 0.870713, -0.0144923)
 
-[node name="history" parent="." index="20" instance=ExtResource("5_4qusu")]
+[node name="history" parent="." index="19" instance=ExtResource("5_4qusu")]
 transform = Transform3D(0.282141, 0, -0.959372, 0, 1, 0, 0.959372, 0, 0.282141, -0.156436, 0.8601, -0.453761)
 
-[node name="cheshire" parent="." index="21" instance=ExtResource("3_1vcsq")]
+[node name="cheshire" parent="." index="20" instance=ExtResource("3_1vcsq")]
 transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -0.712916, 1.40416, -0.0144924)
 
-[node name="pastor" parent="." index="22" instance=ExtResource("6_uwfkk")]
-transform = Transform3D(-1.18021e-08, 0, -0.27, 0, 0.27, 0, 0.27, 0, -1.18021e-08, 0.430662, 0.869423, -0.0427549)
+[node name="camera_on_seat" type="Camera3D" parent="cheshire" index="0"]
+transform = Transform3D(1, -1.46321e-08, -2.5217e-09, 1.46321e-08, 0.942309, 0.334744, -2.5218e-09, -0.334744, 0.942309, 0.0144924, -0.0195, 0.00510901)
 
-[node name="area_history" type="Area3D" parent="." index="23"]
-transform = Transform3D(-0.959825, 0, -0.2806, 0, 1, 0, 0.2806, 0, -0.959825, -0.143826, 0.857563, -0.444374)
+[node name="camera_pastor_closeup" type="Camera3D" parent="cheshire" index="4"]
+transform = Transform3D(1, -5.42472e-09, -3.3787e-10, 5.42471e-09, 0.992269, 0.124103, -3.3797e-10, -0.124103, 0.992269, 0.0144924, -0.0376341, 0.00318342)
+fov = 44.5266
+
+[node name="area_history" type="Area3D" parent="cheshire" index="5"]
+transform = Transform3D(0.2806, 0, -0.959825, 0, 1, 0, 0.959825, 0, 0.2806, -0.429882, -0.546597, -0.56909)
 collision_mask = 0
 monitoring = false
 monitorable = false
 
-[node name="collision_shape_3d" type="CollisionShape3D" parent="area_history" index="0"]
+[node name="collision_shape_3d" type="CollisionShape3D" parent="cheshire/area_history" index="0"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.011139, 0.00320435, 0.0101929)
 shape = SubResource("BoxShape3D_po4na")
 
-[node name="camera_3d" type="Camera3D" parent="area_history" index="1"]
+[node name="camera_3d" type="Camera3D" parent="cheshire/area_history" index="1"]
 transform = Transform3D(-1.49012e-08, -0.965926, 0.258819, -4.2222e-08, 0.258819, 0.965926, -1, 7.45058e-09, -4.65661e-08, 0.108885, 0.233688, 0.00118074)
+
+[node name="area_chessboard" type="Area3D" parent="cheshire" index="6"]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 0.00217657, -0.524411, -0.700565)
+collision_mask = 0
+monitoring = false
+monitorable = false
+
+[node name="collision_shape_3d" type="CollisionShape3D" parent="cheshire/area_chessboard" index="0"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.0129776, 0)
+shape = SubResource("BoxShape3D_uwfkk")
+
+[node name="camera_3d" type="Camera3D" parent="cheshire/area_chessboard" index="1"]
+transform = Transform3D(-1.13133e-08, -0.965926, 0.258819, -4.2222e-08, 0.258819, 0.965926, -1, -5.68434e-14, -4.37114e-08, 0.105483, 0.313066, 9.31323e-10)
+
+[node name="pastor" parent="." index="21" instance=ExtResource("6_uwfkk")]
+transform = Transform3D(-1.18021e-08, 0, -0.27, 0, 0.27, 0, 0.27, 0, -1.18021e-08, 0.430662, 0.869423, -0.0427549)
