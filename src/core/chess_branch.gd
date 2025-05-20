@@ -1,8 +1,6 @@
 extends Object
 class_name ChessBranch
 
-var history:Array[String] = []
-
 func alphabeta(_state:ChessState, alpha:float, beta:float, depth:int = 5) -> float:
 	if !depth:
 		return _state.score

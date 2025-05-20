@@ -6,7 +6,6 @@ signal move_played(move:Move)
 var chess_state:ChessState = null
 var valid_move:Dictionary[String, Array] = {}
 var selected_position_name:String = ""
-var selected_extra:int = 0
 var piece_instance:Dictionary[String, PieceInstance] = {}
 
 
@@ -62,19 +61,15 @@ func confirm_move(position_name_from:String, position_name_to:String) -> void:
 		var decision_list:PackedStringArray = []
 		for iter:Move in move_list:
 			decision_list.push_back(iter.comment)
-		var decision_instance:Decision = Decision.create_decision_instance(decision_list)
-		decision_instance.connect("decided", set_action)
+		var decision_instance:Decision = Decision.create_decision_instance(decision_list, true)
 		add_child(decision_instance)
 		await decision_instance.decided
-		if selected_extra == -1:
+		if decision_instance.selected_index == -1:
 			return
-		execute_move(move_list[selected_extra])
+		execute_move(move_list[decision_instance.selected_index])
 	else:
-		execute_move(move_list[selected_extra])
+		execute_move(move_list[0])
 	$canvas.clear_select_position()
-
-func set_action(action:int) -> void:
-	selected_extra = action
 
 func execute_move(move:Move) -> void:
 	chess_state.execute_move(move)

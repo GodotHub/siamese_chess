@@ -15,12 +15,9 @@ var history:Array[String] = []
 
 
 func _ready() -> void:
-	var tween:Tween = create_tween()
-	tween.tween_interval(1)
-	tween.tween_callback(create_state)
-
-func create_state() -> void:
 	chess_branch = ChessBranch.new()
+
+func create_state_from_start() -> void:
 	if DisplayServer.clipboard_has():
 		history = [DisplayServer.clipboard_get()]
 		chess_state = ChessState.create_from_fen(history[0])
@@ -28,6 +25,18 @@ func create_state() -> void:
 		history = ["rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"]
 		chess_state = ChessState.create_from_fen(history[0])
 	send_initial_state.emit(chess_state.duplicate())
+
+func create_state_from_fen() -> bool:
+	if !DisplayServer.clipboard_has():
+		return false
+	history = [DisplayServer.clipboard_get()]
+	chess_state = ChessState.create_from_fen(history[0])
+	if !is_instance_valid(chess_state):
+		return false
+	send_initial_state.emit(chess_state.duplicate())
+	return true
+
+func start_decision() -> void:
 	thread = Thread.new()
 	thread.start(decision)
 

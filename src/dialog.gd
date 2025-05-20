@@ -5,12 +5,12 @@ signal on_next(index:int)
 signal on_exit()
 
 var text_list:PackedStringArray = [
-	"现在你看到的是测试对话。",
-	"你我之间对话通常不止一句，",
-	"在对话同时，还涉及到视角的转换、角色神情的变化，",
-	"甚至需要展示特定的图像。",
-	"Dialog对象只处理对话的内容，",
-	"在你点击时，除了跳到下一条语句外，它会发送信号，通知给其他演出相关的对象。",
+#	"现在你看到的是测试对话。",
+#	"你我之间对话通常不止一句，",
+#	"在对话同时，还涉及到视角的转换、角色神情的变化，",
+#	"甚至需要展示特定的图像，还有不同选项时的分支",
+#	"Dialog对象只处理对话的内容，",
+#	"在你点击时，除了跳到下一条语句外，它会发送信号，通知给其他演出相关的对象。",
 ]
 var pointer:int = 0
 
@@ -24,7 +24,6 @@ static func create_dialog_instance(_text_list:PackedStringArray) -> Dialog:
 func _ready() -> void:
 	var tween:Tween = create_tween()
 	tween.tween_property($texture_rect_full, "visible", true, 0)
-	tween.tween_callback(on_next.emit.bind(pointer))
 	tween.tween_interval(0.3)
 	tween.tween_property($texture_rect_bottom/label, "text", text_list[pointer], 0)
 	tween.tween_property($texture_rect_full, "visible", false, 0)
