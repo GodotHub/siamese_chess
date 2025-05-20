@@ -45,6 +45,7 @@ func next() -> void:
 	else:
 		var tween:Tween = create_tween()
 		tween.tween_property($texture_rect_bottom/label, "visible", true, 0)
+		tween.tween_callback(on_next.emit.bind(pointer))
 		tween.tween_callback(on_exit.emit)
 		tween.tween_interval(0.3)
 		tween.tween_callback(queue_free)
