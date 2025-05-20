@@ -39,7 +39,7 @@ func dialog_start() -> void:
 		await decision_instance.decided
 		if decision_instance.selected_index == 0:
 			$pastor.create_state_from_start()
-			var dialog_2:Dialog = Dialog.create_dialog_instance([	# Pastor的自我介绍，对于棋局的介绍，以及二选一
+			var dialog_2:Dialog = Dialog.create_dialog_instance([
 				"现在棋盘已经准备好了。",
 				"您是黑方，作为后手，我则先手",
 				"现在开始对局，祝你好运……"
@@ -53,7 +53,7 @@ func dialog_start() -> void:
 			break
 		elif decision_instance.selected_index == 1:
 			if $pastor.create_state_from_fen():
-				var dialog_2:Dialog = Dialog.create_dialog_instance([	# Pastor的自我介绍，对于棋局的介绍，以及二选一
+				var dialog_2:Dialog = Dialog.create_dialog_instance([
 					"现在棋盘已经准备好了。",
 					"根据棋局信息，" + ("目前是白方先手。" if $pastor.chess_state.extra[0] == "w" else "目前是黑方先手。"),
 					"开始对局，祝你好运……"
