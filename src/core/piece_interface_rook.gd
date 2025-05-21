@@ -55,13 +55,13 @@ static func get_valid_move(state:ChessState, position_name_from:String) -> Array
 static func get_value(position_name:String, group:int) -> float:
 	const position_value:PackedInt32Array = [
 		35,  29,  33,   4,  37,  33,  56,  50,
-         55,  29,  56,  67,  55,  62,  34,  60,
-         19,  35,  28,  33,  45,  27,  25,  15,
-          0,   5,  16,  13,  18,  -4,  -9,  -6,
-        -28, -35, -16, -21, -13, -29, -46, -30,
-        -42, -28, -42, -25, -25, -35, -26, -46,
-        -53, -38, -31, -26, -29, -43, -44, -53,
-        -30, -24, -18,   5,  -2, -18, -31, -32]
+		 55,  29,  56,  67,  55,  62,  34,  60,
+		 19,  35,  28,  33,  45,  27,  25,  15,
+		  0,   5,  16,  13,  18,  -4,  -9,  -6,
+		-28, -35, -16, -21, -13, -29, -46, -30,
+		-42, -28, -42, -25, -25, -35, -26, -46,
+		-53, -38, -31, -26, -29, -43, -44, -53,
+		-30, -24, -18,   5,  -2, -18, -31, -32]
 	var piece_position:Vector2i = Chess.to_piece_position(position_name)
 	if group == 1:
 		piece_position.y = 7 - piece_position.y

@@ -64,13 +64,13 @@ static func get_valid_move(state:ChessState, position_name_from:String) -> Array
 static func get_value(position_name:String, group:int) -> float:
 	const position_value:PackedInt32Array = [
 		4,  54,  47, -99, -99,  60,  83, -62,
-    	-32,  10,  55,  56,  56,  55,  10,   3,
-    	-62,  12, -57,  44, -67,  28,  37, -31,
-    	-55,  50,  11,  -4, -19,  13,   0, -49,
-    	-55, -43, -52, -28, -51, -47,  -8, -50,
-    	-47, -42, -43, -79, -64, -32, -29, -32,
-    	 -4,   3, -14, -50, -57, -18,  13,   4,
-    	 17,  30,  -3, -14,   6,  -1,  40,  18
+		-32,  10,  55,  56,  56,  55,  10,   3,
+		-62,  12, -57,  44, -67,  28,  37, -31,
+		-55,  50,  11,  -4, -19,  13,   0, -49,
+		-55, -43, -52, -28, -51, -47,  -8, -50,
+		-47, -42, -43, -79, -64, -32, -29, -32,
+		 -4,   3, -14, -50, -57, -18,  13,   4,
+		 17,  30,  -3, -14,   6,  -1,  40,  18
 	]
 	var piece_position:Vector2i = Chess.to_piece_position(position_name)
 	if group == 1:

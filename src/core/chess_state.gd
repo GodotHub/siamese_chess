@@ -124,15 +124,16 @@ func get_valid_move(position_name_from:String) -> Array[Move]:
 	return []
 
 func execute_move(move:Move) -> void:
-	if extra[0] == "b":
-		extra[5] = "%d" % (extra[5].to_int() + 1)
+	if !has_piece(move.position_name_from):
+		return
+	if pieces[move.position_name_from].group == 1:
+		extra[4] = "%d" % (extra[5].to_int() + 1)
 		extra[0] = "w"
-	elif extra[0] == "w":
+	elif pieces[move.position_name_from].group == 0:
 		extra[0] = "b"
 	var last_en_passant:String = extra[2]
 	var last_king_passant:String = extra[5]
-	if has_piece(move.position_name_from):
-		pieces[move.position_name_from].class_type.execute_move(self, move)
+	pieces[move.position_name_from].class_type.execute_move(self, move)
 	if last_en_passant == extra[2]:
 		extra[2] = "-"
 	if last_king_passant == extra[5]:
