@@ -53,40 +53,36 @@ func receive_move(move:Move) -> void:
 		send_opponent_valid_move()
 
 func decision() -> void:
-	var move_list:Dictionary = chess_branch.search(chess_state, 4, 0)
-	print(move_list)
 	if chess_state.extra[0] == "b":
 		send_opponent_valid_move()
 		return
-	var best_str:String = ""
-	for iter:String in move_list:
-		if move_list[iter] <= -500:
-			continue
-		if !best_str || move_list[iter] > move_list[best_str]:
-			best_str = iter
-	var best:Move = Move.parse(best_str)
-	if !is_instance_valid(best):
+	var move_list = chess_branch.search(chess_state, 6, 0)
+	if !move_list.size():
 		# 判定棋局结束
 		var null_move_check:float = chess_branch.alphabeta(chess_state, -10000, 10000, 1, 1)
 		if null_move_check <= -500:
-			lose.emit()
+			lose.emit.call_deferred()
 		else:
-			draw.emit(1)	# 我方无着法的逼和
+			draw.emit.call_deferred(1)	# 我方无着法的逼和
 		return
+	print(move_list)
+	var best_str:String = ""
+	for iter:String in move_list:
+		if !best_str || move_list[iter] > move_list[best_str]:
+			best_str = iter
+	var best:Move = Move.parse(best_str)
 	decided_move.emit.call_deferred(best)
 
 func send_opponent_valid_move() -> void:	# 仅限轮到对方时使用
-	var move_list:Dictionary = chess_branch.search(chess_state, 2, 1)
+	var move_list:Dictionary = chess_branch.search(chess_state, 1, 1)
 	var output:Array[Move] = []
-	for iter:String in move_list:
-		if move_list[iter] >= 500:
-			continue
-		output.push_back(Move.parse(iter))
-	if output.size() == 0:
+	if move_list.size() == 0:
 		var null_move_check:float = chess_branch.alphabeta(chess_state, -10000, 10000, 1, 0)
 		if null_move_check >= 500:
 			win.emit()
 		else:
 			draw.emit(2)	# 黑方无着法的逼和
 		return
+	for iter:String in move_list:
+		output.push_back(Move.parse(iter))
 	send_opponent_move.emit.call_deferred(output)
