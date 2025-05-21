@@ -8,8 +8,8 @@ signal finger_up()
 
 var mouse_moved:bool = false
 var mouse_start_position_name:String = ""
-var inspecting:bool = 0
 var initial_camera:Camera3D = null
+var current_camera:Camera3D = null
 
 func _ready() -> void:
 	pass
@@ -19,7 +19,7 @@ func set_initial_camera(other:Camera3D) -> void:
 	force_set_camera(other)
 
 func _unhandled_input(event:InputEvent) -> void:
-	if inspecting:
+	if current_camera != initial_camera:
 		input_chessboard(event)
 	else:
 		input_overview(event)
@@ -29,7 +29,6 @@ func input_overview(event:InputEvent) -> void:
 		if event.pressed && event.button_index == MOUSE_BUTTON_LEFT:
 			var inspect_camera:Area3D = click_inspection(event.position)
 			if is_instance_valid(inspect_camera) && inspect_camera.has_node("camera_3d"):
-				inspecting = true
 				move_camera(inspect_camera.get_node("camera_3d"))
 
 func input_chessboard(event:InputEvent) -> void:
@@ -77,7 +76,6 @@ func input_chessboard(event:InputEvent) -> void:
 	if event is InputEventScreenPinch:
 		#cancel_drawing_move.emit()
 		if event.relative < 1:
-			inspecting = false
 			move_camera(initial_camera)
 		#$camera.position.z -= event.relative / 200
 	#if event is InputEventKey && event.pressed && event.keycode == KEY_SPACE:
@@ -106,10 +104,12 @@ func click_chessboard(screen_position:Vector2) -> String:
 	return ""
 
 func move_camera(other:Camera3D) -> void:
+	current_camera = other
 	var tween:Tween = create_tween()
 	tween.tween_property($camera, "global_transform", other.global_transform, 1).set_trans(Tween.TRANS_SINE)
 	tween.tween_property($camera, "fov", other.fov, 1).set_trans(Tween.TRANS_SINE)
 
 func force_set_camera(other:Camera3D) -> void:
+	current_camera = other
 	$camera.global_transform = other.global_transform
 	$camera.fov = other.fov
