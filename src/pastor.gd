@@ -7,6 +7,9 @@ class_name Pastor
 signal send_initial_state(state:ChessState)
 signal decided_move(move:Move)
 signal send_opponent_move(move_list:Array[Move])
+signal lose()
+signal win()
+signal draw()
 
 var chess_state:ChessState = null
 var chess_branch:ChessBranch = null
@@ -50,35 +53,40 @@ func receive_move(move:Move) -> void:
 		send_opponent_valid_move()
 
 func decision() -> void:
-	var move_list:Dictionary = chess_branch.search(chess_state, 4)
+	var move_list:Dictionary = chess_branch.search(chess_state, 4, 0)
 	print(move_list)
 	if chess_state.extra[0] == "b":
 		send_opponent_valid_move()
 		return
 	var best_str:String = ""
 	for iter:String in move_list:
-		if abs(move_list[iter]) >= 500:
+		if move_list[iter] <= -500:
 			continue
 		if !best_str || move_list[iter] > move_list[best_str]:
 			best_str = iter
 	var best:Move = Move.parse(best_str)
 	if !is_instance_valid(best):
 		# 判定棋局结束
-		# var decision_instance:Decision = Decision.create_decision_instance(["Retry", "Quit"])
-		# decision_instance.connect("decided", set_action)
-		# add_child(decision_instance)
-		# await decision_instance.decided
+		var null_move_check:float = chess_branch.alphabeta(chess_state, -10000, 10000, 1, 1)
+		if null_move_check <= -500:
+			lose.emit()
+		else:
+			draw.emit(1)	# 我方无着法的逼和
 		return
 	decided_move.emit.call_deferred(best)
 
 func send_opponent_valid_move() -> void:	# 仅限轮到对方时使用
-	var move_list:Dictionary = chess_branch.search(chess_state, 2)
+	var move_list:Dictionary = chess_branch.search(chess_state, 2, 1)
 	var output:Array[Move] = []
 	for iter:String in move_list:
-		if abs(move_list[iter]) >= 500:
+		if move_list[iter] >= 500:
 			continue
 		output.push_back(Move.parse(iter))
 	if output.size() == 0:
-		# 也是棋局结束
+		var null_move_check:float = chess_branch.alphabeta(chess_state, -10000, 10000, 1, 0)
+		if null_move_check >= 500:
+			win.emit()
+		else:
+			draw.emit(2)	# 黑方无着法的逼和
 		return
 	send_opponent_move.emit.call_deferred(output)
