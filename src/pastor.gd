@@ -21,12 +21,8 @@ func _ready() -> void:
 	chess_branch = ChessBranch.new()
 
 func create_state_from_start() -> void:
-	if DisplayServer.clipboard_has():
-		history = [DisplayServer.clipboard_get()]
-		chess_state = ChessState.create_from_fen(history[0])
-	if !is_instance_valid(chess_state):
-		history = ["rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"]
-		chess_state = ChessState.create_from_fen(history[0])
+	history = ["rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"]
+	chess_state = ChessState.create_from_fen(history[0])
 	send_initial_state.emit(chess_state.duplicate())
 
 func create_state_from_fen() -> bool:
