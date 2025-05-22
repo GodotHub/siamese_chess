@@ -107,6 +107,7 @@ func move_camera(other:Camera3D) -> void:
 	current_camera = other
 	var tween:Tween = create_tween()
 	tween.tween_property($camera, "global_transform", other.global_transform, 1).set_trans(Tween.TRANS_SINE)
+	tween.set_parallel()
 	tween.tween_property($camera, "fov", other.fov, 1).set_trans(Tween.TRANS_SINE)
 
 func force_set_camera(other:Camera3D) -> void:
