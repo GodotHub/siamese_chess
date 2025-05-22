@@ -33,7 +33,7 @@ func convert_name_to_position(_position_name:String) -> Vector3:
 
 func tap_position(position_name:String) -> void:
 	$canvas.clear_select_position()
-	if !is_instance_valid(chess_state) || chess_state.extra[0] == "w":
+	if !is_instance_valid(chess_state) || chess_state.get_extra(0) == "w":
 		return
 	if selected_position_name:
 		confirm_move(selected_position_name, position_name)
@@ -75,7 +75,7 @@ func confirm_move(position_name_from:String, position_name_to:String) -> void:
 	$canvas.clear_select_position()
 
 func execute_move(move:Move) -> void:
-	chess_state.execute_move(move)
+	chess_state.apply_event(chess_state.create_event(move))
 	move_played.emit(move)
 
 func set_valid_move(move_list:Array[Move]) -> void:

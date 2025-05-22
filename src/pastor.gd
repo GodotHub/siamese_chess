@@ -15,7 +15,7 @@ var chess_state:ChessState = null
 var chess_branch:ChessBranch = null
 var thread:Thread = null
 var history:Array[String] = []
-
+var score:float = 0
 
 func _ready() -> void:
 	chess_branch = ChessBranch.new()
@@ -40,22 +40,24 @@ func start_decision() -> void:
 	thread.start(decision)
 
 func receive_move(move:Move) -> void:
-	chess_state.execute_move(move)
+	score += Evaluation.evaluate_move(chess_state, move)
+	chess_state.apply_event(chess_state.create_event(move))
+	
 	history.push_back(chess_state.stringify())
-	if chess_state.extra[0] == "w":
+	if chess_state.get_extra(0) == "w":
 		thread.wait_to_finish()
 		thread.start(decision)
 	else:
 		send_opponent_valid_move()
 
 func decision() -> void:
-	if chess_state.extra[0] == "b":
+	if chess_state.get_extra(0) == "b":
 		send_opponent_valid_move()
 		return
 	var move_list = chess_branch.search(chess_state, 6, 0)
 	if !move_list.size():
 		# 判定棋局结束
-		var null_move_check:float = chess_branch.alphabeta(chess_state, -10000, 10000, 1, 1)
+		var null_move_check:float = chess_branch.alphabeta(chess_state, score, -10000, 10000, 1, 1)
 		if null_move_check <= -500:
 			lose.emit.call_deferred()
 		else:
@@ -73,7 +75,7 @@ func send_opponent_valid_move() -> void:	# 仅限轮到对方时使用
 	var move_list:Dictionary = chess_branch.search(chess_state, 1, 1)
 	var output:Array[Move] = []
 	if move_list.size() == 0:
-		var null_move_check:float = chess_branch.alphabeta(chess_state, -10000, 10000, 1, 0)
+		var null_move_check:float = chess_branch.alphabeta(chess_state, score, -10000, 10000, 1, 0)
 		if null_move_check >= 500:
 			win.emit()
 		else:

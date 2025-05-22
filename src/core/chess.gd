@@ -25,6 +25,6 @@ func change_chessboard(next:String) -> void:
 
 func get_current_chessboard() -> Chessboard:
 	return current_chessboard
-  
+
 func set_current_chessboard(_chessboard:Chessboard) -> void:
 	current_chessboard = _chessboard

@@ -166,7 +166,7 @@ func start() -> void:
 			if $pastor.create_state_from_fen():
 				var dialog_2:Dialog = Dialog.create_dialog_instance([
 					"现在棋盘已经准备好了。",
-					"根据棋局信息，" + ("目前是白方先手。" if $pastor.chess_state.extra[0] == "w" else "目前是黑方先手。"),
+					"根据棋局信息，" + ("目前是白方先手。" if $pastor.chess_state.get_extra(0) == "w" else "目前是黑方先手。"),
 					"开始对局，祝你好运……"
 				])
 				add_child(dialog_2)

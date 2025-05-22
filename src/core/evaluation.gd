@@ -43,13 +43,13 @@ const position_value_bishop:PackedInt32Array = [
 ]
 const position_value_knight:PackedInt32Array = [
 	-66, -53, -75, -75, -10, -55, -58, -70,
-     -3,  -6, 100, -36,   4,  62,  -4, -14,
-     10,  67,   1,  74,  73,  27,  62,  -2,
-     24,  24,  45,  37,  33,  41,  25,  17,
-     -1,   5,  31,  21,  22,  35,   2,   0,
-    -18,  10,  13,  22,  18,  15,  11, -14,
-    -23, -15,   2,   0,   2,   0, -23, -20,
-    -74, -23, -26, -24, -19, -35, -22, -69
+	 -3,  -6, 100, -36,   4,  62,  -4, -14,
+	 10,  67,   1,  74,  73,  27,  62,  -2,
+	 24,  24,  45,  37,  33,  41,  25,  17,
+	 -1,   5,  31,  21,  22,  35,   2,   0,
+	-18,  10,  13,  22,  18,  15,  11, -14,
+	-23, -15,   2,   0,   2,   0, -23, -20,
+	-74, -23, -26, -24, -19, -35, -22, -69
 ]
 const position_value_pawn:PackedInt32Array = [
 	  0,   0,   0,   0,   0,   0,   0,   0,
@@ -62,29 +62,35 @@ const position_value_pawn:PackedInt32Array = [
 	  0,   0,   0,   0,   0,   0,   0,   0
 ]
 
-func evaluate_state(state:ChessState) -> float:
+static func get_piece_score(position_name:String, piece:Piece) -> float:
+	var piece_position:Vector2i = Chess.to_piece_position(position_name)
+	var group:int = piece.group
+	if group == 1:
+		piece_position.y = 7 - piece_position.y
+	match piece.class_type.get_name():
+		"King":
+			return(position_value_king[piece_position.x + (7 - piece_position.y) * 8] / 100.0 + 600.0) * (1 if group == 0 else -1)
+		"Queen":
+			return(position_value_queen[piece_position.x + (7 - piece_position.y) * 8] / 100.0 + 9.29) * (1 if group == 0 else -1)
+		"Rook":
+			return(position_value_rook[piece_position.x + (7 - piece_position.y) * 8] / 100.0 + 4.79) * (1 if group == 0 else -1)
+		"Bishop":
+			return(position_value_bishop[piece_position.x + (7 - piece_position.y) * 8] / 100.0 + 3.2) * (1 if group == 0 else -1)
+		"Knight":
+			return(position_value_knight[piece_position.x + (7 - piece_position.y) * 8] / 100.0 + 2.8) * (1 if group == 0 else -1)
+		"Pawn":
+			return(position_value_pawn[piece_position.x + (7 - piece_position.y) * 8] / 100.0 + 1) * (1 if group == 0 else -1)
+		_:
+			return(1 if group == 0 else -1)	# 未知棋子，在某种规则下出现了未知的棋子，我们可以特别处理未知的棋子
+
+static func evaluate_move(state:ChessState, move:Move) -> float:
 	var score:float = 0
-	for iter:String in state.pieces:
-		var piece_position:Vector2i = Chess.to_piece_position(iter)
-		var group:int = state.get_piece(iter).group
-		if group == 1:
-			piece_position.y = 7 - piece_position.y
-		match state.get_piece(iter).class_type.get_name():
-			"King":
-				score += (position_value_king[piece_position.x + (7 - piece_position.y) * 8] / 100.0 + 600.0) * (1 if group == 0 else -1)
-			"Queen":
-				score += (position_value_queen[piece_position.x + (7 - piece_position.y) * 8] / 100.0 + 9.29) * (1 if group == 0 else -1)
-			"Rook":
-				score += (position_value_rook[piece_position.x + (7 - piece_position.y) * 8] / 100.0 + 4.79) * (1 if group == 0 else -1)
-			"Bishop":
-				score += (position_value_bishop[piece_position.x + (7 - piece_position.y) * 8] / 100.0 + 3.2) * (1 if group == 0 else -1)
-			"Knight":
-				score += (position_value_knight[piece_position.x + (7 - piece_position.y) * 8] / 100.0 + 2.8) * (1 if group == 0 else -1)
-			"Pawn":
-				score += (position_value_pawn[piece_position.x + (7 - piece_position.y) * 8] / 100.0 + 1) * (1 if group == 0 else -1)
-			_:
-				score += (1 if group == 0 else -1)	# 未知棋子，在某种规则下出现了未知的棋子，我们可以特别处理未知的棋子
-		#可移动格子数量
-		var move_list:Array[Move] = state.get_piece(iter).class_type.get_valid_move(state, iter)
-		score += move_list.size() * 0.1
+	var events:Array[ChessEvent] = state.create_event(move)
+	for iter:ChessEvent in events:
+		if iter is ChessEvent.AddPiece:
+			score += get_piece_score(iter.position_name, iter.piece)
+		if iter is ChessEvent.MovePiece:
+			score += get_piece_score(iter.position_name_to, state.get_piece(iter.position_name_from)) - get_piece_score(iter.position_name_from, state.get_piece(iter.position_name_from))
+		if iter is ChessEvent.CapturePiece:
+			score -= get_piece_score(iter.position_name, iter.piece)
 	return score
