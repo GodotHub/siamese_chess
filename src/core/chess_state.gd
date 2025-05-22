@@ -1,12 +1,21 @@
 extends RefCounted
 class_name ChessState
 
+enum ExtraType 
+{
+	TURN = 0,
+	CASTLE = 1,
+	EN_PASSANT = 2,
+	TO_DRAW = 3,
+	STEP = 4,
+	KING_PASSANT = 5,
+}
+
 signal piece_added(position_name:String)
 signal piece_moved(position_name_from:String, position_name_to:String)
 signal piece_removed(position_name:String)
 var pieces:Dictionary[String, Piece] = {}
 var extra:PackedStringArray = []
-var score:float = 0
 
 static func get_piece_mapping() -> Dictionary:
 	var piece_mapping:Dictionary = {}
@@ -60,8 +69,6 @@ static func create_from_fen(fen:String) -> ChessState:
 		return null
 	for i:int in range(1, fen_splited.size()):
 		state.extra.push_back(fen_splited[i])
-	if state.extra.size() == 5:
-		state.extra.push_back("-")
 	return state
 
 func stringify() -> String:
@@ -96,7 +103,6 @@ func duplicate() -> ChessState:
 	var new_state:ChessState = ChessState.new()
 	new_state.pieces = pieces.duplicate(true)
 	new_state.extra = extra.duplicate()
-	new_state.score = score
 	return new_state
 
 static func is_equal(state_a:ChessState, state_b:ChessState) -> bool:
@@ -123,42 +129,55 @@ func get_valid_move(position_name_from:String) -> Array[Move]:
 		return pieces[position_name_from].class_type.get_valid_move(self, position_name_from)
 	return []
 
-func execute_move(move:Move) -> void:
-	if !has_piece(move.position_name_from):
-		return
+func create_event(move:Move) -> Array[ChessEvent]:
+	var output:Array[ChessEvent] = []
 	if pieces[move.position_name_from].group == 1:
-		extra[4] = "%d" % (extra[5].to_int() + 1)
-		extra[0] = "w"
+		output.push_back(ChessEvent.ChangeExtra.create(4, get_extra(4), "%d" % (get_extra(5).to_int() + 1)))
+		output.push_back(ChessEvent.ChangeExtra.create(0, get_extra(0), "w"))
 	elif pieces[move.position_name_from].group == 0:
-		extra[0] = "b"
-	var last_en_passant:String = extra[2]
-	var last_king_passant:String = extra[5]
-	pieces[move.position_name_from].class_type.execute_move(self, move)
-	if last_en_passant == extra[2]:
-		extra[2] = "-"
-	if last_king_passant == extra[5]:
-		extra[5] = "-"
+		output.push_back(ChessEvent.ChangeExtra.create(0, get_extra(0), "b"))
+	output.append_array(pieces[move.position_name_from].class_type.create_event(self, move))
+	if get_extra(2) != "-":
+		output.push_back(ChessEvent.ChangeExtra.create(2, get_extra(2), "-"))
+	if get_extra(5) != "-":
+		output.push_back(ChessEvent.ChangeExtra.create(5, get_extra(5), "-"))
+	return output
+
+func apply_event(events:Array[ChessEvent]) -> void:
+	for iter:ChessEvent in events:
+		iter.apply_change(self)
+
+func rollback_event(events:Array[ChessEvent]) -> void:
+	for i:int in range(events.size() - 1, -1, -1):
+		events[i].rollback_change(self)
 
 func add_piece(_position_name:String, _piece:Piece) -> void:	# 作为吃子的逆运算
 	pieces[_position_name] = _piece
-	score += _piece.class_type.get_value(_position_name, _piece.group)
 	piece_added.emit(_position_name)
 
 func capture_piece(_position_name:String) -> void:
 	if pieces.has(_position_name):
-		score -= pieces[_position_name].class_type.get_value(_position_name, pieces[_position_name].group)
 		pieces.erase(_position_name)	# 虽然大多数情况是攻击者移到被攻击者上，但是吃过路兵是例外，后续可能会出现类似情况，所以还是得手多一下
 		piece_removed.emit(_position_name)
 
 func move_piece(_position_name_from:String, _position_name_to:String) -> void:
 	var _piece:Piece = get_piece(_position_name_from)
-	score += _piece.class_type.get_value(_position_name_to, _piece.group) - _piece.class_type.get_value(_position_name_from, _piece.group)
 	pieces.erase(_position_name_from)
 	pieces[_position_name_to] = _piece
 	piece_moved.emit(_position_name_from, _position_name_to)
 
-func get_score() -> float:
-	return score
+func get_extra(index:int) -> String:
+	if index < extra.size():
+		return extra[index]
+	return "-"
+
+func set_extra(index:int, value:String) -> void:
+	if index < extra.size():
+		extra[index] = value
+
+func reserve_extra(size:int) -> void:	# 预留空间
+	while extra.size() < size:
+		extra.push_back("-")
 
 func get_all_move(group:int) -> Array[Move]:	# 指定阵营
 	var output:Array[Move] = []
