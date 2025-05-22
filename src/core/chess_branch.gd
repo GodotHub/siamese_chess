@@ -5,7 +5,7 @@ func alphabeta(_state:ChessState, score:float, alpha:float, beta:float, depth:in
 	if depth <= 0:	# 底端
 		return score
 	var move_list:Array[Move] = []
-	var move_value:Dictionary[String, float] = {}
+	var move_value:Dictionary[Move, float] = {}
 	if group == 0:
 		# 空着裁剪
 		var null_move_value:float = alphabeta(_state, score, beta - 1, beta, depth - 4, 1)
@@ -14,13 +14,13 @@ func alphabeta(_state:ChessState, score:float, alpha:float, beta:float, depth:in
 
 		move_list = _state.get_all_move(group)
 		for iter:Move in move_list:
-			move_value[iter.stringify()] = Evaluation.evaluate_move(_state, iter)
+			move_value[iter] = Evaluation.evaluate_move(_state, iter)
 		var value:float = -10000
-		move_list.sort_custom(func(a:Move, b:Move) -> bool: return move_value[a.stringify()] > move_value[b.stringify()])
+		move_list.sort_custom(func(a:Move, b:Move) -> bool: return move_value[a] > move_value[b])
 		for iter:Move in move_list:
 			var events:Array[ChessEvent] = _state.create_event(iter)
 			_state.apply_event(events)
-			value = max(value, alphabeta(_state, score + move_value[iter.stringify()], alpha, beta, depth - 1, 1))
+			value = max(value, alphabeta(_state, score + move_value[iter], alpha, beta, depth - 1, 1))
 			_state.rollback_event(events)
 			alpha = max(alpha, value)
 			if beta <= alpha:
@@ -34,13 +34,13 @@ func alphabeta(_state:ChessState, score:float, alpha:float, beta:float, depth:in
 
 		move_list = _state.get_all_move(group)
 		for iter:Move in move_list:
-			move_value[iter.stringify()] = Evaluation.evaluate_move(_state, iter)
+			move_value[iter] = Evaluation.evaluate_move(_state, iter)
 		var value:float = 10000
-		move_list.sort_custom(func(a:Move, b:Move) -> bool: return move_value[a.stringify()] < move_value[b.stringify()])
+		move_list.sort_custom(func(a:Move, b:Move) -> bool: return move_value[a] < move_value[b])
 		for iter:Move in move_list:
 			var events:Array[ChessEvent] = _state.create_event(iter)
 			_state.apply_event(events)
-			value = min(value, alphabeta(_state, score + move_value[iter.stringify()], alpha, beta, depth - 1, 0))
+			value = min(value, alphabeta(_state, score + move_value[iter], alpha, beta, depth - 1, 0))
 			_state.rollback_event(events)
 			beta = min(beta, value)
 			if beta <= alpha:
