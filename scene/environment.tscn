@@ -1,19 +1,16 @@
-[gd_scene load_steps=14 format=3 uid="uid://bmyf2h17xaxlj"]
+[gd_scene load_steps=15 format=3 uid="uid://bmyf2h17xaxlj"]
 
 [ext_resource type="PackedScene" uid="uid://gdof8yy8yrjv" path="res://assets/model/environment.glb" id="1_b3374"]
 [ext_resource type="PackedScene" uid="uid://d1s6qj7aofldk" path="res://scene/chessboard.tscn" id="2_3p4nk"]
 [ext_resource type="Script" uid="uid://b5tdvskepo5dh" path="res://src/environment.gd" id="2_7r8ay"]
 [ext_resource type="PackedScene" uid="uid://b3ml34bssywkr" path="res://scene/cheshire.tscn" id="3_1vcsq"]
+[ext_resource type="PackedScene" uid="uid://n5i2mcgyqj3k" path="res://scene/chess_timer.tscn" id="3_po4na"]
 [ext_resource type="PackedScene" uid="uid://b0ots07uggqyg" path="res://scene/history.tscn" id="5_4qusu"]
 [ext_resource type="PackedScene" uid="uid://cispm4sihu5b3" path="res://scene/pastor.tscn" id="6_uwfkk"]
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_uwfkk"]
-transparency = 1
-albedo_color = Color(0.67, 0.9065, 1, 0.258824)
-
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_po4na"]
 transparency = 1
-albedo_color = Color(0.670588, 0.905882, 1, 0.258824)
+blend_mode = 3
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_3p4nk"]
 sky_horizon_color = Color(0.662243, 0.671743, 0.686743, 1)
@@ -24,7 +21,6 @@ sky_material = SubResource("ProceduralSkyMaterial_3p4nk")
 
 [sub_resource type="Environment" id="Environment_7r8ay"]
 background_mode = 2
-background_color = Color(0.88, 0.88, 0.88, 1)
 sky = SubResource("Sky_1vcsq")
 tonemap_mode = 2
 
@@ -34,13 +30,28 @@ size = Vector3(0.407043, 0.00946045, 0.313843)
 [sub_resource type="BoxShape3D" id="BoxShape3D_uwfkk"]
 size = Vector3(0.511902, 0.0298615, 0.512817)
 
+[sub_resource type="BoxShape3D" id="BoxShape3D_tnamw"]
+size = Vector3(0.328775, 0.0970306, 0.14682)
+
 [node name="environment" instance=ExtResource("1_b3374")]
 script = ExtResource("2_7r8ay")
 
-[node name="window_left" parent="window" index="0"]
-surface_material_override/1 = SubResource("StandardMaterial3D_uwfkk")
+[node name="window_left_000" parent="window_000" index="0"]
+surface_material_override/1 = SubResource("StandardMaterial3D_po4na")
 
-[node name="window_right" parent="window" index="1"]
+[node name="window_right_000" parent="window_000" index="1"]
+surface_material_override/1 = SubResource("StandardMaterial3D_po4na")
+
+[node name="window_left_001" parent="window_001" index="0"]
+surface_material_override/1 = SubResource("StandardMaterial3D_po4na")
+
+[node name="window_right_001" parent="window_001" index="1"]
+surface_material_override/1 = SubResource("StandardMaterial3D_po4na")
+
+[node name="window_left_002" parent="window_002" index="0"]
+surface_material_override/1 = SubResource("StandardMaterial3D_po4na")
+
+[node name="window_right_002" parent="window_002" index="1"]
 surface_material_override/1 = SubResource("StandardMaterial3D_po4na")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="." index="16"]
@@ -56,14 +67,17 @@ directional_shadow_blend_splits = true
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." index="17"]
 environment = SubResource("Environment_7r8ay")
 
-[node name="chessboard" parent="." index="18" instance=ExtResource("2_3p4nk")]
-transform = Transform3D(5.5732e-08, 0, 0.425, 0, 0.425, 0, -0.425, 0, 5.5732e-08, -0.012351, 0.870713, -0.0144923)
+[node name="chess_timer" parent="." index="18" instance=ExtResource("3_po4na")]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -0.00990965, 0.857578, -0.681214)
 
-[node name="history" parent="." index="19" instance=ExtResource("5_4qusu")]
-transform = Transform3D(0.282141, 0, -0.959372, 0, 1, 0, 0.959372, 0, 0.282141, -0.156436, 0.8601, -0.453761)
+[node name="chessboard" parent="." index="19" instance=ExtResource("2_3p4nk")]
+transform = Transform3D(5.5732e-08, 0, 0.425, 0, 0.425, 0, -0.425, 0, 5.5732e-08, -0.012351, 0.870713, -0.20139)
 
-[node name="cheshire" parent="." index="20" instance=ExtResource("3_1vcsq")]
-transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -0.712916, 1.40416, -0.0144924)
+[node name="history" parent="." index="20" instance=ExtResource("5_4qusu")]
+transform = Transform3D(0.07162, 0, -0.997431, 0, 1, 0, 0.997431, 0, 0.07162, -0.395858, 0.8601, -0.604932)
+
+[node name="cheshire" parent="." index="21" instance=ExtResource("3_1vcsq")]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -0.712916, 1.40416, -0.20139)
 
 [node name="camera_chessboard_side" type="Camera3D" parent="cheshire" index="0"]
 transform = Transform3D(-0.258819, 0.25, -0.933013, 1.54268e-08, 0.965926, 0.258819, 0.965926, 0.0669873, -0.25, -0.578096, -0.375964, -0.820515)
@@ -77,7 +91,7 @@ transform = Transform3D(1, -5.42472e-09, -3.3787e-10, 5.42471e-09, 0.992269, 0.1
 fov = 44.5266
 
 [node name="area_history" type="Area3D" parent="cheshire" index="6"]
-transform = Transform3D(0.2806, 0, -0.959825, 0, 1, 0, 0.959825, 0, 0.2806, -0.429882, -0.546597, -0.56909)
+transform = Transform3D(0.0614669, 0, -0.998109, 0, 1, 0, 0.998109, 0, 0.0614669, -0.40007, -0.546597, -0.382827)
 collision_mask = 0
 monitoring = false
 monitorable = false
@@ -102,5 +116,19 @@ shape = SubResource("BoxShape3D_uwfkk")
 [node name="camera_3d" type="Camera3D" parent="cheshire/area_chessboard" index="1"]
 transform = Transform3D(-1.13133e-08, -0.965926, 0.258819, -4.2222e-08, 0.258819, 0.965926, -1, -5.68434e-14, -4.37114e-08, 0.105483, 0.313066, 9.31323e-10)
 
-[node name="pastor" parent="." index="21" instance=ExtResource("6_uwfkk")]
-transform = Transform3D(-1.18021e-08, 0, -0.27, 0, 0.27, 0, 0.27, 0, -1.18021e-08, 0.430662, 0.869423, -0.0427549)
+[node name="area_timer" type="Area3D" parent="cheshire" index="8"]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -0.487093, -0.546597, -0.711289)
+collision_mask = 0
+monitoring = false
+monitorable = false
+
+[node name="collision_shape_3d" type="CollisionShape3D" parent="cheshire/area_timer" index="0"]
+transform = Transform3D(0.999994, 0, -1.93715e-07, 0, 1, 0, 1.93715e-07, 0, 0.999994, -0.00310197, 0.0469894, 0.0123141)
+shape = SubResource("BoxShape3D_tnamw")
+
+[node name="camera_3d" type="Camera3D" parent="cheshire/area_timer" index="1"]
+transform = Transform3D(0.772206, 0.26647, -0.576794, 0.165508, 0.792103, 0.58752, 0.613437, -0.549151, 0.567563, -0.227903, 0.279582, 0.24583)
+fov = 55.9
+
+[node name="pastor" parent="." index="22" instance=ExtResource("6_uwfkk")]
+transform = Transform3D(-1.18021e-08, 0, -0.27, 0, 0.27, 0, 0.27, 0, -1.18021e-08, 0.430662, 0.869423, -0.229653)

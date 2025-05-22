@@ -1,0 +1,7 @@
+[gd_scene load_steps=3 format=3 uid="uid://n5i2mcgyqj3k"]
+
+[ext_resource type="PackedScene" uid="uid://dmo5204uinktq" path="res://assets/model/chess_timer.glb" id="1_jy1k2"]
+[ext_resource type="Script" uid="uid://303g4umue4bi" path="res://src/chess_timer.gd" id="2_vaj2q"]
+
+[node name="chess_timer" instance=ExtResource("1_jy1k2")]
+script = ExtResource("2_vaj2q")
