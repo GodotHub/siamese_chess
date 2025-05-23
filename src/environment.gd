@@ -7,6 +7,7 @@ func _ready() -> void:
 	$cheshire.set_initial_camera($cheshire/camera_on_seat)
 	$chessboard.connect("move_played", $history.push_move)
 	$chessboard.connect("move_played", $pastor.receive_move)
+	$chessboard.connect("press_timer", $chess_timer.next)
 	$pastor.connect("send_initial_state", $chessboard.set_state)
 	$pastor.connect("decided_move", $chessboard.execute_move)
 	$pastor.connect("send_opponent_move", $chessboard.set_valid_move)
@@ -161,6 +162,7 @@ func start() -> void:
 			await dialog_2.on_next
 			await dialog_2.on_next
 			$pastor.start_decision()
+			$chess_timer.start_game(1800, 1)
 			break
 		elif decision_instance.selected_index == 1:
 			if $pastor.create_state_from_fen():
@@ -175,6 +177,7 @@ func start() -> void:
 				await dialog_2.on_next
 				await dialog_2.on_next
 				$pastor.start_decision()
+				$chess_timer.start_game(1800, 1)
 				break
 		$cheshire.force_set_camera($cheshire/camera_pastor_closeup)
 		var dialog_illegal:Dialog = Dialog.create_dialog_instance(["您的剪贴板似乎没有记下局面，或者格式不对，", "注意是FEN格式，请您复制好再重新尝试！"])

@@ -2,6 +2,7 @@ extends Node3D
 class_name Chessboard
 
 signal move_played(move:Move)
+signal press_timer()
 
 var chess_state:ChessState = null
 var valid_move:Dictionary[String, Array] = {}
@@ -77,6 +78,7 @@ func confirm_move(position_name_from:String, position_name_to:String) -> void:
 func execute_move(move:Move) -> void:
 	chess_state.apply_event(chess_state.create_event(move))
 	move_played.emit(move)
+	press_timer.emit()
 
 func set_valid_move(move_list:Array[Move]) -> void:
 	valid_move.clear()
