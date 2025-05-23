@@ -129,13 +129,14 @@ func get_valid_move(position_name_from:String) -> Array[Move]:
 		return pieces[position_name_from].class_type.get_valid_move(self, position_name_from)
 	return []
 
-func create_event(move:Move) -> Array[ChessEvent]:
+func create_event(move:Move, simplified:bool = false) -> Array[ChessEvent]:
 	var output:Array[ChessEvent] = []
-	if pieces[move.position_name_from].group == 1:
-		output.push_back(ChessEvent.ChangeExtra.create(4, get_extra(4), "%d" % (get_extra(5).to_int() + 1)))
-		output.push_back(ChessEvent.ChangeExtra.create(0, get_extra(0), "w"))
-	elif pieces[move.position_name_from].group == 0:
-		output.push_back(ChessEvent.ChangeExtra.create(0, get_extra(0), "b"))
+	if !simplified:
+		if pieces[move.position_name_from].group == 1:
+			output.push_back(ChessEvent.ChangeExtra.create(4, get_extra(4), "%d" % (get_extra(5).to_int() + 1)))
+			output.push_back(ChessEvent.ChangeExtra.create(0, get_extra(0), "w"))
+		elif pieces[move.position_name_from].group == 0:
+			output.push_back(ChessEvent.ChangeExtra.create(0, get_extra(0), "b"))
 	output.append_array(pieces[move.position_name_from].class_type.create_event(self, move))
 	if get_extra(2) != "-":
 		output.push_back(ChessEvent.ChangeExtra.create(2, get_extra(2), "-"))
