@@ -34,9 +34,12 @@ static func get_valid_move(state:ChessState, position_name_from:String) -> Array
 	var output:Array[Move] = []
 	for iter:Vector2i in directions:
 		var position_name_to:String = Chess.direction_to(position_name_from, iter)
-		while position_name_to && (!state.has_piece(position_name_to) || state.get_piece(position_name_from).group != state.get_piece(position_name_to).group):
+		var to_has_piece:bool = state.has_piece(position_name_to)
+		var from_piece:Piece = state.get_piece(position_name_from)
+		var to_piece:Piece = state.get_piece(position_name_to)
+		while position_name_to && (!to_has_piece || from_piece.group != to_piece.group):
 			output.push_back(Move.create(position_name_from, position_name_to, "", "Default"))
-			if state.has_piece(position_name_to) && state.get_piece(position_name_from).group != state.get_piece(position_name_to).group:
+			if to_has_piece && from_piece.group != to_piece.group:
 				break
 			position_name_to = Chess.direction_to(position_name_to, iter)
 	return output
