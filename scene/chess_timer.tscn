@@ -1,7 +1,48 @@
-[gd_scene load_steps=3 format=3 uid="uid://n5i2mcgyqj3k"]
+[gd_scene load_steps=6 format=3 uid="uid://n5i2mcgyqj3k"]
 
 [ext_resource type="PackedScene" uid="uid://dmo5204uinktq" path="res://assets/model/chess_timer.glb" id="1_jy1k2"]
 [ext_resource type="Script" uid="uid://303g4umue4bi" path="res://src/chess_timer.gd" id="2_vaj2q"]
 
+[sub_resource type="ViewportTexture" id="ViewportTexture_vaj2q"]
+viewport_path = NodePath("sub_viewport")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_mbuvm"]
+resource_local_to_scene = true
+albedo_texture = SubResource("ViewportTexture_vaj2q")
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_41mnw"]
+bg_color = Color(0.0503998, 0.111772, 0.0784249, 1)
+
 [node name="chess_timer" instance=ExtResource("1_jy1k2")]
 script = ExtResource("2_vaj2q")
+
+[node name="body" parent="." index="0"]
+surface_material_override/1 = SubResource("StandardMaterial3D_mbuvm")
+
+[node name="sub_viewport" type="SubViewport" parent="." index="2"]
+size = Vector2i(256, 32)
+
+[node name="panel" type="Panel" parent="sub_viewport" index="0"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_41mnw")
+
+[node name="label" type="Label" parent="sub_viewport/panel" index="0"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "TIMER"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="timer_0" type="Timer" parent="." index="3"]
+wait_time = 1800.0
+
+[node name="timer_1" type="Timer" parent="." index="4"]
+wait_time = 1800.0
