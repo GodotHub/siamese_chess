@@ -183,7 +183,5 @@ func get_all_move(group:int) -> Array[Move]:	# 指定阵营
 	var output:Array[Move] = []
 	for position_name_from:String in pieces:
 		if group == pieces[position_name_from].group:	# 当前阵营
-			var piece_move_list:Array[Move] = pieces[position_name_from].class_type.get_valid_move(self, position_name_from)
-			for move:Move in piece_move_list:
-				output.push_back(move)
+			output.append_array(pieces[position_name_from].class_type.get_valid_move(self, position_name_from))
 	return output

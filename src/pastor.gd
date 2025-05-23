@@ -40,8 +40,9 @@ func start_decision() -> void:
 	thread.start(decision)
 
 func receive_move(move:Move) -> void:
-	score += Evaluation.evaluate_move(chess_state, move)
-	chess_state.apply_event(chess_state.create_event(move))
+	var events:Array[ChessEvent] = chess_state.create_event(move)
+	score += Evaluation.evaluate_events(chess_state, events)
+	chess_state.apply_event(events)
 	
 	history.push_back(chess_state.stringify())
 	if chess_state.get_extra(0) == "w":

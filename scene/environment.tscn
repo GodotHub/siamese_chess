@@ -4,7 +4,7 @@
 [ext_resource type="PackedScene" uid="uid://d1s6qj7aofldk" path="res://scene/chessboard.tscn" id="2_3p4nk"]
 [ext_resource type="Script" uid="uid://b5tdvskepo5dh" path="res://src/environment.gd" id="2_7r8ay"]
 [ext_resource type="PackedScene" uid="uid://b3ml34bssywkr" path="res://scene/cheshire.tscn" id="3_1vcsq"]
-[ext_resource type="PackedScene" uid="uid://n5i2mcgyqj3k" path="res://scene/chess_timer.tscn" id="3_po4na"]
+[ext_resource type="PackedScene" path="res://scene/chess_timer.tscn" id="3_po4na"]
 [ext_resource type="PackedScene" uid="uid://b0ots07uggqyg" path="res://scene/history.tscn" id="5_4qusu"]
 [ext_resource type="PackedScene" uid="uid://cispm4sihu5b3" path="res://scene/pastor.tscn" id="6_uwfkk"]
 

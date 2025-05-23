@@ -1,7 +1,17 @@
 extends Object
 class_name Evaluation	# 接口
 
-const position_value_king:PackedInt32Array = [
+const piece_value:Dictionary[String, float] = {
+	"King": 600.0,
+	"Queen": 9.29,
+	"Rook": 4.79,
+	"Bishop": 3.2,
+	"Knight": 2.8,
+	"Pawn": 1,
+}
+
+const position_value:Dictionary[String, Array] = {
+	"King": [
 	  4,  54,  47, -99, -99,  60,  83, -62,
 	-32,  10,  55,  56,  56,  55,  10,   3,
 	-62,  12, -57,  44, -67,  28,  37, -31,
@@ -10,8 +20,8 @@ const position_value_king:PackedInt32Array = [
 	-47, -42, -43, -79, -64, -32, -29, -32,
 	 -4,   3, -14, -50, -57, -18,  13,   4,
 	 17,  30,  -3, -14,   6,  -1,  40,  18
-]
-const position_value_queen:PackedInt32Array = [
+	],
+	"Queen": [
 	  6,   1,  -8,-104,  69,  24,  88,  26,
 	 14,  32,  60, -10,  20,  76,  57,  24,
 	 -2,  43,  32,  60,  72,  63,  43,   2,
@@ -20,8 +30,8 @@ const position_value_queen:PackedInt32Array = [
 	-30,  -6, -13, -11, -16, -11, -16, -27,
 	-36, -18,   0, -19, -15, -15, -21, -38,
 	-39, -30, -31, -13, -31, -36, -34, -42
-]
-const position_value_rook:PackedInt32Array = [
+	],
+	"Rook": [
 	 35,  29,  33,   4,  37,  33,  56,  50,
 	 55,  29,  56,  67,  55,  62,  34,  60,
 	 19,  35,  28,  33,  45,  27,  25,  15,
@@ -30,8 +40,8 @@ const position_value_rook:PackedInt32Array = [
 	-42, -28, -42, -25, -25, -35, -26, -46,
 	-53, -38, -31, -26, -29, -43, -44, -53,
 	-30, -24, -18,   5,  -2, -18, -31, -32
-]
-const position_value_bishop:PackedInt32Array = [
+	],
+	"Bishop": [
 	-59, -78, -82, -76, -23,-107, -37, -50,
 	-11,  20,  35, -42, -39,  31,   2, -22,
 	 -9,  39, -32,  41,  52, -10,  28, -14,
@@ -40,8 +50,8 @@ const position_value_bishop:PackedInt32Array = [
 	 14,  25,  24,  15,   8,  25,  20,  15,
 	 19,  20,  11,   6,   7,   6,  20,  16,
 	 -7,   2, -15, -12, -14, -15, -10, -10
-]
-const position_value_knight:PackedInt32Array = [
+	],
+	"Knight": [
 	-66, -53, -75, -75, -10, -55, -58, -70,
 	 -3,  -6, 100, -36,   4,  62,  -4, -14,
 	 10,  67,   1,  74,  73,  27,  62,  -2,
@@ -50,8 +60,8 @@ const position_value_knight:PackedInt32Array = [
 	-18,  10,  13,  22,  18,  15,  11, -14,
 	-23, -15,   2,   0,   2,   0, -23, -20,
 	-74, -23, -26, -24, -19, -35, -22, -69
-]
-const position_value_pawn:PackedInt32Array = [
+	],
+	"Pawn": [
 	  0,   0,   0,   0,   0,   0,   0,   0,
 	 78,  83,  86,  73, 102,  82,  85,  90,
 	  7,  29,  21,  44,  40,  31,  44,   7,
@@ -60,32 +70,20 @@ const position_value_pawn:PackedInt32Array = [
 	-22,   9,   5, -11, -10,  -2,   3, -19,
 	-31,   8,  -7, -37, -36, -14,   3, -31,
 	  0,   0,   0,   0,   0,   0,   0,   0
-]
-
+	]
+}
 static func get_piece_score(position_name:String, piece:Piece) -> float:
 	var piece_position:Vector2i = Chess.to_piece_position(position_name)
 	var group:int = piece.group
 	if group == 1:
 		piece_position.y = 7 - piece_position.y
-	match piece.class_type.get_name():
-		"King":
-			return(position_value_king[piece_position.x + (7 - piece_position.y) * 8] / 100.0 + 600.0) * (1 if group == 0 else -1)
-		"Queen":
-			return(position_value_queen[piece_position.x + (7 - piece_position.y) * 8] / 100.0 + 9.29) * (1 if group == 0 else -1)
-		"Rook":
-			return(position_value_rook[piece_position.x + (7 - piece_position.y) * 8] / 100.0 + 4.79) * (1 if group == 0 else -1)
-		"Bishop":
-			return(position_value_bishop[piece_position.x + (7 - piece_position.y) * 8] / 100.0 + 3.2) * (1 if group == 0 else -1)
-		"Knight":
-			return(position_value_knight[piece_position.x + (7 - piece_position.y) * 8] / 100.0 + 2.8) * (1 if group == 0 else -1)
-		"Pawn":
-			return(position_value_pawn[piece_position.x + (7 - piece_position.y) * 8] / 100.0 + 1) * (1 if group == 0 else -1)
-		_:
-			return(1 if group == 0 else -1)	# 未知棋子，在某种规则下出现了未知的棋子，我们可以特别处理未知的棋子
+	if piece_value.has(piece.class_type.get_name()):
+		return (position_value[piece.class_type.get_name()][piece_position.x + (7 - piece_position.y) * 8] / 100.0 + piece_value[piece.class_type.get_name()]) * (1 if group == 0 else -1)
+	else:
+		return (1 if group == 0 else -1)	# 未知棋子，在某种规则下出现了未知的棋子，我们可以特别处理未知的棋子
 
-static func evaluate_move(state:ChessState, move:Move) -> float:
+static func evaluate_events(state:ChessState, events:Array[ChessEvent]) -> float:
 	var score:float = 0
-	var events:Array[ChessEvent] = state.create_event(move)
 	for iter:ChessEvent in events:
 		if iter is ChessEvent.AddPiece:
 			score += get_piece_score(iter.position_name, iter.piece)
