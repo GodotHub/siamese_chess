@@ -25,7 +25,7 @@ static func create_event(state:ChessState, move:Move) -> Array[ChessEvent]:
 			output.push_back(ChessEvent.ChangeExtra.create(1, state.get_extra(1), state.get_extra(1).erase(state.get_extra(1).find("q"), 1)))
 	if state.has_piece(move.position_name_to):
 		output.push_back(ChessEvent.CapturePiece.create(move.position_name_to, state.get_piece(move.position_name_to)))
-	if move.position_name_to in state.get_extra(5):
+	if state.get_extra(5).contains(move.position_name_to):
 		if state.get_piece(move.position_name_from).group == 0:
 			if state.has_piece("c8") && state.get_piece("c8").class_type.get_name() == "King":
 				output.push_back(ChessEvent.CapturePiece.create("c8", state.get_piece("c8")))
