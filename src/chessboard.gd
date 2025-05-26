@@ -11,6 +11,8 @@ var piece_instance:Dictionary[String, PieceInstance] = {}
 
 
 func set_state(_state:ChessState) -> void:
+	$canvas.clear_move_position()
+	$canvas.clear_select_position()
 	chess_state = _state
 	chess_state.connect("piece_added", add_piece_instance)
 	chess_state.connect("piece_moved", move_piece_instance)
@@ -77,6 +79,9 @@ func confirm_move(position_name_from:String, position_name_to:String) -> void:
 
 func execute_move(move:Move) -> void:
 	chess_state.apply_event(chess_state.create_event(move))
+	$canvas.clear_move_position()
+	$canvas.draw_move_position($canvas.convert_name_to_position(move.position_name_from))
+	$canvas.draw_move_position($canvas.convert_name_to_position(move.position_name_to))
 	move_played.emit(move)
 	press_timer.emit()
 
