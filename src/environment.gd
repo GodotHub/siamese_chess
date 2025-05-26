@@ -8,6 +8,7 @@ func _ready() -> void:
 	$chessboard.connect("move_played", $history.push_move)
 	$chessboard.connect("move_played", $pastor.receive_move)
 	$chessboard.connect("press_timer", $chess_timer.next)
+	$chess_timer.connect("timeout", timeout)
 	$pastor.connect("send_initial_state", $chessboard.set_state)
 	$pastor.connect("decided_move", $chessboard.execute_move)
 	$pastor.connect("send_opponent_move", $chessboard.set_valid_move)
@@ -38,7 +39,37 @@ func dialog_start() -> void:
 	await dialog_1.on_next
 	start()
 
+func timeout(group:int) -> void:
+	if group == 0:	# 棋钟的阵营1才是Pastor的
+		var dialog_1:Dialog = Dialog.create_dialog_instance([
+			"时间到。",
+			"这不是什么稀罕事，巨大压力之下普通人多少会不知所措。",
+			"能做的就是继续磨练自身的技术了",
+			"还需要再来一局吗？"
+		])
+		add_child(dialog_1)
+		await dialog_1.on_next
+		await dialog_1.on_next
+		await dialog_1.on_next
+		await dialog_1.on_next
+	else:
+		var dialog_1:Dialog = Dialog.create_dialog_instance([
+			"……很意外",
+			"作为引擎竟然还能出现超时。",
+			"您不仅要在时间上领先于我，还需要在防止出错的情况下拖到最后一刻。",
+			"可谓技艺精湛，值得肯定。",
+			"是否需要重新开始？"
+		])
+		add_child(dialog_1)
+		await dialog_1.on_next
+		await dialog_1.on_next
+		await dialog_1.on_next
+		await dialog_1.on_next
+		await dialog_1.on_next
+	start()
+
 func pastor_win() -> void:
+	$chess_timer.stop()
 	var dialog_1:Dialog = Dialog.create_dialog_instance([
 		"……",
 		"看来是我拿下了胜利。",
@@ -57,6 +88,7 @@ func pastor_win() -> void:
 	start()
 
 func pastor_draw(type:int) -> void:	# 0:长将和 1:白方逼和 2:黑方逼和 3:50步和 4:子力不足
+	$chess_timer.stop()
 	match type:
 		0:
 			var dialog_1:Dialog = Dialog.create_dialog_instance([
@@ -127,6 +159,7 @@ func pastor_draw(type:int) -> void:	# 0:长将和 1:白方逼和 2:黑方逼和 
 	start()
 
 func pastor_lose() -> void:
+	$chess_timer.stop()
 	var dialog_1:Dialog = Dialog.create_dialog_instance([
 		"……",
 		"您在标准国际象棋规则中，拿下了胜利。",
@@ -182,7 +215,7 @@ func start() -> void:
 func select_time_limit() -> void:
 	var dialog_1:Dialog = Dialog.create_dialog_instance([
 		"对了，最近我准备了个棋钟。",
-		"如果您选择开启棋钟，那么当您的倒计时结束时，您将会被判负。",
+		"如果您选择开启棋钟，那么这局中某一方的倒计时结束时，这人将会被判负。",
 		"虽然您是在和软件算法进行对决，不过可以锻炼一下思考深度和决策效率。",
 		"那么您是否需要开启计时？"
 	])
