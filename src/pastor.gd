@@ -37,7 +37,7 @@ func create_state_from_fen() -> bool:
 
 func start_decision() -> void:
 	thread = Thread.new()
-	thread.start(decision)
+	thread.start(decision, Thread.PRIORITY_HIGH)
 
 func receive_move(move:Move) -> void:
 	var events:Array[ChessEvent] = chess_state.create_event(move)
@@ -47,7 +47,7 @@ func receive_move(move:Move) -> void:
 	history.push_back(chess_state.stringify())
 	if chess_state.get_extra(0) == "w":
 		thread.wait_to_finish()
-		thread.start(decision)
+		thread.start(decision, Thread.PRIORITY_HIGH)
 	else:
 		send_opponent_valid_move()
 
@@ -55,7 +55,7 @@ func decision() -> void:
 	if chess_state.get_extra(0) == "b":
 		send_opponent_valid_move()
 		return
-	var move_list = chess_branch.search(chess_state, 6, 0)
+	var move_list = chess_branch.search(chess_state, 4, 0)
 	if !move_list.size():
 		# 判定棋局结束
 		var null_move_check:float = chess_branch.alphabeta(chess_state, score, -10000, 10000, 1, 1)

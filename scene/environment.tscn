@@ -4,7 +4,7 @@
 [ext_resource type="PackedScene" uid="uid://d1s6qj7aofldk" path="res://scene/chessboard.tscn" id="2_3p4nk"]
 [ext_resource type="Script" uid="uid://b5tdvskepo5dh" path="res://src/environment.gd" id="2_7r8ay"]
 [ext_resource type="PackedScene" uid="uid://b3ml34bssywkr" path="res://scene/cheshire.tscn" id="3_1vcsq"]
-[ext_resource type="PackedScene" path="res://scene/chess_timer.tscn" id="3_po4na"]
+[ext_resource type="PackedScene" uid="uid://n5i2mcgyqj3k" path="res://scene/chess_timer.tscn" id="3_po4na"]
 [ext_resource type="PackedScene" uid="uid://b0ots07uggqyg" path="res://scene/history.tscn" id="5_4qusu"]
 [ext_resource type="PackedScene" uid="uid://cispm4sihu5b3" path="res://scene/pastor.tscn" id="6_uwfkk"]
 
@@ -68,7 +68,7 @@ directional_shadow_blend_splits = true
 environment = SubResource("Environment_7r8ay")
 
 [node name="chess_timer" parent="." index="18" instance=ExtResource("3_po4na")]
-transform = Transform3D(1, 0, -1.06581e-14, 0, 1, 0, 1.06581e-14, 0, 1, -0.00990965, 0.857578, -0.681214)
+transform = Transform3D(1, 0, -1.06581e-14, 0, 1, 0, 1.06581e-14, 0, 1, -0.00990965, 0.857578, -0.543086)
 
 [node name="chessboard" parent="." index="19" instance=ExtResource("2_3p4nk")]
 transform = Transform3D(5.5732e-08, 0, 0.425, 0, 0.425, 0, -0.425, 0, 5.5732e-08, -0.012351, 0.870713, -0.20139)
@@ -117,7 +117,7 @@ shape = SubResource("BoxShape3D_uwfkk")
 transform = Transform3D(-1.13133e-08, -0.965926, 0.258819, -4.2222e-08, 0.258819, 0.965926, -1, -5.68434e-14, -4.37114e-08, 0.105483, 0.313066, 9.31323e-10)
 
 [node name="area_timer" type="Area3D" parent="cheshire" index="8"]
-transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -0.487093, -0.546597, -0.711289)
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -0.348965, -0.546597, -0.711289)
 collision_mask = 0
 monitoring = false
 monitorable = false

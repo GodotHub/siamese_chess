@@ -5,6 +5,7 @@ extends Node3D
 var lines:Array[Line2D] = []	# 直接暴力搜解决问题
 var select_position:Array[Node2D] = []
 var attack_position:Array[Node2D] = []
+var move_position:Array[Node2D] = []
 var pointer_position:Node2D = null
 var drawing_line:Line2D = null
 
@@ -19,6 +20,12 @@ class ChessboardPointerPosition extends Node2D:
 	func _draw() -> void:
 		draw_rect(Rect2(-resolution / 16, -resolution / 16, resolution / 8, resolution / 8), Color(0.1, 0.6, 0.1, 0.4))
 		draw_rect(Rect2(-resolution / 16, -resolution / 16, resolution / 8, resolution / 8), Color(0.3, 0.6, 0.3), false, 10)
+
+class ChessboardMovePosition extends Node2D:
+	var resolution:float = 512
+	func _draw() -> void:
+		draw_rect(Rect2(-resolution / 16, -resolution / 16, resolution / 8, resolution / 8), Color(0.69411, 0.933333, 0.82745, 0.4))
+		draw_rect(Rect2(-resolution / 16, -resolution / 16, resolution / 8, resolution / 8), Color(0.69411, 0.933333, 0.82745), false, 5)
 
 class ChessboardAttackPosition extends Node2D:
 	var resolution:float = 512
@@ -120,6 +127,18 @@ func clear_attack_position() -> void:
 	for iter:Node2D in attack_position:
 		iter.queue_free()
 	attack_position.clear()
+
+func draw_move_position(drawing_position:Vector2) -> void:
+	var new_point:ChessboardMovePosition = ChessboardMovePosition.new()
+	new_point.position = drawing_position
+	new_point.resolution = resolution
+	$sub_viewport.add_child(new_point)
+	move_position.push_back(new_point)
+
+func clear_move_position() -> void:
+	for iter:Node2D in move_position:
+		iter.queue_free()
+	move_position.clear()
 
 func clear_lines() -> void:
 	for iter:Line2D in lines:

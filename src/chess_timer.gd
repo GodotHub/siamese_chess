@@ -11,6 +11,7 @@ var in_game:bool = false
 var turn:int = 0
 var time_0:int = 0
 var time_1:int = 0
+var extra:int = 0
 
 func _ready() -> void:
 	# 按钮的旋转角度是1.5度，向左倾斜为正数，轮到1。向右则轮到0
@@ -20,21 +21,28 @@ func _ready() -> void:
 	timer_1.connect("timeout", end_game.bind(1))
 	set_physics_process(false)
 
-func start_game(time:int, first:int) -> void:
-	timer_0.wait_time = time
-	timer_1.wait_time = time
-	time_0 = time
-	time_1 = time
-	turn = first
+func set_time(_time:int, _first:int, _extra:int) -> void:
+	timer_0.wait_time = _time
+	timer_1.wait_time = _time
+	time_0 = _time
+	time_1 = _time
+	extra = _extra
+	turn = _first
 	timer_0.start()
 	timer_1.start()
-	if first == 0:
+	timer_0.paused = true
+	timer_1.paused = true
+	in_game = true
+	label.text = "%02d:%02d   %02d:%02d" % [time_0 / 60, time_0 % 60, time_1 / 60, time_1 % 60]
+	#set_physics_process(true)
+
+func start() -> void:
+	if turn == 0:
 		timer_0.paused = false
 		timer_1.paused = true
 	else:
 		timer_0.paused = true
 		timer_1.paused = false
-	in_game = true
 	set_physics_process(true)
 
 func _physics_process(_delta:float) -> void:
@@ -58,9 +66,13 @@ func next() -> void:
 	var tween:Tween = create_tween()
 	tween.tween_property(button, "rotation_degrees:z", 1.5 * (1 if turn == 1 else -1), 0.2).set_trans(Tween.TRANS_SPRING)
 	if turn == 0:
+		timer_1.wait_time = time_1 + extra
+		timer_1.start()
 		timer_0.paused = false
 		timer_1.paused = true
 	else:
+		timer_0.wait_time = time_0 + extra
+		timer_0.start()
 		timer_0.paused = true
 		timer_1.paused = false
 

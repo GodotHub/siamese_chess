@@ -69,6 +69,7 @@ static func create_from_fen(fen:String) -> ChessState:
 		return null
 	for i:int in range(1, fen_splited.size()):
 		state.extra.push_back(fen_splited[i])
+	state.reserve_extra(6)
 	return state
 
 func stringify() -> String:

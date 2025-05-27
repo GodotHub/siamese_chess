@@ -25,7 +25,7 @@ static func create_event(state:ChessState, move:Move) -> Array[ChessEvent]:
 			output.push_back(ChessEvent.ChangeExtra.create(1, state.get_extra(1), state.get_extra(1).erase(state.get_extra(1).find("q"), 1)))
 	if state.has_piece(move.position_name_to):
 		output.push_back(ChessEvent.CapturePiece.create(move.position_name_to, state.get_piece(move.position_name_to)))
-	if move.position_name_to in state.get_extra(5):
+	if state.get_extra(5).contains(move.position_name_to):
 		if state.get_piece(move.position_name_from).group == 0:
 			if state.has_piece("c8") && state.get_piece("c8").class_type.get_name() == "King":
 				output.push_back(ChessEvent.CapturePiece.create("c8", state.get_piece("c8")))
@@ -42,15 +42,20 @@ static func create_event(state:ChessState, move:Move) -> Array[ChessEvent]:
 static func get_valid_move(state:ChessState, position_name_from:String) -> Array[Move]:
 	var directions:PackedVector2Array = [Vector2i(-1, 0), Vector2i(0, -1), Vector2i(0, 1), Vector2i(1, 0)]
 	var output:Array[Move] = []
+	var from_piece:Piece = state.get_piece(position_name_from)
 	for iter:Vector2i in directions:
 		var position_name_to:String = Chess.direction_to(position_name_from, iter)
-		while position_name_to && (!state.has_piece(position_name_to) || state.get_piece(position_name_from).group != state.get_piece(position_name_to).group):
+		var to_has_piece:bool = state.has_piece(position_name_to)
+		var to_piece:Piece = state.get_piece(position_name_to) if to_has_piece else null
+		while position_name_to && (!to_has_piece || from_piece.group != to_piece.group):
 			output.push_back(Move.create(position_name_from, position_name_to, "", "Default"))
-			if state.has_piece(position_name_to) && state.get_piece(position_name_from).group != state.get_piece(position_name_to).group:
+			if to_has_piece && from_piece.group != to_piece.group:
 				break
 			position_name_to = Chess.direction_to(position_name_to, iter)
-			if state.has_piece(position_name_to) && state.get_piece(position_name_from).group == state.get_piece(position_name_to).group && state.get_piece(position_name_to).class_type.get_name() == "King":
-				var group:int = state.get_piece(position_name_to).group
+			to_has_piece = state.has_piece(position_name_to)
+			to_piece = state.get_piece(position_name_to) if to_has_piece else null
+			if to_has_piece && from_piece.group == to_piece.group && to_piece.class_type.get_name() == "King":
+				var group:int = to_piece.group
 				if Chess.to_piece_position(position_name_from).x >= 4 && (group == 0 && state.get_extra(1).contains("K") || group == 1 && state.get_extra(1).contains("k")):
 					output.push_back(Move.create(position_name_to, "g" + ("1" if group == 0 else "8"), position_name_from, "Short Castling"))
 				elif Chess.to_piece_position(position_name_from).x <= 3 && (group == 0 && state.get_extra(1).contains("Q") || group == 1 && state.get_extra(1).contains("q")):
