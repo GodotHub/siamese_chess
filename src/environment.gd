@@ -1,9 +1,6 @@
 extends Node3D
 
 func _ready() -> void:
-	$cheshire.connect("tap_position", $chessboard.tap_position)
-	$cheshire.connect("finger_on_position", $chessboard.finger_on_position)
-	$cheshire.connect("finger_up", $chessboard.finger_up)
 	$cheshire.set_initial_camera($cheshire/camera_on_seat)
 	$chessboard.connect("move_played", $history.push_move)
 	$chessboard.connect("move_played", $pastor.receive_move)
@@ -14,7 +11,14 @@ func _ready() -> void:
 	$pastor.connect("send_opponent_move", $chessboard.set_valid_move)
 	$pastor.connect("win", pastor_win)
 	$pastor.connect("lose", pastor_lose)
+	for iter:Area3D in get_tree().get_nodes_in_group("move_camera"):
+		iter.add_user_signal("input")
+		iter.connect("input", move_camera)
 	dialog_start()
+
+func move_camera(_from:Node3D, _to:Area3D, _event:InputEvent, _event_position:Vector3, _normal:Vector3) -> void:
+	$cheshire.add_stack(_to.get_node(_to.get_meta("camera")), _to.get_node(_to.get_meta("inspectable_item")))
+	$cheshire.move_camera(_to.get_node(_to.get_meta("camera")))
 
 func dialog_start() -> void:
 	var dialog_1:Dialog = Dialog.create_dialog_instance([	# Pastor的自我介绍，对于棋局的介绍，以及二选一
@@ -284,5 +288,6 @@ func select_time_limit() -> void:
 			await dialog_2.on_next
 			await dialog_2.on_next
 			$chess_timer.start()
+	$cheshire.add_stack($cheshire/area_chessboard/camera_3d, $chessboard)
 	$cheshire.move_camera($cheshire/area_chessboard/camera_3d)
 	$pastor.start_decision()

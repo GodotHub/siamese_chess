@@ -90,11 +90,13 @@ transform = Transform3D(1, -1.46321e-08, -2.5217e-09, 1.46321e-08, 0.942309, 0.3
 transform = Transform3D(1, -5.42472e-09, -3.3787e-10, 5.42471e-09, 0.992269, 0.124103, -3.3797e-10, -0.124103, 0.992269, 0.0144924, -0.0376341, 0.00318342)
 fov = 44.5266
 
-[node name="area_history" type="Area3D" parent="cheshire" index="6"]
+[node name="area_history" type="Area3D" parent="cheshire" index="6" groups=["move_camera"]]
 transform = Transform3D(0.0614669, 0, -0.998109, 0, 1, 0, 0.998109, 0, 0.0614669, -0.40007, -0.546597, -0.382827)
 collision_mask = 0
 monitoring = false
 monitorable = false
+metadata/camera = NodePath("camera_3d")
+metadata/inspectable_item = NodePath("../../history")
 
 [node name="collision_shape_3d" type="CollisionShape3D" parent="cheshire/area_history" index="0"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.011139, 0.00320435, 0.0101929)
@@ -103,11 +105,13 @@ shape = SubResource("BoxShape3D_po4na")
 [node name="camera_3d" type="Camera3D" parent="cheshire/area_history" index="1"]
 transform = Transform3D(-1.49012e-08, -0.965926, 0.258819, -4.2222e-08, 0.258819, 0.965926, -1, 7.45058e-09, -4.65661e-08, 0.108885, 0.233688, 0.00118074)
 
-[node name="area_chessboard" type="Area3D" parent="cheshire" index="7"]
+[node name="area_chessboard" type="Area3D" parent="cheshire" index="7" groups=["move_camera"]]
 transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 0.00217657, -0.524411, -0.700565)
 collision_mask = 0
 monitoring = false
 monitorable = false
+metadata/camera = NodePath("camera_3d")
+metadata/inspectable_item = NodePath("../../chessboard")
 
 [node name="collision_shape_3d" type="CollisionShape3D" parent="cheshire/area_chessboard" index="0"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.0129776, 0)
@@ -116,11 +120,13 @@ shape = SubResource("BoxShape3D_uwfkk")
 [node name="camera_3d" type="Camera3D" parent="cheshire/area_chessboard" index="1"]
 transform = Transform3D(-1.13133e-08, -0.965926, 0.258819, -4.2222e-08, 0.258819, 0.965926, -1, -5.68434e-14, -4.37114e-08, 0.105483, 0.313066, 9.31323e-10)
 
-[node name="area_timer" type="Area3D" parent="cheshire" index="8"]
+[node name="area_timer" type="Area3D" parent="cheshire" index="8" groups=["move_camera"]]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -0.348965, -0.546597, -0.711289)
 collision_mask = 0
 monitoring = false
 monitorable = false
+metadata/camera = NodePath("camera_3d")
+metadata/inspectable_item = NodePath("../../chess_timer")
 
 [node name="collision_shape_3d" type="CollisionShape3D" parent="cheshire/area_timer" index="0"]
 transform = Transform3D(0.999994, 0, -1.93715e-07, 0, 1, 0, 1.93715e-07, 0, 0.999994, -0.00310197, 0.0469894, 0.0123141)

@@ -1,4 +1,4 @@
-extends Node3D
+extends InspectableItem
 
 signal timeout(group:int)
 

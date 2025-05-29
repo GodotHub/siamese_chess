@@ -50,6 +50,9 @@ func _ready() -> void:
 	tween.tween_interval(0.3)
 	tween.tween_property($texture_rect/v_box_container, "visible", true, 0)
 
+func _unhandled_input(_event:InputEvent) -> void:
+	get_viewport().set_input_as_handled()
+
 func button_pressed(index:int) -> void:
 	selected_index = index
 	decided.emit()

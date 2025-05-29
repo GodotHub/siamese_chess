@@ -1,14 +1,37 @@
-extends Node3D
+extends InspectableItem
 class_name Chessboard
 
 signal move_played(move:Move)
 signal press_timer()
 
+var mouse_start_position_name:String = ""
+var mouse_moved:bool = false
 var chess_state:ChessState = null
 var valid_move:Dictionary[String, Array] = {}
 var selected_position_name:String = ""
 var piece_instance:Dictionary[String, PieceInstance] = {}
 
+func _ready() -> void:
+	for iter:Node in get_children():
+		if iter is Area3D:
+			iter.add_user_signal("input")
+			iter.connect("input", input)
+
+func input(_from:Node3D, _to:Area3D, _event:InputEvent, _event_position:Vector3, _normal:Vector3) -> void:
+	if _event is InputEventMouseButton:
+		if _event.pressed && _event.button_index == MOUSE_BUTTON_LEFT:
+			finger_on_position(_to.get_name())
+			tap_position(_to.get_name())
+			mouse_moved = false
+			mouse_start_position_name = _to.get_name()
+		elif !_event.pressed && mouse_moved && _event.button_index == MOUSE_BUTTON_LEFT:
+			tap_position(_to.get_name())
+			finger_up()
+	if _event is InputEventMouseMotion:
+		var position_name:String = _to.get_name()
+		if mouse_start_position_name != position_name:
+			mouse_moved = true
+		finger_on_position(position_name)
 
 func set_state(_state:ChessState) -> void:
 	$canvas.clear_move_position()

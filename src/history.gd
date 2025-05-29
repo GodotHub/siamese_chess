@@ -1,4 +1,4 @@
-extends Node3D
+extends InspectableItem
 
 var history:PackedStringArray = ["", ""]
 var state:ChessState = null
