@@ -1,0 +1,424 @@
+[remap]
+
+importer="scene"
+importer_version=1
+type="PackedScene"
+uid="uid://ccddjb14lyird"
+path="res://.godot/imported/chessboard_blank.glb-8d03d9b94ae44d47721ed4a33da8e3ad.scn"
+
+[deps]
+
+source_file="res://assets/model/chessboard_blank.glb"
+dest_files=["res://.godot/imported/chessboard_blank.glb-8d03d9b94ae44d47721ed4a33da8e3ad.scn"]
+
+[params]
+
+nodes/root_type=""
+nodes/root_name=""
+nodes/apply_root_scale=true
+nodes/root_scale=1.0
+nodes/import_as_skeleton_bones=false
+nodes/use_node_type_suffixes=true
+meshes/ensure_tangents=true
+meshes/generate_lods=true
+meshes/create_shadow_meshes=true
+meshes/light_baking=1
+meshes/lightmap_texel_size=0.2
+meshes/force_disable_compression=false
+skins/use_named_skins=true
+animation/import=true
+animation/fps=30
+animation/trimming=false
+animation/remove_immutable_tracks=true
+animation/import_rest_as_RESET=false
+import_script/path=""
+_subresources={
+"nodes": {
+"PATH:a1": {
+"generate/physics": true,
+"physics/body_type": 2,
+"physics/layer": 2,
+"physics/mask": 0
+},
+"PATH:a2": {
+"generate/physics": true,
+"physics/body_type": 2,
+"physics/layer": 2,
+"physics/mask": 0
+},
+"PATH:a3": {
+"generate/physics": true,
+"physics/body_type": 2,
+"physics/layer": 2,
+"physics/mask": 0
+},
+"PATH:a4": {
+"generate/physics": true,
+"physics/body_type": 2,
+"physics/layer": 2,
+"physics/mask": 0
+},
+"PATH:a5": {
+"generate/physics": true,
+"physics/body_type": 2,
+"physics/layer": 2,
+"physics/mask": 0
+},
+"PATH:a6": {
+"generate/physics": true,
+"physics/body_type": 2,
+"physics/layer": 2,
+"physics/mask": 0
+},
+"PATH:a7": {
+"generate/physics": true,
+"physics/body_type": 2,
+"physics/layer": 2,
+"physics/mask": 0
+},
+"PATH:a8": {
+"generate/physics": true,
+"physics/body_type": 2,
+"physics/layer": 2,
+"physics/mask": 0
+},
+"PATH:b1": {
+"generate/physics": true,
+"physics/body_type": 2,
+"physics/layer": 2,
+"physics/mask": 0
+},
+"PATH:b2": {
+"generate/physics": true,
+"physics/body_type": 2,
+"physics/layer": 2,
+"physics/mask": 0
+},
+"PATH:b3": {
+"generate/physics": true,
+"physics/body_type": 2,
+"physics/layer": 2,
+"physics/mask": 0
+},
+"PATH:b4": {
+"generate/physics": true,
+"physics/body_type": 2,
+"physics/layer": 2,
+"physics/mask": 0
+},
+"PATH:b5": {
+"generate/physics": true,
+"physics/body_type": 2,
+"physics/layer": 2,
+"physics/mask": 0
+},
+"PATH:b6": {
+"generate/physics": true,
+"physics/body_type": 2,
+"physics/layer": 2,
+"physics/mask": 0
+},
+"PATH:b7": {
+"generate/physics": true,
+"physics/body_type": 2,
+"physics/layer": 2,
+"physics/mask": 0
+},
+"PATH:b8": {
+"generate/physics": true,
+"physics/body_type": 2,
+"physics/layer": 2,
+"physics/mask": 0
+},
+"PATH:c1": {
+"generate/physics": true,
+"physics/body_type": 2,
+"physics/layer": 2,
+"physics/mask": 0
+},
+"PATH:c2": {
+"generate/physics": true,
+"physics/body_type": 2,
+"physics/layer": 2,
+"physics/mask": 0
+},
+"PATH:c3": {
+"generate/physics": true,
+"physics/body_type": 2,
+"physics/layer": 2,
+"physics/mask": 0
+},
+"PATH:c4": {
+"generate/physics": true,
+"physics/body_type": 2,
+"physics/layer": 2,
+"physics/mask": 0
+},
+"PATH:c5": {
+"generate/physics": true,
+"physics/body_type": 2,
+"physics/layer": 2,
+"physics/mask": 0
+},
+"PATH:c6": {
+"generate/physics": true,
+"physics/body_type": 2,
+"physics/layer": 2,
+"physics/mask": 0
+},
+"PATH:c7": {
+"generate/physics": true,
+"physics/body_type": 2,
+"physics/layer": 2,
+"physics/mask": 0
+},
+"PATH:c8": {
+"generate/physics": true,
+"physics/body_type": 2,
+"physics/layer": 2,
+"physics/mask": 0
+},
+"PATH:d1": {
+"generate/physics": true,
+"physics/body_type": 2,
+"physics/layer": 2,
+"physics/mask": 0
+},
+"PATH:d2": {
+"generate/physics": true,
+"physics/body_type": 2,
+"physics/layer": 2,
+"physics/mask": 0
+},
+"PATH:d3": {
+"generate/physics": true,
+"physics/body_type": 2,
+"physics/layer": 2,
+"physics/mask": 0
+},
+"PATH:d4": {
+"generate/physics": true,
+"physics/body_type": 2,
+"physics/layer": 2,
+"physics/mask": 0
+},
+"PATH:d5": {
+"generate/physics": true,
+"physics/body_type": 2,
+"physics/layer": 2,
+"physics/mask": 0
+},
+"PATH:d6": {
+"generate/physics": true,
+"physics/body_type": 2,
+"physics/layer": 2,
+"physics/mask": 0
+},
+"PATH:d7": {
+"generate/physics": true,
+"physics/body_type": 2,
+"physics/layer": 2,
+"physics/mask": 0
+},
+"PATH:d8": {
+"generate/physics": true,
+"physics/body_type": 2,
+"physics/layer": 2,
+"physics/mask": 0
+},
+"PATH:e1": {
+"generate/physics": true,
+"physics/body_type": 2,
+"physics/layer": 2,
+"physics/mask": 0
+},
+"PATH:e2": {
+"generate/physics": true,
+"physics/body_type": 2,
+"physics/layer": 2,
+"physics/mask": 0
+},
+"PATH:e3": {
+"generate/physics": true,
+"physics/body_type": 2,
+"physics/layer": 2,
+"physics/mask": 0
+},
+"PATH:e4": {
+"generate/physics": true,
+"physics/body_type": 2,
+"physics/layer": 2,
+"physics/mask": 0
+},
+"PATH:e5": {
+"generate/physics": true,
+"physics/body_type": 2,
+"physics/layer": 2,
+"physics/mask": 0
+},
+"PATH:e6": {
+"generate/physics": true,
+"physics/body_type": 2,
+"physics/layer": 2,
+"physics/mask": 0
+},
+"PATH:e7": {
+"generate/physics": true,
+"physics/body_type": 2,
+"physics/layer": 2,
+"physics/mask": 0
+},
+"PATH:e8": {
+"generate/physics": true,
+"physics/body_type": 2,
+"physics/layer": 2,
+"physics/mask": 0
+},
+"PATH:f1": {
+"generate/physics": true,
+"physics/body_type": 2,
+"physics/layer": 2,
+"physics/mask": 0
+},
+"PATH:f2": {
+"generate/physics": true,
+"physics/body_type": 2,
+"physics/layer": 2,
+"physics/mask": 0
+},
+"PATH:f3": {
+"generate/physics": true,
+"physics/body_type": 2,
+"physics/layer": 2,
+"physics/mask": 0
+},
+"PATH:f4": {
+"generate/physics": true,
+"physics/body_type": 2,
+"physics/layer": 2,
+"physics/mask": 0
+},
+"PATH:f5": {
+"generate/physics": true,
+"physics/body_type": 2,
+"physics/layer": 2,
+"physics/mask": 0
+},
+"PATH:f6": {
+"generate/physics": true,
+"physics/body_type": 2,
+"physics/layer": 2,
+"physics/mask": 0
+},
+"PATH:f7": {
+"generate/physics": true,
+"physics/body_type": 2,
+"physics/layer": 2,
+"physics/mask": 0
+},
+"PATH:f8": {
+"generate/physics": true,
+"physics/body_type": 2,
+"physics/layer": 2,
+"physics/mask": 0
+},
+"PATH:g1": {
+"generate/physics": true,
+"physics/body_type": 2,
+"physics/layer": 2,
+"physics/mask": 0
+},
+"PATH:g2": {
+"generate/physics": true,
+"physics/body_type": 2,
+"physics/layer": 2,
+"physics/mask": 0
+},
+"PATH:g3": {
+"generate/physics": true,
+"physics/body_type": 2,
+"physics/layer": 2,
+"physics/mask": 0
+},
+"PATH:g4": {
+"generate/physics": true,
+"physics/body_type": 2,
+"physics/layer": 2,
+"physics/mask": 0
+},
+"PATH:g5": {
+"generate/physics": true,
+"physics/body_type": 2,
+"physics/layer": 2,
+"physics/mask": 0
+},
+"PATH:g6": {
+"generate/physics": true,
+"physics/body_type": 2,
+"physics/layer": 2,
+"physics/mask": 0
+},
+"PATH:g7": {
+"generate/physics": true,
+"physics/body_type": 2,
+"physics/layer": 2,
+"physics/mask": 0
+},
+"PATH:g8": {
+"generate/physics": true,
+"physics/body_type": 2,
+"physics/layer": 2,
+"physics/mask": 0
+},
+"PATH:h1": {
+"generate/physics": true,
+"physics/body_type": 2,
+"physics/layer": 2,
+"physics/mask": 0
+},
+"PATH:h2": {
+"generate/physics": true,
+"physics/body_type": 2,
+"physics/layer": 2,
+"physics/mask": 0
+},
+"PATH:h3": {
+"generate/physics": true,
+"physics/body_type": 2,
+"physics/layer": 2,
+"physics/mask": 0
+},
+"PATH:h4": {
+"generate/physics": true,
+"physics/body_type": 2,
+"physics/layer": 2,
+"physics/mask": 0
+},
+"PATH:h5": {
+"generate/physics": true,
+"physics/body_type": 2,
+"physics/layer": 2,
+"physics/mask": 0
+},
+"PATH:h6": {
+"generate/physics": true,
+"physics/body_type": 2,
+"physics/layer": 2,
+"physics/mask": 0
+},
+"PATH:h7": {
+"generate/physics": true,
+"physics/body_type": 2,
+"physics/layer": 2,
+"physics/mask": 0
+},
+"PATH:h8": {
+"generate/physics": true,
+"physics/body_type": 2,
+"physics/layer": 2,
+"physics/mask": 0
+}
+}
+}
+gltf/naming_version=1
+gltf/embedded_image_handling=1

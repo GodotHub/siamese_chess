@@ -29,12 +29,16 @@ static func get_piece_mapping() -> Dictionary:
 			"N": {"class": "res://src/core/piece_interface_knight.gd", "group": 0},
 			"B": {"class": "res://src/core/piece_interface_bishop.gd", "group": 0},
 			"P": {"class": "res://src/core/piece_interface_pawn.gd", "group": 0},
+			"猫": {"class": "res://src/core/piece_interface_cat.gd", "group": 0},
+			"#": {"class": "res://src/core/piece_interface_cat.gd", "group": 0},
 			"k": {"class": "res://src/core/piece_interface_king.gd", "group": 1},
 			"q": {"class": "res://src/core/piece_interface_queen.gd", "group": 1},
 			"r": {"class": "res://src/core/piece_interface_rook.gd", "group": 1},
 			"n": {"class": "res://src/core/piece_interface_knight.gd", "group": 1},
 			"b": {"class": "res://src/core/piece_interface_bishop.gd", "group": 1},
 			"p": {"class": "res://src/core/piece_interface_pawn.gd", "group": 1},
+			"貓": {"class": "res://src/core/piece_interface_cat.gd", "group": 1},
+			"$": {"class": "res://src/core/piece_interface_cat.gd", "group": 1},
 		}
 		file_mapping.store_string(JSON.stringify(piece_mapping, "\t"))	# 注意排版，玩家会看的
 		file_mapping.close()
