@@ -17,8 +17,9 @@ func _ready() -> void:
 	dialog_start()
 
 func move_camera(_from:Node3D, _to:Area3D, _event:InputEvent, _event_position:Vector3, _normal:Vector3) -> void:
-	$cheshire.add_stack(_to.get_node(_to.get_meta("camera")), _to.get_node(_to.get_meta("inspectable_item")))
-	$cheshire.move_camera(_to.get_node(_to.get_meta("camera")))
+	if _event is InputEventMouseButton && _event.pressed && _event.button_index == MOUSE_BUTTON_LEFT:
+		$cheshire.add_stack(_to.get_node(_to.get_meta("camera")), _to.get_node(_to.get_meta("inspectable_item")))
+		$cheshire.move_camera(_to.get_node(_to.get_meta("camera")))
 
 func dialog_start() -> void:
 	var dialog_1:Dialog = Dialog.create_dialog_instance([	# Pastor的自我介绍，对于棋局的介绍，以及二选一
@@ -81,7 +82,7 @@ func pastor_win() -> void:
 		"我暂时没有其他安排，需要重新进行一场对局吗？",
 	])
 	add_child(dialog_1)
-	$cheshire.force_set_camera($cheshire/camera_on_seat)
+	$cheshire.force_set_camera($cheshire/area_chessboard/camera_3d)
 	await dialog_1.on_next
 	$cheshire.force_set_camera($cheshire/camera_pastor_closeup)
 	await dialog_1.on_next
@@ -171,7 +172,7 @@ func pastor_lose() -> void:
 		"我暂时没有其他安排，需要重新进行一场对局吗？"
 	])
 	add_child(dialog_1)
-	$cheshire.force_set_camera($cheshire/camera_on_seat)
+	$cheshire.force_set_camera($cheshire/area_chessboard/camera_3d)
 	await dialog_1.on_next
 	$cheshire.force_set_camera($cheshire/camera_pastor_closeup)
 	await dialog_1.on_next
@@ -269,6 +270,7 @@ func select_time_limit() -> void:
 			$cheshire.force_set_camera($cheshire/area_timer/camera_3d)
 			await dialog_2.on_next
 			$cheshire.force_set_camera($cheshire/camera_pastor_closeup)
+			await dialog_2.on_next
 			await dialog_2.on_next
 			await dialog_2.on_next
 			$chess_timer.start()
