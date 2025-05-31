@@ -11,4 +11,5 @@ func _ready() -> void:
 	$pastor.connect("decided_move", $chessboard_blank_0.execute_move)
 	$pastor.connect("send_opponent_move", $chessboard_blank_0.set_valid_move)
 	$pastor.create_state(fen[0])
+	$pastor.depth = 20
 	$pastor.start_decision()

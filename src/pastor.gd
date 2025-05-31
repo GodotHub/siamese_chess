@@ -15,6 +15,8 @@ var chess_state:ChessState = null
 var thread:Thread = null
 var history:Array[String] = []
 var score:float = 0
+var depth:int = 4
+var evaluation:Evaluation = null
 
 func _ready() -> void:
 	pass
@@ -47,7 +49,7 @@ func decision() -> void:
 	if chess_state.get_extra(0) == "b":
 		send_opponent_valid_move()
 		return
-	var move_list:Dictionary = ChessBranch.search(chess_state, 4, 0)
+	var move_list:Dictionary = ChessBranch.search(chess_state, depth, 0)
 	if !move_list.size():
 		# 判定棋局结束
 		var null_move_check:float = ChessBranch.alphabeta(chess_state, score, -10000, 10000, 1, 1)
