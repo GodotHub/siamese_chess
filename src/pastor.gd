@@ -12,26 +12,18 @@ signal win()
 signal draw()
 
 var chess_state:ChessState = null
-var chess_branch:ChessBranch = null
 var thread:Thread = null
 var history:Array[String] = []
 var score:float = 0
 
 func _ready() -> void:
-	chess_branch = ChessBranch.new()
+	pass
 
-func create_state_from_start() -> void:
-	history = ["rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"]
-	chess_state = ChessState.create_from_fen(history[0])
-	send_initial_state.emit(chess_state.duplicate())
-
-func create_state_from_fen() -> bool:
-	if !DisplayServer.clipboard_has():
-		return false
-	history = [DisplayServer.clipboard_get()]
-	chess_state = ChessState.create_from_fen(history[0])
+func create_state(fen:String) -> bool:
+	chess_state = ChessState.create_from_fen(fen)
 	if !is_instance_valid(chess_state):
 		return false
+	history = [fen]
 	send_initial_state.emit(chess_state.duplicate())
 	return true
 
@@ -55,10 +47,10 @@ func decision() -> void:
 	if chess_state.get_extra(0) == "b":
 		send_opponent_valid_move()
 		return
-	var move_list = chess_branch.search(chess_state, 4, 0)
+	var move_list:Dictionary = ChessBranch.search(chess_state, 4, 0)
 	if !move_list.size():
 		# 判定棋局结束
-		var null_move_check:float = chess_branch.alphabeta(chess_state, score, -10000, 10000, 1, 1)
+		var null_move_check:float = ChessBranch.alphabeta(chess_state, score, -10000, 10000, 1, 1)
 		if null_move_check <= -500:
 			lose.emit.call_deferred()
 		else:
@@ -73,10 +65,10 @@ func decision() -> void:
 	decided_move.emit.call_deferred(best)
 
 func send_opponent_valid_move() -> void:	# 仅限轮到对方时使用
-	var move_list:Dictionary = chess_branch.search(chess_state, 1, 1)
+	var move_list:Dictionary = ChessBranch.search(chess_state, 1, 1)
 	var output:Array[Move] = []
 	if move_list.size() == 0:
-		var null_move_check:float = chess_branch.alphabeta(chess_state, score, -10000, 10000, 1, 0)
+		var null_move_check:float = ChessBranch.alphabeta(chess_state, score, -10000, 10000, 1, 0)
 		if null_move_check >= 500:
 			win.emit()
 		else:

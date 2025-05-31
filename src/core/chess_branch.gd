@@ -1,7 +1,7 @@
 extends Object
 class_name ChessBranch
 
-func alphabeta(_state:ChessState, score:float, alpha:float, beta:float, depth:int = 5, group:int = 0) -> float:
+static func alphabeta(_state:ChessState, score:float, alpha:float, beta:float, depth:int = 5, group:int = 0) -> float:
 	if depth <= 0:	# 底端
 		return score
 	var move_list:Array[Move] = []
@@ -48,7 +48,7 @@ func alphabeta(_state:ChessState, score:float, alpha:float, beta:float, depth:in
 				break
 		return value
 
-func search(state:ChessState, depth:int = 10, group:int = 0) -> Dictionary:
+static func search(state:ChessState, depth:int = 10, group:int = 0) -> Dictionary:
 	var move_list:Array[Move] = state.get_all_move(group)
 	var output:Dictionary[String, float] = {}
 	var test_state:ChessState = state.duplicate()	# 复制状态防止修改时出现异常

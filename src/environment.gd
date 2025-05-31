@@ -188,7 +188,7 @@ func start() -> void:
 		add_child(decision_instance)
 		await decision_instance.decided
 		if decision_instance.selected_index == 0:
-			$pastor.create_state_from_start()
+			$pastor.create_state("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
 			var dialog_2:Dialog = Dialog.create_dialog_instance([
 				"现在棋盘已经准备好了。",
 				"您是黑方，以后手开局，我则先手"
@@ -199,18 +199,17 @@ func start() -> void:
 			await dialog_2.on_next
 			select_time_limit()
 			break
-		elif decision_instance.selected_index == 1:
-			if $pastor.create_state_from_fen():
-				var dialog_2:Dialog = Dialog.create_dialog_instance([
-					"现在棋盘已经准备好了。",
-					"根据棋局信息，" + ("目前是白方先手。" if $pastor.chess_state.get_extra(0) == "w" else "目前是黑方先手。")
-				])
-				add_child(dialog_2)
-				$cheshire.force_set_camera($cheshire/area_chessboard/camera_3d)
-				await dialog_2.on_next
-				await dialog_2.on_next
-				select_time_limit()
-				break
+		elif decision_instance.selected_index == 1 && DisplayServer.clipboard_has() && $pastor.create_state(DisplayServer.clipboard_get()):
+			var dialog_2:Dialog = Dialog.create_dialog_instance([
+				"现在棋盘已经准备好了。",
+				"根据棋局信息，" + ("目前是白方先手。" if $pastor.chess_state.get_extra(0) == "w" else "目前是黑方先手。")
+			])
+			add_child(dialog_2)
+			$cheshire.force_set_camera($cheshire/area_chessboard/camera_3d)
+			await dialog_2.on_next
+			await dialog_2.on_next
+			select_time_limit()
+			break
 		$cheshire.force_set_camera($cheshire/camera_pastor_closeup)
 		var dialog_illegal:Dialog = Dialog.create_dialog_instance(["您的剪贴板似乎没有记下局面，或者格式不对，", "注意是FEN格式，请您复制好再重新尝试！"])
 		add_child(dialog_illegal)
