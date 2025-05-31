@@ -1,8 +1,9 @@
-[gd_scene load_steps=8 format=3 uid="uid://bpiq0e4oy68yx"]
+[gd_scene load_steps=9 format=3 uid="uid://bpiq0e4oy68yx"]
 
-[ext_resource type="PackedScene" uid="uid://ccddjb14lyird" path="res://assets/model/chessboard_blank.glb" id="1_r0laq"]
 [ext_resource type="Script" uid="uid://fy1h7puheajr" path="res://src/maze.gd" id="1_x2hdw"]
 [ext_resource type="PackedScene" uid="uid://b3ml34bssywkr" path="res://scene/cheshire.tscn" id="2_sfl3n"]
+[ext_resource type="PackedScene" uid="uid://dwvyc2qlcdag0" path="res://scene/chessboard_blank.tscn" id="3_x2hdw"]
+[ext_resource type="Script" uid="uid://d37nkxik3au1i" path="res://src/pastor.gd" id="4_wtgk7"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_sfl3n"]
 sky_top_color = Color(0.88, 0.88, 0.88, 1)
@@ -38,34 +39,34 @@ environment = SubResource("Environment_wtgk7")
 transform = Transform3D(-0.866023, -0.433016, 0.250001, 0, 0.499998, 0.866027, -0.500003, 0.749999, -0.43301, 0, 0, 0)
 shadow_enabled = true
 
-[node name="chessboard_blank_0" parent="." instance=ExtResource("1_r0laq")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 0, -2)
-
-[node name="chessboard_blank_1" parent="." instance=ExtResource("1_r0laq")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -2)
-
-[node name="chessboard_blank_2" parent="." instance=ExtResource("1_r0laq")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0, -2)
-
-[node name="chessboard_blank_3" parent="." instance=ExtResource("1_r0laq")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 0, 0.02)
-
-[node name="chessboard_blank_4" parent="." instance=ExtResource("1_r0laq")]
-
-[node name="chessboard_blank_5" parent="." instance=ExtResource("1_r0laq")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0, 0)
-
-[node name="chessboard_blank_6" parent="." instance=ExtResource("1_r0laq")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 0, 2)
-
-[node name="chessboard_blank_7" parent="." instance=ExtResource("1_r0laq")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 2)
-
-[node name="chessboard_blank_8" parent="." instance=ExtResource("1_r0laq")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0, 2)
-
 [node name="cheshire" parent="." instance=ExtResource("2_sfl3n")]
 transform = Transform3D(1, 9.31323e-10, -1.86265e-09, 0, 0.808689, 0.588237, 0, -0.588237, 0.808689, -2.01963, 1.27407, -0.772554)
+
+[node name="chessboard_blank_0" parent="." instance=ExtResource("3_x2hdw")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 0, -2)
+
+[node name="chessboard_blank_1" parent="." instance=ExtResource("3_x2hdw")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -2)
+
+[node name="chessboard_blank_2" parent="." instance=ExtResource("3_x2hdw")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0, -2)
+
+[node name="chessboard_blank_3" parent="." instance=ExtResource("3_x2hdw")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 0, 0)
+
+[node name="chessboard_blank_4" parent="." instance=ExtResource("3_x2hdw")]
+
+[node name="chessboard_blank_5" parent="." instance=ExtResource("3_x2hdw")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0, 0)
+
+[node name="chessboard_blank_6" parent="." instance=ExtResource("3_x2hdw")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 0, 2)
+
+[node name="chessboard_blank_7" parent="." instance=ExtResource("3_x2hdw")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 2)
+
+[node name="chessboard_blank_8" parent="." instance=ExtResource("3_x2hdw")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0, 2)
 
 [node name="area_3d_0" type="Area3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 0, -2)
@@ -168,3 +169,8 @@ fov = 61.32
 [node name="collision_shape_3d" type="CollisionShape3D" parent="area_3d_8"]
 transform = Transform3D(1, 0, -1.81611e-07, 0, 1, 0, 1.81611e-07, 0, 1, 0, -0.698608, 0)
 shape = SubResource("BoxShape3D_sfl3n")
+
+[node name="pastor" type="Node3D" parent="."]
+visible = false
+script = ExtResource("4_wtgk7")
+metadata/_custom_type_script = "uid://d37nkxik3au1i"
