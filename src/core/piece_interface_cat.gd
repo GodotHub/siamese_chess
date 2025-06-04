@@ -17,7 +17,7 @@ static func create_event(state:ChessState, move:Move) -> Array[ChessEvent]:
 	return output
 
 static func get_valid_move(state:ChessState, position_name_from:String) -> Array[Move]:
-	var directions:PackedVector2Array = [Vector2i(-1, 0), Vector2i(0, -1), Vector2i(0, 1), Vector2i(1, 0)]
+	var directions:PackedVector2Array = [Vector2i(-1, -1), Vector2i(-1, 0), Vector2i(-1, 1), Vector2i(0, -1), Vector2i(0, 1), Vector2i(1, -1), Vector2i(1, 0), Vector2i(1, 1)]
 	var output:Array[Move] = []
 	for iter:Vector2i in directions:
 		var position_name_to:String = Chess.direction_to(position_name_from, iter)

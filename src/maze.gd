@@ -12,4 +12,5 @@ func _ready() -> void:
 	$pastor.connect("send_opponent_move", $chessboard_blank_0.set_valid_move)
 	$pastor.create_state(fen[0])
 	$pastor.depth = 20
+	$pastor.evaluation = EvaluationMaze
 	$pastor.start_decision()
