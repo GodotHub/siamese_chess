@@ -11,6 +11,7 @@ func _ready() -> void:
 	$pastor.connect("send_opponent_move", $chessboard.set_valid_move)
 	$pastor.connect("win", pastor_win)
 	$pastor.connect("lose", pastor_lose)
+	$pastor.evaluation = EvaluationStandard
 	for iter:Area3D in get_tree().get_nodes_in_group("move_camera"):
 		iter.add_user_signal("input")
 		iter.connect("input", move_camera)

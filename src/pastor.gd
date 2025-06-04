@@ -16,7 +16,7 @@ var thread:Thread = null
 var history:Array[String] = []
 var score:float = 0
 var depth:int = 4
-var evaluation:Evaluation = null
+var evaluation:Object = null
 
 func _ready() -> void:
 	pass
@@ -35,10 +35,23 @@ func start_decision() -> void:
 
 func receive_move(move:Move) -> void:
 	var events:Array[ChessEvent] = chess_state.create_event(move)
-	score += Evaluation.evaluate_events(chess_state, events)
+	score += evaluation.evaluate_events(chess_state, events)
 	chess_state.apply_event(events)
-	
 	history.push_back(chess_state.stringify())
+
+	var end_type:String = evaluation.get_end_type(chess_state)
+	if end_type:
+		match end_type:
+			"checkmate_black":
+				lose.emit()
+			"checkmate_white":
+				win.emit()
+			"stalemate_black":
+				draw.emit()
+			"stalemate_white":
+				draw.emit()
+		return
+
 	if chess_state.get_extra(0) == "w":
 		thread.wait_to_finish()
 		thread.start(decision, Thread.PRIORITY_HIGH)
@@ -49,16 +62,9 @@ func decision() -> void:
 	if chess_state.get_extra(0) == "b":
 		send_opponent_valid_move()
 		return
-	var move_list:Dictionary = ChessBranch.search(chess_state, depth, 0)
+	var move_list:Dictionary = evaluation.search(chess_state, depth, 0)
 	if !move_list.size():
-		# 判定棋局结束
-		var null_move_check:float = ChessBranch.alphabeta(chess_state, score, -10000, 10000, 1, 1)
-		if null_move_check <= -500:
-			lose.emit.call_deferred()
-		else:
-			draw.emit.call_deferred(1)	# 我方无着法的逼和
 		return
-	print(move_list)
 	var best_str:String = ""
 	for iter:String in move_list:
 		if !best_str || move_list[iter] > move_list[best_str]:
@@ -67,14 +73,9 @@ func decision() -> void:
 	decided_move.emit.call_deferred(best)
 
 func send_opponent_valid_move() -> void:	# 仅限轮到对方时使用
-	var move_list:Dictionary = ChessBranch.search(chess_state, 1, 1)
+	var move_list:Dictionary = evaluation.search(chess_state, 1, 1)
 	var output:Array[Move] = []
 	if move_list.size() == 0:
-		var null_move_check:float = ChessBranch.alphabeta(chess_state, score, -10000, 10000, 1, 0)
-		if null_move_check >= 500:
-			win.emit()
-		else:
-			draw.emit(2)	# 黑方无着法的逼和
 		return
 	for iter:String in move_list:
 		output.push_back(Move.parse(iter))
