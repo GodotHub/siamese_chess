@@ -46,6 +46,7 @@ func _ready() -> void:
 		cancel_button.connect("button_up", button_pressed.bind(-1))
 		$texture_rect/v_box_container.add_child(cancel_button)
 	$texture_rect/v_box_container.hide()
+	$texture_rect/v_box_container.visible = false
 	var tween:Tween = create_tween()
 	tween.tween_interval(0.3)
 	tween.tween_property($texture_rect/v_box_container, "visible", true, 0)

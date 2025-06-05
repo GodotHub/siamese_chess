@@ -185,7 +185,7 @@ func pastor_lose() -> void:
 
 func start() -> void:
 	while true:
-		var decision_instance:Decision = Decision.create_decision_instance(["从头开始", "从剪贴板导入棋局（FEN格式）"], false)
+		var decision_instance:Decision = Decision.create_decision_instance(["从头开始", "导入棋局"], false)
 		add_child(decision_instance)
 		await decision_instance.decided
 		if decision_instance.selected_index == 0:
@@ -200,21 +200,24 @@ func start() -> void:
 			await dialog_2.on_next
 			select_time_limit()
 			break
-		elif decision_instance.selected_index == 1 && DisplayServer.clipboard_has() && $pastor.create_state(DisplayServer.clipboard_get()):
-			var dialog_2:Dialog = Dialog.create_dialog_instance([
-				"现在棋盘已经准备好了。",
-				"根据棋局信息，" + ("目前是白方先手。" if $pastor.chess_state.get_extra(0) == "w" else "目前是黑方先手。")
-			])
-			add_child(dialog_2)
-			$cheshire.force_set_camera($cheshire/area_chessboard/camera_3d)
-			await dialog_2.on_next
-			await dialog_2.on_next
-			select_time_limit()
-			break
-		$cheshire.force_set_camera($cheshire/camera_pastor_closeup)
-		var dialog_illegal:Dialog = Dialog.create_dialog_instance(["您的剪贴板似乎没有记下局面，或者格式不对，", "注意是FEN格式，请您复制好再重新尝试！"])
+		elif decision_instance.selected_index == 1:
+			var text_input_instance:TextInput = TextInput.create_text_input_instance("输入FEN格式的布局：")
+			add_child(text_input_instance)
+			await text_input_instance.confirmed
+			if $pastor.create_state(text_input_instance.text):
+				var dialog_2:Dialog = Dialog.create_dialog_instance([
+					"现在棋盘已经准备好了。",
+					"根据棋局信息，" + ("目前是白方先手。" if $pastor.chess_state.get_extra(0) == "w" else "目前是黑方先手。")
+				])
+				add_child(dialog_2)
+				$cheshire.force_set_camera($cheshire/area_chessboard/camera_3d)
+				await dialog_2.on_next
+				await dialog_2.on_next
+				select_time_limit()
+				break
+		$cheshire.force_set_camera($cheshire/area_chessboard/camera_3d)
+		var dialog_illegal:Dialog = Dialog.create_dialog_instance(["您输入的格式有误，务必重新检查一下再尝试。"])
 		add_child(dialog_illegal)
-		await dialog_illegal.on_next
 		await dialog_illegal.on_next
 
 func select_time_limit() -> void:

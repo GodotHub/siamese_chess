@@ -1,0 +1,67 @@
+[gd_scene load_steps=7 format=3 uid="uid://dweywda5mojmf"]
+
+[ext_resource type="Script" uid="uid://bvuqnv0fsx2gn" path="res://src/text_input.gd" id="1_nu684"]
+
+[sub_resource type="Gradient" id="Gradient_j3y3i"]
+offsets = PackedFloat32Array(0)
+colors = PackedColorArray(0, 0, 0, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_j3y3i"]
+gradient = SubResource("Gradient_j3y3i")
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_nu684"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_l1wpo"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_nu684"]
+font_size = 26
+
+[node name="text_input" type="CanvasLayer"]
+script = ExtResource("1_nu684")
+
+[node name="texture_rect" type="TextureRect" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 0
+texture = SubResource("GradientTexture1D_j3y3i")
+expand_mode = 1
+stretch_mode = 1
+metadata/_edit_lock_ = true
+
+[node name="line_edit" type="LineEdit" parent="texture_rect"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.196
+anchor_top = 0.403
+anchor_right = 0.832
+anchor_bottom = 0.739
+offset_left = 0.207993
+offset_top = -0.144012
+offset_right = -0.463989
+offset_bottom = 0.127991
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 30
+theme_override_styles/focus = SubResource("StyleBoxEmpty_nu684")
+theme_override_styles/normal = SubResource("StyleBoxEmpty_l1wpo")
+flat = true
+draw_control_chars = true
+
+[node name="label" type="Label" parent="texture_rect"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.227
+anchor_top = 0.31
+anchor_right = 0.486
+anchor_bottom = 0.366
+offset_left = 0.495972
+offset_top = 0.119995
+offset_right = 2.12799
+offset_bottom = -0.168015
+grow_horizontal = 2
+grow_vertical = 2
+text = "请输入："
+label_settings = SubResource("LabelSettings_nu684")
