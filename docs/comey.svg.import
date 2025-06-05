@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://by65hw0y0ugsn"
-path="res://.godot/imported/coremy.svg-975abbf99c321b6cbdf25bf8012e73fa.ctex"
+path="res://.godot/imported/comey.svg-f29aa8849555ec01c79bfdc2f66944cb.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://docs/coremy.svg"
-dest_files=["res://.godot/imported/coremy.svg-975abbf99c321b6cbdf25bf8012e73fa.ctex"]
+source_file="res://docs/comey.svg"
+dest_files=["res://.godot/imported/comey.svg-f29aa8849555ec01c79bfdc2f66944cb.ctex"]
 
 [params]
 
