@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=3 uid="uid://bmyf2h17xaxlj"]
+[gd_scene load_steps=17 format=3 uid="uid://bmyf2h17xaxlj"]
 
 [ext_resource type="PackedScene" uid="uid://gdof8yy8yrjv" path="res://assets/model/environment.glb" id="1_b3374"]
 [ext_resource type="PackedScene" uid="uid://d1s6qj7aofldk" path="res://scene/chessboard.tscn" id="2_3p4nk"]
@@ -7,6 +7,7 @@
 [ext_resource type="PackedScene" uid="uid://n5i2mcgyqj3k" path="res://scene/chess_timer.tscn" id="3_po4na"]
 [ext_resource type="PackedScene" uid="uid://b0ots07uggqyg" path="res://scene/history.tscn" id="5_4qusu"]
 [ext_resource type="PackedScene" uid="uid://cispm4sihu5b3" path="res://scene/pastor.tscn" id="6_uwfkk"]
+[ext_resource type="PackedScene" uid="uid://de73qrhtkiaka" path="res://scene/draft.tscn" id="8_tnamw"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_po4na"]
 transparency = 1
@@ -33,6 +34,9 @@ size = Vector3(0.511902, 0.0298615, 0.512817)
 [sub_resource type="BoxShape3D" id="BoxShape3D_tnamw"]
 size = Vector3(0.328775, 0.0970306, 0.14682)
 
+[sub_resource type="BoxShape3D" id="BoxShape3D_560hc"]
+size = Vector3(0.403229, 0.0231934, 0.300537)
+
 [node name="environment" instance=ExtResource("1_b3374")]
 script = ExtResource("2_7r8ay")
 
@@ -54,8 +58,8 @@ surface_material_override/1 = SubResource("StandardMaterial3D_po4na")
 [node name="window_right_002" parent="window_002" index="1"]
 surface_material_override/1 = SubResource("StandardMaterial3D_po4na")
 
-[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." index="16"]
-transform = Transform3D(-0.925801, 0.0354592, -0.376346, -0.231734, 0.733336, 0.639154, 0.298653, 0.678941, -0.670705, 0, 0, 0)
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." index="45"]
+transform = Transform3D(-0.9258, 0.0354599, -0.376346, -0.231734, 0.733336, 0.639154, 0.298653, 0.678941, -0.670705, 0, 0, 0)
 light_color = Color(0.71, 0.65888, 0.5822, 1)
 shadow_enabled = true
 shadow_normal_bias = 0.0
@@ -64,19 +68,19 @@ directional_shadow_split_2 = 0.476
 directional_shadow_split_3 = 0.73
 directional_shadow_blend_splits = true
 
-[node name="WorldEnvironment" type="WorldEnvironment" parent="." index="17"]
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." index="46"]
 environment = SubResource("Environment_7r8ay")
 
-[node name="chess_timer" parent="." index="18" instance=ExtResource("3_po4na")]
+[node name="chess_timer" parent="." index="47" instance=ExtResource("3_po4na")]
 transform = Transform3D(1, 0, -1.06581e-14, 0, 1, 0, 1.06581e-14, 0, 1, -0.00990965, 0.857578, -0.543086)
 
-[node name="chessboard" parent="." index="19" instance=ExtResource("2_3p4nk")]
+[node name="chessboard" parent="." index="48" instance=ExtResource("2_3p4nk")]
 transform = Transform3D(5.5732e-08, 0, 0.425, 0, 0.425, 0, -0.425, 0, 5.5732e-08, -0.012351, 0.870713, -0.20139)
 
-[node name="history" parent="." index="20" instance=ExtResource("5_4qusu")]
+[node name="history" parent="." index="49" instance=ExtResource("5_4qusu")]
 transform = Transform3D(0.07162, 0, -0.997431, 0, 1, 0, 0.997431, 0, 0.07162, -0.395858, 0.8601, -0.604932)
 
-[node name="cheshire" parent="." index="21" instance=ExtResource("3_1vcsq")]
+[node name="cheshire" parent="." index="50" instance=ExtResource("3_1vcsq")]
 transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -0.712916, 1.40416, -0.20139)
 
 [node name="camera_chessboard_side" type="Camera3D" parent="cheshire" index="0"]
@@ -136,5 +140,23 @@ shape = SubResource("BoxShape3D_tnamw")
 transform = Transform3D(0.772206, 0.26647, -0.576794, 0.165508, 0.792103, 0.58752, 0.613437, -0.549151, 0.567563, -0.227903, 0.279582, 0.24583)
 fov = 55.9
 
-[node name="pastor" parent="." index="22" instance=ExtResource("6_uwfkk")]
+[node name="area_draft" type="Area3D" parent="cheshire" index="9" groups=["move_camera"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0127096, -0.541795, -0.299174)
+collision_mask = 0
+monitoring = false
+monitorable = false
+metadata/camera = NodePath("camera_3d")
+metadata/inspectable_item = NodePath("../../draft")
+
+[node name="collision_shape_3d" type="CollisionShape3D" parent="cheshire/area_draft" index="0"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00733949, -0.00549316, 0.0162355)
+shape = SubResource("BoxShape3D_560hc")
+
+[node name="camera_3d" type="Camera3D" parent="cheshire/area_draft" index="1"]
+transform = Transform3D(1, -4.33591e-08, -3.81731e-08, 4.33591e-08, 0.126701, 0.991941, -3.81731e-08, -0.991941, 0.126701, 0, 0.229753, 0.0445619)
+
+[node name="draft" parent="." index="51" instance=ExtResource("8_tnamw")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.430485, 0.860146, -0.206568)
+
+[node name="pastor" parent="." index="52" instance=ExtResource("6_uwfkk")]
 transform = Transform3D(-1.18021e-08, 0, -0.27, 0, 0.27, 0, 0.27, 0, -1.18021e-08, 0.430662, 0.869423, -0.229653)
