@@ -158,6 +158,25 @@ static func alphabeta(_state:ChessState, score:float, alpha:float, beta:float, d
 				break
 		return value
 
+static func mtdf(state:ChessState, score:float, depth:int, group:int) -> float:
+	var l:float = -10000
+	var r:float = 10000
+	var m:float = 0
+	var value:float = 0
+	while l + 1 < r:
+		m = (l + r) / 2
+		if m <= 0 && l / 2 < m:
+			m = l / 2
+		elif m >= 0 && r / 2 > m:
+			m = r / 2;
+		value = alphabeta(state, score, m, m + 0.1, depth, group)
+		if value <= m:
+			r = m
+		else:
+			l = m
+	return value
+	
+
 static func search(state:ChessState, depth:int = 10, group:int = 0) -> Dictionary:
 	var move_list:Array[Move] = state.get_all_move(group)
 	var output:Dictionary[String, float] = {}
@@ -170,6 +189,6 @@ static func search(state:ChessState, depth:int = 10, group:int = 0) -> Dictionar
 		if abs(valid_check) >= 500:
 			test_state.rollback_event(events)
 			continue
-		output[iter.stringify()] = alphabeta(test_state, score, -10000, 10000, depth - 1, 1 if group == 0 else 0)
+		output[iter.stringify()] = mtdf(test_state, score, depth - 1, 1 if group == 0 else 0)
 		test_state.rollback_event(events)
 	return output
