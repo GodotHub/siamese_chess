@@ -35,13 +35,13 @@ static func create_event(state:ChessState, move:Move) -> Array[ChessEvent]:
 	if move.extra:
 		match move.extra:
 			"Q":
-				state.add_piece(move.position_name_to, Piece.create(PieceInterfaceQueen, state.get_piece(move.position_name_from).group))
+				output.push_back(ChessEvent.AddPiece.create(move.position_name_to, Piece.create(PieceInterfaceQueen, state.get_piece(move.position_name_from).group)))
 			"R":
-				state.add_piece(move.position_name_to, Piece.create(PieceInterfaceRook, state.get_piece(move.position_name_from).group))
+				output.push_back(ChessEvent.AddPiece.create(move.position_name_to, Piece.create(PieceInterfaceRook, state.get_piece(move.position_name_from).group)))
 			"N":
-				state.add_piece(move.position_name_to, Piece.create(PieceInterfaceKnight, state.get_piece(move.position_name_from).group))
+				output.push_back(ChessEvent.AddPiece.create(move.position_name_to, Piece.create(PieceInterfaceKnight, state.get_piece(move.position_name_from).group)))
 			"B":
-				state.add_piece(move.position_name_to, Piece.create(PieceInterfaceBishop, state.get_piece(move.position_name_from).group))
+				output.push_back(ChessEvent.AddPiece.create(move.position_name_to, Piece.create(PieceInterfaceBishop, state.get_piece(move.position_name_from).group)))
 		output.push_back(ChessEvent.CapturePiece.create(move.position_name_from, state.get_piece(move.position_name_from)))
 	else:
 		output.push_back(ChessEvent.MovePiece.create(move.position_name_from, move.position_name_to))
