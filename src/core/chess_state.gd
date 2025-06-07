@@ -16,6 +16,7 @@ signal piece_moved(position_name_from:String, position_name_to:String)
 signal piece_removed(position_name:String)
 var pieces:Dictionary[String, Piece] = {}
 var extra:PackedStringArray = []
+var zobrist:int = 0
 
 static func get_piece_mapping() -> Dictionary:
 	var piece_mapping:Dictionary = {}
@@ -61,7 +62,7 @@ static func create_from_fen(fen:String) -> ChessState:
 		elif fen_splited[0][i].is_valid_int():
 			pointer.x += fen_splited[0][i].to_int()
 		elif piece_mapping.has(fen_splited[0][i]):
-			state.pieces[Chess.to_position_name(pointer)] = Piece.create(load(piece_mapping[fen_splited[0][i]]["class"]), piece_mapping[fen_splited[0][i]]["group"])
+			state.add_piece(Chess.to_position_name(pointer), Piece.create(load(piece_mapping[fen_splited[0][i]]["class"]), piece_mapping[fen_splited[0][i]]["group"]))
 			pointer.x += 1
 		else:
 			return null
@@ -71,10 +72,18 @@ static func create_from_fen(fen:String) -> ChessState:
 		return null
 	if !fen_splited[5].is_valid_int():
 		return null
-	for i:int in range(1, fen_splited.size()):
-		state.extra.push_back(fen_splited[i])
 	state.reserve_extra(6)
+	for i:int in range(1, fen_splited.size()):
+		state.set_extra(i - 1, fen_splited[i])
 	return state
+
+static func zobrist_hash_piece(piece:Piece, position_name:String) -> int:
+	seed(("%s%d%s" % [piece.class_type.get_name(), piece.group, position_name]).hash())
+	return randi() + randi() << 32
+
+static func zobrist_hash_extra(_index:int, _extra:String) -> int:
+	seed(("%d%s" % [_index, _extra]).hash())
+	return randi() + randi() << 32
 
 func stringify() -> String:
 	var piece_mapping:Dictionary = get_piece_mapping()
@@ -108,6 +117,7 @@ func duplicate() -> ChessState:
 	var new_state:ChessState = ChessState.new()
 	new_state.pieces = pieces.duplicate(true)
 	new_state.extra = extra.duplicate()
+	new_state.zobrist = zobrist
 	return new_state
 
 static func is_equal(state_a:ChessState, state_b:ChessState) -> bool:
@@ -159,15 +169,19 @@ func rollback_event(events:Array[ChessEvent]) -> void:
 
 func add_piece(_position_name:String, _piece:Piece) -> void:	# 作为吃子的逆运算
 	pieces[_position_name] = _piece
+	zobrist ^= zobrist_hash_piece(_piece, _position_name)
 	piece_added.emit(_position_name)
 
 func capture_piece(_position_name:String) -> void:
 	if pieces.has(_position_name):
+		zobrist ^= zobrist_hash_piece(pieces[_position_name], _position_name)
 		pieces.erase(_position_name)	# 虽然大多数情况是攻击者移到被攻击者上，但是吃过路兵是例外，后续可能会出现类似情况，所以还是得手多一下
 		piece_removed.emit(_position_name)
 
 func move_piece(_position_name_from:String, _position_name_to:String) -> void:
 	var _piece:Piece = get_piece(_position_name_from)
+	zobrist ^= zobrist_hash_piece(_piece, _position_name_from)
+	zobrist ^= zobrist_hash_piece(_piece, _position_name_to)
 	pieces.erase(_position_name_from)
 	pieces[_position_name_to] = _piece
 	piece_moved.emit(_position_name_from, _position_name_to)
@@ -179,10 +193,13 @@ func get_extra(index:int) -> String:
 
 func set_extra(index:int, value:String) -> void:
 	if index < extra.size():
+		zobrist ^= zobrist_hash_extra(index, extra[index])
+		zobrist ^= zobrist_hash_extra(index, value)
 		extra[index] = value
 
 func reserve_extra(size:int) -> void:	# 预留空间
 	while extra.size() < size:
+		zobrist ^= zobrist_hash_extra(extra.size(), "-")
 		extra.push_back("-")
 
 func get_all_move(group:int) -> Array[Move]:	# 指定阵营

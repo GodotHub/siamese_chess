@@ -19,6 +19,7 @@ config/icon="uid://gdemlmk1r3x4"
 [autoload]
 
 Chess="*res://src/core/chess.gd"
+TranspositionTable="*res://src/core/transposition_table.gd"
 
 [debug]
 

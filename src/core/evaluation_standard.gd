@@ -112,15 +112,22 @@ static func evaluate_events(state:ChessState, events:Array[ChessEvent]) -> float
 	return score
 
 static func alphabeta(_state:ChessState, score:float, alpha:float, beta:float, depth:int = 5, group:int = 0) -> float:
+	var flag:TranspositionTable.Flag = TranspositionTable.Flag.UNKNOWN
+	var stored_score:float = TranspositionTable.probe_hash(_state.zobrist, depth, alpha, beta)
+	if !is_nan(stored_score):
+		return stored_score
 	if depth <= 0:	# 底端
+		TranspositionTable.record_hash(_state.zobrist, depth, score, TranspositionTable.Flag.EXACT)
 		return score
 	var move_list:Array[Move] = []
 	var move_value:Dictionary[Move, float] = {}
 	var move_event:Dictionary[Move, Array] = {}
 	if group == 0:
 		# 空着裁剪
+		flag = TranspositionTable.Flag.ALPHA
 		var null_move_value:float = alphabeta(_state, score, beta - 1, beta, depth - 4, 1)
 		if null_move_value >= beta:
+			TranspositionTable.record_hash(_state.zobrist, depth, beta, TranspositionTable.Flag.BETA)
 			return beta
 
 		move_list = _state.get_all_move(group)
@@ -134,13 +141,20 @@ static func alphabeta(_state:ChessState, score:float, alpha:float, beta:float, d
 			value = max(value, alphabeta(_state, score + move_value[iter], alpha, beta, depth - 1, 1))
 			_state.rollback_event(move_event[iter])
 			alpha = max(alpha, value)
-			if beta <= alpha:
-				break
+			if beta <= value:
+				TranspositionTable.record_hash(_state.zobrist, depth, value, TranspositionTable.Flag.BETA)
+				return beta
+			if alpha < value:
+				flag = TranspositionTable.Flag.EXACT
+				alpha = value
+		TranspositionTable.record_hash(_state.zobrist, depth, value, flag)
 		return value
 	else:
+		flag = TranspositionTable.Flag.BETA
 		# 空着裁剪
 		var null_move_value:float = alphabeta(_state, score, alpha, alpha + 1, depth - 4, 0)
 		if null_move_value <= alpha:
+			TranspositionTable.record_hash(_state.zobrist, depth, alpha, TranspositionTable.Flag.ALPHA)
 			return alpha
 
 		move_list = _state.get_all_move(group)
@@ -153,9 +167,13 @@ static func alphabeta(_state:ChessState, score:float, alpha:float, beta:float, d
 			_state.apply_event(move_event[iter])
 			value = min(value, alphabeta(_state, score + move_value[iter], alpha, beta, depth - 1, 0))
 			_state.rollback_event(move_event[iter])
-			beta = min(beta, value)
-			if beta <= alpha:
-				break
+			if alpha >= value:
+				TranspositionTable.record_hash(_state.zobrist, depth, alpha, TranspositionTable.Flag.ALPHA)
+				return alpha
+			if beta > value:
+				flag = TranspositionTable.Flag.EXACT
+				beta = value
+		TranspositionTable.record_hash(_state.zobrist, depth, value, flag)
 		return value
 
 static func mtdf(state:ChessState, score:float, depth:int, group:int) -> float:
@@ -163,7 +181,7 @@ static func mtdf(state:ChessState, score:float, depth:int, group:int) -> float:
 	var r:float = 10000
 	var m:float = 0
 	var value:float = 0
-	while l + 1 < r:
+	while l + 0.1 < r:
 		m = (l + r) / 2
 		if m <= 0 && l / 2 < m:
 			m = l / 2
