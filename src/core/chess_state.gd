@@ -79,11 +79,11 @@ static func create_from_fen(fen:String) -> ChessState:
 
 static func zobrist_hash_piece(piece:Piece, position_name:String) -> int:
 	seed(("%s%d%s" % [piece.class_type.get_name(), piece.group, position_name]).hash())
-	return randi() + randi() << 32
+	return randi()
 
 static func zobrist_hash_extra(_index:int, _extra:String) -> int:
 	seed(("%d%s" % [_index, _extra]).hash())
-	return randi() + randi() << 32
+	return randi()
 
 func stringify() -> String:
 	var piece_mapping:Dictionary = get_piece_mapping()
