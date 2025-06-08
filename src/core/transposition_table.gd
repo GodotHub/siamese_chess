@@ -1,6 +1,6 @@
 extends Node
 
-var table_size:int = 131072
+var table_size:int = 1048576
 var table_size_mask:int = table_size - 1
 
 enum Flag	{

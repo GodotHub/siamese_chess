@@ -133,7 +133,7 @@ static func alphabeta(_state:ChessState, score:float, alpha:float, beta:float, d
 
 		move_list = _state.get_all_move(group)
 		for iter:Move in move_list:
-			move_event[iter] = _state.create_event(iter, true)
+			move_event[iter] = _state.create_event(iter)
 			move_value[iter] = evaluate_events(_state, move_event[iter])
 		var value:float = -10000
 		move_list.sort_custom(func(a:Move, b:Move) -> bool: return move_value[a] > move_value[b])
@@ -160,7 +160,7 @@ static func alphabeta(_state:ChessState, score:float, alpha:float, beta:float, d
 
 		move_list = _state.get_all_move(group)
 		for iter:Move in move_list:
-			move_event[iter] = _state.create_event(iter, true)
+			move_event[iter] = _state.create_event(iter)
 			move_value[iter] = evaluate_events(_state, move_event[iter])
 		var value:float = 10000
 		move_list.sort_custom(func(a:Move, b:Move) -> bool: return move_value[a] < move_value[b])
@@ -178,8 +178,8 @@ static func alphabeta(_state:ChessState, score:float, alpha:float, beta:float, d
 		return value
 
 static func mtdf(state:ChessState, score:float, depth:int, group:int) -> float:
-	var l:float = -10000
-	var r:float = 10000
+	var l:float = -2000
+	var r:float = 2000
 	var m:float = 0
 	var value:float = 0
 	while l + 0.1 < r:
@@ -187,7 +187,7 @@ static func mtdf(state:ChessState, score:float, depth:int, group:int) -> float:
 		if m <= 0 && l / 2 < m:
 			m = l / 2
 		elif m >= 0 && r / 2 > m:
-			m = r / 2;
+			m = r / 2
 		value = alphabeta(state, score, m, m + 0.1, depth, group)
 		if value <= m:
 			r = m
@@ -200,18 +200,18 @@ static func search(state:ChessState, depth:int = 10, group:int = 0) -> Dictionar
 	var output:Dictionary[String, float] = {}
 	var test_state:ChessState = state.duplicate()	# 复制状态防止修改时出现异常
 	for iter:Move in move_list:
-		var events:Array[ChessEvent] = test_state.create_event(iter, true)
+		var events:Array[ChessEvent] = test_state.create_event(iter)
 		var score:float = EvaluationStandard.evaluate_events(test_state, events)
 		test_state.apply_event(events)
-		var valid_check:float = alphabeta(test_state, score, -10000, 10000, 1, 1 if group == 0 else 0, false)	# 下一步被吃就说明这一步不合法
+		var valid_check:float = alphabeta(test_state, score, -2000, 2000, 1, 1 if group == 0 else 0, false)	# 下一步被吃就说明这一步不合法
 		if abs(valid_check) < 500:
 			output[iter.stringify()] = 0
 		test_state.rollback_event(events)
 	for i:int in range(1, depth):
 		for key:String in output:
-			var events:Array[ChessEvent] = test_state.create_event(Move.parse(key), true)
+			var events:Array[ChessEvent] = test_state.create_event(Move.parse(key))
 			var score:float = EvaluationStandard.evaluate_events(test_state, events)
 			test_state.apply_event(events)
-			output[key] = mtdf(test_state, score, i - 1, 1 if group == 0 else 0)
+			output[key] = mtdf(test_state, score, i, 1 if group == 0 else 0)
 			test_state.rollback_event(events)
 	return output
