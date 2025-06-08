@@ -111,11 +111,12 @@ static func evaluate_events(state:ChessState, events:Array[ChessEvent]) -> float
 			score -= get_piece_score(iter.position_name, iter.piece)
 	return score
 
-static func alphabeta(_state:ChessState, score:float, alpha:float, beta:float, depth:int = 5, group:int = 0) -> float:
+static func alphabeta(_state:ChessState, score:float, alpha:float, beta:float, depth:int = 5, group:int = 0, memorize:bool = true) -> float:
 	var flag:TranspositionTable.Flag = TranspositionTable.Flag.UNKNOWN
-	var stored_score:float = TranspositionTable.probe_hash(_state.zobrist, depth, alpha, beta)
-	if !is_nan(stored_score):
-		return stored_score
+	if memorize:
+		var stored_score:float = TranspositionTable.probe_hash(_state.zobrist, depth, alpha, beta)
+		if !is_nan(stored_score):
+			return stored_score
 	if depth <= 0:	# 底端
 		TranspositionTable.record_hash(_state.zobrist, depth, score, TranspositionTable.Flag.EXACT)
 		return score
@@ -142,7 +143,7 @@ static func alphabeta(_state:ChessState, score:float, alpha:float, beta:float, d
 			_state.rollback_event(move_event[iter])
 			alpha = max(alpha, value)
 			if beta <= value:
-				TranspositionTable.record_hash(_state.zobrist, depth, value, TranspositionTable.Flag.BETA)
+				TranspositionTable.record_hash(_state.zobrist, depth, beta, TranspositionTable.Flag.BETA)
 				return beta
 			if alpha < value:
 				flag = TranspositionTable.Flag.EXACT
@@ -193,7 +194,6 @@ static func mtdf(state:ChessState, score:float, depth:int, group:int) -> float:
 		else:
 			l = m
 	return value
-	
 
 static func search(state:ChessState, depth:int = 10, group:int = 0) -> Dictionary:
 	var move_list:Array[Move] = state.get_all_move(group)
@@ -203,10 +203,15 @@ static func search(state:ChessState, depth:int = 10, group:int = 0) -> Dictionar
 		var events:Array[ChessEvent] = test_state.create_event(iter, true)
 		var score:float = EvaluationStandard.evaluate_events(test_state, events)
 		test_state.apply_event(events)
-		var valid_check:float = alphabeta(test_state, score, -10000, 10000, 1, 1 if group == 0 else 0)	# 下一步被吃就说明这一步不合法
-		if abs(valid_check) >= 500:
-			test_state.rollback_event(events)
-			continue
-		output[iter.stringify()] = mtdf(test_state, score, depth - 1, 1 if group == 0 else 0)
+		var valid_check:float = alphabeta(test_state, score, -10000, 10000, 1, 1 if group == 0 else 0, false)	# 下一步被吃就说明这一步不合法
+		if abs(valid_check) < 500:
+			output[iter.stringify()] = 0
 		test_state.rollback_event(events)
+	for i:int in range(1, depth):
+		for key:String in output:
+			var events:Array[ChessEvent] = test_state.create_event(Move.parse(key), true)
+			var score:float = EvaluationStandard.evaluate_events(test_state, events)
+			test_state.apply_event(events)
+			output[key] = mtdf(test_state, score, i - 1, 1 if group == 0 else 0)
+			test_state.rollback_event(events)
 	return output

@@ -1,6 +1,6 @@
 extends Node
 
-var table_size:int = 1048576
+var table_size:int = 131072
 var table_size_mask:int = table_size - 1
 
 enum Flag	{
@@ -20,11 +20,13 @@ var transposition_table:Array[Item] = []
 
 func _init() -> void:
 	transposition_table.resize(table_size)
+	for i:int in range(transposition_table.size()):
+		transposition_table[i] = Item.new()
 
 func probe_hash(checksum:int, depth:int, alpha:float, beta:float) -> float:
 	var index:int = checksum & table_size_mask
 	var item:Item = transposition_table[index]
-	if is_instance_valid(item) && item.checksum == checksum:
+	if item.checksum == checksum:
 		if item.depth >= depth:
 			if item.flag == Flag.EXACT:
 				return item.value
@@ -36,8 +38,6 @@ func probe_hash(checksum:int, depth:int, alpha:float, beta:float) -> float:
 
 func record_hash(checksum:int, depth:int, value:float, flag:Flag)-> void:
 	var index:int = checksum & table_size_mask
-	if !is_instance_valid(transposition_table[index]):
-		transposition_table[index] = Item.new()
 	var item:Item = transposition_table[index]
 	item.checksum = checksum
 	item.depth = depth
