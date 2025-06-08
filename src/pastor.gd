@@ -5,8 +5,8 @@ extends Node3D
 class_name Pastor
 
 signal send_initial_state(state:ChessState)
-signal decided_move(move:Move)
-signal send_opponent_move(move_list:Array[Move])
+signal decided_move(move:int)
+signal send_opponent_move(move_list:PackedInt32Array)
 signal lose()
 signal win()
 signal draw()
@@ -15,7 +15,7 @@ var chess_state:ChessState = null
 var thread:Thread = null
 var history:Array[String] = []
 var score:float = 0
-var depth:int = 6
+var depth:int = 4
 var evaluation:Object = null
 
 func _ready() -> void:
@@ -33,7 +33,7 @@ func start_decision() -> void:
 	thread = Thread.new()
 	thread.start(decision, Thread.PRIORITY_HIGH)
 
-func receive_move(move:Move) -> void:
+func receive_move(move:int) -> void:
 	var events:Array[ChessEvent] = chess_state.create_event(move)
 	score += evaluation.evaluate_events(chess_state, events)
 	chess_state.apply_event(events)
@@ -65,18 +65,17 @@ func decision() -> void:
 	var move_list:Dictionary = evaluation.search(chess_state, depth, 0)
 	if !move_list.size():
 		return
-	var best_str:String = ""
-	for iter:String in move_list:
-		if !best_str || move_list[iter] > move_list[best_str]:
-			best_str = iter
-	var best:Move = Move.parse(best_str)
+	var best:int = -1
+	for iter:int in move_list:
+		if best == -1 || move_list[iter] > move_list[best]:
+			best = iter
 	decided_move.emit.call_deferred(best)
 
 func send_opponent_valid_move() -> void:	# 仅限轮到对方时使用
 	var move_list:Dictionary = evaluation.search(chess_state, 1, 1)
-	var output:Array[Move] = []
+	var output:PackedInt32Array = []
 	if move_list.size() == 0:
 		return
-	for iter:String in move_list:
-		output.push_back(Move.parse(iter))
+	for iter:int in move_list:
+		output.push_back(iter)
 	send_opponent_move.emit.call_deferred(output)

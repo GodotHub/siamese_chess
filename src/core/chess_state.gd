@@ -11,10 +11,10 @@ enum ExtraType
 	KING_PASSANT = 5,
 }
 
-signal piece_added(position_name:String)
-signal piece_moved(position_name_from:String, position_name_to:String)
-signal piece_removed(position_name:String)
-var pieces:Dictionary[String, Piece] = {}
+signal piece_added(by:int)
+signal piece_moved(from:int, to:int)
+signal piece_removed(by:int)
+var pieces:Array[Piece] = []
 var extra:PackedStringArray = []
 var zobrist:int = 0
 
@@ -51,22 +51,24 @@ static func get_piece_mapping() -> Dictionary:
 static func create_from_fen(fen:String) -> ChessState:
 	var piece_mapping:Dictionary = get_piece_mapping()
 	var state:ChessState = ChessState.new()
-	var pointer:Vector2i = Vector2i(0, 7)
+	state.pieces.resize(128)
+	state.pieces.fill(null)
+	var pointer:Vector2i = Vector2i(0, 0)
 	var fen_splited:PackedStringArray = fen.split(" ")
 	if fen_splited.size() < 6:
 		return null
 	for i:int in range(fen_splited[0].length()):
 		if fen_splited[0][i] == "/":
 			pointer.x = 0
-			pointer.y -= 1
+			pointer.y += 1
 		elif fen_splited[0][i].is_valid_int():
 			pointer.x += fen_splited[0][i].to_int()
 		elif piece_mapping.has(fen_splited[0][i]):
-			state.add_piece(Chess.to_position_name(pointer), Piece.create(load(piece_mapping[fen_splited[0][i]]["class"]), piece_mapping[fen_splited[0][i]]["group"]))
+			state.add_piece(pointer.x + pointer.y * 16, Piece.create(load(piece_mapping[fen_splited[0][i]]["class"]), piece_mapping[fen_splited[0][i]]["group"]))
 			pointer.x += 1
 		else:
 			return null
-	if pointer.x != 8 || pointer.y != 0:
+	if pointer.x != 8 || pointer.y != 7:
 		return null
 	if !(fen_splited[1] in ["w", "b"]):
 		return null
@@ -77,8 +79,8 @@ static func create_from_fen(fen:String) -> ChessState:
 		state.set_extra(i - 1, fen_splited[i])
 	return state
 
-static func zobrist_hash_piece(piece:Piece, position_name:String) -> int:
-	var key:int = piece.class_type.get_name().hash() + position_name.hash() + piece.group
+static func zobrist_hash_piece(piece:Piece, from:int) -> int:
+	var key:int = piece.class_type.get_name().hash() + from + piece.group
 	seed(key)
 	return randi()
 
@@ -96,15 +98,14 @@ func stringify() -> String:
 		abbrevation_mapping[path + ":%d" % group] = abbrevation
 	var null_counter:int = 0
 	var chessboard:PackedStringArray = []
-	for i:int in range(7, -1, -1):
+	for i:int in range(8):
 		var line:String = ""
 		for j:int in range(8):
-			var position_name:String = Chess.to_position_name(Vector2i(j, i))
-			if pieces.has(position_name):
+			if is_instance_valid(pieces[i * 16 + j]):
 				if null_counter:
 					line += "%d" % null_counter
 					null_counter = 0
-				line += abbrevation_mapping[pieces[position_name].class_type.resource_path + ":%d" % pieces[position_name].group]
+				line += abbrevation_mapping[pieces[i * 16 + j].class_type.resource_path + ":%d" % pieces[i * 16 + j].group]
 			else:
 				null_counter += 1
 		if null_counter:
@@ -125,36 +126,32 @@ func duplicate() -> ChessState:
 static func is_equal(state_a:ChessState, state_b:ChessState) -> bool:
 	return state_a.pieces == state_b.pieces
 
-func get_piece_instance(position_name:String) -> PieceInstance:
-	return pieces[position_name].class_type.create_instance(position_name, pieces[position_name].group)
+func get_piece_instance(to:int) -> PieceInstance:
+	return pieces[to].class_type.create_instance(to, pieces[to].group)
 
-func get_piece(position_name:String) -> Piece:
-	if !position_name || !pieces.has(position_name):
+func get_piece(to:int) -> Piece:
+	if to & 0x88 || !is_instance_valid(pieces[to]):
 		return null
-	return pieces[position_name]
+	return pieces[to]
 
-func has_piece(position_name:String) -> bool:
-	return pieces.has(position_name)
+func has_piece(to:int) -> bool:
+	return !(to & 0x88) && is_instance_valid(pieces[to])
 
-func is_move_valid(position_name_from:String, position_name_to:String) -> bool:
-	if !position_name_from || !position_name_to || !pieces.has(position_name_from):
-		return false
-	return get_valid_move(position_name_from).has(position_name_to)
-
-func get_valid_move(position_name_from:String) -> Array[Move]:
-	if has_piece(position_name_from):
-		return pieces[position_name_from].class_type.get_valid_move(self, position_name_from)
+func get_valid_move(from:int) -> PackedInt32Array:
+	if has_piece(from):
+		return pieces[from].class_type.get_valid_move(self, from)
 	return []
 
-func create_event(move:Move, simplified:bool = false) -> Array[ChessEvent]:
+func create_event(move:int, simplified:bool = false) -> Array[ChessEvent]:
 	var output:Array[ChessEvent] = []
+	var from:int = Move.from(move)
 	if !simplified:
-		if pieces[move.position_name_from].group == 1:
+		if pieces[from].group == 1:
 			output.push_back(ChessEvent.ChangeExtra.create(4, get_extra(4), "%d" % (get_extra(5).to_int() + 1)))
 			output.push_back(ChessEvent.ChangeExtra.create(0, get_extra(0), "w"))
-		elif pieces[move.position_name_from].group == 0:
+		elif pieces[from].group == 0:
 			output.push_back(ChessEvent.ChangeExtra.create(0, get_extra(0), "b"))
-	output.append_array(pieces[move.position_name_from].class_type.create_event(self, move))
+	output.append_array(pieces[from].class_type.create_event(self, move))
 	if get_extra(2) != "-":
 		output.push_back(ChessEvent.ChangeExtra.create(2, get_extra(2), "-"))
 	if get_extra(5) != "-":
@@ -169,24 +166,24 @@ func rollback_event(events:Array[ChessEvent]) -> void:
 	for i:int in range(events.size() - 1, -1, -1):
 		events[i].rollback_change(self)
 
-func add_piece(_position_name:String, _piece:Piece) -> void:	# 作为吃子的逆运算
-	pieces[_position_name] = _piece
-	zobrist ^= zobrist_hash_piece(_piece, _position_name)
-	piece_added.emit(_position_name)
+func add_piece(_to:int, _piece:Piece) -> void:	# 作为吃子的逆运算
+	pieces[_to] = _piece
+	zobrist ^= zobrist_hash_piece(_piece, _to)
+	piece_added.emit(_to)
 
-func capture_piece(_position_name:String) -> void:
-	if pieces.has(_position_name):
-		zobrist ^= zobrist_hash_piece(pieces[_position_name], _position_name)
-		pieces.erase(_position_name)	# 虽然大多数情况是攻击者移到被攻击者上，但是吃过路兵是例外，后续可能会出现类似情况，所以还是得手多一下
-		piece_removed.emit(_position_name)
+func capture_piece(_by:int) -> void:
+	if has_piece(_by):
+		zobrist ^= zobrist_hash_piece(pieces[_by], _by)
+		pieces[_by] = null	# 虽然大多数情况是攻击者移到被攻击者上，但是吃过路兵是例外，后续可能会出现类似情况，所以还是得手多一下
+		piece_removed.emit(_by)
 
-func move_piece(_position_name_from:String, _position_name_to:String) -> void:
-	var _piece:Piece = get_piece(_position_name_from)
-	zobrist ^= zobrist_hash_piece(_piece, _position_name_from)
-	zobrist ^= zobrist_hash_piece(_piece, _position_name_to)
-	pieces.erase(_position_name_from)
-	pieces[_position_name_to] = _piece
-	piece_moved.emit(_position_name_from, _position_name_to)
+func move_piece(_from:int, _to:int) -> void:
+	var _piece:Piece = get_piece(_from)
+	zobrist ^= zobrist_hash_piece(_piece, _from)
+	zobrist ^= zobrist_hash_piece(_piece, _to)
+	pieces[_to] = pieces[_from]
+	pieces[_from] = null
+	piece_moved.emit(_from, _to)
 
 func get_extra(index:int) -> String:
 	if index < extra.size():
@@ -204,9 +201,11 @@ func reserve_extra(size:int) -> void:	# 预留空间
 		zobrist ^= zobrist_hash_extra(extra.size(), "-")
 		extra.push_back("-")
 
-func get_all_move(group:int) -> Array[Move]:	# 指定阵营
-	var output:Array[Move] = []
-	for position_name_from:String in pieces:
-		if group == pieces[position_name_from].group:	# 当前阵营
-			output.append_array(pieces[position_name_from].class_type.get_valid_move(self, position_name_from))
+func get_all_move(group:int) -> PackedInt32Array:	# 指定阵营
+	var output:PackedInt32Array = []
+	for from:int in range(128):
+		if !has_piece(from):
+			continue
+		if group == pieces[from].group:	# 当前阵营
+			output.append_array(pieces[from].class_type.get_valid_move(self, from))
 	return output

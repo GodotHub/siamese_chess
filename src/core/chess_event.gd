@@ -8,43 +8,43 @@ func rollback_change(_state:ChessState) -> void:
 	pass
 
 class MovePiece extends ChessEvent:
-	var position_name_from:String
-	var position_name_to:String
-	static func create(_position_name_from:String, _position_name_to:String) -> MovePiece:
+	var from:int
+	var to:int
+	static func create(_from:int, _to:int) -> MovePiece:
 		var new_event:MovePiece = MovePiece.new()
-		new_event.position_name_from = _position_name_from
-		new_event.position_name_to = _position_name_to
+		new_event.from = _from
+		new_event.to = _to
 		return new_event
 	func apply_change(_state:ChessState) -> void:
-		_state.move_piece(position_name_from, position_name_to)
+		_state.move_piece(from, to)
 	func rollback_change(_state:ChessState) -> void:
-		_state.move_piece(position_name_to, position_name_from)
+		_state.move_piece(to, from)
 
 class CapturePiece extends ChessEvent:
-	var position_name:String
+	var by:int
 	var piece:Piece
-	static func create(_position_name:String, _piece:Piece) -> CapturePiece:
+	static func create(_by:int, _piece:Piece) -> CapturePiece:
 		var new_event:CapturePiece = CapturePiece.new()
-		new_event.position_name = _position_name
+		new_event.by = _by
 		new_event.piece = _piece
 		return new_event
 	func apply_change(_state:ChessState) -> void:
-		_state.capture_piece(position_name)
+		_state.capture_piece(by)
 	func rollback_change(_state:ChessState) -> void:
-		_state.add_piece(position_name, piece)
+		_state.add_piece(by, piece)
 
 class AddPiece extends ChessEvent:
-	var position_name:String
+	var by:int
 	var piece:Piece
-	static func create(_position_name:String, _piece:Piece) -> AddPiece:
+	static func create(_by:int, _piece:Piece) -> AddPiece:
 		var new_event:AddPiece = AddPiece.new()
-		new_event.position_name = _position_name
+		new_event.by = _by
 		new_event.piece = _piece
 		return new_event
 	func apply_change(_state:ChessState) -> void:
-		_state.add_piece(position_name, piece)
+		_state.add_piece(by, piece)
 	func rollback_change(_state:ChessState) -> void:
-		_state.capture_piece(position_name)
+		_state.capture_piece(by)
 
 class ChangeExtra extends ChessEvent:
 	var index:int

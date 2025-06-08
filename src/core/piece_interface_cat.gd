@@ -1,27 +1,28 @@
 extends PieceInterface
 class_name PieceInterfaceCat
 
+const directions:PackedInt32Array = [-17, -16, -15, -1, 1, 15, 16, 17]
+
 static func get_name() -> String:
 	return "Cat"
 
-static func create_instance(position_name:String, group:int) -> PieceInstance:
+static func create_instance(from:int, group:int) -> PieceInstance:
 	var packed_scene:PackedScene = load("res://scene/piece_feral_cat.tscn")
 	var instance:PieceInstance = packed_scene.instantiate()
-	instance.position_name = position_name
+	instance.position_name = Chess.to_position_name(from)
 	instance.group = group
 	return instance
 
-static func create_event(state:ChessState, move:Move) -> Array[ChessEvent]:
+static func create_event(_state:ChessState, _move:int) -> Array[ChessEvent]:
 	var output:Array[ChessEvent] = []
-	output.push_back(ChessEvent.MovePiece.create(move.position_name_from, move.position_name_to))
+	output.push_back(ChessEvent.MovePiece.create(Move.from(_move), Move.to(_move)))
 	return output
 
-static func get_valid_move(state:ChessState, position_name_from:String) -> Array[Move]:
-	var directions:PackedVector2Array = [Vector2i(-1, -1), Vector2i(-1, 0), Vector2i(-1, 1), Vector2i(0, -1), Vector2i(0, 1), Vector2i(1, -1), Vector2i(1, 0), Vector2i(1, 1)]
-	var output:Array[Move] = []
-	for iter:Vector2i in directions:
-		var position_name_to:String = Chess.direction_to(position_name_from, iter)
-		if !position_name_to || state.has_piece(position_name_to):
+static func get_valid_move(_state:ChessState, _from:int) -> PackedInt32Array:
+	var output:PackedInt32Array = []
+	for iter:int in directions:
+		var to:int = _from + iter
+		if to & 0x88 || _state.has_piece(to) && _state.get_piece(_from).group == _state.get_piece(to).group:
 			continue
-		output.push_back(Move.create(position_name_from, position_name_to, "", "Default"))
+		output.push_back(Move.create(_from, to, 0))
 	return output

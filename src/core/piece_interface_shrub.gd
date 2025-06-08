@@ -4,17 +4,17 @@ class_name PieceInterfaceShrub
 static func get_name() -> String:
 	return "Shrub"
 
-static func create_instance(position_name:String, group:int) -> PieceInstance:
+static func create_instance(from:int, group:int) -> PieceInstance:
 	var packed_scene:PackedScene = load("res://scene/piece_shrub.tscn")
 	var instance:PieceInstance = packed_scene.instantiate()
-	instance.position_name = position_name
+	instance.position_name = Chess.to_position_name(from)
 	instance.group = group
 	return instance
 
-static func create_event(_state:ChessState, move:Move) -> Array[ChessEvent]:
+static func create_event(_state:ChessState, _move:int) -> Array[ChessEvent]:
 	var output:Array[ChessEvent] = []
-	output.push_back(ChessEvent.MovePiece.create(move.position_name_from, move.position_name_to))
+	output.push_back(ChessEvent.MovePiece.create(Move.from(_move), Move.to(_move)))
 	return output
 
-static func get_valid_move(_state:ChessState, _position_name_from:String) -> Array[Move]:
+static func get_valid_move(_state:ChessState, _from:int) -> PackedInt32Array:
 	return []

@@ -1,24 +1,15 @@
-extends RefCounted
+extends Object
 class_name Move
+# 大致格式是：（前面一堆0补位）（extra 8位）（to 8位）（from 8位）
 
-var position_name_from:String
-var position_name_to:String
-var extra:String
-var comment:String
+static func create(_from:int, _to:int, _extra:int) -> int:
+	return _from + (_to << 8) + (_extra << 16)
 
-func stringify() -> String:
-	return position_name_from + "|" + position_name_to + "|" + extra + "|" + comment
+static func from(move:int) -> int:
+	return move & 0xFF
 
-static func parse(move_str:String) -> Move:
-	var str_list:PackedStringArray = move_str.split("|")
-	if !move_str || str_list.size() != 4:
-		return null
-	return Move.create(str_list[0], str_list[1], str_list[2], str_list[3])
+static func to(move:int) -> int:
+	return (move >> 8) & 0xFF
 
-static func create(_position_name_from:String, _position_name_to:String, _extra:String, _comment:String) -> Move:
-	var new_move:Move = Move.new()
-	new_move.position_name_from = _position_name_from
-	new_move.position_name_to = _position_name_to
-	new_move.extra = _extra
-	new_move.comment = _comment
-	return new_move
+static func extra(move:int) -> int:
+	return (move >> 16) & 0xFF

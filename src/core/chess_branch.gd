@@ -4,7 +4,7 @@ class_name ChessBranch
 static func alphabeta(_state:ChessState, score:float, alpha:float, beta:float, depth:int = 5, group:int = 0) -> float:
 	if depth <= 0:	# 底端
 		return score
-	var move_list:Array[Move] = []
+	var move_list:PackedInt32Array = []
 	var move_value:Dictionary[Move, float] = {}
 	var move_event:Dictionary[Move, Array] = {}
 	if group == 0:
@@ -49,7 +49,7 @@ static func alphabeta(_state:ChessState, score:float, alpha:float, beta:float, d
 		return value
 
 static func search(state:ChessState, depth:int = 10, group:int = 0) -> Dictionary:
-	var move_list:Array[Move] = state.get_all_move(group)
+	var move_list:PackedInt32Array = state.get_all_move(group)
 	var output:Dictionary[String, float] = {}
 	var test_state:ChessState = state.duplicate()	# 复制状态防止修改时出现异常
 	for iter:Move in move_list:
