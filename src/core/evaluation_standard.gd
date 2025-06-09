@@ -1,13 +1,13 @@
 extends Evaluation
 class_name EvaluationStandard	# 接口
 
-const piece_value:Dictionary[String, float] = {
-	"King": 600.0,
-	"Queen": 9.29,
-	"Rook": 4.79,
-	"Bishop": 3.2,
-	"Knight": 2.8,
-	"Pawn": 1,
+const piece_value:Dictionary[String, int] = {
+	"King": 60000,
+	"Queen": 929,
+	"Rook": 479,
+	"Bishop": 320,
+	"Knight": 280,
+	"Pawn": 100,
 }
 
 const position_value:Dictionary[String, Array] = {
@@ -77,7 +77,7 @@ static func get_end_type(_state:ChessState) -> String:
 	var group:int = 0 if _state.extra[0] == "w" else 1
 	var move_list:Dictionary = search(_state, 1, group)
 	if move_list.size() == 0:
-		var null_move_check:float = alphabeta(_state, 0, -10000, 10000, 1, 1 - group)
+		var null_move_check:int = alphabeta(_state, 0, -10000, 10000, 1, 1 - group)
 		if abs(null_move_check) >= 500:
 			if group == 0:
 				return "checkmate_black"
@@ -90,18 +90,18 @@ static func get_end_type(_state:ChessState) -> String:
 				return "stalemate_white"
 	return ""
 
-static func get_piece_score(by:int, piece:Piece) -> float:
+static func get_piece_score(by:int, piece:Piece) -> int:
 	var piece_position:Vector2i = Vector2(by % 16, by / 16)
 	var group:int = piece.group
 	if group == 1:
 		piece_position.y = 7 - piece_position.y
 	if piece_value.has(piece.class_type.get_name()):
-		return (position_value[piece.class_type.get_name()][piece_position.x + (7 - piece_position.y) * 8] / 100.0 + piece_value[piece.class_type.get_name()]) * (1 if group == 0 else -1)
+		return (position_value[piece.class_type.get_name()][piece_position.x + piece_position.y * 8] / 100.0 + piece_value[piece.class_type.get_name()]) * (1 if group == 0 else -1)
 	else:
 		return (1 if group == 0 else -1)	# 未知棋子，在某种规则下出现了未知的棋子，我们可以特别处理未知的棋子
 
-static func evaluate_events(state:ChessState, events:Array[ChessEvent]) -> float:
-	var score:float = 0
+static func evaluate_events(state:ChessState, events:Array[ChessEvent]) -> int:
+	var score:int = 0
 	for iter:ChessEvent in events:
 		if iter is ChessEvent.AddPiece:
 			score += get_piece_score(iter.by, iter.piece)
@@ -111,84 +111,83 @@ static func evaluate_events(state:ChessState, events:Array[ChessEvent]) -> float
 			score -= get_piece_score(iter.by, iter.piece)
 	return score
 
-static func alphabeta(_state:ChessState, score:float, alpha:float, beta:float, depth:int = 5, group:int = 0, memorize:bool = true) -> float:
-	var flag:TranspositionTable.Flag = TranspositionTable.Flag.UNKNOWN
-	if memorize:
-		var stored_score:float = TranspositionTable.probe_hash(_state.zobrist, depth, alpha, beta)
-		if !is_nan(stored_score):
-			return stored_score
+static func alphabeta(_state:ChessState, score:int, alpha:int, beta:int, depth:int = 5, group:int = 0, _memorize:bool = true) -> int:
+	#var flag:TranspositionTable.Flag = TranspositionTable.Flag.UNKNOWN
+	#if memorize:
+	#	var stored_score:int = TranspositionTable.probe_hash(_state.zobrist, depth, alpha, beta)
+	#	if !is_nan(stored_score):
+	#		return stored_score
 	if depth <= 0:	# 底端
-		TranspositionTable.record_hash(_state.zobrist, depth, score, TranspositionTable.Flag.EXACT)
+	#	TranspositionTable.record_hash(_state.zobrist, depth, score, TranspositionTable.Flag.EXACT)
 		return score
 	var move_list:Array = []
-	var move_value:Dictionary[int, float] = {}
+	var move_value:Dictionary[int, int] = {}
 	var move_event:Dictionary[int, Array] = {}
 	if group == 0:
 		# 空着裁剪
-		flag = TranspositionTable.Flag.ALPHA
-		var null_move_value:float = alphabeta(_state, score, beta - 1, beta, depth - 4, 1)
+		#flag = TranspositionTable.Flag.ALPHA
+		var null_move_value:int = alphabeta(_state, score, beta - 1, beta, depth - 4, 1)
 		if null_move_value >= beta:
-			TranspositionTable.record_hash(_state.zobrist, depth, beta, TranspositionTable.Flag.BETA)
+			#TranspositionTable.record_hash(_state.zobrist, depth, beta, TranspositionTable.Flag.BETA)
 			return beta
 
 		move_list = _state.get_all_move(group)
 		for iter:int in move_list:
 			move_event[iter] = _state.create_event(iter)
 			move_value[iter] = evaluate_events(_state, move_event[iter])
-		var value:float = -10000
+		var value:int = -10000
 		move_list.sort_custom(func(a:int, b:int) -> bool: return move_value[a] > move_value[b])
 		for iter:int in move_list:
 			_state.apply_event(move_event[iter])
 			value = max(value, alphabeta(_state, score + move_value[iter], alpha, beta, depth - 1, 1))
 			_state.rollback_event(move_event[iter])
-			alpha = max(alpha, value)
 			if beta <= value:
-				TranspositionTable.record_hash(_state.zobrist, depth, beta, TranspositionTable.Flag.BETA)
+				#TranspositionTable.record_hash(_state.zobrist, depth, beta, TranspositionTable.Flag.BETA)
 				return beta
 			if alpha < value:
-				flag = TranspositionTable.Flag.EXACT
+				#flag = TranspositionTable.Flag.EXACT
 				alpha = value
-		TranspositionTable.record_hash(_state.zobrist, depth, value, flag)
+		#TranspositionTable.record_hash(_state.zobrist, depth, value, flag)
 		return value
 	else:
-		flag = TranspositionTable.Flag.BETA
+		#flag = TranspositionTable.Flag.BETA
 		# 空着裁剪
-		var null_move_value:float = alphabeta(_state, score, alpha, alpha + 1, depth - 4, 0)
+		var null_move_value:int = alphabeta(_state, score, alpha, alpha + 1, depth - 4, 0)
 		if null_move_value <= alpha:
-			TranspositionTable.record_hash(_state.zobrist, depth, alpha, TranspositionTable.Flag.ALPHA)
+			#TranspositionTable.record_hash(_state.zobrist, depth, alpha, TranspositionTable.Flag.ALPHA)
 			return alpha
 
 		move_list = _state.get_all_move(group)
 		for iter:int in move_list:
 			move_event[iter] = _state.create_event(iter)
 			move_value[iter] = evaluate_events(_state, move_event[iter])
-		var value:float = 10000
+		var value:int = 10000
 		move_list.sort_custom(func(a:int, b:int) -> bool: return move_value[a] < move_value[b])
 		for iter:int in move_list:
 			_state.apply_event(move_event[iter])
 			value = min(value, alphabeta(_state, score + move_value[iter], alpha, beta, depth - 1, 0))
 			_state.rollback_event(move_event[iter])
 			if alpha >= value:
-				TranspositionTable.record_hash(_state.zobrist, depth, alpha, TranspositionTable.Flag.ALPHA)
+				#TranspositionTable.record_hash(_state.zobrist, depth, alpha, TranspositionTable.Flag.ALPHA)
 				return alpha
 			if beta > value:
-				flag = TranspositionTable.Flag.EXACT
+				#flag = TranspositionTable.Flag.EXACT
 				beta = value
-		TranspositionTable.record_hash(_state.zobrist, depth, value, flag)
+		#TranspositionTable.record_hash(_state.zobrist, depth, value, flag)
 		return value
 
-static func mtdf(state:ChessState, score:float, depth:int, group:int) -> float:
-	var l:float = -2000
-	var r:float = 2000
-	var m:float = 0
-	var value:float = 0
-	while l + 0.1 < r:
+static func mtdf(state:ChessState, score:int, depth:int, group:int) -> int:
+	var l:int = -2000
+	var r:int = 2000
+	var m:int = 0
+	var value:int = 0
+	while l + 1 < r:
 		m = (l + r) / 2
 		if m <= 0 && l / 2 < m:
 			m = l / 2
 		elif m >= 0 && r / 2 > m:
 			m = r / 2
-		value = alphabeta(state, score, m, m + 0.1, depth, group)
+		value = alphabeta(state, score, m, m + 1, depth, group)
 		if value <= m:
 			r = m
 		else:
@@ -197,21 +196,21 @@ static func mtdf(state:ChessState, score:float, depth:int, group:int) -> float:
 
 static func search(state:ChessState, depth:int = 10, group:int = 0) -> Dictionary:
 	var move_list:PackedInt32Array = state.get_all_move(group)
-	var output:Dictionary[int, float] = {}
+	var output:Dictionary[int, int] = {}
 	var test_state:ChessState = state.duplicate()	# 复制状态防止修改时出现异常
 	for iter:int in move_list:
 		var events:Array[ChessEvent] = test_state.create_event(iter)
-		var score:float = EvaluationStandard.evaluate_events(test_state, events)
+		var score:int = EvaluationStandard.evaluate_events(test_state, events)
 		test_state.apply_event(events)
-		var valid_check:float = alphabeta(test_state, score, -2000, 2000, 1, 1 if group == 0 else 0, false)	# 下一步被吃就说明这一步不合法
-		if abs(valid_check) < 500:
+		var valid_check:int = alphabeta(test_state, score, -200000, 200000, 1, 1 if group == 0 else 0, false)	# 下一步被吃就说明这一步不合法
+		if abs(valid_check) < 50000:
 			output[iter] = 0
 		test_state.rollback_event(events)
-	for i:int in range(1, depth):
-		for key:int in output:
-			var events:Array[ChessEvent] = test_state.create_event(key)
-			var score:float = EvaluationStandard.evaluate_events(test_state, events)
-			test_state.apply_event(events)
-			output[key] = mtdf(test_state, score, i, 1 if group == 0 else 0)
-			test_state.rollback_event(events)
+	for key:int in output:
+		var events:Array[ChessEvent] = test_state.create_event(key)
+		var score:int = EvaluationStandard.evaluate_events(test_state, events)
+		test_state.apply_event(events)
+		#output[key] = mtdf(test_state, score, depth, 1 if group == 0 else 0)
+		output[key] = alphabeta(test_state, score, -200000, 200000, depth - 1, 1 if group == 0 else 0)
+		test_state.rollback_event(events)
 	return output

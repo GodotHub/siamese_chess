@@ -14,8 +14,8 @@ signal draw()
 var chess_state:ChessState = null
 var thread:Thread = null
 var history:Array[String] = []
-var score:float = 0
-var depth:int = 4
+var score:int = 0
+var depth:int = 6
 var evaluation:Object = null
 
 func _ready() -> void:

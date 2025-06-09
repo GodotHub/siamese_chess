@@ -1,9 +1,9 @@
 extends Evaluation
 class_name EvaluationMaze
 
-static func evaluate_events(_state:ChessState, _events:Array[ChessEvent]) -> float:
+static func evaluate_events(_state:ChessState, _events:Array[ChessEvent]) -> int:
 	# 白方起点h8，黑方起点a8
-	var sum:float = 0
+	var sum:int = 0
 	for iter:ChessEvent in _events:
 		if iter is ChessEvent:
 			var piece_position_from:Vector2i = Chess.to_piece_position(iter.position_name_from)

@@ -14,7 +14,7 @@ class Item extends Object:
 	var checksum:int = 0
 	var depth:int = 0
 	var flag:Flag = Flag.UNKNOWN
-	var value:float = 0
+	var value:int = 0
 
 var transposition_table:Array[Item] = []
 
@@ -23,7 +23,7 @@ func _init() -> void:
 	for i:int in range(transposition_table.size()):
 		transposition_table[i] = Item.new()
 
-func probe_hash(checksum:int, depth:int, alpha:float, beta:float) -> float:
+func probe_hash(checksum:int, depth:int, alpha:int, beta:int) -> int:
 	var index:int = checksum & table_size_mask
 	var item:Item = transposition_table[index]
 	if item.checksum == checksum:
@@ -34,9 +34,9 @@ func probe_hash(checksum:int, depth:int, alpha:float, beta:float) -> float:
 				return alpha
 			if item.flag == Flag.BETA && item.value > beta:
 				return beta
-	return NAN
+	return 65535
 
-func record_hash(checksum:int, depth:int, value:float, flag:Flag)-> void:
+func record_hash(checksum:int, depth:int, value:int, flag:Flag)-> void:
 	var index:int = checksum & table_size_mask
 	var item:Item = transposition_table[index]
 	item.checksum = checksum
