@@ -115,7 +115,7 @@ static func alphabeta(_state:ChessState, score:int, alpha:int, beta:int, depth:i
 	#var flag:TranspositionTable.Flag = TranspositionTable.Flag.UNKNOWN
 	#if memorize:
 	#	var stored_score:int = TranspositionTable.probe_hash(_state.zobrist, depth, alpha, beta)
-	#	if !is_nan(stored_score):
+	#	if stored_score != 65535:
 	#		return stored_score
 	if depth <= 0:	# 底端
 	#	TranspositionTable.record_hash(_state.zobrist, depth, score, TranspositionTable.Flag.EXACT)
