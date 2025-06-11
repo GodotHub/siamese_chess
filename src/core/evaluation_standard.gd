@@ -195,44 +195,44 @@ static func generate_move(_state:ChessState, _group:int) -> PackedInt32Array:
 		if (_group == 0) != (from_piece >= "A".unicode_at(0) && from_piece <= "Z".unicode_at(0)):
 			continue
 		var directions:PackedInt32Array
-		if char(from_piece) in "Pp":
-			var front:int = -16 if char(from_piece) == "P" else 16
-			var on_start:bool = _from / 16 == (6 if char(from_piece) == "P" else 1)
-			var on_end:bool = _from / 16 == (1 if char(from_piece) == "P" else 16)
+		if from_piece in ["P".unicode_at(0), "p".unicode_at(0)]:
+			var front:int = -16 if from_piece == "P".unicode_at(0) else 16
+			var on_start:bool = _from / 16 == (6 if from_piece == "P".unicode_at(0) else 1)
+			var on_end:bool = _from / 16 == (1 if from_piece == "P".unicode_at(0) else 16)
 			if !_state.has_piece(_from + front):
 				if on_end:
-					output.push_back(Move.create(_from, _from + front, 81 if char(from_piece) == "P" else 113))
-					output.push_back(Move.create(_from, _from + front, 82 if char(from_piece) == "P" else 114))
-					output.push_back(Move.create(_from, _from + front, 78 if char(from_piece) == "P" else 110))
-					output.push_back(Move.create(_from, _from + front, 66 if char(from_piece) == "P" else 98))
+					output.push_back(Move.create(_from, _from + front, 81 if from_piece == "P".unicode_at(0) else 113))
+					output.push_back(Move.create(_from, _from + front, 82 if from_piece == "P".unicode_at(0) else 114))
+					output.push_back(Move.create(_from, _from + front, 78 if from_piece == "P".unicode_at(0) else 110))
+					output.push_back(Move.create(_from, _from + front, 66 if from_piece == "P".unicode_at(0) else 98))
 				else:
 					output.push_back(Move.create(_from, _from + front, 0))
 					if !_state.has_piece(_from + front + front) && on_start:
 						output.push_back(Move.create(_from, _from + front + front, 0))
 			if _state.has_piece(_from + front + 1) && !is_same_camp(from_piece, _state.get_piece(_from + front + 1)):
 				if on_end:
-					output.push_back(Move.create(_from, _from + front + 1, 81 if char(from_piece) == "P" else 113))
-					output.push_back(Move.create(_from, _from + front + 1, 82 if char(from_piece) == "P" else 114))
-					output.push_back(Move.create(_from, _from + front + 1, 78 if char(from_piece) == "P" else 110))
-					output.push_back(Move.create(_from, _from + front + 1, 66 if char(from_piece) == "P" else 98))
+					output.push_back(Move.create(_from, _from + front + 1, 81 if from_piece == "P".unicode_at(0) else 113))
+					output.push_back(Move.create(_from, _from + front + 1, 82 if from_piece == "P".unicode_at(0) else 114))
+					output.push_back(Move.create(_from, _from + front + 1, 78 if from_piece == "P".unicode_at(0) else 110))
+					output.push_back(Move.create(_from, _from + front + 1, 66 if from_piece == "P".unicode_at(0) else 98))
 				else:
 					output.push_back(Move.create(_from, _from + front + 1, 0))
 			if _state.has_piece(_from + front - 1) && !is_same_camp(from_piece, _state.get_piece(_from + front - 1)):
 				if on_end:
-					output.push_back(Move.create(_from, _from + front - 1, 81 if char(from_piece) == "P" else 113))
-					output.push_back(Move.create(_from, _from + front - 1, 82 if char(from_piece) == "P" else 114))
-					output.push_back(Move.create(_from, _from + front - 1, 78 if char(from_piece) == "P" else 110))
-					output.push_back(Move.create(_from, _from + front - 1, 66 if char(from_piece) == "P" else 98))
+					output.push_back(Move.create(_from, _from + front - 1, 81 if from_piece == "P".unicode_at(0) else 113))
+					output.push_back(Move.create(_from, _from + front - 1, 82 if from_piece == "P".unicode_at(0) else 114))
+					output.push_back(Move.create(_from, _from + front - 1, 78 if from_piece == "P".unicode_at(0) else 110))
+					output.push_back(Move.create(_from, _from + front - 1, 66 if from_piece == "P".unicode_at(0) else 98))
 				else:
 					output.push_back(Move.create(_from, _from + front - 1, 0))
 			continue
-		elif char(from_piece) in "KQkq":
+		elif from_piece in ["K".unicode_at(0), "Q".unicode_at(0), "k".unicode_at(0), "q".unicode_at(0)]:
 			directions = directions_eight_way
-		elif char(from_piece) in "Rr":
+		elif from_piece in ["R".unicode_at(0), "r".unicode_at(0)]:
 			directions = directions_straight
-		elif char(from_piece) in "Nn":
+		elif from_piece in ["N".unicode_at(0), "n".unicode_at(0)]:
 			directions = directions_horse
-		elif char(from_piece) in "Bb":
+		elif from_piece in ["B".unicode_at(0), "b".unicode_at(0)]:
 			directions = directions_diagonal
 
 		for iter:int in directions:
@@ -242,16 +242,16 @@ static func generate_move(_state:ChessState, _group:int) -> PackedInt32Array:
 				output.push_back(Move.create(_from, to, 0))
 				if !(to & 0x88) && to_piece && !is_same_camp(from_piece, to_piece):
 					break
-				if char(from_piece) in "KkNn":
+				if from_piece in ["K".unicode_at(0), "k".unicode_at(0), "N".unicode_at(0), "n".unicode_at(0)]:
 					break
 				to += iter
 				to_piece = _state.get_piece(to)
-				if !char(from_piece) in "Rr" && char(to_piece) in "Kk" && is_same_camp(from_piece, to_piece):
+				if !(from_piece == "R".unicode_at(0) && from_piece == "K".unicode_at(0) || from_piece == "r".unicode_at(0) && from_piece == "k".unicode_at(0)):
 					continue
-				if _from % 16 >= 4 && (char(from_piece) == "R" && _state.get_extra(1).contains("K") || char(from_piece) == 'r' && _state.get_extra(1).contains("k")):
-					output.push_back(Move.create(to, Chess.g1 if char(from_piece) == "R" else Chess.g8, 75))
-				elif _from % 16 <= 3 && (char(from_piece) == "R" && _state.get_extra(1).contains("Q") || char(from_piece) == 'r' && _state.get_extra(1).contains("q")):
-					output.push_back(Move.create(to, Chess.c1 if char(from_piece) == "R" else Chess.c8, 81))
+				if _from % 16 >= 4 && (from_piece == "R".unicode_at(0) && _state.get_extra(1).contains("K") || from_piece == "r".unicode_at(0) && _state.get_extra(1).contains("k")):
+					output.push_back(Move.create(to, Chess.g1 if from_piece == "R".unicode_at(0) else Chess.g8, 75))
+				elif _from % 16 <= 3 && (from_piece == "R".unicode_at(0) && _state.get_extra(1).contains("Q") || from_piece == "r".unicode_at(0) && _state.get_extra(1).contains("q")):
+					output.push_back(Move.create(to, Chess.c1 if from_piece == "R".unicode_at(0) else Chess.c8, 81))
 	return output
 
 static func create_event(_state:ChessState, _move:int) -> Array[ChessEvent]:
@@ -279,7 +279,7 @@ static func create_event(_state:ChessState, _move:int) -> Array[ChessEvent]:
 			if _state.get_piece(Chess.g1) == "k".unicode_at(0):
 				output.push_back(ChessEvent.CapturePiece.create(Chess.g1, _state.get_piece(Chess.g1)))
 
-	if char(from_piece) in "Rr":
+	if from_piece in ["R".unicode_at(0), "r".unicode_at(0)]:
 		if Move.from(_move) % 16 >= 4:
 			if from_piece == "R".unicode_at(0) && _state.get_extra(1).find("K") != -1:
 				output.push_back(ChessEvent.ChangeExtra.create(1, _state.get_extra(1), _state.get_extra(1).erase(_state.get_extra(1).find("K"), 1)))
@@ -291,7 +291,7 @@ static func create_event(_state:ChessState, _move:int) -> Array[ChessEvent]:
 			elif from_piece == "r".unicode_at(0) && _state.get_extra(1).find("q") != -1:
 				output.push_back(ChessEvent.ChangeExtra.create(1, _state.get_extra(1), _state.get_extra(1).erase(_state.get_extra(1).find("q"), 1)))
 
-	if char(from_piece) in "Kk":
+	if from_piece in ["K".unicode_at(0), "k".unicode_at(0)]:
 		if from_group == 0:
 			var castle_text:String = ("k" if _state.get_extra(1).contains("k") else "") + ("q" if _state.get_extra(1).contains("q") else "")
 			output.push_back(ChessEvent.ChangeExtra.create(1, _state.get_extra(1), castle_text))
@@ -314,8 +314,8 @@ static func create_event(_state:ChessState, _move:int) -> Array[ChessEvent]:
 				king_passant = "e8d8c8"
 			output.push_back(ChessEvent.ChangeExtra.create(5, _state.get_extra(5), king_passant))
 
-	if char(from_piece) in "Pp":
-		var front:int = -16 if char(from_piece) == "P" else 16
+	if from_piece in ["P".unicode_at(0), "p".unicode_at(0)]:
+		var front:int = -16 if from_piece == "P".unicode_at(0) else 16
 		if Move.to(_move) - Move.from(_move) == front * 2:
 			output.push_back(ChessEvent.ChangeExtra.create(2, _state.get_extra(2), Chess.to_position_name(Move.from(_move) + front)))
 		if Chess.to_position_name(Move.to(_move)) == _state.get_extra(2):
