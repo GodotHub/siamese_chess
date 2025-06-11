@@ -83,6 +83,7 @@ func duplicate() -> ChessState:
 	var new_state:ChessState = ChessState.new()
 	new_state.pieces = pieces.duplicate()
 	new_state.extra = extra.duplicate()
+	new_state.evaluation = evaluation
 	new_state.zobrist = zobrist
 	return new_state
 
@@ -90,7 +91,7 @@ static func is_equal(state_a:ChessState, state_b:ChessState) -> bool:
 	return state_a.pieces == state_b.pieces
 
 func get_piece_instance(to:int) -> PieceInstance:
-	return evaluation.create_instance(to, pieces[to])
+	return evaluation.get_piece_instance(to, pieces[to])
 
 func get_piece(to:int) -> int:
 	if to & 0x88:
@@ -100,20 +101,8 @@ func get_piece(to:int) -> int:
 func has_piece(to:int) -> bool:
 	return !(to & 0x88) && pieces[to]
 
-func create_event(move:int, simplified:bool = false) -> Array[ChessEvent]:
-	var output:Array[ChessEvent] = []
-	if !simplified:
-		if extra[0] == "b":
-			output.push_back(ChessEvent.ChangeExtra.create(4, get_extra(4), "%d" % (get_extra(5).to_int() + 1)))
-			output.push_back(ChessEvent.ChangeExtra.create(0, get_extra(0), "w"))
-		elif extra[0] == "w":
-			output.push_back(ChessEvent.ChangeExtra.create(0, get_extra(0), "b"))
-	output.append_array(evaluation.create_event(self, move))
-	if get_extra(2) != "-":
-		output.push_back(ChessEvent.ChangeExtra.create(2, get_extra(2), "-"))
-	if get_extra(5) != "-":
-		output.push_back(ChessEvent.ChangeExtra.create(5, get_extra(5), "-"))
-	return output
+func create_event(move:int) -> Array[ChessEvent]:
+	return evaluation.create_event(self, move)
 
 func apply_event(events:Array[ChessEvent]) -> void:
 	for iter:ChessEvent in events:

@@ -45,7 +45,7 @@ func set_state(_state:ChessState) -> void:
 	piece_instance.clear()
 	var pieces:Array = chess_state.pieces
 	for i:int in range(pieces.size()):
-		if !is_instance_valid(pieces[i]):
+		if !pieces[i]:
 			continue
 		var instance:PieceInstance = chess_state.get_piece_instance(i)
 		instance.chessboard = self

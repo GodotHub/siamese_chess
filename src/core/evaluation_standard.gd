@@ -145,18 +145,18 @@ const position_value:Dictionary[String, Array] = {
 }
 
 const piece_mapping:Dictionary = {
-	"K": {"instance": "res://scene/piece_intstance_king.tscn", "group": 0},
-	"Q": {"instance": "res://scene/piece_intstance_queen.tscn", "group": 0},
-	"R": {"instance": "res://scene/piece_intstance_rook.tscn", "group": 0},
-	"N": {"instance": "res://scene/piece_intstance_knight.tscn", "group": 0},
-	"B": {"instance": "res://scene/piece_intstance_bishop.tscn", "group": 0},
-	"P": {"instance": "res://scene/piece_intstance_pawn.tscn", "group": 0},
-	"k": {"instance": "res://scene/piece_intstance_king.tscn", "group": 1},
-	"q": {"instance": "res://scene/piece_intstance_queen.tscn", "group": 1},
-	"r": {"instance": "res://scene/piece_intstance_rook.tscn", "group": 1},
-	"n": {"instance": "res://scene/piece_intstance_knight.tscn", "group": 1},
-	"b": {"instance": "res://scene/piece_intstance_bishop.tscn", "group": 1},
-	"p": {"instance": "res://scene/piece_intstance_pawn.tscn", "group": 1},
+	"K": {"instance": "res://scene/piece_king.tscn", "group": 0},
+	"Q": {"instance": "res://scene/piece_queen.tscn", "group": 0},
+	"R": {"instance": "res://scene/piece_rook.tscn", "group": 0},
+	"N": {"instance": "res://scene/piece_knight.tscn", "group": 0},
+	"B": {"instance": "res://scene/piece_bishop.tscn", "group": 0},
+	"P": {"instance": "res://scene/piece_pawn.tscn", "group": 0},
+	"k": {"instance": "res://scene/piece_king.tscn", "group": 1},
+	"q": {"instance": "res://scene/piece_queen.tscn", "group": 1},
+	"r": {"instance": "res://scene/piece_rook.tscn", "group": 1},
+	"n": {"instance": "res://scene/piece_knight.tscn", "group": 1},
+	"b": {"instance": "res://scene/piece_bishop.tscn", "group": 1},
+	"p": {"instance": "res://scene/piece_pawn.tscn", "group": 1},
 }
 
 static func get_end_type(_state:ChessState) -> String:
@@ -189,11 +189,44 @@ static func get_piece_instance(by:int, piece:int) -> PieceInstance:
 static func generate_move(_state:ChessState, _group:int) -> PackedInt32Array:
 	var output:PackedInt32Array = []
 	for _from:int in range(128):
-		if !_state.get_piece(_from):
+		if !_state.has_piece(_from):
 			continue
 		var from_piece:int = _state.get_piece(_from)
+		if (_group == 0) != (from_piece >= "A".unicode_at(0) && from_piece <= "Z".unicode_at(0)):
+			continue
 		var directions:PackedInt32Array
-		if char(from_piece) in "KQkq":
+		if char(from_piece) in "Pp":
+			var front:int = -16 if char(from_piece) == "P" else 16
+			var on_start:bool = _from / 16 == (6 if char(from_piece) == "P" else 1)
+			var on_end:bool = _from / 16 == (1 if char(from_piece) == "P" else 16)
+			if !_state.has_piece(_from + front):
+				if on_end:
+					output.push_back(Move.create(_from, _from + front, 81 if char(from_piece) == "P" else 113))
+					output.push_back(Move.create(_from, _from + front, 82 if char(from_piece) == "P" else 114))
+					output.push_back(Move.create(_from, _from + front, 78 if char(from_piece) == "P" else 110))
+					output.push_back(Move.create(_from, _from + front, 66 if char(from_piece) == "P" else 98))
+				else:
+					output.push_back(Move.create(_from, _from + front, 0))
+					if !_state.has_piece(_from + front + front) && on_start:
+						output.push_back(Move.create(_from, _from + front + front, 0))
+			if _state.has_piece(_from + front + 1) && !is_same_camp(from_piece, _state.get_piece(_from + front + 1)):
+				if on_end:
+					output.push_back(Move.create(_from, _from + front + 1, 81 if char(from_piece) == "P" else 113))
+					output.push_back(Move.create(_from, _from + front + 1, 82 if char(from_piece) == "P" else 114))
+					output.push_back(Move.create(_from, _from + front + 1, 78 if char(from_piece) == "P" else 110))
+					output.push_back(Move.create(_from, _from + front + 1, 66 if char(from_piece) == "P" else 98))
+				else:
+					output.push_back(Move.create(_from, _from + front + 1, 0))
+			if _state.has_piece(_from + front - 1) && !is_same_camp(from_piece, _state.get_piece(_from + front - 1)):
+				if on_end:
+					output.push_back(Move.create(_from, _from + front - 1, 81 if char(from_piece) == "P" else 113))
+					output.push_back(Move.create(_from, _from + front - 1, 82 if char(from_piece) == "P" else 114))
+					output.push_back(Move.create(_from, _from + front - 1, 78 if char(from_piece) == "P" else 110))
+					output.push_back(Move.create(_from, _from + front - 1, 66 if char(from_piece) == "P" else 98))
+				else:
+					output.push_back(Move.create(_from, _from + front - 1, 0))
+			continue
+		elif char(from_piece) in "KQkq":
 			directions = directions_eight_way
 		elif char(from_piece) in "Rr":
 			directions = directions_straight
@@ -204,17 +237,102 @@ static func generate_move(_state:ChessState, _group:int) -> PackedInt32Array:
 
 		for iter:int in directions:
 			var to:int = _from + iter
-			var to_has_piece:bool = _state.has_piece(to)
 			var to_piece:int = _state.get_piece(to)
-			while !(to & 0x88) && (!to_has_piece || !is_same_camp(from_piece, to_piece)):
+			while !(to & 0x88) && (!to_piece || !is_same_camp(from_piece, to_piece)):
 				output.push_back(Move.create(_from, to, 0))
-				if !(to & 0x88) && to_has_piece && !is_same_camp(from_piece, to_piece):
+				if !(to & 0x88) && to_piece && !is_same_camp(from_piece, to_piece):
 					break
 				if char(from_piece) in "KkNn":
 					break
 				to += iter
-				to_has_piece = _state.has_piece(to)
 				to_piece = _state.get_piece(to)
+				if !char(from_piece) in "Rr" && char(to_piece) in "Kk" && is_same_camp(from_piece, to_piece):
+					continue
+				if _from % 16 >= 4 && (char(from_piece) == "R" && _state.get_extra(1).contains("K") || char(from_piece) == 'r' && _state.get_extra(1).contains("k")):
+					output.push_back(Move.create(to, Chess.g1 if char(from_piece) == "R" else Chess.g8, 75))
+				elif _from % 16 <= 3 && (char(from_piece) == "R" && _state.get_extra(1).contains("Q") || char(from_piece) == 'r' && _state.get_extra(1).contains("q")):
+					output.push_back(Move.create(to, Chess.c1 if char(from_piece) == "R" else Chess.c8, 81))
+	return output
+
+static func create_event(_state:ChessState, _move:int) -> Array[ChessEvent]:
+	var output:Array[ChessEvent] = []
+	if _state.extra[0] == "b":
+		output.push_back(ChessEvent.ChangeExtra.create(4, _state.get_extra(4), "%d" % (_state.get_extra(5).to_int() + 1)))
+		output.push_back(ChessEvent.ChangeExtra.create(0, _state.get_extra(0), "w"))
+	elif _state.extra[0] == "w":
+		output.push_back(ChessEvent.ChangeExtra.create(0, _state.get_extra(0), "b"))
+	var from_piece:int = _state.get_piece(Move.from(_move))
+	var from_group:int = 0 if from_piece >= 'A'.unicode_at(0) && from_piece <= 'Z'.unicode_at(0) else 1
+	var to_piece:int = _state.get_piece(Move.to(_move))
+	var dont_move:bool = false
+	if to_piece:
+		output.push_back(ChessEvent.CapturePiece.create(Move.to(_move), to_piece))
+	if _state.get_extra(5).contains(Chess.to_position_name(Move.to(_move))):
+		if from_group == 0:
+			if _state.get_piece(Chess.c8) == "k".unicode_at(0):
+				output.push_back(ChessEvent.CapturePiece.create(Chess.c8, _state.get_piece(Chess.c8)))
+			if _state.get_piece(Chess.g8) == "k".unicode_at(0):
+				output.push_back(ChessEvent.CapturePiece.create(Chess.g8, _state.get_piece(Chess.g8)))
+		else:
+			if _state.get_piece(Chess.c1) == "k".unicode_at(0):
+				output.push_back(ChessEvent.CapturePiece.create(Chess.c1, _state.get_piece(Chess.c1)))
+			if _state.get_piece(Chess.g1) == "k".unicode_at(0):
+				output.push_back(ChessEvent.CapturePiece.create(Chess.g1, _state.get_piece(Chess.g1)))
+
+	if char(from_piece) in "Rr":
+		if Move.from(_move) % 16 >= 4:
+			if from_piece == "R".unicode_at(0) && _state.get_extra(1).find("K") != -1:
+				output.push_back(ChessEvent.ChangeExtra.create(1, _state.get_extra(1), _state.get_extra(1).erase(_state.get_extra(1).find("K"), 1)))
+			elif from_piece == "r".unicode_at(0) && _state.get_extra(1).find("k") != -1:
+				output.push_back(ChessEvent.ChangeExtra.create(1, _state.get_extra(1), _state.get_extra(1).erase(_state.get_extra(1).find("k"), 1)))
+		elif Move.from(_move) % 16 <= 3:
+			if from_piece == "R".unicode_at(0) && _state.get_extra(1).find("Q") != -1:
+				output.push_back(ChessEvent.ChangeExtra.create(1, _state.get_extra(1), _state.get_extra(1).erase(_state.get_extra(1).find("Q"), 1)))
+			elif from_piece == "r".unicode_at(0) && _state.get_extra(1).find("q") != -1:
+				output.push_back(ChessEvent.ChangeExtra.create(1, _state.get_extra(1), _state.get_extra(1).erase(_state.get_extra(1).find("q"), 1)))
+
+	if char(from_piece) in "Kk":
+		if from_group == 0:
+			var castle_text:String = ("k" if _state.get_extra(1).contains("k") else "") + ("q" if _state.get_extra(1).contains("q") else "")
+			output.push_back(ChessEvent.ChangeExtra.create(1, _state.get_extra(1), castle_text))
+		else:
+			var castle_text:String = ("K" if _state.get_extra(1).contains("K") else "") + ("Q" if _state.get_extra(1).contains("Q") else "")
+			output.push_back(ChessEvent.ChangeExtra.create(1, _state.get_extra(1), castle_text))
+		if Move.extra(_move):
+			var king_passant:String = ""
+			if Move.to(_move) == Chess.g1:
+				output.push_back(ChessEvent.MovePiece.create(Chess.h1, Chess.f1))
+				king_passant = "e1f1g1"
+			if Move.to(_move) == Chess.c1:
+				output.push_back(ChessEvent.MovePiece.create(Chess.a1, Chess.d1))
+				king_passant = "e1d1c1"
+			if Move.to(_move) == Chess.g8:
+				output.push_back(ChessEvent.MovePiece.create(Chess.h8, Chess.f8))
+				king_passant = "e8f8g8"
+			if Move.to(_move) == Chess.c8:
+				output.push_back(ChessEvent.MovePiece.create(Chess.a8, Chess.d8))
+				king_passant = "e8d8c8"
+			output.push_back(ChessEvent.ChangeExtra.create(5, _state.get_extra(5), king_passant))
+
+	if char(from_piece) in "Pp":
+		var front:int = -16 if char(from_piece) == "P" else 16
+		if Move.to(_move) - Move.from(_move) == front * 2:
+			output.push_back(ChessEvent.ChangeExtra.create(2, _state.get_extra(2), Chess.to_position_name(Move.from(_move) + front)))
+		if Chess.to_position_name(Move.to(_move)) == _state.get_extra(2):
+			var captured:int = Move.to(_move) - front
+			output.push_back(ChessEvent.CapturePiece.create(captured, _state.get_piece(captured)))
+		if Move.extra(_move):
+			output.push_back(ChessEvent.CapturePiece.create(Move.from(_move), from_piece))
+			output.push_back(ChessEvent.AddPiece.create(Move.to(_move), Move.extra(_move)))
+			dont_move = true
+
+	if !dont_move:
+		output.push_back(ChessEvent.MovePiece.create(Move.from(_move), Move.to(_move)))
+
+	if _state.get_extra(2) != "-":
+		output.push_back(ChessEvent.ChangeExtra.create(2, _state.get_extra(2), "-"))
+	if _state.get_extra(5) != "-":
+		output.push_back(ChessEvent.ChangeExtra.create(5, _state.get_extra(5), "-"))
 	return output
 
 static func get_piece_score(by:int, piece:int) -> int:
