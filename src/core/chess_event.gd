@@ -22,8 +22,8 @@ class MovePiece extends ChessEvent:
 
 class CapturePiece extends ChessEvent:
 	var by:int
-	var piece:Piece
-	static func create(_by:int, _piece:Piece) -> CapturePiece:
+	var piece:int
+	static func create(_by:int, _piece:int) -> CapturePiece:
 		var new_event:CapturePiece = CapturePiece.new()
 		new_event.by = _by
 		new_event.piece = _piece
@@ -35,8 +35,8 @@ class CapturePiece extends ChessEvent:
 
 class AddPiece extends ChessEvent:
 	var by:int
-	var piece:Piece
-	static func create(_by:int, _piece:Piece) -> AddPiece:
+	var piece:int
+	static func create(_by:int, _piece:int) -> AddPiece:
 		var new_event:AddPiece = AddPiece.new()
 		new_event.by = _by
 		new_event.piece = _piece

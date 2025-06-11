@@ -25,6 +25,7 @@ func create_state(fen:String) -> bool:
 	chess_state = ChessState.create_from_fen(fen)
 	if !is_instance_valid(chess_state):
 		return false
+	chess_state.evaluation = evaluation
 	history = [fen]
 	send_initial_state.emit(chess_state.duplicate())
 	return true
