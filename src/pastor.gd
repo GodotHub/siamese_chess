@@ -21,11 +21,11 @@ var evaluation:Object = null
 func _ready() -> void:
 	pass
 
-func create_state(fen:String) -> bool:
-	chess_state = ChessState.create_from_fen(fen)
+func create_state(fen:String, _evaluation:Object) -> bool:
+	chess_state = ChessState.create_from_fen(fen, _evaluation)
 	if !is_instance_valid(chess_state):
 		return false
-	chess_state.evaluation = evaluation
+	evaluation = _evaluation
 	history = [fen]
 	send_initial_state.emit(chess_state.duplicate())
 	return true
@@ -35,9 +35,7 @@ func start_decision() -> void:
 	thread.start(decision, Thread.PRIORITY_HIGH)
 
 func receive_move(move:int) -> void:
-	var events:Array[ChessEvent] = chess_state.create_event(move)
-	score += evaluation.evaluate_events(chess_state, events)
-	chess_state.apply_event(events)
+	chess_state.apply_move(move)
 	history.push_back(chess_state.stringify())
 
 	var end_type:String = evaluation.get_end_type(chess_state)

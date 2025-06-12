@@ -254,86 +254,88 @@ static func generate_move(_state:ChessState, _group:int) -> PackedInt32Array:
 					output.push_back(Move.create(to, Chess.c1 if from_piece == "R".unicode_at(0) else Chess.c8, 81))
 	return output
 
-static func create_event(_state:ChessState, _move:int) -> Array[ChessEvent]:
-	var output:Array[ChessEvent] = []
+static func apply_move(_state:ChessState, _move:int) -> void:
 	if _state.extra[0] == "b":
-		output.push_back(ChessEvent.ChangeExtra.create(4, _state.get_extra(4), "%d" % (_state.get_extra(5).to_int() + 1)))
-		output.push_back(ChessEvent.ChangeExtra.create(0, _state.get_extra(0), "w"))
+		_state.set_extra(4, "%d" % (_state.get_extra(5).to_int() + 1))
+		_state.set_extra(0, "w")
 	elif _state.extra[0] == "w":
-		output.push_back(ChessEvent.ChangeExtra.create(0, _state.get_extra(0), "b"))
+		_state.set_extra(0, "b")
 	var from_piece:int = _state.get_piece(Move.from(_move))
 	var from_group:int = 0 if from_piece >= 'A'.unicode_at(0) && from_piece <= 'Z'.unicode_at(0) else 1
 	var to_piece:int = _state.get_piece(Move.to(_move))
 	var dont_move:bool = false
+	var has_en_passant:bool = false
+	var has_king_passant:bool = false
 	if to_piece:
-		output.push_back(ChessEvent.CapturePiece.create(Move.to(_move), to_piece))
+		_state.capture_piece(Move.to(_move))
 	if _state.get_extra(5).contains(Chess.to_position_name(Move.to(_move))):
 		if from_group == 0:
 			if _state.get_piece(Chess.c8) == "k".unicode_at(0):
-				output.push_back(ChessEvent.CapturePiece.create(Chess.c8, _state.get_piece(Chess.c8)))
+				_state.capture_piece(Chess.c8)
 			if _state.get_piece(Chess.g8) == "k".unicode_at(0):
-				output.push_back(ChessEvent.CapturePiece.create(Chess.g8, _state.get_piece(Chess.g8)))
+				_state.capture_piece(Chess.g8)
 		else:
 			if _state.get_piece(Chess.c1) == "k".unicode_at(0):
-				output.push_back(ChessEvent.CapturePiece.create(Chess.c1, _state.get_piece(Chess.c1)))
+				_state.capture_piece(Chess.c1)
 			if _state.get_piece(Chess.g1) == "k".unicode_at(0):
-				output.push_back(ChessEvent.CapturePiece.create(Chess.g1, _state.get_piece(Chess.g1)))
+				_state.capture_piece(Chess.g1)
 
 	if from_piece in ["R".unicode_at(0), "r".unicode_at(0)]:
 		if Move.from(_move) % 16 >= 4:
 			if from_piece == "R".unicode_at(0) && _state.get_extra(1).find("K") != -1:
-				output.push_back(ChessEvent.ChangeExtra.create(1, _state.get_extra(1), _state.get_extra(1).erase(_state.get_extra(1).find("K"), 1)))
+				_state.set_extra(1, _state.get_extra(1).erase(_state.get_extra(1).find("K"), 1))
 			elif from_piece == "r".unicode_at(0) && _state.get_extra(1).find("k") != -1:
-				output.push_back(ChessEvent.ChangeExtra.create(1, _state.get_extra(1), _state.get_extra(1).erase(_state.get_extra(1).find("k"), 1)))
+				_state.set_extra(1, _state.get_extra(1).erase(_state.get_extra(1).find("k"), 1))
 		elif Move.from(_move) % 16 <= 3:
 			if from_piece == "R".unicode_at(0) && _state.get_extra(1).find("Q") != -1:
-				output.push_back(ChessEvent.ChangeExtra.create(1, _state.get_extra(1), _state.get_extra(1).erase(_state.get_extra(1).find("Q"), 1)))
+				_state.set_extra(1, _state.get_extra(1).erase(_state.get_extra(1).find("Q"), 1))
 			elif from_piece == "r".unicode_at(0) && _state.get_extra(1).find("q") != -1:
-				output.push_back(ChessEvent.ChangeExtra.create(1, _state.get_extra(1), _state.get_extra(1).erase(_state.get_extra(1).find("q"), 1)))
+				_state.set_extra(1, _state.get_extra(1).erase(_state.get_extra(1).find("q"), 1))
 
 	if from_piece in ["K".unicode_at(0), "k".unicode_at(0)]:
 		if from_group == 0:
 			var castle_text:String = ("k" if _state.get_extra(1).contains("k") else "") + ("q" if _state.get_extra(1).contains("q") else "")
-			output.push_back(ChessEvent.ChangeExtra.create(1, _state.get_extra(1), castle_text))
+			_state.set_extra(1, castle_text)
 		else:
 			var castle_text:String = ("K" if _state.get_extra(1).contains("K") else "") + ("Q" if _state.get_extra(1).contains("Q") else "")
-			output.push_back(ChessEvent.ChangeExtra.create(1, _state.get_extra(1), castle_text))
+			_state.set_extra(1, castle_text)
 		if Move.extra(_move):
 			var king_passant:String = ""
 			if Move.to(_move) == Chess.g1:
-				output.push_back(ChessEvent.MovePiece.create(Chess.h1, Chess.f1))
+				_state.move_piece(Chess.h1, Chess.f1)
 				king_passant = "e1f1g1"
 			if Move.to(_move) == Chess.c1:
-				output.push_back(ChessEvent.MovePiece.create(Chess.a1, Chess.d1))
+				_state.move_piece(Chess.a1, Chess.d1)
 				king_passant = "e1d1c1"
 			if Move.to(_move) == Chess.g8:
-				output.push_back(ChessEvent.MovePiece.create(Chess.h8, Chess.f8))
+				_state.move_piece(Chess.h8, Chess.f8)
 				king_passant = "e8f8g8"
 			if Move.to(_move) == Chess.c8:
-				output.push_back(ChessEvent.MovePiece.create(Chess.a8, Chess.d8))
+				_state.move_piece(Chess.a8, Chess.d8)
 				king_passant = "e8d8c8"
-			output.push_back(ChessEvent.ChangeExtra.create(5, _state.get_extra(5), king_passant))
+			has_king_passant = true
+			_state.set_extra(5, king_passant)
 
 	if from_piece in ["P".unicode_at(0), "p".unicode_at(0)]:
 		var front:int = -16 if from_piece == "P".unicode_at(0) else 16
 		if Move.to(_move) - Move.from(_move) == front * 2:
-			output.push_back(ChessEvent.ChangeExtra.create(2, _state.get_extra(2), Chess.to_position_name(Move.from(_move) + front)))
-		if Chess.to_position_name(Move.to(_move)) == _state.get_extra(2):
+			has_en_passant = true
+			_state.set_extra(2, Chess.to_position_name(Move.from(_move) + front))
+		if (Move.from(_move) / 16 == 2 || Move.from(_move) / 16 == 5) && Chess.to_position_name(Move.to(_move)) == _state.get_extra(2):
 			var captured:int = Move.to(_move) - front
-			output.push_back(ChessEvent.CapturePiece.create(captured, _state.get_piece(captured)))
+			_state.capture_piece(captured)
 		if Move.extra(_move):
-			output.push_back(ChessEvent.CapturePiece.create(Move.from(_move), from_piece))
-			output.push_back(ChessEvent.AddPiece.create(Move.to(_move), Move.extra(_move)))
 			dont_move = true
+			_state.capture_piece(Move.from(_move))
+			_state.add_piece(Move.to(_move), Move.extra(_move))
 
 	if !dont_move:
-		output.push_back(ChessEvent.MovePiece.create(Move.from(_move), Move.to(_move)))
+		_state.move_piece(Move.from(_move), Move.to(_move))
 
-	if _state.get_extra(2) != "-":
-		output.push_back(ChessEvent.ChangeExtra.create(2, _state.get_extra(2), "-"))
-	if _state.get_extra(5) != "-":
-		output.push_back(ChessEvent.ChangeExtra.create(5, _state.get_extra(5), "-"))
-	return output
+	if !has_en_passant:
+		_state.set_extra(2, "-")
+	if !has_king_passant:
+		_state.set_extra(5, "-")
 
 static func get_piece_score(by:int, piece:int) -> int:
 	var piece_position:Vector2i = Vector2(by % 16, by / 16)
@@ -342,18 +344,16 @@ static func get_piece_score(by:int, piece:int) -> int:
 	else:
 		return 0
 
-static func evaluate_events(state:ChessState, events:Array[ChessEvent]) -> int:
-	var score:int = 0
-	for iter:ChessEvent in events:
-		if iter is ChessEvent.AddPiece:
-			score += get_piece_score(iter.by, iter.piece)
-		if iter is ChessEvent.MovePiece:
-			score += get_piece_score(iter.to, state.get_piece(iter.from)) - get_piece_score(iter.from, state.get_piece(iter.from))
-		if iter is ChessEvent.CapturePiece:
-			score -= get_piece_score(iter.by, iter.piece)
-	return score
+static func evaluate_add(_state:ChessState, by:int, piece:int) -> int:
+	return get_piece_score(by, piece)
 
-static func alphabeta(_state:ChessState, score:int, alpha:int, beta:int, depth:int = 5, group:int = 0, _memorize:bool = true) -> int:
+static func evaluate_move(state:ChessState, from:int, to:int) -> int:
+	return get_piece_score(to, state.get_piece(from)) - get_piece_score(from, state.get_piece(from))
+
+static func evaluate_capture(state:ChessState, by:int) -> int:
+	return -get_piece_score(by, state.get_piece(by))
+
+static func alphabeta(_state:ChessState, alpha:int, beta:int, depth:int = 5, group:int = 0, _memorize:bool = true) -> int:
 	#var flag:TranspositionTable.Flag = TranspositionTable.Flag.UNKNOWN
 	#if memorize:
 	#	var stored_score:int = TranspositionTable.probe_hash(_state.zobrist, depth, alpha, beta)
@@ -361,28 +361,25 @@ static func alphabeta(_state:ChessState, score:int, alpha:int, beta:int, depth:i
 	#		return stored_score
 	if depth <= 0:	# 底端
 	#	TranspositionTable.record_hash(_state.zobrist, depth, score, TranspositionTable.Flag.EXACT)
-		return score
+		return _state.score
 	var move_list:Array = []
-	var move_value:Dictionary[int, int] = {}
-	var move_event:Dictionary[int, Array] = {}
+	var move_to_state:Dictionary[int, ChessState] = {}
 	if group == 0:
 		# 空着裁剪
 		#flag = TranspositionTable.Flag.ALPHA
-		var null_move_value:int = alphabeta(_state, score, beta - 1, beta, depth - 4, 1)
+		var null_move_value:int = alphabeta(_state, beta - 1, beta, depth - 4, 1)
 		if null_move_value >= beta:
 			#TranspositionTable.record_hash(_state.zobrist, depth, beta, TranspositionTable.Flag.BETA)
 			return beta
 
 		move_list = _state.get_all_move(group)
 		for iter:int in move_list:
-			move_event[iter] = _state.create_event(iter)
-			move_value[iter] = evaluate_events(_state, move_event[iter])
+			move_to_state[iter] = _state.duplicate()
+			move_to_state[iter].apply_move(iter)
 		var value:int = -10000
-		move_list.sort_custom(func(a:int, b:int) -> bool: return move_value[a] > move_value[b])
+		move_list.sort_custom(func(a:int, b:int) -> bool: return move_to_state[a].score > move_to_state[b].score)
 		for iter:int in move_list:
-			_state.apply_event(move_event[iter])
-			value = max(value, alphabeta(_state, score + move_value[iter], alpha, beta, depth - 1, 1))
-			_state.rollback_event(move_event[iter])
+			value = max(value, alphabeta(move_to_state[iter], alpha, beta, depth - 1, 1))
 			if beta <= value:
 				#TranspositionTable.record_hash(_state.zobrist, depth, beta, TranspositionTable.Flag.BETA)
 				return beta
@@ -394,21 +391,19 @@ static func alphabeta(_state:ChessState, score:int, alpha:int, beta:int, depth:i
 	else:
 		#flag = TranspositionTable.Flag.BETA
 		# 空着裁剪
-		var null_move_value:int = alphabeta(_state, score, alpha, alpha + 1, depth - 4, 0)
+		var null_move_value:int = alphabeta(_state, alpha, alpha + 1, depth - 4, 0)
 		if null_move_value <= alpha:
 			#TranspositionTable.record_hash(_state.zobrist, depth, alpha, TranspositionTable.Flag.ALPHA)
 			return alpha
 
 		move_list = _state.get_all_move(group)
 		for iter:int in move_list:
-			move_event[iter] = _state.create_event(iter)
-			move_value[iter] = evaluate_events(_state, move_event[iter])
+			move_to_state[iter] = _state.duplicate()
+			move_to_state[iter].apply_move(iter)
 		var value:int = 10000
-		move_list.sort_custom(func(a:int, b:int) -> bool: return move_value[a] < move_value[b])
+		move_list.sort_custom(func(a:int, b:int) -> bool: return move_to_state[a].score < move_to_state[b].score)
 		for iter:int in move_list:
-			_state.apply_event(move_event[iter])
-			value = min(value, alphabeta(_state, score + move_value[iter], alpha, beta, depth - 1, 0))
-			_state.rollback_event(move_event[iter])
+			value = min(value, alphabeta(move_to_state[iter], alpha, beta, depth - 1, 0))
 			if alpha >= value:
 				#TranspositionTable.record_hash(_state.zobrist, depth, alpha, TranspositionTable.Flag.ALPHA)
 				return alpha
@@ -418,7 +413,7 @@ static func alphabeta(_state:ChessState, score:int, alpha:int, beta:int, depth:i
 		#TranspositionTable.record_hash(_state.zobrist, depth, value, flag)
 		return value
 
-static func mtdf(state:ChessState, score:int, depth:int, group:int) -> int:
+static func mtdf(state:ChessState, depth:int, group:int) -> int:
 	var l:int = -2000
 	var r:int = 2000
 	var m:int = 0
@@ -429,7 +424,7 @@ static func mtdf(state:ChessState, score:int, depth:int, group:int) -> int:
 			m = l / 2
 		elif m >= 0 && r / 2 > m:
 			m = r / 2
-		value = alphabeta(state, score, m, m + 1, depth, group)
+		value = alphabeta(state, m, m + 1, depth, group)
 		if value <= m:
 			r = m
 		else:
@@ -438,21 +433,16 @@ static func mtdf(state:ChessState, score:int, depth:int, group:int) -> int:
 
 static func search(state:ChessState, depth:int = 10, group:int = 0) -> Dictionary:
 	var move_list:PackedInt32Array = state.get_all_move(group)
+	var move_to_state:Dictionary[int, ChessState] = {}
 	var output:Dictionary[int, int] = {}
-	var test_state:ChessState = state.duplicate()	# 复制状态防止修改时出现异常
 	for iter:int in move_list:
-		var events:Array[ChessEvent] = test_state.create_event(iter)
-		var score:int = EvaluationStandard.evaluate_events(test_state, events)
-		test_state.apply_event(events)
-		var valid_check:int = alphabeta(test_state, score, -200000, 200000, 1, 1 if group == 0 else 0, false)	# 下一步被吃就说明这一步不合法
+		var test_state:ChessState = state.duplicate()
+		test_state.apply_move(iter)
+		var valid_check:int = alphabeta(test_state, -200000, 200000, 1, 1 if group == 0 else 0, false)	# 下一步被吃就说明这一步不合法
 		if abs(valid_check) < 50000:
+			move_to_state[iter] = test_state
 			output[iter] = 0
-		test_state.rollback_event(events)
 	for key:int in output:
-		var events:Array[ChessEvent] = test_state.create_event(key)
-		var score:int = EvaluationStandard.evaluate_events(test_state, events)
-		test_state.apply_event(events)
 		#output[key] = mtdf(test_state, score, depth, 1 if group == 0 else 0)
-		output[key] = alphabeta(test_state, score, -200000, 200000, depth - 1, 1 if group == 0 else 0)
-		test_state.rollback_event(events)
+		output[key] = alphabeta(move_to_state[key], -200000, 200000, depth - 1, 1 if group == 0 else 0)
 	return output

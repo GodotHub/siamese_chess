@@ -10,10 +10,16 @@ static func get_piece_instance(_by:int, _piece:int) -> PieceInstance:
 static func generate_move(_state:ChessState, _group:int) -> PackedInt32Array:
 	return []
 
-static func create_event(_state:ChessState, _move:int) -> Array[ChessEvent]:
-	return []
+static func apply_move(_state:ChessState, _move:int) -> void:
+	pass
 
-static func evaluate_events(_state:ChessState, _events:Array[ChessEvent]) -> int:
+static func evaluate_add(_state:ChessState, _by:int, _piece:int) -> int:
+	return 0
+
+static func evaluate_move(_state:ChessState, _from:int, _to:int) -> int:
+	return 0
+
+static func evaluate_capture(_state:ChessState, _by:int) -> int:
 	return 0
 
 static func search(_state:ChessState, _depth:int = 10, _group:int = 0) -> Dictionary:

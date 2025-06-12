@@ -19,9 +19,11 @@ var extra:PackedStringArray = []
 var history:PackedInt64Array = []
 var evaluation:Object = null
 var zobrist:int = 0
+var score:int = 0
 
-static func create_from_fen(fen:String) -> ChessState:
+static func create_from_fen(fen:String, _evaluation:Object) -> ChessState:
 	var state:ChessState = ChessState.new()
+	state.evaluation = _evaluation
 	state.pieces.resize(128)
 	state.pieces.fill(0)
 	var pointer:Vector2i = Vector2i(0, 0)
@@ -83,6 +85,7 @@ func duplicate() -> ChessState:
 	var new_state:ChessState = ChessState.new()
 	new_state.pieces = pieces.duplicate()
 	new_state.extra = extra.duplicate()
+	new_state.score = score
 	new_state.evaluation = evaluation
 	new_state.zobrist = zobrist
 	return new_state
@@ -101,30 +104,22 @@ func get_piece(to:int) -> int:
 func has_piece(to:int) -> bool:
 	return !(to & 0x88) && pieces[to]
 
-func create_event(move:int) -> Array[ChessEvent]:
-	return evaluation.create_event(self, move)
-
-func apply_event(events:Array[ChessEvent]) -> void:
-	for iter:ChessEvent in events:
-		iter.apply_change(self)
-
-func rollback_event(events:Array[ChessEvent]) -> void:
-	for i:int in range(events.size() - 1, -1, -1):
-		events[i].rollback_change(self)
-
-func add_piece(_to:int, _piece:int) -> void:	# 作为吃子的逆运算
-	pieces[_to] = _piece
-	zobrist ^= zobrist_hash_piece(_piece, _to)
-	piece_added.emit(_to)
+func add_piece(_by:int, _piece:int) -> void:	# 作为吃子的逆运算
+	pieces[_by] = _piece
+	score += evaluation.evaluate_add(self, _by, _piece)
+	zobrist ^= zobrist_hash_piece(_piece, _by)
+	piece_added.emit(_by)
 
 func capture_piece(_by:int) -> void:
 	if has_piece(_by):
 		zobrist ^= zobrist_hash_piece(pieces[_by], _by)
+		score += evaluation.evaluate_capture(self, _by)
 		pieces[_by] = 0	# 虽然大多数情况是攻击者移到被攻击者上，但是吃过路兵是例外，后续可能会出现类似情况，所以还是得手多一下
 		piece_removed.emit(_by)
 
 func move_piece(_from:int, _to:int) -> void:
 	var _piece:int = get_piece(_from)
+	score += evaluation.evaluate_move(self, _from, _to)
 	zobrist ^= zobrist_hash_piece(_piece, _from)
 	zobrist ^= zobrist_hash_piece(_piece, _to)
 	pieces[_to] = pieces[_from]
@@ -149,3 +144,6 @@ func reserve_extra(size:int) -> void:	# 预留空间
 
 func get_all_move(group:int) -> PackedInt32Array:	# 指定阵营
 	return evaluation.generate_move(self, group)
+
+func apply_move(_move:int) -> void:
+	evaluation.apply_move(self, _move)

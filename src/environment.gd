@@ -189,7 +189,7 @@ func start() -> void:
 		add_child(decision_instance)
 		await decision_instance.decided
 		if decision_instance.selected_index == 0:
-			$pastor.create_state("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
+			$pastor.create_state("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", EvaluationStandard)
 			var dialog_2:Dialog = Dialog.create_dialog_instance([
 				"现在棋盘已经准备好了。",
 				"您是黑方，以后手开局，我则先手"
@@ -204,7 +204,7 @@ func start() -> void:
 			var text_input_instance:TextInput = TextInput.create_text_input_instance("输入FEN格式的布局：")
 			add_child(text_input_instance)
 			await text_input_instance.confirmed
-			if $pastor.create_state(text_input_instance.text):
+			if $pastor.create_state(text_input_instance.text, EvaluationStandard):
 				var dialog_2:Dialog = Dialog.create_dialog_instance([
 					"现在棋盘已经准备好了。",
 					"根据棋局信息，" + ("目前是白方先手。" if $pastor.chess_state.get_extra(0) == "w" else "目前是黑方先手。")

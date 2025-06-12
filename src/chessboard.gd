@@ -104,7 +104,7 @@ func confirm_move(from:int, to:int) -> void:
 	$canvas.clear_select_position()
 
 func execute_move(move:int) -> void:
-	chess_state.apply_event(chess_state.create_event(move))
+	chess_state.apply_move(move)
 	$canvas.clear_move_position()
 	$canvas.draw_move_position($canvas.convert_name_to_position(Chess.to_position_name(Move.from(move))))
 	$canvas.draw_move_position($canvas.convert_name_to_position(Chess.to_position_name(Move.to(move))))
