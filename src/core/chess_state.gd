@@ -16,7 +16,7 @@ signal piece_moved(from:int, to:int)
 signal piece_removed(by:int)
 var pieces:PackedInt32Array = []
 var extra:PackedStringArray = []
-var history:PackedInt64Array = []
+var history:Dictionary = {}
 var evaluation:Object = null
 var zobrist:int = 0
 var score:int = 0
@@ -85,6 +85,7 @@ func duplicate() -> ChessState:
 	var new_state:ChessState = ChessState.new()
 	new_state.pieces = pieces.duplicate()
 	new_state.extra = extra.duplicate()
+	new_state.history = history.duplicate()
 	new_state.score = score
 	new_state.evaluation = evaluation
 	new_state.zobrist = zobrist

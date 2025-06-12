@@ -9,7 +9,7 @@ signal decided_move(move:int)
 signal send_opponent_move(move_list:PackedInt32Array)
 signal lose()
 signal win()
-signal draw()
+signal draw(type:int)
 
 var chess_state:ChessState = null
 var thread:Thread = null
@@ -46,9 +46,11 @@ func receive_move(move:int) -> void:
 			"checkmate_white":
 				win.emit()
 			"stalemate_black":
-				draw.emit()
+				draw.emit(1)
 			"stalemate_white":
-				draw.emit()
+				draw.emit(2)
+			"threefold_repetition":
+				draw.emit(0)
 		return
 
 	if chess_state.get_extra(0) == "w":

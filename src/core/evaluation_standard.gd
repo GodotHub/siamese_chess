@@ -174,6 +174,8 @@ static func get_end_type(_state:ChessState) -> String:
 				return "stalemate_black"
 			else:
 				return "stalemate_white"
+	if _state.history.get(_state.zobrist, 0) == 3:
+		return "threefold_repetition"	# 三次重复局面
 	return ""
 
 static func is_same_camp(piece_1:int, piece_2:int) -> bool:
@@ -255,6 +257,7 @@ static func generate_move(_state:ChessState, _group:int) -> PackedInt32Array:
 	return output
 
 static func apply_move(_state:ChessState, _move:int) -> void:
+	_state.history.set(_state.zobrist, _state.history.get(_state.zobrist, 0) + 1)
 	if _state.extra[0] == "b":
 		_state.set_extra(4, "%d" % (_state.get_extra(5).to_int() + 1))
 		_state.set_extra(0, "w")
@@ -362,6 +365,8 @@ static func alphabeta(_state:ChessState, alpha:int, beta:int, depth:int = 5, gro
 	if depth <= 0:	# 底端
 	#	TranspositionTable.record_hash(_state.zobrist, depth, score, TranspositionTable.Flag.EXACT)
 		return _state.score
+	if _state.history.has(_state.zobrist):
+		return 0	# 视作平局，如果局面不太好，也不会选择负分的下法
 	var move_list:Array = []
 	var move_to_state:Dictionary[int, ChessState] = {}
 	if group == 0:
