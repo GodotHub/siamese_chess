@@ -161,9 +161,9 @@ const piece_mapping:Dictionary = {
 
 static func get_end_type(_state:ChessState) -> String:
 	var group:int = 0 if _state.extra[0] == "w" else 1
-	var move_list:Dictionary = search(_state, 1, group)
-	if move_list.size() == 0:
-		var null_move_check:int = alphabeta(_state, 0, -10000, 10000, 1, 1 - group)
+	var move_list:PackedInt32Array = get_valid_move(_state, group)
+	if !move_list.size():
+		var null_move_check:int = alphabeta(_state, -200000, 200000, 1, 1 - group)
 		if abs(null_move_check) >= 500:
 			if group == 0:
 				return "checkmate_black"
@@ -356,13 +356,13 @@ static func evaluate_move(state:ChessState, from:int, to:int) -> int:
 static func evaluate_capture(state:ChessState, by:int) -> int:
 	return -get_piece_score(by, state.get_piece(by))
 
-static func alphabeta(_state:ChessState, alpha:int, beta:int, depth:int = 5, group:int = 0, _memorize:bool = true) -> int:
+static func alphabeta(_state:ChessState, alpha:int, beta:int, depth:int = 5, group:int = 0, is_timeup:Callable = Callable(), _memorize:bool = true) -> int:
 	#var flag:TranspositionTable.Flag = TranspositionTable.Flag.UNKNOWN
 	#if memorize:
 	#	var stored_score:int = TranspositionTable.probe_hash(_state.zobrist, depth, alpha, beta)
 	#	if stored_score != 65535:
 	#		return stored_score
-	if depth <= 0:	# 底端
+	if depth <= 0 || is_timeup.is_valid() && is_timeup.call():	# 底端，或者计算时间到
 	#	TranspositionTable.record_hash(_state.zobrist, depth, score, TranspositionTable.Flag.EXACT)
 		return _state.score
 	if _state.history.has(_state.zobrist):
@@ -381,7 +381,7 @@ static func alphabeta(_state:ChessState, alpha:int, beta:int, depth:int = 5, gro
 		for iter:int in move_list:
 			move_to_state[iter] = _state.duplicate()
 			move_to_state[iter].apply_move(iter)
-		var value:int = -10000
+		var value:int = -2000000
 		move_list.sort_custom(func(a:int, b:int) -> bool: return move_to_state[a].score > move_to_state[b].score)
 		for iter:int in move_list:
 			value = max(value, alphabeta(move_to_state[iter], alpha, beta, depth - 1, 1))
@@ -405,7 +405,7 @@ static func alphabeta(_state:ChessState, alpha:int, beta:int, depth:int = 5, gro
 		for iter:int in move_list:
 			move_to_state[iter] = _state.duplicate()
 			move_to_state[iter].apply_move(iter)
-		var value:int = 10000
+		var value:int = 2000000
 		move_list.sort_custom(func(a:int, b:int) -> bool: return move_to_state[a].score < move_to_state[b].score)
 		for iter:int in move_list:
 			value = min(value, alphabeta(move_to_state[iter], alpha, beta, depth - 1, 0))
@@ -419,8 +419,8 @@ static func alphabeta(_state:ChessState, alpha:int, beta:int, depth:int = 5, gro
 		return value
 
 static func mtdf(state:ChessState, depth:int, group:int) -> int:
-	var l:int = -2000
-	var r:int = 2000
+	var l:int = -200000
+	var r:int = 200000
 	var m:int = 0
 	var value:int = 0
 	while l + 1 < r:
@@ -436,18 +436,29 @@ static func mtdf(state:ChessState, depth:int, group:int) -> int:
 			l = m
 	return value
 
-static func search(state:ChessState, depth:int = 10, group:int = 0) -> Dictionary:
+static func get_valid_move(state:ChessState, group:int) -> PackedInt32Array:
 	var move_list:PackedInt32Array = state.get_all_move(group)
-	var move_to_state:Dictionary[int, ChessState] = {}
-	var output:Dictionary[int, int] = {}
+	var output:PackedInt32Array = []
 	for iter:int in move_list:
 		var test_state:ChessState = state.duplicate()
 		test_state.apply_move(iter)
-		var valid_check:int = alphabeta(test_state, -200000, 200000, 1, 1 if group == 0 else 0, false)	# 下一步被吃就说明这一步不合法
+		var valid_check:int = alphabeta(test_state, -200000, 200000, 1, 1 if group == 0 else 0)	# 下一步被吃就说明这一步不合法
 		if abs(valid_check) < 50000:
-			move_to_state[iter] = test_state
-			output[iter] = 0
-	for key:int in output:
-		#output[key] = mtdf(test_state, score, depth, 1 if group == 0 else 0)
-		output[key] = alphabeta(move_to_state[key], -200000, 200000, depth - 1, 1 if group == 0 else 0)
+			output.push_back(iter)
 	return output
+
+
+static func search(output:Dictionary[int, int], state:ChessState, is_timeup:Callable, group:int = 0) -> void:
+	var move_list:PackedInt32Array = get_valid_move(state, group)
+	var move_to_state:Dictionary[int, ChessState] = {}
+	for iter:int in move_list:
+		move_to_state[iter] = state.duplicate()
+		move_to_state[iter].apply_move(iter)
+		output[iter] = 0
+	# 迭代加深，并准备提前中断
+	for i:int in range(2, 1000):
+		for key:int in output:
+			#output[key] = mtdf(test_state, score, depth, 1 if group == 0 else 0)
+			output[key] = alphabeta(move_to_state[key], -200000, 200000, i, 1 if group == 0 else 0, is_timeup)
+			if is_timeup.call():
+				break

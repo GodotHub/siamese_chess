@@ -17,6 +17,8 @@ var history:Array[String] = []
 var score:int = 0
 var depth:int = 6
 var evaluation:Object = null
+var timer:Timer = null
+var start_thinking:float = 0
 
 func _ready() -> void:
 	pass
@@ -63,7 +65,10 @@ func decision() -> void:
 	if chess_state.get_extra(0) == "b":
 		send_opponent_valid_move()
 		return
-	var move_list:Dictionary = evaluation.search(chess_state, depth, 0)
+	
+	timer_start()
+	var move_list:Dictionary[int, int] = {}
+	evaluation.search(move_list, chess_state, is_timeup.bind(5), 0)
 	if !move_list.size():
 		return
 	var best:int = -1
@@ -72,11 +77,14 @@ func decision() -> void:
 			best = iter
 	decided_move.emit.call_deferred(best)
 
+func timer_start() -> void:
+	start_thinking = Time.get_unix_time_from_system()
+
+func is_timeup(duration:float) -> bool:
+	return Time.get_unix_time_from_system() - start_thinking >= duration
+
 func send_opponent_valid_move() -> void:	# 仅限轮到对方时使用
-	var move_list:Dictionary = evaluation.search(chess_state, 1, 1)
-	var output:PackedInt32Array = []
+	var move_list:PackedInt32Array = evaluation.get_valid_move(chess_state, 1)
 	if move_list.size() == 0:
 		return
-	for iter:int in move_list:
-		output.push_back(iter)
-	send_opponent_move.emit.call_deferred(output)
+	send_opponent_move.emit.call_deferred(move_list)

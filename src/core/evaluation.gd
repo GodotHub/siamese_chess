@@ -22,5 +22,8 @@ static func evaluate_move(_state:ChessState, _from:int, _to:int) -> int:
 static func evaluate_capture(_state:ChessState, _by:int) -> int:
 	return 0
 
-static func search(_state:ChessState, _depth:int = 10, _group:int = 0) -> Dictionary:
-	return {}
+static func get_valid_move(_state:ChessState, _group:int) -> PackedInt32Array:
+	return []
+
+static func search(_output:Dictionary[int, int], _state:ChessState, is_timeup:Callable, _group:int = 0) -> void:
+	pass
