@@ -13,6 +13,9 @@ static func stringify(_state:ChessState) -> String:
 static func get_piece_instance(_by:int, _piece:int) -> PieceInstance:
 	return null
 
+static func generate_premove(_state:ChessState, _group:int) -> PackedInt32Array:
+	return []
+
 static func generate_move(_state:ChessState, _group:int) -> PackedInt32Array:
 	return []
 
@@ -31,5 +34,5 @@ static func evaluate_capture(_state:ChessState, _by:int) -> int:
 static func get_valid_move(_state:ChessState, _group:int) -> PackedInt32Array:
 	return []
 
-static func search(_output:Dictionary[int, int], _state:ChessState, is_timeup:Callable, _group:int = 0) -> void:
+static func search(_output:Dictionary[int, int], _state:ChessState, _is_timeup:Callable, _group:int = 0) -> void:
 	pass

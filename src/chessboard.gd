@@ -8,7 +8,9 @@ var mouse_start_position_name:String = ""
 var mouse_moved:bool = false
 var chess_state:ChessState = null
 var valid_move:Dictionary[int, Array] = {}
+var valid_premove:Dictionary[int, Array] = {}
 var selected:int = -1
+var premove:int = -1
 var piece_instance:Dictionary[int, PieceInstance] = {}
 
 func _ready() -> void:
@@ -62,16 +64,27 @@ func convert_name_to_position(_position_name:String) -> Vector3:
 func tap_position(position_name:String) -> void:
 	$canvas.clear_select_position()
 	var by:int = Chess.to_int(position_name)
-	if !is_instance_valid(chess_state) || chess_state.get_extra(0) == 0:
+	if !is_instance_valid(chess_state):
 		return
-	if selected != -1:
-		confirm_move(selected, by)
-		selected = -1
-		return
-	if !chess_state.has_piece(by) || !valid_move.has(by):
-		return
-	for iter:int in valid_move[by]:
-		$canvas.draw_select_position($canvas.convert_name_to_position(Chess.to_position_name(Move.to(iter))))
+	if chess_state.get_extra(0) == 1:
+		if selected != -1:
+			confirm_move(selected, by)
+			selected = -1
+			return
+		if !chess_state.has_piece(by) || !valid_move.has(by):
+			return
+		for iter:int in valid_move[by]:
+			$canvas.draw_select_position($canvas.convert_name_to_position(Chess.to_position_name(Move.to(iter))))
+	else:
+		if selected != -1:
+			confirm_premove(selected, by)
+			selected = -1
+			return
+		if !chess_state.has_piece(by) || !valid_move.has(by):
+			return
+		for iter:int in valid_premove[by]:
+			premove = -1
+			$canvas.draw_select_position($canvas.convert_name_to_position(Chess.to_position_name(Move.to(iter))))
 	selected = by
 
 func finger_on_position(position_name:String) -> void:
@@ -82,6 +95,26 @@ func finger_on_position(position_name:String) -> void:
 
 func finger_up() -> void:
 	$canvas.clear_pointer_position()
+
+func confirm_premove(from:int, to:int) -> void:
+	if from & 0x88 || to & 0x88 || !valid_premove.has(from):
+		return
+	var move_list:PackedInt32Array = valid_premove[from].filter(func (move:int) -> bool: return to == Move.to(move))
+	if move_list.size() == 0:
+		return
+	elif move_list.size() > 1:
+		var decision_list:PackedStringArray = []
+		for iter:int in move_list:
+			decision_list.push_back("%c" % Move.extra(iter))
+		var decision_instance:Decision = Decision.create_decision_instance(decision_list, true)
+		add_child(decision_instance)
+		await decision_instance.decided
+		if decision_instance.selected_index == -1:
+			return
+		premove = move_list[decision_instance.selected_index]
+	else:
+		premove = move_list[0]
+	$canvas.clear_select_position()
 
 func confirm_move(from:int, to:int) -> void:
 	if from & 0x88 || to & 0x88 || !valid_move.has(from):
@@ -112,11 +145,23 @@ func execute_move(move:int) -> void:
 	press_timer.emit()
 
 func set_valid_move(move_list:PackedInt32Array) -> void:
+	$canvas.clear_select_position()
 	valid_move.clear()
 	for move:int in move_list:
 		if !valid_move.has(Move.from(move)):
 			valid_move[Move.from(move)] = []
 		valid_move[Move.from(move)].push_back(move)
+	if premove != -1 && valid_move.has(Move.from(premove)) && valid_move[Move.from(premove)].has(premove):
+		execute_move(premove)
+	premove = -1
+
+func set_valid_premove(move_list:PackedInt32Array) -> void:
+	$canvas.clear_select_position()
+	valid_premove.clear()
+	for move:int in move_list:
+		if !valid_premove.has(Move.from(move)):
+			valid_premove[Move.from(move)] = []
+		valid_premove[Move.from(move)].push_back(move)
 
 func add_piece_instance(by:int) -> void:
 	var instance:PieceInstance = chess_state.get_piece_instance(by)

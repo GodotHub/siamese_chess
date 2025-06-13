@@ -35,7 +35,7 @@ func duplicate() -> ChessState:
 	var new_state:ChessState = ChessState.new()
 	new_state.pieces = pieces.duplicate()
 	new_state.extra = extra.duplicate()
-	new_state.history = history.duplicate()
+	#new_state.history = history.duplicate()
 	new_state.score = score
 	new_state.evaluation = evaluation
 	new_state.zobrist = zobrist

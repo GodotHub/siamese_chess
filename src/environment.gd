@@ -9,6 +9,7 @@ func _ready() -> void:
 	$pastor.connect("send_initial_state", $chessboard.set_state)
 	$pastor.connect("decided_move", $chessboard.execute_move)
 	$pastor.connect("send_opponent_move", $chessboard.set_valid_move)
+	$pastor.connect("send_opponent_premove", $chessboard.set_valid_premove)
 	$pastor.connect("win", pastor_win)
 	$pastor.connect("lose", pastor_lose)
 	$pastor.evaluation = EvaluationStandard

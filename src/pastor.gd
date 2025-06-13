@@ -7,6 +7,7 @@ class_name Pastor
 signal send_initial_state(state:ChessState)
 signal decided_move(move:int)
 signal send_opponent_move(move_list:PackedInt32Array)
+signal send_opponent_premove(move_list:PackedInt32Array)
 signal lose()
 signal win()
 signal draw(type:int)
@@ -62,10 +63,10 @@ func decision() -> void:
 	if chess_state.get_extra(0) == 1:
 		send_opponent_valid_move()
 		return
-	
+	send_opponent_valid_premove()
 	timer_start()
 	var move_list:Dictionary[int, int] = {}
-	evaluation.search(move_list, chess_state, is_timeup.bind(5), 0)
+	evaluation.search(move_list, chess_state, is_timeup.bind(10), 4, 1000, 0)
 	if !move_list.size():
 		return
 	var best:int = -1
@@ -85,3 +86,9 @@ func send_opponent_valid_move() -> void:	# 仅限轮到对方时使用
 	if move_list.size() == 0:
 		return
 	send_opponent_move.emit.call_deferred(move_list)
+
+func send_opponent_valid_premove() -> void:
+	var move_list:PackedInt32Array = evaluation.generate_premove(chess_state, 1)
+	if move_list.size() == 0:
+		return
+	send_opponent_premove.emit.call_deferred(move_list)
