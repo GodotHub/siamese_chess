@@ -159,8 +159,68 @@ const piece_mapping:Dictionary = {
 	"p": {"instance": "res://scene/piece_pawn.tscn", "group": 1},
 }
 
+static func parse(str:String) -> ChessState:
+	var state:ChessState = ChessState.new()
+	state.evaluation = EvaluationStandard
+	state.pieces.resize(128)
+	state.pieces.fill(0)
+	var pointer:Vector2i = Vector2i(0, 0)
+	var fen_splited:PackedStringArray = str.split(" ")
+	if fen_splited.size() < 6:
+		return null
+	for i:int in range(fen_splited[0].length()):
+		if fen_splited[0][i] == "/":
+			pointer.x = 0
+			pointer.y += 1
+		elif fen_splited[0][i].is_valid_int():
+			pointer.x += fen_splited[0][i].to_int()
+		elif fen_splited[0][i]:
+			state.add_piece(pointer.x + pointer.y * 16, fen_splited[0].unicode_at(i))
+			pointer.x += 1
+	if pointer.x != 8 || pointer.y != 7:
+		return null
+	if !(fen_splited[1] in ["w", "b"]):
+		return null
+	if !fen_splited[4].is_valid_int():
+		return null
+	if !fen_splited[5].is_valid_int():
+		return null
+	state.reserve_extra(6)
+	state.set_extra(0, 0 if fen_splited[1] == "w" else 1)
+	state.set_extra(1, (int(fen_splited[2].contains("K")) << 3) + (int(fen_splited[2].contains("Q")) << 2) + (int(fen_splited[2].contains("k")) << 1) + int(fen_splited[2].contains("q")))
+	state.set_extra(2, Chess.to_int(fen_splited[3]))
+	state.set_extra(3, fen_splited[4].to_int())
+	state.set_extra(4, fen_splited[5].to_int())
+	return state
+
+static func stringify(_state:ChessState) -> String:
+	var null_counter:int = 0
+	var chessboard:PackedStringArray = []
+	for i:int in range(8):
+		var line:String = ""
+		for j:int in range(8):
+			if _state.pieces[i * 16 + j]:
+				if null_counter:
+					line += "%d" % null_counter
+					null_counter = 0
+				line += char(_state.pieces[i * 16 + j])
+			else:
+				null_counter += 1
+		if null_counter:
+			line += "%d" % null_counter
+			null_counter = 0
+		chessboard.append(line)
+	var output:PackedStringArray = ["/".join(chessboard)]
+	output.push_back("w" if _state.get_extra(0) == 0 else "b")
+	output.push_back(("K" if _state.get_extra(1) & 8 else "") + ("Q" if _state.get_extra(1) & 4 else "") + ("k" if _state.get_extra(1) & 2 else "") + ("q" if _state.get_extra(1) & 1 else "") if _state.get_extra(1) else "-")
+	output.push_back(Chess.to_position_name(_state.get_extra(2)) if _state.get_extra(2) else "-")
+	output.push_back("%d" % _state.get_extra(3))
+	output.push_back("%d" % _state.get_extra(4))
+	# king_passant是为了判定是否违规走子，临时记录的，这里不做转换
+	return " ".join(output)
+
 static func get_end_type(_state:ChessState) -> String:
-	var group:int = 0 if _state.extra[0] == "w" else 1
+	var group:int = _state.extra[0]
 	var move_list:PackedInt32Array = get_valid_move(_state, group)
 	if !move_list.size():
 		var null_move_check:int = alphabeta(_state, -200000, 200000, 1, 1 - group)
@@ -250,19 +310,19 @@ static func generate_move(_state:ChessState, _group:int) -> PackedInt32Array:
 				to_piece = _state.get_piece(to)
 				if !(from_piece == "R".unicode_at(0) && from_piece == "K".unicode_at(0) || from_piece == "r".unicode_at(0) && from_piece == "k".unicode_at(0)):
 					continue
-				if _from % 16 >= 4 && (from_piece == "R".unicode_at(0) && _state.get_extra(1).contains("K") || from_piece == "r".unicode_at(0) && _state.get_extra(1).contains("k")):
+				if _from % 16 >= 4 && (from_piece == "R".unicode_at(0) && _state.get_extra(1) & 8 || from_piece == "r".unicode_at(0) && _state.get_extra(1) & 2):
 					output.push_back(Move.create(to, Chess.g1 if from_piece == "R".unicode_at(0) else Chess.g8, 75))
-				elif _from % 16 <= 3 && (from_piece == "R".unicode_at(0) && _state.get_extra(1).contains("Q") || from_piece == "r".unicode_at(0) && _state.get_extra(1).contains("q")):
+				elif _from % 16 <= 3 && (from_piece == "R".unicode_at(0) && _state.get_extra(1) & 4 || from_piece == "r".unicode_at(0) && _state.get_extra(1) & 2):
 					output.push_back(Move.create(to, Chess.c1 if from_piece == "R".unicode_at(0) else Chess.c8, 81))
 	return output
 
 static func apply_move(_state:ChessState, _move:int) -> void:
 	_state.history.set(_state.zobrist, _state.history.get(_state.zobrist, 0) + 1)
-	if _state.extra[0] == "b":
-		_state.set_extra(4, "%d" % (_state.get_extra(5).to_int() + 1))
-		_state.set_extra(0, "w")
-	elif _state.extra[0] == "w":
-		_state.set_extra(0, "b")
+	if _state.extra[0] == 1:
+		_state.set_extra(4, _state.get_extra(4) + 1)
+		_state.set_extra(0, 0)
+	elif _state.extra[0] == 0:
+		_state.set_extra(0, 1)
 	var from_piece:int = _state.get_piece(Move.from(_move))
 	var from_group:int = 0 if from_piece >= 'A'.unicode_at(0) && from_piece <= 'Z'.unicode_at(0) else 1
 	var to_piece:int = _state.get_piece(Move.to(_move))
@@ -271,7 +331,7 @@ static func apply_move(_state:ChessState, _move:int) -> void:
 	var has_king_passant:bool = false
 	if to_piece:
 		_state.capture_piece(Move.to(_move))
-	if _state.get_extra(5).contains(Chess.to_position_name(Move.to(_move))):
+	if abs(_state.get_extra(5) - Move.to(_move)) <= 1:
 		if from_group == 0:
 			if _state.get_piece(Chess.c8) == "k".unicode_at(0):
 				_state.capture_piece(Chess.c8)
@@ -283,48 +343,44 @@ static func apply_move(_state:ChessState, _move:int) -> void:
 			if _state.get_piece(Chess.g1) == "k".unicode_at(0):
 				_state.capture_piece(Chess.g1)
 
-	if from_piece in ["R".unicode_at(0), "r".unicode_at(0)]:
+	if from_piece in ["R".unicode_at(0), "r".unicode_at(0)]:	#哪边的车动过，就不能往那个方向易位
 		if Move.from(_move) % 16 >= 4:
-			if from_piece == "R".unicode_at(0) && _state.get_extra(1).find("K") != -1:
-				_state.set_extra(1, _state.get_extra(1).erase(_state.get_extra(1).find("K"), 1))
-			elif from_piece == "r".unicode_at(0) && _state.get_extra(1).find("k") != -1:
-				_state.set_extra(1, _state.get_extra(1).erase(_state.get_extra(1).find("k"), 1))
+			if from_piece == "R".unicode_at(0) && _state.get_extra(1) & 8:
+				_state.set_extra(1, _state.get_extra(1) & 7)
+			elif from_piece == "r".unicode_at(0) && _state.get_extra(1) & 2:
+				_state.set_extra(1, _state.get_extra(1) & 13)
 		elif Move.from(_move) % 16 <= 3:
-			if from_piece == "R".unicode_at(0) && _state.get_extra(1).find("Q") != -1:
-				_state.set_extra(1, _state.get_extra(1).erase(_state.get_extra(1).find("Q"), 1))
-			elif from_piece == "r".unicode_at(0) && _state.get_extra(1).find("q") != -1:
-				_state.set_extra(1, _state.get_extra(1).erase(_state.get_extra(1).find("q"), 1))
+			if from_piece == "R".unicode_at(0) && _state.get_extra(1) & 4:
+				_state.set_extra(1, _state.get_extra(1) & 11)
+			elif from_piece == "r".unicode_at(0) && _state.get_extra(1) & 1:
+				_state.set_extra(1, _state.get_extra(1) & 14)
 
 	if from_piece in ["K".unicode_at(0), "k".unicode_at(0)]:
 		if from_group == 0:
-			var castle_text:String = ("k" if _state.get_extra(1).contains("k") else "") + ("q" if _state.get_extra(1).contains("q") else "")
-			_state.set_extra(1, castle_text)
+			_state.set_extra(1, _state.get_extra(1) & 3)
 		else:
-			var castle_text:String = ("K" if _state.get_extra(1).contains("K") else "") + ("Q" if _state.get_extra(1).contains("Q") else "")
-			_state.set_extra(1, castle_text)
+			_state.set_extra(1, _state.get_extra(1) & 12)
 		if Move.extra(_move):
-			var king_passant:String = ""
 			if Move.to(_move) == Chess.g1:
 				_state.move_piece(Chess.h1, Chess.f1)
-				king_passant = "e1f1g1"
+				_state.set_extra(5, Chess.f1)
 			if Move.to(_move) == Chess.c1:
 				_state.move_piece(Chess.a1, Chess.d1)
-				king_passant = "e1d1c1"
+				_state.set_extra(5, Chess.d1)
 			if Move.to(_move) == Chess.g8:
 				_state.move_piece(Chess.h8, Chess.f8)
-				king_passant = "e8f8g8"
+				_state.set_extra(5, Chess.f8)
 			if Move.to(_move) == Chess.c8:
 				_state.move_piece(Chess.a8, Chess.d8)
-				king_passant = "e8d8c8"
+				_state.set_extra(5, Chess.d8)
 			has_king_passant = true
-			_state.set_extra(5, king_passant)
 
 	if from_piece in ["P".unicode_at(0), "p".unicode_at(0)]:
 		var front:int = -16 if from_piece == "P".unicode_at(0) else 16
 		if Move.to(_move) - Move.from(_move) == front * 2:
 			has_en_passant = true
-			_state.set_extra(2, Chess.to_position_name(Move.from(_move) + front))
-		if (Move.from(_move) / 16 == 2 || Move.from(_move) / 16 == 5) && Chess.to_position_name(Move.to(_move)) == _state.get_extra(2):
+			_state.set_extra(2, Move.from(_move) + front)
+		if (Move.from(_move) / 16 == 2 || Move.from(_move) / 16 == 5) && Move.to(_move) == _state.get_extra(2):
 			var captured:int = Move.to(_move) - front
 			_state.capture_piece(captured)
 		if Move.extra(_move):
@@ -336,9 +392,9 @@ static func apply_move(_state:ChessState, _move:int) -> void:
 		_state.move_piece(Move.from(_move), Move.to(_move))
 
 	if !has_en_passant:
-		_state.set_extra(2, "-")
+		_state.set_extra(2, -1)
 	if !has_king_passant:
-		_state.set_extra(5, "-")
+		_state.set_extra(5, -1)
 
 static func get_piece_score(by:int, piece:int) -> int:
 	var piece_position:Vector2i = Vector2(by % 16, by / 16)

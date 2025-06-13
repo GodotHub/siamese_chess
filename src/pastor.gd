@@ -13,7 +13,6 @@ signal draw(type:int)
 
 var chess_state:ChessState = null
 var thread:Thread = null
-var history:Array[String] = []
 var score:int = 0
 var depth:int = 6
 var evaluation:Object = null
@@ -24,11 +23,10 @@ func _ready() -> void:
 	pass
 
 func create_state(fen:String, _evaluation:Object) -> bool:
-	chess_state = ChessState.create_from_fen(fen, _evaluation)
+	chess_state = _evaluation.parse(fen)
 	if !is_instance_valid(chess_state):
 		return false
 	evaluation = _evaluation
-	history = [fen]
 	send_initial_state.emit(chess_state.duplicate())
 	return true
 
@@ -38,7 +36,6 @@ func start_decision() -> void:
 
 func receive_move(move:int) -> void:
 	chess_state.apply_move(move)
-	history.push_back(chess_state.stringify())
 
 	var end_type:String = evaluation.get_end_type(chess_state)
 	if end_type:
@@ -55,14 +52,14 @@ func receive_move(move:int) -> void:
 				draw.emit(0)
 		return
 
-	if chess_state.get_extra(0) == "w":
+	if chess_state.get_extra(0) == 0:
 		thread.wait_to_finish()
 		thread.start(decision, Thread.PRIORITY_HIGH)
 	else:
 		send_opponent_valid_move()
 
 func decision() -> void:
-	if chess_state.get_extra(0) == "b":
+	if chess_state.get_extra(0) == 1:
 		send_opponent_valid_move()
 		return
 	

@@ -21,7 +21,7 @@ func to_piece_position(position_name:String) -> Vector2i:
 	return Vector2i(position_name.unicode_at(0) - 97, position_name.unicode_at(1) - 49)
 
 func to_int(position_name:String) -> int:
-	if !position_name:
+	if !position_name || position_name == "-":
 		return -1
 	return position_name.unicode_at(0) - 97 + (7 - position_name.unicode_at(1) + 49) * 16
 

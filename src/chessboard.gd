@@ -62,7 +62,7 @@ func convert_name_to_position(_position_name:String) -> Vector3:
 func tap_position(position_name:String) -> void:
 	$canvas.clear_select_position()
 	var by:int = Chess.to_int(position_name)
-	if !is_instance_valid(chess_state) || chess_state.get_extra(0) == "w":
+	if !is_instance_valid(chess_state) || chess_state.get_extra(0) == 0:
 		return
 	if selected != -1:
 		confirm_move(selected, by)

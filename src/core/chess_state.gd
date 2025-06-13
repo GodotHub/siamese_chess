@@ -15,71 +15,21 @@ signal piece_added(by:int)
 signal piece_moved(from:int, to:int)
 signal piece_removed(by:int)
 var pieces:PackedInt32Array = []
-var extra:PackedStringArray = []
+var extra:PackedInt32Array = []
 var history:Dictionary = {}
 var evaluation:Object = null
 var zobrist:int = 0
 var score:int = 0
-
-static func create_from_fen(fen:String, _evaluation:Object) -> ChessState:
-	var state:ChessState = ChessState.new()
-	state.evaluation = _evaluation
-	state.pieces.resize(128)
-	state.pieces.fill(0)
-	var pointer:Vector2i = Vector2i(0, 0)
-	var fen_splited:PackedStringArray = fen.split(" ")
-	if fen_splited.size() < 6:
-		return null
-	for i:int in range(fen_splited[0].length()):
-		if fen_splited[0][i] == "/":
-			pointer.x = 0
-			pointer.y += 1
-		elif fen_splited[0][i].is_valid_int():
-			pointer.x += fen_splited[0][i].to_int()
-		elif fen_splited[0][i]:
-			state.add_piece(pointer.x + pointer.y * 16, fen_splited[0].unicode_at(i))
-			pointer.x += 1
-	if pointer.x != 8 || pointer.y != 7:
-		return null
-	if !(fen_splited[1] in ["w", "b"]):
-		return null
-	if !fen_splited[5].is_valid_int():
-		return null
-	state.reserve_extra(6)
-	for i:int in range(1, fen_splited.size()):
-		state.set_extra(i - 1, fen_splited[i])
-	return state
 
 static func zobrist_hash_piece(piece:int, from:int) -> int:
 	var key:int = piece + (from << 8)
 	seed(key)
 	return randi()
 
-static func zobrist_hash_extra(_index:int, _extra:String) -> int:
-	var key:int = _index + _extra.hash()
+static func zobrist_hash_extra(_index:int, _extra:int) -> int:
+	var key:int = _index + (_extra) << 8
 	seed(key)
 	return randi()
-
-func stringify() -> String:
-	var null_counter:int = 0
-	var chessboard:PackedStringArray = []
-	for i:int in range(8):
-		var line:String = ""
-		for j:int in range(8):
-			if pieces[i * 16 + j]:
-				if null_counter:
-					line += "%d" % null_counter
-					null_counter = 0
-				line += char(pieces[i * 16 + j])
-			else:
-				null_counter += 1
-		if null_counter:
-			line += "%d" % null_counter
-			null_counter = 0
-		chessboard.append(line)
-	var output:PackedStringArray = ["/".join(chessboard)]
-	output.append_array(extra)
-	return " ".join(output)
 
 func duplicate() -> ChessState:
 	var new_state:ChessState = ChessState.new()
@@ -127,12 +77,12 @@ func move_piece(_from:int, _to:int) -> void:
 	pieces[_from] = 0
 	piece_moved.emit(_from, _to)
 
-func get_extra(index:int) -> String:
+func get_extra(index:int) -> int:
 	if index < extra.size():
 		return extra[index]
-	return "-"
+	return -1
 
-func set_extra(index:int, value:String) -> void:
+func set_extra(index:int, value:int) -> void:
 	if index < extra.size():
 		zobrist ^= zobrist_hash_extra(index, extra[index])
 		zobrist ^= zobrist_hash_extra(index, value)
@@ -140,8 +90,8 @@ func set_extra(index:int, value:String) -> void:
 
 func reserve_extra(size:int) -> void:	# 预留空间
 	while extra.size() < size:
-		zobrist ^= zobrist_hash_extra(extra.size(), "-")
-		extra.push_back("-")
+		zobrist ^= zobrist_hash_extra(extra.size(), -1)
+		extra.push_back(-1)
 
 func get_all_move(group:int) -> PackedInt32Array:	# 指定阵营
 	return evaluation.generate_move(self, group)

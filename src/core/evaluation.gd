@@ -4,6 +4,12 @@ class_name Evaluation	# 接口
 static func get_end_type(_state:ChessState) -> String:
 	return ""
 
+static func parse(_str:String) -> ChessState:
+	return null
+
+static func stringify(_state:ChessState) -> String:
+	return ""
+
 static func get_piece_instance(_by:int, _piece:int) -> PieceInstance:
 	return null
 
