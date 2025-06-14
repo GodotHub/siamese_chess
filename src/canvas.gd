@@ -3,7 +3,7 @@ extends Node3D
 @onready var resolution:float = 512
 
 var select_position:Array[Node2D] = []
-var attack_position:Array[Node2D] = []
+var premove_position:Array[Node2D] = []
 var move_position:Array[Node2D] = []
 var pointer_position:Node2D = null
 
@@ -25,14 +25,11 @@ class ChessboardMovePosition extends Node2D:
 		draw_rect(Rect2(-resolution / 16, -resolution / 16, resolution / 8, resolution / 8), Color(0.69411, 0.933333, 0.82745, 0.4))
 		draw_rect(Rect2(-resolution / 16, -resolution / 16, resolution / 8, resolution / 8), Color(0.69411, 0.933333, 0.82745), false, 5)
 
-class ChessboardAttackPosition extends Node2D:
+class ChessboardPremovePosition extends Node2D:
 	var resolution:float = 512
-	var count:int = 0
 	func _draw() -> void:
-		var white:int = count & 0x3F
-		var black:int = (count >> 6) & 0x3F
-		draw_rect(Rect2(-resolution / 16, -resolution / 16, resolution / 8, resolution / 8), Color(0.6, 0.1, 0.1, white * 0.3))
-		draw_rect(Rect2(-resolution / 16, -resolution / 16, resolution / 8, resolution / 8), Color(0.1, 0.1, 0.6, black * 0.3))
+		draw_rect(Rect2(-resolution / 16, -resolution / 16, resolution / 8, resolution / 8), Color(0.6, 0.1, 0.1, 0.4))
+		draw_rect(Rect2(-resolution / 16, -resolution / 16, resolution / 8, resolution / 8), Color(0.6, 0.3, 0.3), false, 10)
 
 func _ready() -> void:
 	$sub_viewport.size = Vector2(resolution, resolution)
@@ -61,18 +58,17 @@ func clear_select_position() -> void:
 		iter.queue_free()
 	select_position.clear()
 
-func draw_attack_position(drawing_position:Vector2, count:int) -> void:
-	var new_point:ChessboardAttackPosition = ChessboardAttackPosition.new()
+func draw_premove_position(drawing_position:Vector2) -> void:
+	var new_point:ChessboardPremovePosition = ChessboardPremovePosition.new()
 	new_point.position = drawing_position
 	new_point.resolution = resolution
-	new_point.count = count
 	$sub_viewport.add_child(new_point)
-	attack_position.push_back(new_point)
+	premove_position.push_back(new_point)
 
-func clear_attack_position() -> void:
-	for iter:Node2D in attack_position:
+func clear_premove_position() -> void:
+	for iter:Node2D in premove_position:
 		iter.queue_free()
-	attack_position.clear()
+	premove_position.clear()
 
 func draw_move_position(drawing_position:Vector2) -> void:
 	var new_point:ChessboardMovePosition = ChessboardMovePosition.new()
