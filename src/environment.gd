@@ -26,23 +26,14 @@ func move_camera(_from:Node3D, _to:Area3D, _event:InputEvent, _event_position:Ve
 func dialog_start() -> void:
 	var dialog_1:Dialog = Dialog.create_dialog_instance([	# Pastor的自我介绍，对于棋局的介绍，以及二选一
 		"……",
-		"……您好",
-		"很抱歉不太擅长自我介绍，不过您可以称呼我玉兰。",
-		"先进入正题吧。",
-		"现在您看到的是国际象棋的棋盘。",
-		"既然来到这里，默认您已了解国际象棋基本规则。",
-		"现在为您提供两种选项以开始对局，",
+		"长话短说，我是Yulan，目前是测试的程序。",
+		"现在你有若干选项开始游戏",
 	])
 	add_child(dialog_1)
 	await dialog_1.on_next
-	await dialog_1.on_next
 	$cheshire.force_set_camera($cheshire/camera_pastor_closeup)
 	await dialog_1.on_next
-	await dialog_1.on_next
 	$cheshire.force_set_camera($cheshire/area_chessboard/camera_3d)
-	await dialog_1.on_next
-	await dialog_1.on_next
-	$cheshire.force_set_camera($cheshire/camera_on_seat)
 	await dialog_1.on_next
 	start()
 
@@ -186,22 +177,53 @@ func pastor_lose() -> void:
 
 func start() -> void:
 	while true:
-		var decision_instance:Decision = Decision.create_decision_instance(["从头开始", "导入棋局"], false)
+		var decision_instance:Decision = Decision.create_decision_instance(["标准棋局（30+0）", "快棋（10+5）", "超快棋（5+3）", "子弹棋（小规模布局，1/2+0）", "导入棋局"], false)
 		add_child(decision_instance)
 		await decision_instance.decided
-		if decision_instance.selected_index == 0:
+		if decision_instance.selected_index in [0, 1, 2]:
 			$pastor.create_state("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", EvaluationStandard)
 			var dialog_2:Dialog = Dialog.create_dialog_instance([
 				"现在棋盘已经准备好了。",
-				"您是黑方，以后手开局，我则先手"
+				"您是黑方后手开局，时间有限，请注意合理分配。"
 			])
+			if decision_instance.selected_index == 0:
+				$chess_timer.set_time(1800, 1, 0)
+				$pastor.think_time = 20
+			elif decision_instance.selected_index == 1:
+				$chess_timer.set_time(600, 1, 5)
+				$pastor.think_time = 8
+			elif decision_instance.selected_index == 2:
+				$chess_timer.set_time(300, 1, 3)
+				$pastor.think_time = 4
 			add_child(dialog_2)
 			$cheshire.force_set_camera($cheshire/area_chessboard/camera_3d)
 			await dialog_2.on_next
+			$cheshire.force_set_camera($cheshire/camera_pastor_closeup)
 			await dialog_2.on_next
-			select_time_limit()
+			$chess_timer.start()
+			$cheshire.add_stack($cheshire/area_chessboard/camera_3d, $chessboard)
+			$cheshire.move_camera($cheshire/area_chessboard/camera_3d)
+			$pastor.start_decision()
 			break
-		elif decision_instance.selected_index == 1:
+		elif decision_instance.selected_index == 3:
+			$pastor.create_state("8/8/2rbqk2/2pppn2/2NPPP2/2KQBR2/8/8 w - - 0 1", EvaluationStandard)
+			var dialog_2:Dialog = Dialog.create_dialog_instance([
+				"现在棋盘已经准备好了。",
+				"该对局为特殊布局，时间上较为紧张，注意速战速决。"
+			])
+			$chess_timer.set_time(30, 1, 0)
+			$pastor.think_time = 1
+			add_child(dialog_2)
+			$cheshire.force_set_camera($cheshire/area_chessboard/camera_3d)
+			await dialog_2.on_next
+			$cheshire.force_set_camera($cheshire/camera_pastor_closeup)
+			await dialog_2.on_next
+			$chess_timer.start()
+			$cheshire.add_stack($cheshire/area_chessboard/camera_3d, $chessboard)
+			$cheshire.move_camera($cheshire/area_chessboard/camera_3d)
+			$pastor.start_decision()
+			break
+		elif decision_instance.selected_index == 4:
 			var text_input_instance:TextInput = TextInput.create_text_input_instance("输入FEN格式的布局：")
 			add_child(text_input_instance)
 			await text_input_instance.confirmed
@@ -214,7 +236,9 @@ func start() -> void:
 				$cheshire.force_set_camera($cheshire/area_chessboard/camera_3d)
 				await dialog_2.on_next
 				await dialog_2.on_next
-				select_time_limit()
+				$cheshire.add_stack($cheshire/area_chessboard/camera_3d, $chessboard)
+				$cheshire.move_camera($cheshire/area_chessboard/camera_3d)
+				$pastor.start_decision()
 				break
 		$cheshire.force_set_camera($cheshire/area_chessboard/camera_3d)
 		var dialog_illegal:Dialog = Dialog.create_dialog_instance(["您输入的格式有误，务必重新检查一下再尝试。"])

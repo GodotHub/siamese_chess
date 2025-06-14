@@ -323,7 +323,7 @@ static func generate_move(_state:ChessState, _group:int) -> PackedInt32Array:
 		if from_piece in ["P".unicode_at(0), "p".unicode_at(0)]:
 			var front:int = -16 if from_piece == "P".unicode_at(0) else 16
 			var on_start:bool = _from / 16 == (6 if from_piece == "P".unicode_at(0) else 1)
-			var on_end:bool = _from / 16 == (1 if from_piece == "P".unicode_at(0) else 16)
+			var on_end:bool = _from / 16 == (1 if from_piece == "P".unicode_at(0) else 6)
 			if !_state.has_piece(_from + front):
 				if on_end:
 					output.push_back(Move.create(_from, _from + front, 81 if from_piece == "P".unicode_at(0) else 113))
