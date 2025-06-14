@@ -1,14 +1,18 @@
 extends Node
 
 const a8:int = 0
+const b8:int = 1
 const c8:int = 2
 const d8:int = 3
+const e8:int = 4
 const f8:int = 5
 const g8:int = 6
 const h8:int = 7
 const a1:int = 16 * 7
+const b1:int = 16 * 7
 const c1:int = 16 * 7 + 2
 const d1:int = 16 * 7 + 3
+const e1:int = 4
 const f1:int = 16 * 7 + 5
 const g1:int = 16 * 7 + 6
 const h1:int = 16 * 7 + 7

@@ -208,7 +208,7 @@ func start() -> void:
 			if $pastor.create_state(text_input_instance.text, EvaluationStandard):
 				var dialog_2:Dialog = Dialog.create_dialog_instance([
 					"现在棋盘已经准备好了。",
-					"根据棋局信息，" + ("目前是白方先手。" if $pastor.chess_state.get_extra(0) == "w" else "目前是黑方先手。")
+					"根据棋局信息，" + ("目前是白方先手。" if $pastor.chess_state.get_extra(0) == 0 else "目前是黑方先手。")
 				])
 				add_child(dialog_2)
 				$cheshire.force_set_camera($cheshire/area_chessboard/camera_3d)

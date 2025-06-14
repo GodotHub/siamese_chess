@@ -1,6 +1,8 @@
 extends Evaluation
 class_name EvaluationStandard	# 接口
 
+const WIN:int = 50000
+
 const piece_value:Dictionary[String, int] = {
 	"K": 60000,
 	"Q": 929,
@@ -223,7 +225,7 @@ static func get_end_type(_state:ChessState) -> String:
 	var group:int = _state.extra[0]
 	var move_list:PackedInt32Array = get_valid_move(_state, group)
 	if !move_list.size():
-		var null_move_check:int = alphabeta(_state, -200000, 200000, 1, 1 - group)
+		var null_move_check:int = alphabeta(_state, -WIN, WIN, 1, 1 - group)
 		if abs(null_move_check) >= 500:
 			if group == 0:
 				return "checkmate_black"
@@ -292,17 +294,21 @@ static func generate_premove(_state:ChessState, _group:int) -> PackedInt32Array:
 
 		for iter:int in directions:
 			var to:int = _from + iter
+			var to_piece:int = _state.get_piece(to)
 			while !(to & 0x88):
 				output.push_back(Move.create(_from, to, 0))
 				if from_piece in ["K".unicode_at(0), "k".unicode_at(0), "N".unicode_at(0), "n".unicode_at(0)]:
 					break
 				to += iter
-				if !(from_piece == "R".unicode_at(0) && from_piece == "K".unicode_at(0) || from_piece == "r".unicode_at(0) && from_piece == "k".unicode_at(0)):
-					continue
-				if _from % 16 >= 4 && (from_piece == "R".unicode_at(0) && _state.get_extra(1) & 8 || from_piece == "r".unicode_at(0) && _state.get_extra(1) & 2):
-					output.push_back(Move.create(to, Chess.g1 if from_piece == "R".unicode_at(0) else Chess.g8, 75))
-				elif _from % 16 <= 3 && (from_piece == "R".unicode_at(0) && _state.get_extra(1) & 4 || from_piece == "r".unicode_at(0) && _state.get_extra(1) & 2):
-					output.push_back(Move.create(to, Chess.c1 if from_piece == "R".unicode_at(0) else Chess.c8, 81))
+				to_piece = _state.get_piece(to)
+	if _state.get_extra(1) & 8 && !_state.has_piece(Chess.g1) && !_state.has_piece(Chess.f1):
+		output.push_back(Move.create(Chess.e1, Chess.g1, 75))
+	if _state.get_extra(1) & 4 && !_state.has_piece(Chess.c1) && !_state.has_piece(Chess.d1):
+		output.push_back(Move.create(Chess.e1, Chess.c1, 81))
+	if _state.get_extra(1) & 2 && !_state.has_piece(Chess.g8) && !_state.has_piece(Chess.f8):
+		output.push_back(Move.create(Chess.e8, Chess.g8, 75))
+	if _state.get_extra(1) & 1 && !_state.has_piece(Chess.c8) && !_state.has_piece(Chess.d8):
+		output.push_back(Move.create(Chess.e8, Chess.c8, 81))
 	return output
 
 static func generate_move(_state:ChessState, _group:int) -> PackedInt32Array:
@@ -328,7 +334,7 @@ static func generate_move(_state:ChessState, _group:int) -> PackedInt32Array:
 					output.push_back(Move.create(_from, _from + front, 0))
 					if !_state.has_piece(_from + front + front) && on_start:
 						output.push_back(Move.create(_from, _from + front + front, 0))
-			if _state.has_piece(_from + front + 1) && !is_same_camp(from_piece, _state.get_piece(_from + front + 1)):
+			if _state.has_piece(_from + front + 1) && !is_same_camp(from_piece, _state.get_piece(_from + front + 1)) || (_from / 16 == 2 || _from / 16 == 5) && _state.get_extra(2) == _from + front + 1:
 				if on_end:
 					output.push_back(Move.create(_from, _from + front + 1, 81 if from_piece == "P".unicode_at(0) else 113))
 					output.push_back(Move.create(_from, _from + front + 1, 82 if from_piece == "P".unicode_at(0) else 114))
@@ -336,7 +342,7 @@ static func generate_move(_state:ChessState, _group:int) -> PackedInt32Array:
 					output.push_back(Move.create(_from, _from + front + 1, 66 if from_piece == "P".unicode_at(0) else 98))
 				else:
 					output.push_back(Move.create(_from, _from + front + 1, 0))
-			if _state.has_piece(_from + front - 1) && !is_same_camp(from_piece, _state.get_piece(_from + front - 1)):
+			if _state.has_piece(_from + front - 1) && !is_same_camp(from_piece, _state.get_piece(_from + front - 1)) || (_from / 16 == 2 || _from / 16 == 5) && _state.get_extra(2) == _from + front - 1:
 				if on_end:
 					output.push_back(Move.create(_from, _from + front - 1, 81 if from_piece == "P".unicode_at(0) else 113))
 					output.push_back(Move.create(_from, _from + front - 1, 82 if from_piece == "P".unicode_at(0) else 114))
@@ -365,7 +371,7 @@ static func generate_move(_state:ChessState, _group:int) -> PackedInt32Array:
 					break
 				to += iter
 				to_piece = _state.get_piece(to)
-				if !(from_piece == "R".unicode_at(0) && from_piece == "K".unicode_at(0) || from_piece == "r".unicode_at(0) && from_piece == "k".unicode_at(0)):
+				if !(from_piece == "R".unicode_at(0) && to_piece == "K".unicode_at(0) || from_piece == "r".unicode_at(0) && to_piece == "k".unicode_at(0)):
 					continue
 				if _from % 16 >= 4 && (from_piece == "R".unicode_at(0) && _state.get_extra(1) & 8 || from_piece == "r".unicode_at(0) && _state.get_extra(1) & 2):
 					output.push_back(Move.create(to, Chess.g1 if from_piece == "R".unicode_at(0) else Chess.g8, 75))
@@ -475,7 +481,7 @@ static func alphabeta(_state:ChessState, alpha:int, beta:int, depth:int = 5, gro
 	#	var stored_score:int = TranspositionTable.probe_hash(_state.zobrist, depth, alpha, beta)
 	#	if stored_score != 65535:
 	#		return stored_score
-	if depth <= 0 || abs(_state.score) >= 500 || is_timeup.is_valid() && is_timeup.call():	# 底端，或者计算时间到，或者这个分数已经分出胜负了
+	if depth <= 0 || abs(_state.score) >= WIN || is_timeup.is_valid() && is_timeup.call():	# 底端，或者计算时间到，或者这个分数已经分出胜负了
 	#	TranspositionTable.record_hash(_state.zobrist, depth, score, TranspositionTable.Flag.EXACT)
 		return _state.score
 	if _state.history.has(_state.zobrist):
@@ -494,7 +500,7 @@ static func alphabeta(_state:ChessState, alpha:int, beta:int, depth:int = 5, gro
 		for iter:int in move_list:
 			move_to_state[iter] = _state.duplicate()
 			move_to_state[iter].apply_move(iter)
-		var value:int = -2000000
+		var value:int = -WIN
 		move_list.sort_custom(func(a:int, b:int) -> bool: return move_to_state[a].score > move_to_state[b].score)
 		for iter:int in move_list:
 			value = max(value, alphabeta(move_to_state[iter], alpha, beta, depth - 1, 1))
@@ -518,7 +524,7 @@ static func alphabeta(_state:ChessState, alpha:int, beta:int, depth:int = 5, gro
 		for iter:int in move_list:
 			move_to_state[iter] = _state.duplicate()
 			move_to_state[iter].apply_move(iter)
-		var value:int = 2000000
+		var value:int = WIN
 		move_list.sort_custom(func(a:int, b:int) -> bool: return move_to_state[a].score < move_to_state[b].score)
 		for iter:int in move_list:
 			value = min(value, alphabeta(move_to_state[iter], alpha, beta, depth - 1, 0))
@@ -532,8 +538,8 @@ static func alphabeta(_state:ChessState, alpha:int, beta:int, depth:int = 5, gro
 		return value
 
 static func mtdf(state:ChessState, depth:int, group:int) -> int:
-	var l:int = -200000
-	var r:int = 200000
+	var l:int = -WIN
+	var r:int = WIN
 	var m:int = 0
 	var value:int = 0
 	while l + 1 < r:
@@ -555,8 +561,8 @@ static func get_valid_move(state:ChessState, group:int) -> PackedInt32Array:
 	for iter:int in move_list:
 		var test_state:ChessState = state.duplicate()
 		test_state.apply_move(iter)
-		var valid_check:int = alphabeta(test_state, -200000, 200000, 1, 1 if group == 0 else 0)	# 下一步被吃就说明这一步不合法
-		if abs(valid_check) < 50000:
+		var valid_check:int = alphabeta(test_state, -WIN, WIN, 1, 1 if group == 0 else 0)	# 下一步被吃就说明这一步不合法
+		if abs(valid_check) < WIN:
 			output.push_back(iter)
 	return output
 
@@ -572,6 +578,6 @@ static func search(output:Dictionary[int, int], state:ChessState, is_timeup:Call
 	for i:int in range(depth_min - 1, depth_max):
 		for key:int in output:
 			#output[key] = mtdf(test_state, score, depth, 1 if group == 0 else 0)
-			output[key] = alphabeta(move_to_state[key], -200000, 200000, i, 1 if group == 0 else 0, is_timeup)
+			output[key] = alphabeta(move_to_state[key], -WIN, WIN, i, 1 if group == 0 else 0, is_timeup)
 			if is_timeup.call():
 				break
