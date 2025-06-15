@@ -40,9 +40,3 @@ grow_vertical = 2
 text = "TIMER"
 horizontal_alignment = 1
 vertical_alignment = 1
-
-[node name="timer_0" type="Timer" parent="." index="3"]
-wait_time = 1800.0
-
-[node name="timer_1" type="Timer" parent="." index="4"]
-wait_time = 1800.0
