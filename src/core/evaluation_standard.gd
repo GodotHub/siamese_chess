@@ -2,6 +2,7 @@ extends Evaluation
 class_name EvaluationStandard	# 接口
 
 const WIN:int = 50000
+const THRESHOLD:int = 2000
 
 const piece_value:Dictionary[String, int] = {
 	"K": 60000,
@@ -380,7 +381,7 @@ static func generate_move(_state:ChessState, _group:int) -> PackedInt32Array:
 	return output
 
 static func apply_move(_state:ChessState, _move:int) -> void:
-	_state.history.set(_state.zobrist, _state.history.get(_state.zobrist, 0) + 1)
+	_state.history.set(_state.zobrist, _state.history.get(_state.zobrist, 0) + 1)	# 上一步的局面
 	if _state.extra[0] == 1:
 		_state.set_extra(4, _state.get_extra(4) + 1)
 		_state.set_extra(0, 0)
@@ -491,7 +492,7 @@ static func alphabeta(_state:ChessState, alpha:int, beta:int, depth:int = 5, gro
 	if group == 0:
 		# 空着裁剪
 		#flag = TranspositionTable.Flag.ALPHA
-		var null_move_value:int = alphabeta(_state, beta - 1, beta, depth - 4, 1)
+		var null_move_value:int = alphabeta(_state, beta - 1, beta, depth - 4, 1 - group)
 		if null_move_value >= beta:
 			#TranspositionTable.record_hash(_state.zobrist, depth, beta, TranspositionTable.Flag.BETA)
 			return beta
@@ -503,7 +504,7 @@ static func alphabeta(_state:ChessState, alpha:int, beta:int, depth:int = 5, gro
 		var value:int = -WIN
 		move_list.sort_custom(func(a:int, b:int) -> bool: return move_to_state[a].score > move_to_state[b].score)
 		for iter:int in move_list:
-			value = max(value, alphabeta(move_to_state[iter], alpha, beta, depth - 1, 1))
+			value = alphabeta(move_to_state[iter], alpha, beta, depth - 1, 1 - group)
 			if beta <= value:
 				#TranspositionTable.record_hash(_state.zobrist, depth, beta, TranspositionTable.Flag.BETA)
 				return beta
@@ -515,7 +516,7 @@ static func alphabeta(_state:ChessState, alpha:int, beta:int, depth:int = 5, gro
 	else:
 		#flag = TranspositionTable.Flag.BETA
 		# 空着裁剪
-		var null_move_value:int = alphabeta(_state, alpha, alpha + 1, depth - 4, 0)
+		var null_move_value:int = alphabeta(_state, alpha, alpha + 1, depth - 4, 1 - group)
 		if null_move_value <= alpha:
 			#TranspositionTable.record_hash(_state.zobrist, depth, alpha, TranspositionTable.Flag.ALPHA)
 			return alpha
@@ -527,7 +528,7 @@ static func alphabeta(_state:ChessState, alpha:int, beta:int, depth:int = 5, gro
 		var value:int = WIN
 		move_list.sort_custom(func(a:int, b:int) -> bool: return move_to_state[a].score < move_to_state[b].score)
 		for iter:int in move_list:
-			value = min(value, alphabeta(move_to_state[iter], alpha, beta, depth - 1, 0))
+			value = alphabeta(move_to_state[iter], alpha, beta, depth - 1, 1 - group)
 			if alpha >= value:
 				#TranspositionTable.record_hash(_state.zobrist, depth, alpha, TranspositionTable.Flag.ALPHA)
 				return alpha
@@ -562,7 +563,7 @@ static func get_valid_move(state:ChessState, group:int) -> PackedInt32Array:
 		var test_state:ChessState = state.duplicate()
 		test_state.apply_move(iter)
 		var valid_check:int = alphabeta(test_state, -WIN, WIN, 1, 1 if group == 0 else 0)	# 下一步被吃就说明这一步不合法
-		if abs(valid_check) < WIN:
+		if abs(valid_check) < THRESHOLD:	# 合法阈值
 			output.push_back(iter)
 	return output
 

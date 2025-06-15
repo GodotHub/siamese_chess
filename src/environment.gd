@@ -12,6 +12,7 @@ func _ready() -> void:
 	$pastor.connect("send_opponent_premove", $chessboard.set_valid_premove)
 	$pastor.connect("win", pastor_win)
 	$pastor.connect("lose", pastor_lose)
+	$pastor.connect("draw", pastor_draw)
 	$pastor.evaluation = EvaluationStandard
 	for iter:Area3D in get_tree().get_nodes_in_group("move_camera"):
 		iter.add_user_signal("input")
@@ -232,6 +233,7 @@ func start() -> void:
 					"现在棋盘已经准备好了。",
 					"根据棋局信息，" + ("目前是白方先手。" if $pastor.chess_state.get_extra(0) == 0 else "目前是黑方先手。")
 				])
+				$pastor.think_time = 1
 				add_child(dialog_2)
 				$cheshire.force_set_camera($cheshire/area_chessboard/camera_3d)
 				await dialog_2.on_next
