@@ -84,13 +84,13 @@ func get_extra(index:int) -> int:
 
 func set_extra(index:int, value:int) -> void:
 	if index < extra.size():
-		zobrist ^= zobrist_hash_extra(index, extra[index])
-		zobrist ^= zobrist_hash_extra(index, value)
+		#zobrist ^= zobrist_hash_extra(index, extra[index])
+		#zobrist ^= zobrist_hash_extra(index, value)
 		extra[index] = value
 
 func reserve_extra(size:int) -> void:	# 预留空间
 	while extra.size() < size:
-		zobrist ^= zobrist_hash_extra(extra.size(), -1)
+		#zobrist ^= zobrist_hash_extra(extra.size(), -1)
 		extra.push_back(-1)
 
 func get_all_move(group:int) -> PackedInt32Array:	# 指定阵营
