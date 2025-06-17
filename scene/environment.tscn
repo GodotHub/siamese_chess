@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=3 uid="uid://bmyf2h17xaxlj"]
+[gd_scene load_steps=17 format=3 uid="uid://bmyf2h17xaxlj"]
 
 [ext_resource type="PackedScene" uid="uid://gdof8yy8yrjv" path="res://assets/model/environment.glb" id="1_b3374"]
 [ext_resource type="PackedScene" uid="uid://d1s6qj7aofldk" path="res://scene/chessboard.tscn" id="2_3p4nk"]
@@ -6,9 +6,8 @@
 [ext_resource type="PackedScene" uid="uid://b3ml34bssywkr" path="res://scene/cheshire.tscn" id="3_1vcsq"]
 [ext_resource type="PackedScene" uid="uid://n5i2mcgyqj3k" path="res://scene/chess_timer.tscn" id="3_po4na"]
 [ext_resource type="PackedScene" uid="uid://b0ots07uggqyg" path="res://scene/history.tscn" id="5_4qusu"]
-[ext_resource type="PackedScene" uid="uid://cispm4sihu5b3" path="res://scene/pastor.tscn" id="6_uwfkk"]
 [ext_resource type="PackedScene" uid="uid://de73qrhtkiaka" path="res://scene/draft.tscn" id="8_tnamw"]
-[ext_resource type="PackedScene" uid="uid://crucchfeabm" path="res://scene/background_character.tscn" id="9_560hc"]
+[ext_resource type="PackedScene" uid="uid://crucchfeabm" path="res://scene/pastor.tscn" id="9_560hc"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_po4na"]
 transparency = 1
@@ -159,9 +158,5 @@ transform = Transform3D(1, -4.33591e-08, -3.81731e-08, 4.33591e-08, 0.126701, 0.
 [node name="draft" parent="." index="51" instance=ExtResource("8_tnamw")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.430485, 0.860146, -0.206568)
 
-[node name="pastor" parent="." index="52" instance=ExtResource("6_uwfkk")]
-transform = Transform3D(-1.18021e-08, 0, -0.27, 0, 0.27, 0, 0.27, 0, -1.18021e-08, 0.430662, 0.869423, -0.229653)
-visible = false
-
-[node name="background_character" parent="." index="53" instance=ExtResource("9_560hc")]
+[node name="pastor" parent="." index="52" instance=ExtResource("9_560hc")]
 transform = Transform3D(0.0318641, 0, -1.20958, 0, 1.21, 0, 1.20958, 0, 0.0318641, 0.862272, -0.0999314, -0.22346)
