@@ -2,20 +2,20 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://8wmtlr6p55qd"
-path.s3tc="res://.godot/imported/background_character_suit.png-e4b26e7b57d1e2889479226a003c74e6.s3tc.ctex"
+uid="uid://6ilud2o50ndr"
+path.s3tc="res://.godot/imported/pastor_suit.png-706da463d89393f981b68860fdb84fa5.s3tc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc"],
 "vram_texture": true
 }
 generator_parameters={
-"md5": "cb71b87681d81d0067295a2ae3e82ecd"
+"md5": "e3ee8511919cced77ba448f6bf690480"
 }
 
 [deps]
 
-source_file="res://assets/model/background_character_suit.png"
-dest_files=["res://.godot/imported/background_character_suit.png-e4b26e7b57d1e2889479226a003c74e6.s3tc.ctex"]
+source_file="res://assets/model/pastor_suit.png"
+dest_files=["res://.godot/imported/pastor_suit.png-706da463d89393f981b68860fdb84fa5.s3tc.ctex"]
 
 [params]
 

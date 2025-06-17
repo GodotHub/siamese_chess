@@ -4,12 +4,12 @@ importer="scene"
 importer_version=1
 type="PackedScene"
 uid="uid://fpjpqr5sn1q7"
-path="res://.godot/imported/background_character.glb-40cd05460a0ebfe7f59a019e73d322db.scn"
+path="res://.godot/imported/pastor.glb-4da19b7e6d970473b751cb54dba95719.scn"
 
 [deps]
 
-source_file="res://assets/model/background_character.glb"
-dest_files=["res://.godot/imported/background_character.glb-40cd05460a0ebfe7f59a019e73d322db.scn"]
+source_file="res://assets/model/pastor.glb"
+dest_files=["res://.godot/imported/pastor.glb-4da19b7e6d970473b751cb54dba95719.scn"]
 
 [params]
 
