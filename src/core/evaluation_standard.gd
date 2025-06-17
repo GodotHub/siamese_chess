@@ -239,6 +239,8 @@ static func get_end_type(_state:ChessState) -> String:
 				return "stalemate_white"
 	if _state.history.get(_state.zobrist, 0) == 3:
 		return "threefold_repetition"	# 三次重复局面
+	if _state.get_extra(3) == 50:
+		return "50_moves"
 	return ""
 
 static func is_same_camp(piece_1:int, piece_2:int) -> bool:
@@ -387,6 +389,7 @@ static func apply_move(_state:ChessState, _move:int) -> void:
 		_state.set_extra(0, 0)
 	elif _state.extra[0] == 0:
 		_state.set_extra(0, 1)
+	_state.set_extra(3, _state.get_extra(3) + 1)
 	var from_piece:int = _state.get_piece(Move.from(_move))
 	var from_group:int = 0 if from_piece >= 'A'.unicode_at(0) && from_piece <= 'Z'.unicode_at(0) else 1
 	var to_piece:int = _state.get_piece(Move.to(_move))
@@ -395,6 +398,7 @@ static func apply_move(_state:ChessState, _move:int) -> void:
 	var has_king_passant:bool = false
 	if to_piece:
 		_state.capture_piece(Move.to(_move))
+		_state.set_extra(3, 0)	# 吃子时重置50步和棋
 	if abs(_state.get_extra(5) - Move.to(_move)) <= 1:
 		if from_group == 0:
 			if _state.get_piece(Chess.c8) == "k".unicode_at(0):
@@ -441,6 +445,7 @@ static func apply_move(_state:ChessState, _move:int) -> void:
 
 	if from_piece in ["P".unicode_at(0), "p".unicode_at(0)]:
 		var front:int = -16 if from_piece == "P".unicode_at(0) else 16
+		_state.set_extra(3, 0)	# 移动兵时重置50步和棋
 		if Move.to(_move) - Move.from(_move) == front * 2:
 			has_en_passant = true
 			_state.set_extra(2, Move.from(_move) + front)

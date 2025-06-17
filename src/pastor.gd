@@ -52,6 +52,8 @@ func receive_move(move:int) -> void:
 				draw.emit(2)
 			"threefold_repetition":
 				draw.emit(0)
+			"50_moves":
+				draw.emit(3)
 		return
 
 	if chess_state.get_extra(0) == 0:
