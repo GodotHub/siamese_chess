@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=3 uid="uid://bmyf2h17xaxlj"]
+[gd_scene load_steps=20 format=3 uid="uid://bmyf2h17xaxlj"]
 
 [ext_resource type="PackedScene" uid="uid://gdof8yy8yrjv" path="res://assets/model/environment.glb" id="1_b3374"]
 [ext_resource type="PackedScene" uid="uid://d1s6qj7aofldk" path="res://scene/chessboard.tscn" id="2_3p4nk"]
@@ -8,6 +8,9 @@
 [ext_resource type="PackedScene" uid="uid://b0ots07uggqyg" path="res://scene/history.tscn" id="5_4qusu"]
 [ext_resource type="PackedScene" uid="uid://de73qrhtkiaka" path="res://scene/draft.tscn" id="8_tnamw"]
 [ext_resource type="PackedScene" uid="uid://crucchfeabm" path="res://scene/pastor.tscn" id="9_560hc"]
+[ext_resource type="PackedScene" uid="uid://y13y4nucxo2v" path="res://scene/bible.tscn" id="9_u78ad"]
+[ext_resource type="PackedScene" uid="uid://n6i5vwajcqn4" path="res://assets/model/cup.glb" id="10_u78ad"]
+[ext_resource type="PackedScene" uid="uid://biv8ghyjqw63y" path="res://assets/model/shrub.glb" id="11_j14fg"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_po4na"]
 transparency = 1
@@ -75,7 +78,7 @@ environment = SubResource("Environment_7r8ay")
 transform = Transform3D(1, 0, -1.06581e-14, 0, 1, 0, 1.06581e-14, 0, 1, -0.00990965, 0.857578, -0.543086)
 
 [node name="chessboard" parent="." index="48" instance=ExtResource("2_3p4nk")]
-transform = Transform3D(5.5732e-08, 0, 0.425, 0, 0.425, 0, -0.425, 0, 5.5732e-08, -0.012351, 0.870713, -0.20139)
+transform = Transform3D(5.5732e-08, 0, 0.425, 0, 0.425, 0, -0.425, 0, 5.5732e-08, -0.012351, 0.875598, -0.20139)
 
 [node name="history" parent="." index="49" instance=ExtResource("5_4qusu")]
 transform = Transform3D(0.07162, 0, -0.997431, 0, 1, 0, 0.997431, 0, 0.07162, -0.395858, 0.8601, -0.604932)
@@ -160,3 +163,44 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.430485, 0.860146, -0.20656
 
 [node name="pastor" parent="." index="52" instance=ExtResource("9_560hc")]
 transform = Transform3D(0.0318641, 0, -1.20958, 0, 1.21, 0, 1.20958, 0, 0.0318641, 0.862272, -0.0999314, -0.22346)
+
+[node name="bible" parent="." index="53" instance=ExtResource("9_u78ad")]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0.408293, 0.888294, -0.2079)
+
+[node name="cup_pastor" parent="." index="54" instance=ExtResource("10_u78ad")]
+transform = Transform3D(-0.666767, 0, -0.745266, 0, 1, 0, 0.745266, 0, -0.666767, 0.419048, 0.862758, 0.222303)
+
+[node name="cup_cheshire" parent="." index="55" instance=ExtResource("10_u78ad")]
+transform = Transform3D(-0.593447, 0, 0.804873, 0, 1, 0, -0.804873, 0, -0.593447, -0.351912, 0.862758, 0.152521)
+
+[node name="shrub" type="Node3D" parent="." index="56"]
+
+[node name="shrub_0" parent="shrub" index="0" instance=ExtResource("11_j14fg")]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 0.837925, 0, -3.37087)
+
+[node name="shrub_1" parent="shrub" index="1" instance=ExtResource("11_j14fg")]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 1.62979, 0, -3.37087)
+
+[node name="shrub_2" parent="shrub" index="2" instance=ExtResource("11_j14fg")]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 2.47126, 0, -3.37087)
+
+[node name="shrub_3" parent="shrub" index="3" instance=ExtResource("11_j14fg")]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 3.28786, 0, -3.37087)
+
+[node name="shrub_4" parent="shrub" index="4" instance=ExtResource("11_j14fg")]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 4.08556, 0, -3.37087)
+
+[node name="shrub_5" parent="shrub" index="5" instance=ExtResource("11_j14fg")]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 4.89877, 0, -3.37087)
+
+[node name="shrub_6" parent="shrub" index="6" instance=ExtResource("11_j14fg")]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 5.69064, 0, -3.37087)
+
+[node name="shrub_7" parent="shrub" index="7" instance=ExtResource("11_j14fg")]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 6.5321, 0, -3.37087)
+
+[node name="shrub_8" parent="shrub" index="8" instance=ExtResource("11_j14fg")]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 7.34871, 0, -3.37087)
+
+[node name="shrub_9" parent="shrub" index="9" instance=ExtResource("11_j14fg")]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 8.14641, 0, -3.37087)
