@@ -2,20 +2,20 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://1u2spg2tx4wk"
-path.s3tc="res://.godot/imported/shrub_leaves.png-be38393b30e4581354b3232c8840b976.s3tc.ctex"
+uid="uid://468hwfb7k3m5"
+path.s3tc="res://.godot/imported/tree_leaves.png-6174ec6bc26b4ff904440b0a303f15af.s3tc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc"],
 "vram_texture": true
 }
 generator_parameters={
-"md5": "43b341d6f0d83ba19ba8faf25057283f"
+"md5": "43334334c91915674d10618cb7e22f05"
 }
 
 [deps]
 
-source_file="res://assets/model/shrub_leaves.png"
-dest_files=["res://.godot/imported/shrub_leaves.png-be38393b30e4581354b3232c8840b976.s3tc.ctex"]
+source_file="res://assets/model/tree_leaves.png"
+dest_files=["res://.godot/imported/tree_leaves.png-6174ec6bc26b4ff904440b0a303f15af.s3tc.ctex"]
 
 [params]
 
