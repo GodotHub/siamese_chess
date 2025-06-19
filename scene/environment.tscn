@@ -1,4 +1,4 @@
-[gd_scene load_steps=22 format=3 uid="uid://bmyf2h17xaxlj"]
+[gd_scene load_steps=25 format=3 uid="uid://bmyf2h17xaxlj"]
 
 [ext_resource type="PackedScene" uid="uid://gdof8yy8yrjv" path="res://assets/model/environment.glb" id="1_b3374"]
 [ext_resource type="PackedScene" uid="uid://d1s6qj7aofldk" path="res://scene/chessboard.tscn" id="2_3p4nk"]
@@ -13,6 +13,9 @@
 [ext_resource type="PackedScene" uid="uid://biv8ghyjqw63y" path="res://assets/model/shrub.glb" id="11_j14fg"]
 [ext_resource type="PackedScene" uid="uid://d13fcqueggvup" path="res://assets/model/fence.glb" id="12_cqi1n"]
 [ext_resource type="PackedScene" uid="uid://dbxji8pi5nulg" path="res://assets/model/tree.glb" id="13_sel54"]
+[ext_resource type="PackedScene" uid="uid://c2r0g1i6eu65r" path="res://assets/model/table.glb" id="14_7clsy"]
+[ext_resource type="PackedScene" uid="uid://df443q5sl4vaj" path="res://assets/model/sofa.glb" id="15_futd0"]
+[ext_resource type="PackedScene" uid="uid://cd30yi3gohbq5" path="res://assets/model/upright_piano.glb" id="16_futd0"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_po4na"]
 transparency = 1
@@ -61,7 +64,7 @@ surface_material_override/1 = SubResource("StandardMaterial3D_po4na")
 [node name="window_right_002" parent="window_002" index="1"]
 surface_material_override/1 = SubResource("StandardMaterial3D_po4na")
 
-[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." index="45"]
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." index="13"]
 transform = Transform3D(-0.9258, 0.0354599, -0.376346, -0.231734, 0.733336, 0.639154, 0.298653, 0.678941, -0.670705, 0, 0, 0)
 light_color = Color(0.71, 0.65888, 0.5822, 1)
 shadow_enabled = true
@@ -71,23 +74,23 @@ directional_shadow_split_2 = 0.476
 directional_shadow_split_3 = 0.73
 directional_shadow_blend_splits = true
 
-[node name="WorldEnvironment" type="WorldEnvironment" parent="." index="46"]
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." index="14"]
 environment = SubResource("Environment_7r8ay")
 
-[node name="chess_timer" parent="." index="47" instance=ExtResource("3_po4na")]
-transform = Transform3D(1, 0, -1.06581e-14, 0, 1, 0, 1.06581e-14, 0, 1, -0.00990965, 0.857578, -0.543086)
+[node name="chess_timer" parent="." index="15" instance=ExtResource("3_po4na")]
+transform = Transform3D(1, 0, -1.06581e-14, 0, 1, 0, 1.06581e-14, 0, 1, -0.00990965, 0.857578, -0.481859)
 
-[node name="chessboard" parent="." index="48" instance=ExtResource("2_3p4nk")]
-transform = Transform3D(5.5732e-08, 0, 0.425, 0, 0.425, 0, -0.425, 0, 5.5732e-08, -0.012351, 0.875598, -0.20139)
+[node name="chessboard" parent="." index="16" instance=ExtResource("2_3p4nk")]
+transform = Transform3D(5.5732e-08, 0, 0.425, 0, 0.425, 0, -0.425, 0, 5.5732e-08, -0.012351, 0.866345, -0.0600458)
 
-[node name="history" parent="." index="49" instance=ExtResource("5_4qusu")]
-transform = Transform3D(0.07162, 0, -0.997431, 0, 1, 0, 0.997431, 0, 0.07162, -0.395858, 0.8601, -0.604932)
+[node name="history" parent="." index="17" instance=ExtResource("5_4qusu")]
+transform = Transform3D(0.07162, 0, -0.997431, 0, 1, 0, 0.997431, 0, 0.07162, -0.395858, 0.850589, -0.463588)
 
-[node name="cheshire" parent="." index="50" instance=ExtResource("3_1vcsq")]
-transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -0.712916, 1.40416, -0.20139)
+[node name="cheshire" parent="." index="18" instance=ExtResource("3_1vcsq")]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -0.712916, 1.40416, -0.0600458)
 
 [node name="camera_chessboard_side" type="Camera3D" parent="cheshire" index="0"]
-transform = Transform3D(-0.258819, 0.25, -0.933013, 1.54268e-08, 0.965926, 0.258819, 0.965926, 0.0669873, -0.25, -0.578096, -0.375964, -0.820515)
+transform = Transform3D(-0.258819, 0.25, -0.933013, 1.54268e-08, 0.965926, 0.258819, 0.965926, 0.0669873, -0.25, -0.578096, -0.385217, -0.820515)
 fov = 49.0616
 
 [node name="camera_on_seat" type="Camera3D" parent="cheshire" index="1"]
@@ -106,7 +109,7 @@ metadata/camera = NodePath("camera_3d")
 metadata/inspectable_item = NodePath("../../history")
 
 [node name="collision_shape_3d" type="CollisionShape3D" parent="cheshire/area_history" index="0"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.011139, 0.00320435, 0.0101929)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0701367, 0.00320435, 0.0138262)
 shape = SubResource("BoxShape3D_po4na")
 
 [node name="camera_3d" type="Camera3D" parent="cheshire/area_history" index="1"]
@@ -128,7 +131,7 @@ shape = SubResource("BoxShape3D_uwfkk")
 transform = Transform3D(-1.13133e-08, -0.965926, 0.258819, -4.2222e-08, 0.258819, 0.965926, -1, -5.68434e-14, -4.37114e-08, 0.105483, 0.313066, 9.31323e-10)
 
 [node name="area_timer" type="Area3D" parent="cheshire" index="8" groups=["move_camera"]]
-transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -0.348965, -0.546597, -0.711289)
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -0.412138, -0.546597, -0.711289)
 collision_mask = 0
 monitoring = false
 monitorable = false
@@ -136,7 +139,7 @@ metadata/camera = NodePath("camera_3d")
 metadata/inspectable_item = NodePath("../../chess_timer")
 
 [node name="collision_shape_3d" type="CollisionShape3D" parent="cheshire/area_timer" index="0"]
-transform = Transform3D(0.999994, 0, -1.93715e-07, 0, 1, 0, 1.93715e-07, 0, 0.999994, -0.00310197, 0.0469894, 0.0123141)
+transform = Transform3D(0.999994, 0, -1.93715e-07, 0, 1, 0, 1.93715e-07, 0, 0.999994, -0.00310197, 0.0377367, 0.0123141)
 shape = SubResource("BoxShape3D_tnamw")
 
 [node name="camera_3d" type="Camera3D" parent="cheshire/area_timer" index="1"]
@@ -158,22 +161,22 @@ shape = SubResource("BoxShape3D_560hc")
 [node name="camera_3d" type="Camera3D" parent="cheshire/area_draft" index="1"]
 transform = Transform3D(1, -4.33591e-08, -3.81731e-08, 4.33591e-08, 0.126701, 0.991941, -3.81731e-08, -0.991941, 0.126701, 0, 0.229753, 0.0445619)
 
-[node name="draft" parent="." index="51" instance=ExtResource("8_tnamw")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.430485, 0.860146, -0.206568)
+[node name="draft" parent="." index="19" instance=ExtResource("8_tnamw")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.430485, 0.850893, -0.0652238)
 
-[node name="pastor" parent="." index="52" instance=ExtResource("9_560hc")]
-transform = Transform3D(0.0318641, 0, -1.20958, 0, 1.21, 0, 1.20958, 0, 0.0318641, 0.862272, -0.0999314, -0.22346)
+[node name="pastor" parent="." index="20" instance=ExtResource("9_560hc")]
+transform = Transform3D(0.0318641, 0, -1.20958, 0, 1.21, 0, 1.20958, 0, 0.0318641, 0.862272, -0.0100827, -0.0821158)
 
-[node name="bible" parent="." index="53" instance=ExtResource("9_u78ad")]
-transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0.408293, 0.888294, -0.2079)
+[node name="bible" parent="." index="21" instance=ExtResource("9_u78ad")]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0.408293, 0.879041, -0.0665558)
 
-[node name="cup_pastor" parent="." index="54" instance=ExtResource("10_u78ad")]
-transform = Transform3D(-0.666767, 0, -0.745266, 0, 1, 0, 0.745266, 0, -0.666767, 0.419048, 0.862758, 0.222303)
+[node name="cup_pastor" parent="." index="22" instance=ExtResource("10_u78ad")]
+transform = Transform3D(-0.666767, 0, -0.745266, 0, 1, 0, 0.745266, 0, -0.666767, 0.419048, 0.853505, 0.469984)
 
-[node name="cup_cheshire" parent="." index="55" instance=ExtResource("10_u78ad")]
-transform = Transform3D(-0.593447, 0, 0.804873, 0, 1, 0, -0.804873, 0, -0.593447, -0.351912, 0.862758, 0.152521)
+[node name="cup_cheshire" parent="." index="23" instance=ExtResource("10_u78ad")]
+transform = Transform3D(-0.593447, 0, 0.804873, 0, 1, 0, -0.804873, 0, -0.593447, -0.351912, 0.853505, 0.400202)
 
-[node name="outside" type="Node3D" parent="." index="56"]
+[node name="outside" type="Node3D" parent="." index="24"]
 
 [node name="shrub_0" parent="outside" index="0" instance=ExtResource("11_j14fg")]
 transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -1.35632, 0, -2.88739)
@@ -220,11 +223,55 @@ transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 11.509
 [node name="fence_4" parent="outside" index="14" instance=ExtResource("12_cqi1n")]
 transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 11.5094, 0, 11.6173)
 
-[node name="tree_0" parent="outside" index="15" instance=ExtResource("13_sel54")]
+[node name="fence_5" parent="outside" index="15" instance=ExtResource("12_cqi1n")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.22246, 0, -7.18705)
+
+[node name="tree_0" parent="outside" index="16" instance=ExtResource("13_sel54")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.13836, 0, -4.83603)
 
-[node name="tree_1" parent="outside" index="16" instance=ExtResource("13_sel54")]
+[node name="tree_1" parent="outside" index="17" instance=ExtResource("13_sel54")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.91093, 0, -4.83603)
 
-[node name="tree_2" parent="outside" index="17" instance=ExtResource("13_sel54")]
+[node name="tree_2" parent="outside" index="18" instance=ExtResource("13_sel54")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.91093, 0, 6.22293)
+
+[node name="upright_piano" parent="." index="25" instance=ExtResource("16_futd0")]
+transform = Transform3D(-1, 0, 8.74226e-08, 0, 1, 0, -8.74226e-08, 0, -1, -3.64242, 0, 7.93728)
+
+[node name="seat" type="Node3D" parent="." index="26"]
+
+[node name="table_0" parent="seat" index="0" instance=ExtResource("14_7clsy")]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 0.0190875, 0, 0.240975)
+
+[node name="sofa_0" parent="seat" index="1" instance=ExtResource("15_futd0")]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 0.919315, 0, 0.195626)
+
+[node name="sofa_1" parent="seat" index="2" instance=ExtResource("15_futd0")]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -1.0793, 0, 0.192173)
+
+[node name="table_2" parent="seat" index="3" instance=ExtResource("14_7clsy")]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 0.0190875, 0, 7.56504)
+
+[node name="sofa_4" parent="seat" index="4" instance=ExtResource("15_futd0")]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 0.919315, 0, 7.33979)
+
+[node name="sofa_5" parent="seat" index="5" instance=ExtResource("15_futd0")]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -1.0793, 0, 7.33634)
+
+[node name="table_1" parent="seat" index="6" instance=ExtResource("14_7clsy")]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -2.97043, 0, 0.240975)
+
+[node name="sofa_2" parent="seat" index="7" instance=ExtResource("15_futd0")]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -1.91385, 0, 0.195626)
+
+[node name="sofa_3" parent="seat" index="8" instance=ExtResource("15_futd0")]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -4.09247, 0, 0.192173)
+
+[node name="table_3" parent="seat" index="9" instance=ExtResource("14_7clsy")]
+transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, -3.79681, 0, 4.60237)
+
+[node name="sofa_6" parent="seat" index="10" instance=ExtResource("15_futd0")]
+transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, -3.55407, 0, 5.5026)
+
+[node name="sofa_7" parent="seat" index="11" instance=ExtResource("15_futd0")]
+transform = Transform3D(1, 0, 1.06581e-14, 0, 1, 0, -1.06581e-14, 0, 1, -3.55062, 0, 3.50399)
