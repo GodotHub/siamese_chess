@@ -2,7 +2,7 @@ extends Evaluation
 class_name EvaluationStandard	# 接口
 
 const WIN:int = 50000
-const THRESHOLD:int = 2000
+const THRESHOLD:int = 20000
 
 const piece_value:Dictionary[String, int] = {
 	"K": 60000,
@@ -304,13 +304,13 @@ static func generate_premove(_state:ChessState, _group:int) -> PackedInt32Array:
 					break
 				to += iter
 				to_piece = _state.get_piece(to)
-	if _state.get_extra(1) & 8 && !_state.has_piece(Chess.g1) && !_state.has_piece(Chess.f1):
+	if group == 0 && _state.get_extra(1) & 8 && !_state.has_piece(Chess.g1) && !_state.has_piece(Chess.f1):
 		output.push_back(Move.create(Chess.e1, Chess.g1, 75))
-	if _state.get_extra(1) & 4 && !_state.has_piece(Chess.c1) && !_state.has_piece(Chess.d1):
+	if group == 0 && _state.get_extra(1) & 4 && !_state.has_piece(Chess.c1) && !_state.has_piece(Chess.d1):
 		output.push_back(Move.create(Chess.e1, Chess.c1, 81))
-	if _state.get_extra(1) & 2 && !_state.has_piece(Chess.g8) && !_state.has_piece(Chess.f8):
+	if group == 1 && _state.get_extra(1) & 2 && !_state.has_piece(Chess.g8) && !_state.has_piece(Chess.f8):
 		output.push_back(Move.create(Chess.e8, Chess.g8, 75))
-	if _state.get_extra(1) & 1 && !_state.has_piece(Chess.c8) && !_state.has_piece(Chess.d8):
+	if group == 1 && _state.get_extra(1) & 1 && !_state.has_piece(Chess.c8) && !_state.has_piece(Chess.d8):
 		output.push_back(Move.create(Chess.e8, Chess.c8, 81))
 	return output
 
@@ -406,9 +406,9 @@ static func apply_move(_state:ChessState, _move:int) -> void:
 			if _state.get_piece(Chess.g8) == "k".unicode_at(0):
 				_state.capture_piece(Chess.g8)
 		else:
-			if _state.get_piece(Chess.c1) == "k".unicode_at(0):
+			if _state.get_piece(Chess.c1) == "K".unicode_at(0):
 				_state.capture_piece(Chess.c1)
-			if _state.get_piece(Chess.g1) == "k".unicode_at(0):
+			if _state.get_piece(Chess.g1) == "K".unicode_at(0):
 				_state.capture_piece(Chess.g1)
 
 	if from_piece in ["R".unicode_at(0), "r".unicode_at(0)]:	#哪边的车动过，就不能往那个方向易位
@@ -574,16 +574,17 @@ static func get_valid_move(state:ChessState, group:int) -> PackedInt32Array:
 
 
 static func search(output:Dictionary[int, int], state:ChessState, is_timeup:Callable, depth_min:int = 2, depth_max:int = 1000, group:int = 0) -> void:
-	var move_list:PackedInt32Array = get_valid_move(state, group)
+	var move_list:Array = get_valid_move(state, group)
 	var move_to_state:Dictionary[int, ChessState] = {}
 	for iter:int in move_list:
 		move_to_state[iter] = state.duplicate()
 		move_to_state[iter].apply_move(iter)
 		output[iter] = 0
+	move_list.sort_custom(func(a:int, b:int) -> bool: return move_to_state[a].score < move_to_state[b].score)
 	# 迭代加深，并准备提前中断
-	for i:int in range(depth_min - 1, depth_max):
+	for i:int in range(depth_min - 1, depth_max - 1, 2):
 		for key:int in output:
-			#output[key] = mtdf(test_state, score, depth, 1 if group == 0 else 0)
-			output[key] = alphabeta(move_to_state[key], -WIN, WIN, i, 1 if group == 0 else 0, is_timeup)
+			output[key] = mtdf(move_to_state[key], i, 1 if group == 0 else 0)
+			#output[key] = alphabeta(move_to_state[key], -WIN, WIN, i, 1 if group == 0 else 0, is_timeup)
 			if is_timeup.call():
-				break
+				return
