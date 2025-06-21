@@ -189,13 +189,13 @@ func start() -> void:
 			])
 			if decision_instance.selected_index == 0:
 				$chess_timer.set_time(1800, 1, 0)
-				$pastor.think_time = 20
+				$pastor.think_time = 5
 			elif decision_instance.selected_index == 1:
 				$chess_timer.set_time(600, 1, 5)
-				$pastor.think_time = 8
+				$pastor.think_time = 3
 			elif decision_instance.selected_index == 2:
 				$chess_timer.set_time(300, 1, 3)
-				$pastor.think_time = 4
+				$pastor.think_time = 2
 			add_child(dialog_2)
 			$cheshire.force_set_camera($cheshire/area_chessboard/camera_3d)
 			await dialog_2.on_next
