@@ -492,8 +492,14 @@ static func is_check(_state:ChessState) -> bool:
 	var score:float = alphabeta(_state, -THRESHOLD, THRESHOLD, 1, 1 - _state.get_extra(0))
 	return abs(score) >= WIN
 
-static func alphabeta(_state:ChessState, alpha:int, beta:int, depth:int = 5, group:int = 0) -> int:
+static func alphabeta(_state:ChessState, alpha:int, beta:int, depth:int = 5, group:int = 0, can_null = false, _transposition_table:TranspositionTable = null) -> int:
+	if is_instance_valid(_transposition_table):
+		var table_value:int = _transposition_table.probe_hash(_state.zobrist, depth, alpha, beta)
+		if table_value != 65535:
+			return table_value
 	if depth <= 0:
+		if is_instance_valid(_transposition_table):
+			_transposition_table.record_hash(_state.zobrist, depth, _state.score, TranspositionTable.Flag.EXACT)
 		return _state.score
 	if _state.history.has(_state.zobrist):
 		return 0	# 视作平局，如果局面不太好，也不会选择负分的下法
@@ -501,9 +507,10 @@ static func alphabeta(_state:ChessState, alpha:int, beta:int, depth:int = 5, gro
 	var move_to_state:Dictionary[int, ChessState] = {}
 	if group == 0:
 		# 空着裁剪
-		var null_move_value:int = alphabeta(_state, beta - 1, beta, depth - 2, 1 - group)
-		if null_move_value >= beta:
-			return beta
+		if can_null:
+			var null_move_value:int = alphabeta(_state, beta - 1, beta, depth - 4, 1 - group)
+			if null_move_value >= beta:
+				return beta
 
 		move_list = _state.get_all_move(group)
 		for iter:int in move_list:
@@ -511,18 +518,25 @@ static func alphabeta(_state:ChessState, alpha:int, beta:int, depth:int = 5, gro
 			move_to_state[iter].apply_move(iter)
 		var value:int = -WIN
 		move_list.sort_custom(func(a:int, b:int) -> bool: return move_to_state[a].score > move_to_state[b].score)
+		var flag:TranspositionTable.Flag = TranspositionTable.Flag.ALPHA
 		for iter:int in move_list:
 			value = alphabeta(move_to_state[iter], alpha, beta, depth - 1, 1 - group)
 			if beta <= value:
+				if is_instance_valid(_transposition_table):
+					_transposition_table.record_hash(_state.zobrist, depth, beta, TranspositionTable.Flag.BETA)
 				return beta
 			if alpha < value:
 				alpha = value
-		return value
+				flag = TranspositionTable.Flag.EXACT
+		if is_instance_valid(_transposition_table):
+			_transposition_table.record_hash(_state.zobrist, depth, alpha, flag)
+		return alpha
 	else:
 		# 空着裁剪
-		var null_move_value:int = alphabeta(_state, alpha, alpha + 1, depth - 3, 1 - group)
-		if null_move_value <= alpha:
-			return alpha
+		if can_null:
+			var null_move_value:int = alphabeta(_state, alpha, alpha + 1, depth - 4, 1 - group)
+			if null_move_value <= alpha:
+				return alpha
 
 		move_list = _state.get_all_move(group)
 		for iter:int in move_list:
@@ -530,15 +544,21 @@ static func alphabeta(_state:ChessState, alpha:int, beta:int, depth:int = 5, gro
 			move_to_state[iter].apply_move(iter)
 		var value:int = WIN
 		move_list.sort_custom(func(a:int, b:int) -> bool: return move_to_state[a].score < move_to_state[b].score)
+		var flag:TranspositionTable.Flag = TranspositionTable.Flag.BETA
 		for iter:int in move_list:
 			value = alphabeta(move_to_state[iter], alpha, beta, depth - 1, 1 - group)
 			if alpha >= value:
+				if is_instance_valid(_transposition_table):
+					_transposition_table.record_hash(_state.zobrist, depth, alpha, TranspositionTable.Flag.ALPHA)
 				return alpha
 			if beta > value:
+				flag = TranspositionTable.Flag.EXACT
 				beta = value
-		return value
+		if is_instance_valid(_transposition_table):
+			_transposition_table.record_hash(_state.zobrist, depth, beta, flag)
+		return beta
 
-static func mtdf(state:ChessState, depth:int, group:int) -> int:
+static func mtdf(state:ChessState, depth:int, group:int, _transposition_table:TranspositionTable) -> int:
 	var l:int = -WIN
 	var r:int = WIN
 	var m:int = 0
@@ -549,7 +569,7 @@ static func mtdf(state:ChessState, depth:int, group:int) -> int:
 			m = l / 2
 		elif m >= 0 && r / 2 > m:
 			m = r / 2
-		value = alphabeta(state, m, m + 1, depth, group)
+		value = alphabeta(state, m, m + 1, depth, group, true, _transposition_table)
 		if value <= m:
 			r = m
 		else:
@@ -576,9 +596,11 @@ static func search(output:Dictionary[int, int], state:ChessState, is_timeup:Call
 		output[iter] = 0
 	move_list.sort_custom(func(a:int, b:int) -> bool: return move_to_state[a].score < move_to_state[b].score)
 	# 迭代加深，并准备提前中断
-	for i:int in range(depth_min - 1, depth_max - 1, 2):
-		for key:int in output:
-			output[key] = mtdf(move_to_state[key], i, 1 if group == 0 else 0)
-			#output[key] = alphabeta(move_to_state[key], -WIN, WIN, i, 1 if group == 0 else 0, is_timeup)
+	var transposition_table:TranspositionTable = TranspositionTable.new()
+	for i:int in range(depth_min, depth_max, 2):
+		mtdf(state, i, 1 if group == 0 else 0, transposition_table)
+		#output[key] = alphabeta(move_to_state[key], -WIN, WIN, i, 1 if group == 0 else 0, is_timeup)
 		if is_timeup.call():
+			for key:int in move_list:
+				output[key] = transposition_table.probe_hash(move_to_state[key].zobrist, 1, -WIN, WIN)
 			return

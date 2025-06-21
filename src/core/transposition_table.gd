@@ -1,6 +1,7 @@
-extends Node
+extends RefCounted
+class_name TranspositionTable
 
-var table_size:int = 1024
+var table_size:int = 262144
 var table_size_mask:int = table_size - 1
 
 enum Flag	{
