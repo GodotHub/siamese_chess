@@ -16,7 +16,6 @@ var chess_state:ChessState = null
 var thread:Thread = null
 var score:int = 0
 var think_time:int = 10
-var min_depth:int = 2
 var evaluation:Object = null
 var timer:Timer = null
 var start_thinking:float = 0
@@ -69,7 +68,7 @@ func decision() -> void:
 	send_opponent_valid_premove()
 	timer_start()
 	var move_list:Dictionary[int, int] = {}
-	evaluation.search(move_list, chess_state, is_timeup.bind(think_time), min_depth, 1000, 0)
+	evaluation.search(move_list, chess_state, is_timeup.bind(think_time), 0)
 	if !move_list.size():
 		return
 	var best:int = -1
