@@ -244,7 +244,7 @@ static func get_end_type(_state:ChessState) -> String:
 	return ""
 
 static func is_same_camp(piece_1:int, piece_2:int) -> bool:
-	return (piece_1 >= "A".unicode_at(0) && piece_1 <= "Z".unicode_at(0)) == (piece_2 >= "A".unicode_at(0) && piece_2 <= "Z".unicode_at(0))
+	return (piece_1 >= 65 && piece_1 <= 90) == (piece_2 >= 65 && piece_2 <= 90)
 
 static func get_piece_instance(by:int, piece:int) -> PieceInstance:
 	var packed_scene:PackedScene = load(piece_mapping[char(piece)]["instance"])
@@ -261,29 +261,29 @@ static func generate_premove(_state:ChessState, _group:int) -> PackedInt32Array:
 			if !_state.has_piece(_from):
 				continue
 			var from_piece:int = _state.get_piece(_from)
-			if (_group == 0) != (from_piece >= "A".unicode_at(0) && from_piece <= "Z".unicode_at(0)):
+			if (_group == 0) != (from_piece >= 65 && from_piece <= 90):
 				continue
 			var directions:PackedInt32Array
-			if from_piece & 95 == "P".unicode_at(0):
-				var front:int = -16 if from_piece == "P".unicode_at(0) else 16
-				var on_start:bool = _from / 16 == (6 if from_piece == "P".unicode_at(0) else 1)
-				var on_end:bool = _from / 16 == (1 if from_piece == "P".unicode_at(0) else 16)
+			if from_piece & 95 == 80:
+				var front:int = -16 if from_piece == 80 else 16
+				var on_start:bool = _from / 16 == (6 if from_piece == 80 else 1)
+				var on_end:bool = _from / 16 == (1 if from_piece == 80 else 16)
 				if on_end:
-					output.push_back(Move.create(_from, _from + front, 81 if from_piece == "P".unicode_at(0) else 113))
-					output.push_back(Move.create(_from, _from + front, 82 if from_piece == "P".unicode_at(0) else 114))
-					output.push_back(Move.create(_from, _from + front, 78 if from_piece == "P".unicode_at(0) else 110))
-					output.push_back(Move.create(_from, _from + front, 66 if from_piece == "P".unicode_at(0) else 98))
+					output.push_back(Move.create(_from, _from + front, 81 if from_piece == 80 else 113))
+					output.push_back(Move.create(_from, _from + front, 82 if from_piece == 80 else 114))
+					output.push_back(Move.create(_from, _from + front, 78 if from_piece == 80 else 110))
+					output.push_back(Move.create(_from, _from + front, 66 if from_piece == 80 else 98))
 					if !((_from + front + 1) & 0x88):
-						output.push_back(Move.create(_from, _from + front + 1, 81 if from_piece == "P".unicode_at(0) else 113))
-						output.push_back(Move.create(_from, _from + front + 1, 82 if from_piece == "P".unicode_at(0) else 114))
-						output.push_back(Move.create(_from, _from + front + 1, 78 if from_piece == "P".unicode_at(0) else 110))
-						output.push_back(Move.create(_from, _from + front + 1, 66 if from_piece == "P".unicode_at(0) else 98))
+						output.push_back(Move.create(_from, _from + front + 1, 81 if from_piece == 80 else 113))
+						output.push_back(Move.create(_from, _from + front + 1, 82 if from_piece == 80 else 114))
+						output.push_back(Move.create(_from, _from + front + 1, 78 if from_piece == 80 else 110))
+						output.push_back(Move.create(_from, _from + front + 1, 66 if from_piece == 80 else 98))
 
 					if !((_from + front - 1) & 0x88):
-						output.push_back(Move.create(_from, _from + front - 1, 81 if from_piece == "P".unicode_at(0) else 113))
-						output.push_back(Move.create(_from, _from + front - 1, 82 if from_piece == "P".unicode_at(0) else 114))
-						output.push_back(Move.create(_from, _from + front - 1, 78 if from_piece == "P".unicode_at(0) else 110))
-						output.push_back(Move.create(_from, _from + front - 1, 66 if from_piece == "P".unicode_at(0) else 98))
+						output.push_back(Move.create(_from, _from + front - 1, 81 if from_piece == 80 else 113))
+						output.push_back(Move.create(_from, _from + front - 1, 82 if from_piece == 80 else 114))
+						output.push_back(Move.create(_from, _from + front - 1, 78 if from_piece == 80 else 110))
+						output.push_back(Move.create(_from, _from + front - 1, 66 if from_piece == 80 else 98))
 				else:
 					output.push_back(Move.create(_from, _from + front, 0))
 					if !((_from + front + 1) & 0x88):
@@ -293,20 +293,20 @@ static func generate_premove(_state:ChessState, _group:int) -> PackedInt32Array:
 					if on_start:
 						output.push_back(Move.create(_from, _from + front + front, 0))
 				continue
-			elif from_piece & 95 == "K".unicode_at(0) || from_piece & 95 == "Q".unicode_at(0):
+			elif from_piece & 95 == 107 || from_piece & 95 == 81:
 				directions = directions_eight_way
-			elif from_piece & 95 == "R".unicode_at(0):
+			elif from_piece & 95 == 82:
 				directions = directions_straight
-			elif from_piece & 95 == "N".unicode_at(0):
+			elif from_piece & 95 == 78:
 				directions = directions_horse
-			elif from_piece & 95 == "B".unicode_at(0):
+			elif from_piece & 95 == 66:
 				directions = directions_diagonal
 
 			for iter:int in directions:
 				var to:int = _from + iter
 				while !(to & 0x88):
 					output.push_back(Move.create(_from, to, 0))
-					if from_piece & 95 == "K".unicode_at(0) || from_piece & 95 == "N".unicode_at(0):
+					if from_piece & 95 == 107 || from_piece & 95 == 78:
 						break
 					to += iter
 	if _group == 0 && _state.get_extra(1) & 8 && !_state.has_piece(Chess.g1) && !_state.has_piece(Chess.f1):
@@ -327,10 +327,10 @@ static func generate_move(_state:ChessState, _group:int) -> PackedInt32Array:
 			if !_state.has_piece(_from):
 				continue
 			var from_piece:int = _state.get_piece(_from)
-			if (_group == 0) != (from_piece >= "A".unicode_at(0) && from_piece <= "Z".unicode_at(0)):
+			if (_group == 0) != (from_piece >= 65 && from_piece <= 90):
 				continue
 			var directions:PackedInt32Array
-			if from_piece & 95 == "P".unicode_at(0):
+			if from_piece & 95 == 80:
 				var front:int = -16 if _group == 0 else 16
 				var on_start:bool = _from / 16 == (6 if _group == 0 else 1)
 				var on_end:bool = _from / 16 == (1 if _group == 0 else 6)
@@ -361,13 +361,13 @@ static func generate_move(_state:ChessState, _group:int) -> PackedInt32Array:
 					else:
 						output.push_back(Move.create(_from, _from + front - 1, 0))
 				continue
-			elif from_piece & 95 == "K".unicode_at(0) || from_piece & 95 == "Q".unicode_at(0):
+			elif from_piece & 95 == 107 || from_piece & 95 == 81:
 				directions = directions_eight_way
-			elif from_piece & 95 == "R".unicode_at(0):
+			elif from_piece & 95 == 82:
 				directions = directions_straight
-			elif from_piece & 95 == "N".unicode_at(0):
+			elif from_piece & 95 == 78:
 				directions = directions_horse
-			elif from_piece & 95 == "B".unicode_at(0):
+			elif from_piece & 95 == 66:
 				directions = directions_diagonal
 
 			for iter:int in directions:
@@ -377,16 +377,16 @@ static func generate_move(_state:ChessState, _group:int) -> PackedInt32Array:
 					output.push_back(Move.create(_from, to, 0))
 					if !(to & 0x88) && to_piece && !is_same_camp(from_piece, to_piece):
 						break
-					if from_piece & 95 == "K".unicode_at(0) || from_piece & 95 == "N".unicode_at(0):
+					if from_piece & 95 == 107 || from_piece & 95 == 78:
 						break
 					to += iter
 					to_piece = _state.get_piece(to)
-					if !(from_piece == "R".unicode_at(0) && to_piece == "K".unicode_at(0) || from_piece == "r".unicode_at(0) && to_piece == "k".unicode_at(0)):
+					if !(from_piece == 82 && to_piece == 107 || from_piece == 82 && to_piece == 107):
 						continue
-					if _from % 16 >= 4 && (from_piece == "R".unicode_at(0) && _state.get_extra(1) & 8 || from_piece == "r".unicode_at(0) && _state.get_extra(1) & 2):
-						output.push_back(Move.create(to, Chess.g1 if from_piece == "R".unicode_at(0) else Chess.g8, 75))
-					elif _from % 16 <= 3 && (from_piece == "R".unicode_at(0) && _state.get_extra(1) & 4 || from_piece == "r".unicode_at(0) && _state.get_extra(1) & 2):
-						output.push_back(Move.create(to, Chess.c1 if from_piece == "R".unicode_at(0) else Chess.c8, 81))
+					if _from % 16 >= 4 && (from_piece == 82 && _state.get_extra(1) & 8 || from_piece == 82 && _state.get_extra(1) & 2):
+						output.push_back(Move.create(to, Chess.g1 if from_piece == 82 else Chess.g8, 75))
+					elif _from % 16 <= 3 && (from_piece == 82 && _state.get_extra(1) & 4 || from_piece == 82 && _state.get_extra(1) & 2):
+						output.push_back(Move.create(to, Chess.c1 if from_piece == 82 else Chess.c8, 81))
 	return output
 
 static func apply_move(_state:ChessState, _move:int) -> void:
@@ -398,7 +398,7 @@ static func apply_move(_state:ChessState, _move:int) -> void:
 		_state.set_extra(0, 1)
 	_state.set_extra(3, _state.get_extra(3) + 1)
 	var from_piece:int = _state.get_piece(Move.from(_move))
-	var from_group:int = 0 if from_piece >= 'A'.unicode_at(0) && from_piece <= 'Z'.unicode_at(0) else 1
+	var from_group:int = 0 if from_piece >= 65 && from_piece <= 90 else 1	# 大写A到大写Z
 	var to_piece:int = _state.get_piece(Move.to(_move))
 	var dont_move:bool = false
 	var has_en_passant:bool = false
@@ -408,17 +408,17 @@ static func apply_move(_state:ChessState, _move:int) -> void:
 		_state.set_extra(3, 0)	# 吃子时重置50步和棋
 	if abs(_state.get_extra(5) - Move.to(_move)) <= 1:
 		if from_group == 0:
-			if _state.get_piece(Chess.c8) == "k".unicode_at(0):
+			if _state.get_piece(Chess.c8) == 107:
 				_state.capture_piece(Chess.c8)
-			if _state.get_piece(Chess.g8) == "k".unicode_at(0):
+			if _state.get_piece(Chess.g8) == 107:
 				_state.capture_piece(Chess.g8)
 		else:
-			if _state.get_piece(Chess.c1) == "K".unicode_at(0):
+			if _state.get_piece(Chess.c1) == 107:
 				_state.capture_piece(Chess.c1)
-			if _state.get_piece(Chess.g1) == "K".unicode_at(0):
+			if _state.get_piece(Chess.g1) == 107:
 				_state.capture_piece(Chess.g1)
 
-	if from_piece & 95 == "R".unicode_at(0):	#哪边的车动过，就不能往那个方向易位
+	if from_piece & 95 == 82:	#哪边的车动过，就不能往那个方向易位
 		if Move.from(_move) % 16 >= 4:
 			if from_group == 0:
 				_state.set_extra(1, _state.get_extra(1) & 7)
@@ -430,7 +430,7 @@ static func apply_move(_state:ChessState, _move:int) -> void:
 			else:
 				_state.set_extra(1, _state.get_extra(1) & 14)
 
-	if from_piece & 95 == "K".unicode_at(0):
+	if from_piece & 95 == 107:
 		if from_group == 0:
 			_state.set_extra(1, _state.get_extra(1) & 3)
 		else:
@@ -450,8 +450,8 @@ static func apply_move(_state:ChessState, _move:int) -> void:
 				_state.set_extra(5, Chess.d8)
 			has_king_passant = true
 
-	if from_piece & 95 == "P".unicode_at(0):
-		var front:int = -16 if from_piece == "P".unicode_at(0) else 16
+	if from_piece & 95 == 80:
+		var front:int = -16 if from_piece == 80 else 16
 		_state.set_extra(3, 0)	# 移动兵时重置50步和棋
 		if Move.to(_move) - Move.from(_move) == front * 2:
 			has_en_passant = true
@@ -492,7 +492,7 @@ static func is_check(_state:ChessState) -> bool:
 	var score:float = alphabeta(_state, -THRESHOLD, THRESHOLD, 1, 1 - _state.get_extra(0))
 	return abs(score) >= WIN
 
-static func alphabeta(_state:ChessState, alpha:int, beta:int, depth:int = 5, group:int = 0, can_null = false) -> int:
+static func alphabeta(_state:ChessState, alpha:int, beta:int, depth:int = 5, group:int = 0, can_null = false, history_table:Dictionary = {}) -> int:
 	if depth <= 0:
 		return _state.score
 	if _state.history.has(_state.zobrist):
@@ -511,13 +511,14 @@ static func alphabeta(_state:ChessState, alpha:int, beta:int, depth:int = 5, gro
 			move_to_state[iter] = _state.duplicate()
 			move_to_state[iter].apply_move(iter)
 		var value:int = -WIN
-		move_list.sort_custom(func(a:int, b:int) -> bool: return move_to_state[a].score > move_to_state[b].score)
+		move_list.sort_custom(func(a:int, b:int) -> bool: return history_table.get(a, 0) > history_table.get(b, 0))
 		for iter:int in move_list:
 			value = alphabeta(move_to_state[iter], alpha, beta, depth - 1, 1 - group, false)
 			if beta <= value:
 				return beta
 			if alpha < value:
 				alpha = value
+				history_table[iter] = history_table.get(iter, 0) + 1
 		return alpha
 	else:
 		# 空着裁剪
@@ -531,13 +532,14 @@ static func alphabeta(_state:ChessState, alpha:int, beta:int, depth:int = 5, gro
 			move_to_state[iter] = _state.duplicate()
 			move_to_state[iter].apply_move(iter)
 		var value:int = WIN
-		move_list.sort_custom(func(a:int, b:int) -> bool: return move_to_state[a].score < move_to_state[b].score)
+		move_list.sort_custom(func(a:int, b:int) -> bool: return history_table.get(a, 0) > history_table.get(b, 0))
 		for iter:int in move_list:
 			value = alphabeta(move_to_state[iter], alpha, beta, depth - 1, 1 - group, false)
 			if alpha >= value:
 				return alpha
 			if beta > value:
 				beta = value
+				history_table[iter] = history_table.get(iter, 0) + 1
 		return beta
 
 static func mtdf(state:ChessState, depth:int, group:int) -> int:
@@ -578,9 +580,10 @@ static func search(output:Dictionary[int, int], state:ChessState, is_timeup:Call
 		output[iter] = -WIN
 	# 迭代加深，并准备提前中断
 	move_list.sort_custom(func(a:int, b:int) -> bool: return move_to_state[a].score < move_to_state[b].score)
-	for i:int in range(depth_min, depth_max, 2):
+	var history_table:Dictionary = {}
+	for i:int in range(depth_min, depth_max, 1):
 		for key:int in move_list:
 			#mtdf(state, i, group, transposition_table)
-			output[key] = alphabeta(move_to_state[key], -WIN, WIN, i, 1 - group, is_timeup)
+			output[key] = alphabeta(move_to_state[key], -WIN, WIN, i, 1 - group, true, history_table)
 			if is_timeup.call():
 				return
