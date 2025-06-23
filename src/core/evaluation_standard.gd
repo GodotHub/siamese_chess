@@ -293,7 +293,7 @@ static func generate_premove(_state:ChessState, _group:int) -> PackedInt32Array:
 					if on_start:
 						output.push_back(Move.create(_from, _from + front + front, 0))
 				continue
-			elif from_piece & 95 == 107 || from_piece & 95 == 81:
+			elif from_piece & 95 == 75 || from_piece & 95 == 81:
 				directions = directions_eight_way
 			elif from_piece & 95 == 82:
 				directions = directions_straight
@@ -306,7 +306,7 @@ static func generate_premove(_state:ChessState, _group:int) -> PackedInt32Array:
 				var to:int = _from + iter
 				while !(to & 0x88):
 					output.push_back(Move.create(_from, to, 0))
-					if from_piece & 95 == 107 || from_piece & 95 == 78:
+					if from_piece & 95 == 75 || from_piece & 95 == 78:
 						break
 					to += iter
 	if _group == 0 && _state.get_extra(1) & 8 && !_state.has_piece(Chess.g1) && !_state.has_piece(Chess.f1):
@@ -361,7 +361,7 @@ static func generate_move(_state:ChessState, _group:int) -> PackedInt32Array:
 					else:
 						output.push_back(Move.create(_from, _from + front - 1, 0))
 				continue
-			elif from_piece & 95 == 107 || from_piece & 95 == 81:
+			elif from_piece & 95 == 75 || from_piece & 95 == 81:
 				directions = directions_eight_way
 			elif from_piece & 95 == 82:
 				directions = directions_straight
@@ -377,15 +377,15 @@ static func generate_move(_state:ChessState, _group:int) -> PackedInt32Array:
 					output.push_back(Move.create(_from, to, 0))
 					if !(to & 0x88) && to_piece && !is_same_camp(from_piece, to_piece):
 						break
-					if from_piece & 95 == 107 || from_piece & 95 == 78:
+					if from_piece & 95 == 75 || from_piece & 95 == 78:
 						break
 					to += iter
 					to_piece = _state.get_piece(to)
-					if !(from_piece == 82 && to_piece == 107 || from_piece == 82 && to_piece == 107):
+					if !(from_piece == 82 && to_piece == 75 || from_piece == 114 && to_piece == 107):
 						continue
-					if _from % 16 >= 4 && (from_piece == 82 && _state.get_extra(1) & 8 || from_piece == 82 && _state.get_extra(1) & 2):
+					if _from % 16 >= 4 && (from_piece == 82 && _state.get_extra(1) & 8 || from_piece == 114 && _state.get_extra(1) & 2):
 						output.push_back(Move.create(to, Chess.g1 if from_piece == 82 else Chess.g8, 75))
-					elif _from % 16 <= 3 && (from_piece == 82 && _state.get_extra(1) & 4 || from_piece == 82 && _state.get_extra(1) & 2):
+					elif _from % 16 <= 3 && (from_piece == 82 && _state.get_extra(1) & 4 || from_piece == 114 && _state.get_extra(1) & 2):
 						output.push_back(Move.create(to, Chess.c1 if from_piece == 82 else Chess.c8, 81))
 	return output
 
@@ -413,9 +413,9 @@ static func apply_move(_state:ChessState, _move:int) -> void:
 			if _state.get_piece(Chess.g8) == 107:
 				_state.capture_piece(Chess.g8)
 		else:
-			if _state.get_piece(Chess.c1) == 107:
+			if _state.get_piece(Chess.c1) == 75:
 				_state.capture_piece(Chess.c1)
-			if _state.get_piece(Chess.g1) == 107:
+			if _state.get_piece(Chess.g1) == 75:
 				_state.capture_piece(Chess.g1)
 
 	if from_piece & 95 == 82:	#哪边的车动过，就不能往那个方向易位
@@ -492,6 +492,11 @@ static func is_check(_state:ChessState) -> bool:
 	var score:float = alphabeta(_state, -THRESHOLD, THRESHOLD, 1, 1 - _state.get_extra(0))
 	return abs(score) >= WIN
 
+static func compare_move(a:int, b:int, group:int, move_to_state:Dictionary, history_table:Dictionary) -> bool:
+	if history_table.get(a, 0) != history_table.get(b, 0):
+		return history_table.get(a, 0) > history_table.get(b, 0)
+	return (move_to_state[a].score > move_to_state[b].score) == (group == 0)
+
 static func alphabeta(_state:ChessState, alpha:int, beta:int, depth:int = 5, group:int = 0, can_null = false, history_table:Dictionary = {}) -> int:
 	if depth <= 0:
 		return _state.score
@@ -511,7 +516,7 @@ static func alphabeta(_state:ChessState, alpha:int, beta:int, depth:int = 5, gro
 			move_to_state[iter] = _state.duplicate()
 			move_to_state[iter].apply_move(iter)
 		var value:int = -WIN
-		move_list.sort_custom(func(a:int, b:int) -> bool: return history_table.get(a, 0) > history_table.get(b, 0))
+		move_list.sort_custom(compare_move.bind(group, move_to_state, history_table))
 		for iter:int in move_list:
 			value = alphabeta(move_to_state[iter], alpha, beta, depth - 1, 1 - group, false)
 			if beta <= value:
@@ -532,7 +537,7 @@ static func alphabeta(_state:ChessState, alpha:int, beta:int, depth:int = 5, gro
 			move_to_state[iter] = _state.duplicate()
 			move_to_state[iter].apply_move(iter)
 		var value:int = WIN
-		move_list.sort_custom(func(a:int, b:int) -> bool: return history_table.get(a, 0) > history_table.get(b, 0))
+		move_list.sort_custom(compare_move.bind(group, move_to_state, history_table))
 		for iter:int in move_list:
 			value = alphabeta(move_to_state[iter], alpha, beta, depth - 1, 1 - group, false)
 			if alpha >= value:
