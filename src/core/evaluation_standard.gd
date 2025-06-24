@@ -495,64 +495,38 @@ static func is_check(_state:ChessState) -> bool:
 static func compare_move(a:int, b:int, group:int, move_to_state:Dictionary, history_table:Dictionary) -> bool:
 	if history_table.get(a, 0) != history_table.get(b, 0):
 		return history_table.get(a, 0) > history_table.get(b, 0)
-	return (move_to_state[a].score > move_to_state[b].score) == (group == 0)
+	return move_to_state[a].get_relative_score(group) > move_to_state[b].get_relative_score(group)
 
 static func alphabeta(_state:ChessState, alpha:int, beta:int, depth:int = 5, group:int = 0, can_null = false, history_table:Dictionary = {}, main_variation:PackedInt32Array = []) -> int:
 	var line:PackedInt32Array = []
 	if depth <= 0:
-		return _state.score
+		return _state.get_relative_score(group)
 	if _state.history.has(_state.zobrist):
 		return 0	# 视作平局，如果局面不太好，也不会选择负分的下法
 	var move_list:Array = []
 	var move_to_state:Dictionary[int, ChessState] = {}
-	if group == 0:
-		# 空着裁剪
-		if can_null:
-			var null_move_value:int = alphabeta(_state, beta - 1, beta, depth - 4, 1 - group, false, history_table)
-			if null_move_value >= beta:
-				return beta
-
-		move_list = _state.get_all_move(group)
-		for iter:int in move_list:
-			move_to_state[iter] = _state.duplicate()
-			move_to_state[iter].apply_move(iter)
-		var value:int = -WIN
-		move_list.sort_custom(func(a:int, b:int) -> bool: return history_table.get(a, 0) > history_table.get(b, 0))
-		for iter:int in move_list:
-			value = alphabeta(move_to_state[iter], alpha, beta, depth - 1, 1 - group, false, history_table, line)
-			if beta <= value:
-				return beta
-			if alpha < value:
-				alpha = value
-				history_table[iter] = history_table.get(iter, 0) + (1 << depth)
-				main_variation.clear()
-				main_variation.push_back(iter)
-				main_variation.append_array(line)
-		return alpha
-	else:
-		# 空着裁剪
-		if can_null:
-			var null_move_value:int = alphabeta(_state, alpha + 1, alpha, depth - 4, 1 - group, false, history_table)
-			if null_move_value <= alpha:
-				return alpha
-
-		move_list = _state.get_all_move(group)
-		for iter:int in move_list:
-			move_to_state[iter] = _state.duplicate()
-			move_to_state[iter].apply_move(iter)
-		var value:int = WIN
-		move_list.sort_custom(func(a:int, b:int) -> bool: return history_table.get(a, 0) > history_table.get(b, 0))
-		for iter:int in move_list:
-			value = alphabeta(move_to_state[iter], alpha, beta, depth - 1, 1 - group, false, history_table, line)
-			if alpha >= value:
-				return alpha
-			if beta > value:
-				beta = value
-				history_table[iter] = history_table.get(iter, 0) + (1 << depth)
-				main_variation.clear()
-				main_variation.push_back(iter)
-				main_variation.append_array(line)
-		return beta
+	# 空着裁剪
+	if can_null:
+		var null_move_value:int = alphabeta(_state, beta - 1, beta, depth - 4, 1 - group, false, history_table)
+		if null_move_value >= beta:
+			return beta
+	move_list = _state.get_all_move(group)
+	for iter:int in move_list:
+		move_to_state[iter] = _state.duplicate()
+		move_to_state[iter].apply_move(iter)
+	var value:int = -WIN
+	move_list.sort_custom(func(a:int, b:int) -> bool: return history_table.get(a, 0) > history_table.get(b, 0))
+	for iter:int in move_list:
+		value = -alphabeta(move_to_state[iter], -beta, -alpha, depth - 1, 1 - group, false, history_table, line)
+		if beta <= value:
+			return beta
+		if alpha < value:
+			alpha = value
+			history_table[iter] = history_table.get(iter, 0) + (1 << depth)
+			main_variation.clear()
+			main_variation.push_back(iter)
+			main_variation.append_array(line)
+	return alpha
 
 static func mtdf(state:ChessState, depth:int, group:int) -> int:
 	var l:int = -WIN
@@ -589,6 +563,7 @@ static func search(output:Dictionary[int, int], state:ChessState, is_timeup:Call
 	var main_variation:PackedInt32Array = []
 	for i:int in range(1, 1000, 1):
 		#mtdf(state, i, group, transposition_table)
+		output.clear()
 		output[main_variation[0]] = alphabeta(state, -WIN, WIN, i, group, false, history_table, main_variation)
 		if is_timeup.call():
 			return
