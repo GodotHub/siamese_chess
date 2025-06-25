@@ -430,7 +430,7 @@ static func apply_move(_state:ChessState, _move:int) -> void:
 			else:
 				_state.set_extra(1, _state.get_extra(1) & 14)
 
-	if from_piece & 95 == 107:
+	if from_piece & 95 == 75:
 		if from_group == 0:
 			_state.set_extra(1, _state.get_extra(1) & 3)
 		else:
@@ -488,44 +488,76 @@ static func evaluate_move(state:ChessState, from:int, to:int) -> int:
 static func evaluate_capture(state:ChessState, by:int) -> int:
 	return -get_piece_score(by, state.get_piece(by))
 
+static func evaluate(state:ChessState, move:int) -> int:
+	var from:int = Move.from(move)
+	var from_piece:int = state.get_piece(from)
+	var to:int = Move.to(move)
+	var to_piece:int = state.get_piece(to)
+	var extra:int = Move.extra(move)
+	var group:int = 0 if (from >= 65 && from <= 90) else 1
+	var score:int = get_piece_score(to, from_piece) - get_piece_score(from, from_piece)
+	if to_piece && !is_same_camp(from_piece, to_piece):
+		score -= get_piece_score(to_piece, to)
+	if abs(state.get_extra(5) - Move.to(move)) <= 1:
+		score -= piece_value["k" if group == 0 else "K"]
+	if from_piece == "K".unicode_at(0) && extra != 0:
+		score += get_piece_score("R".unicode_at(0), (from + to) / 2)
+		score -= get_piece_score("R".unicode_at(0), Chess.a1 if to < from else Chess.h1)
+	if from_piece == "k".unicode_at(0) && extra != 0:
+		score += get_piece_score("r".unicode_at(0), (from + to) / 2)
+		score -= get_piece_score("r".unicode_at(0), Chess.a8 if to < from else Chess.h8)
+	if from_piece & 95 == "P".unicode_at(0):
+		var front:int = -16 if group == 0 else 16
+		if from / 16 == 0:
+			score += get_piece_score(extra, to)
+			score -= get_piece_score(from_piece, from)
+		if to == state.get_extra(2):
+			score -= get_piece_score("p".unicode_at(0), to - front)
+	return score
+
 static func is_check(_state:ChessState) -> bool:
 	var score:float = alphabeta(_state, -THRESHOLD, THRESHOLD, 1, 1 - _state.get_extra(0))
 	return abs(score) >= WIN
 
-static func compare_move(a:int, b:int, group:int, move_to_state:Dictionary, history_table:Dictionary) -> bool:
+static func compare_move(a:int, b:int, _group:int, move_to_score:Dictionary, history_table:Dictionary) -> bool:
 	if history_table.get(a, 0) != history_table.get(b, 0):
 		return history_table.get(a, 0) > history_table.get(b, 0)
-	return move_to_state[a].get_relative_score(group) > move_to_state[b].get_relative_score(group)
+	return move_to_score[a] > move_to_score[b]
 
-static func alphabeta(_state:ChessState, alpha:int, beta:int, depth:int = 5, group:int = 0, can_null = false, history_table:Dictionary = {}, main_variation:PackedInt32Array = []) -> int:
-	var line:PackedInt32Array = []
+static func alphabeta(_state:ChessState, alpha:int, beta:int, depth:int = 5, group:int = 0, history_table:Dictionary = {}, main_variation:PackedInt32Array = [], transposition_table:TranspositionTable = null) -> int:
+	if is_instance_valid(transposition_table):
+		var score:int = transposition_table.probe_hash(_state.zobrist, depth, alpha, beta)
+		if score != 65535:
+			return score
 	if depth <= 0:
+		if is_instance_valid(transposition_table):
+			transposition_table.record_hash(_state.zobrist, depth, _state.get_relative_score(group), TranspositionTable.Flag.EXACT)
 		return _state.get_relative_score(group)
 	if _state.history.has(_state.zobrist):
 		return 0	# 视作平局，如果局面不太好，也不会选择负分的下法
+	var line:PackedInt32Array = []
 	var move_list:Array = []
-	var move_to_state:Dictionary[int, ChessState] = {}
-	# 空着裁剪
-	if can_null:
-		var null_move_value:int = alphabeta(_state, beta - 1, beta, depth - 4, 1 - group, false, history_table)
-		if null_move_value >= beta:
-			return beta
-	move_list = _state.get_all_move(group)
-	for iter:int in move_list:
-		move_to_state[iter] = _state.duplicate()
-		move_to_state[iter].apply_move(iter)
+	var flag:TranspositionTable.Flag = TranspositionTable.Flag.ALPHA
 	var value:int = -WIN
+	move_list = _state.get_all_move(group)
 	move_list.sort_custom(func(a:int, b:int) -> bool: return history_table.get(a, 0) > history_table.get(b, 0))
 	for iter:int in move_list:
-		value = -alphabeta(move_to_state[iter], -beta, -alpha, depth - 1, 1 - group, false, history_table, line)
+		var test_state:ChessState = _state.duplicate()
+		test_state.apply_move(iter)
+		value = -alphabeta(test_state, -beta, -alpha, depth - 1, 1 - group, history_table, line, transposition_table)
 		if beta <= value:
+			if is_instance_valid(transposition_table):
+				transposition_table.record_hash(_state.zobrist, depth, _state.get_relative_score(group), TranspositionTable.Flag.BETA)
 			return beta
 		if alpha < value:
 			alpha = value
+			flag = TranspositionTable.Flag.EXACT
 			history_table[iter] = history_table.get(iter, 0) + (1 << depth)
 			main_variation.clear()
 			main_variation.push_back(iter)
 			main_variation.append_array(line)
+	if is_instance_valid(transposition_table):
+		transposition_table.record_hash(_state.zobrist, depth, alpha, flag)
 	return alpha
 
 static func mtdf(state:ChessState, depth:int, group:int) -> int:
@@ -539,7 +571,7 @@ static func mtdf(state:ChessState, depth:int, group:int) -> int:
 			m = l / 2
 		elif m >= 0 && r / 2 > m:
 			m = r / 2
-		value = alphabeta(state, m, m + 1, depth, group, true)
+		value = alphabeta(state, m, m + 1, depth, group)
 		if value <= m:
 			r = m
 		else:
@@ -557,13 +589,11 @@ static func get_valid_move(state:ChessState, group:int) -> PackedInt32Array:
 			output.push_back(iter)
 	return output
 
-static func search(output:Dictionary[int, int], state:ChessState, is_timeup:Callable, group:int = 0) -> void:
+static func search(state:ChessState, group:int, main_variation:PackedInt32Array = [], transposition_table:TranspositionTable = null, is_timeup:Callable = Callable()) -> void:
 	# 迭代加深，并准备提前中断
 	var history_table:Dictionary = {}
-	var main_variation:PackedInt32Array = []
 	for i:int in range(1, 1000, 1):
 		#mtdf(state, i, group, transposition_table)
-		output.clear()
-		output[main_variation[0]] = alphabeta(state, -WIN, WIN, i, group, false, history_table, main_variation)
+		alphabeta(state, -WIN, WIN, i, group, history_table, main_variation, transposition_table)
 		if is_timeup.call():
 			return

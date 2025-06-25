@@ -34,5 +34,5 @@ static func evaluate_capture(_state:ChessState, _by:int) -> int:
 static func get_valid_move(_state:ChessState, _group:int) -> PackedInt32Array:
 	return []
 
-static func search(_output:Dictionary[int, int], _state:ChessState, _is_timeup:Callable, _group:int = 0) -> void:
+static func search(_state:ChessState, _group:int, _main_variation:PackedInt32Array = [], _transposition_table:TranspositionTable = null, _is_timeup:Callable = Callable()) -> void:
 	pass

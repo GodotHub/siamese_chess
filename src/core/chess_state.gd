@@ -99,5 +99,5 @@ func get_all_move(group:int) -> PackedInt32Array:	# 指定阵营
 func apply_move(_move:int) -> void:
 	evaluation.apply_move(self, _move)
 
-func get_relative_score(group:int) -> float:
+func get_relative_score(group:int) -> int:
 	return score if group == 0 else -score

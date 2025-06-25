@@ -19,9 +19,10 @@ var think_time:int = 10
 var evaluation:Object = null
 var timer:Timer = null
 var start_thinking:float = 0
+var transposition_table:TranspositionTable = TranspositionTable.new()
 
 func _ready() -> void:
-	pass
+	transposition_table = TranspositionTable.new()
 
 func create_state(fen:String, _evaluation:Object) -> bool:
 	chess_state = _evaluation.parse(fen)
@@ -67,15 +68,11 @@ func decision() -> void:
 		return
 	send_opponent_valid_premove()
 	timer_start()
-	var move_list:Dictionary[int, int] = {}
-	evaluation.search(move_list, chess_state, is_timeup.bind(think_time), 0)
-	if !move_list.size():
+	var main_variation:PackedInt32Array = []
+	evaluation.search(chess_state, 0, main_variation, transposition_table, is_timeup.bind(think_time))
+	if !main_variation.size():
 		return
-	var best:int = -1
-	for iter:int in move_list:
-		if best == -1 || move_list[iter] > move_list[best]:
-			best = iter
-	decided_move.emit.call_deferred(best)
+	decided_move.emit.call_deferred(main_variation[0])
 
 func timer_start() -> void:
 	start_thinking = Time.get_unix_time_from_system()
