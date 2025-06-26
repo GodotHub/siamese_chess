@@ -524,7 +524,7 @@ static func compare_move(a:int, b:int, _group:int, move_to_score:Dictionary, his
 		return history_table.get(a, 0) > history_table.get(b, 0)
 	return move_to_score[a] > move_to_score[b]
 
-static func alphabeta(_state:ChessState, alpha:int, beta:int, depth:int = 5, group:int = 0, history_table:Dictionary = {}, main_variation:PackedInt32Array = [], transposition_table:TranspositionTable = null) -> int:
+static func alphabeta(_state:ChessState, alpha:int, beta:int, depth:int = 5, group:int = 0, history_table:Dictionary[int, int] = {}, main_variation:PackedInt32Array = [], transposition_table:TranspositionTable = null) -> int:
 	if is_instance_valid(transposition_table):
 		var score:int = transposition_table.probe_hash(_state.zobrist, depth, alpha, beta)
 		if score != 65535:
@@ -560,7 +560,7 @@ static func alphabeta(_state:ChessState, alpha:int, beta:int, depth:int = 5, gro
 		transposition_table.record_hash(_state.zobrist, depth, alpha, flag)
 	return alpha
 
-static func mtdf(state:ChessState, depth:int, group:int) -> int:
+static func mtdf(state:ChessState, group:int, depth:int, history_table:Dictionary[int, int], main_variation:PackedInt32Array = [], transposition_table:TranspositionTable = null) -> int:
 	var l:int = -WIN
 	var r:int = WIN
 	var m:int = 0
@@ -571,7 +571,7 @@ static func mtdf(state:ChessState, depth:int, group:int) -> int:
 			m = l / 2
 		elif m >= 0 && r / 2 > m:
 			m = r / 2
-		value = alphabeta(state, m, m + 1, depth, group)
+		value = alphabeta(state, m, m + 1, depth, group, history_table, main_variation, transposition_table)
 		if value <= m:
 			r = m
 		else:
@@ -591,9 +591,9 @@ static func get_valid_move(state:ChessState, group:int) -> PackedInt32Array:
 
 static func search(state:ChessState, group:int, main_variation:PackedInt32Array = [], transposition_table:TranspositionTable = null, is_timeup:Callable = Callable()) -> void:
 	# 迭代加深，并准备提前中断
-	var history_table:Dictionary = {}
+	var history_table:Dictionary[int, int] = {}
 	for i:int in range(1, 1000, 1):
-		#mtdf(state, i, group, transposition_table)
-		alphabeta(state, -WIN, WIN, i, group, history_table, main_variation, transposition_table)
+		mtdf(state, group, i, history_table, main_variation, transposition_table)
+		#alphabeta(state, -WIN, WIN, i, group, history_table, main_variation, transposition_table)
 		if is_timeup.call():
 			return
