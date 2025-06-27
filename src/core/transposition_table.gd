@@ -24,6 +24,29 @@ func _init() -> void:
 	for i:int in range(transposition_table.size()):
 		transposition_table[i] = Item.new()
 
+func save_file(path:String) -> void:
+	var file:FileAccess = FileAccess.open_compressed(path, FileAccess.WRITE, FileAccess.COMPRESSION_FASTLZ)
+	file.store_32(table_size)
+	for iter:Item in transposition_table:
+		file.store_64(iter.checksum)
+		file.store_16(iter.depth)
+		file.store_8(iter.flag)
+		file.store_32(iter.value)
+	file.close()
+
+func load_file(path:String) -> void:
+	var file:FileAccess = FileAccess.open_compressed(path, FileAccess.READ, FileAccess.COMPRESSION_FASTLZ)
+	table_size = file.get_32()
+	table_size_mask = table_size - 1
+	transposition_table.resize(table_size)
+	for i:int in range(table_size):
+		transposition_table[i] = Item.new()
+		transposition_table[i].checksum = file.get_64()
+		transposition_table[i].depth = file.get_16()
+		transposition_table[i].flag = file.get_8()
+		transposition_table[i].value = file.get_32()
+	file.close()
+
 func probe_hash(checksum:int, depth:int, alpha:int, beta:int) -> int:
 	var index:int = checksum & table_size_mask
 	var item:Item = transposition_table[index]
