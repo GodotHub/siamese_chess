@@ -1,7 +1,7 @@
 extends RefCounted
 class_name TranspositionTable
 
-var table_size:int = 262144
+var table_size:int = 1024
 var table_size_mask:int = table_size - 1
 var read_only:int = false	# 如果遇到现有信息的话就停止覆盖
 
@@ -20,7 +20,8 @@ class Item extends Object:
 
 var transposition_table:Array[Item] = []
 
-func _init() -> void:
+func reserve(_table_size:int) -> void:
+	table_size = _table_size
 	transposition_table.resize(table_size)
 	for i:int in range(transposition_table.size()):
 		transposition_table[i] = Item.new()
@@ -63,9 +64,9 @@ func probe_hash(checksum:int, depth:int, alpha:int, beta:int) -> int:
 
 func record_hash(checksum:int, depth:int, value:int, flag:Flag)-> void:
 	var index:int = checksum & table_size_mask
-	if read_only && transposition_table[index].flag != Flag.UNKNOWN:
-		return	# 最好不要丢掉开局库内容，这是容不得覆盖的
 	var item:Item = transposition_table[index]
+	if read_only && item.flag != Flag.UNKNOWN || depth < item.depth:
+		return	# 最好不要丢掉开局库内容，这是容不得覆盖的
 	item.checksum = checksum
 	item.depth = depth
 	item.value = value

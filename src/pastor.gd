@@ -19,10 +19,7 @@ var think_time:int = 10
 var evaluation:Object = null
 var timer:Timer = null
 var start_thinking:float = 0
-var transposition_table:TranspositionTable = TranspositionTable.new()
-
-func _ready() -> void:
-	transposition_table = TranspositionTable.new()
+var transposition_table:TranspositionTable = null
 
 func create_state(fen:String, _evaluation:Object) -> bool:
 	chess_state = _evaluation.parse(fen)

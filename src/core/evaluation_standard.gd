@@ -594,9 +594,9 @@ static func get_valid_move(state:ChessState, group:int) -> PackedInt32Array:
 			output.push_back(iter)
 	return output
 
-static func search(state:ChessState, group:int, main_variation:PackedInt32Array = [], transposition_table:TranspositionTable = null, is_timeup:Callable = Callable()) -> void:
+static func search(state:ChessState, group:int, main_variation:PackedInt32Array = [], transposition_table:TranspositionTable = null, is_timeup:Callable = Callable(), max_depth:int = 1000) -> void:
 	# 迭代加深，并准备提前中断
 	var history_table:Dictionary[int, int] = {}
-	for i:int in range(1, 1000, 1):
+	for i:int in range(1, max_depth, 1):
 		#mtdf(state, group, i, history_table, main_variation, transposition_table)
 		alphabeta(state, -WIN, WIN, i, group, history_table, main_variation, transposition_table, is_timeup)
