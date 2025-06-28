@@ -35,8 +35,6 @@ func dialog_wait() -> void:
 		"请等待我准备好我的开局……",
 	])
 	add_child(dialog_1)
-	var thread:Thread = Thread.new()
-	thread.start(make_database.bind(transposition_table))
 	await dialog_1.on_next
 	dialog_start()
 
@@ -339,11 +337,3 @@ func select_time_limit() -> void:
 	$cheshire.add_stack($cheshire/area_chessboard/camera_3d, $chessboard)
 	$cheshire.move_camera($cheshire/area_chessboard/camera_3d)
 	$pastor.start_decision()
-
-func make_database(transposition_table:TranspositionTable) -> void:
-	transposition_table.reserve(1 << 20)
-	var chess_state:ChessState = EvaluationStandard.parse("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
-	var main_variation:PackedInt32Array = []
-	EvaluationStandard.search(chess_state, 0, main_variation, transposition_table, Callable(), 6)
-	#$pastor.transposition_table = transposition_table
-	transposition_table.save_file("user://standard_opening.fa")
