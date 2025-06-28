@@ -389,6 +389,61 @@ static func generate_move(_state:ChessState, _group:int) -> PackedInt32Array:
 						output.push_back(Move.create(to, Chess.c1 if from_piece == 82 else Chess.c8, 81))
 	return output
 
+static func generate_good_capture_move(_state:ChessState, _group:int) -> PackedInt32Array:
+	var output:PackedInt32Array = []
+	for _from_1:int in range(8):
+		for _from_2:int in range(8):
+			var _from:int = (_from_1 << 4) + _from_2
+			if !_state.has_piece(_from):
+				continue
+			var from_piece:int = _state.get_piece(_from)
+			if (_group == 0) != (from_piece >= 65 && from_piece <= 90):
+				continue
+			var directions:PackedInt32Array
+			if from_piece & 95 == 80:
+				var front:int = -16 if _group == 0 else 16
+				var on_start:bool = _from / 16 == (6 if _group == 0 else 1)
+				var on_end:bool = _from / 16 == (1 if _group == 0 else 6)
+				if _state.has_piece(_from + front + 1) && !is_same_camp(from_piece, _state.get_piece(_from + front + 1)) || (_from / 16 == 2 || _from / 16 == 5) && _state.get_extra(2) == _from + front + 1:
+					if on_end:
+						output.push_back(Move.create(_from, _from + front + 1, 81 if _group == 0 else 113))
+						output.push_back(Move.create(_from, _from + front + 1, 82 if _group == 0 else 114))
+						output.push_back(Move.create(_from, _from + front + 1, 78 if _group == 0 else 110))
+						output.push_back(Move.create(_from, _from + front + 1, 66 if _group == 0 else 98))
+					else:
+						output.push_back(Move.create(_from, _from + front + 1, 0))
+				if _state.has_piece(_from + front - 1) && !is_same_camp(from_piece, _state.get_piece(_from + front - 1)) || (_from / 16 == 2 || _from / 16 == 5) && _state.get_extra(2) == _from + front - 1:
+					if on_end:
+						output.push_back(Move.create(_from, _from + front - 1, 81 if _group == 0 else 113))
+						output.push_back(Move.create(_from, _from + front - 1, 82 if _group == 0 else 114))
+						output.push_back(Move.create(_from, _from + front - 1, 78 if _group == 0 else 110))
+						output.push_back(Move.create(_from, _from + front - 1, 66 if _group == 0 else 98))
+					else:
+						output.push_back(Move.create(_from, _from + front - 1, 0))
+				continue
+			elif from_piece & 95 == 75 || from_piece & 95 == 81:
+				directions = directions_eight_way
+			elif from_piece & 95 == 82:
+				directions = directions_straight
+			elif from_piece & 95 == 78:
+				directions = directions_horse
+			elif from_piece & 95 == 66:
+				directions = directions_diagonal
+
+			for iter:int in directions:
+				var to:int = _from + iter
+				var to_piece:int = _state.get_piece(to)
+				while !(to & 0x88) && (!to_piece || !is_same_camp(from_piece, to_piece)):
+					if !(to & 0x88) && to_piece && !is_same_camp(from_piece, to_piece):
+						if abs(piece_value[char(from_piece)]) <= abs(piece_value[char(to_piece)]):
+							output.push_back(Move.create(_from, to, 0))
+						break
+					if from_piece & 95 == 75 || from_piece & 95 == 78:
+						break
+					to += iter
+					to_piece = _state.get_piece(to)
+	return output
+
 static func apply_move(_state:ChessState, _move:int) -> void:
 	_state.history.set(_state.zobrist, _state.history.get(_state.zobrist, 0) + 1)	# 上一步的局面
 	if _state.extra[0] == 1:
@@ -524,21 +579,39 @@ static func compare_move(a:int, b:int, history_table:Dictionary, move_to_score:D
 		return history_table.get(a, 0) > history_table.get(b, 0)
 	return move_to_score[a] > move_to_score[b]
 
+static func quies(_state:ChessState, alpha:int, beta:int, group:int = 0) -> int:
+	var value:int = _state.get_relative_score(group)
+	if value >= beta:
+		return beta
+	if value > alpha:
+		alpha = value
+	var move_list:PackedInt32Array = generate_good_capture_move(_state, group)
+	for iter:int in move_list:
+		var test_state:ChessState = _state.duplicate()
+		test_state.apply_move(iter)
+		value = -quies(_state, -beta, -alpha, 1 - group)
+		if value >= beta:
+			return beta
+		if value > alpha:
+			alpha = value
+	return alpha
+
 static func alphabeta(_state:ChessState, alpha:int, beta:int, depth:int = 5, group:int = 0, history_table:Dictionary[int, int] = {}, main_variation:PackedInt32Array = [], transposition_table:TranspositionTable = null, is_timeup:Callable = Callable(), debug_output:Callable = Callable()) -> int:
 	if is_instance_valid(transposition_table):
 		var score:int = transposition_table.probe_hash(_state.zobrist, depth, alpha, beta)
 		if score != 65535:
 			return score
 	if depth <= 0:
+		var score:int = quies(_state, alpha, beta, group)
 		if is_instance_valid(transposition_table):
-			transposition_table.record_hash(_state.zobrist, depth, _state.get_relative_score(group), TranspositionTable.Flag.EXACT)
-		return _state.get_relative_score(group)
+			transposition_table.record_hash(_state.zobrist, depth, score, TranspositionTable.Flag.EXACT)
+		return score
 
 	if _state.history.has(_state.zobrist):
 		return 0	# 视作平局，如果局面不太好，也不会选择负分的下法
 
 	if is_timeup.is_valid() && is_timeup.call():
-		return _state.get_relative_score(group)
+		return quies(_state, alpha, beta, group)
 
 	var line:PackedInt32Array = []
 	var move_list:Array = []
@@ -572,7 +645,7 @@ static func alphabeta(_state:ChessState, alpha:int, beta:int, depth:int = 5, gro
 		transposition_table.record_hash(_state.zobrist, depth, alpha, flag)
 	return alpha
 
-static func mtdf(state:ChessState, group:int, depth:int, history_table:Dictionary[int, int], main_variation:PackedInt32Array = [], transposition_table:TranspositionTable = null) -> int:
+static func mtdf(state:ChessState, group:int, depth:int, history_table:Dictionary[int, int], main_variation:PackedInt32Array = [], transposition_table:TranspositionTable = null, debug_output:Callable = Callable()) -> int:
 	var l:int = -WIN
 	var r:int = WIN
 	var m:int = 0
@@ -605,7 +678,7 @@ static func search(state:ChessState, group:int, main_variation:PackedInt32Array 
 	# 迭代加深，并准备提前中断
 	var history_table:Dictionary[int, int] = {}
 	for i:int in range(1, max_depth, 1):
-		#mtdf(state, group, i, history_table, main_variation, transposition_table)
-		alphabeta(state, -WIN, WIN, i, group, history_table, main_variation, transposition_table, Callable(), debug_output)
+		#mtdf(state, group, i, history_table, main_variation, transposition_table, debug_output)
+		alphabeta(state, -WIN, WIN, i, group, history_table, main_variation, transposition_table, is_timeup, debug_output)
 		if is_timeup.is_valid() && is_timeup.call():
 			return
