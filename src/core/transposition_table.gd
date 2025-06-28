@@ -17,7 +17,6 @@ class Item extends Object:
 	var depth:int = 0
 	var flag:Flag = Flag.UNKNOWN
 	var value:int = 0
-	var best_move:int = 0
 
 var transposition_table:Array[Item] = []
 
@@ -35,7 +34,6 @@ func save_file(path:String) -> void:
 		file.store_16(iter.depth)
 		file.store_8(iter.flag)
 		file.store_32(iter.value)
-		file.store_32(iter.best_move)
 	file.close()
 
 func load_file(path:String) -> void:
@@ -49,7 +47,6 @@ func load_file(path:String) -> void:
 		transposition_table[i].depth = file.get_16()
 		transposition_table[i].flag = file.get_8()
 		transposition_table[i].value = file.get_32()
-		transposition_table[i].best_move = file.get_32()
 	file.close()
 
 func probe_hash(checksum:int, depth:int, alpha:int, beta:int) -> int:
@@ -64,15 +61,6 @@ func probe_hash(checksum:int, depth:int, alpha:int, beta:int) -> int:
 			if item.flag == Flag.BETA && item.value > beta:
 				return beta
 	return 65535
-
-func get_best_move(checksum:int, depth:int, alpha:int, beta:int) -> int:
-	var index:int = checksum & table_size_mask
-	var item:Item = transposition_table[index]
-	if item.checksum == checksum:
-		if item.depth >= depth:
-			if item.flag == Flag.EXACT || item.flag == Flag.ALPHA && item.value < alpha || item.flag == Flag.BETA && item.value > beta:
-				return item.best_move
-	return 0
 
 func record_hash(checksum:int, depth:int, value:int, flag:Flag)-> void:
 	var index:int = checksum & table_size_mask

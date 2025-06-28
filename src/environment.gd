@@ -17,26 +17,16 @@ func _ready() -> void:
 	for iter:Area3D in get_tree().get_nodes_in_group("move_camera"):
 		iter.add_user_signal("input")
 		iter.connect("input", move_camera)
-	dialog_wait()
+	var transposition_table:TranspositionTable = TranspositionTable.new()
+	$pastor.transposition_table = transposition_table
+	if FileAccess.file_exists("user://standard_opening.fa"):
+		transposition_table.load_file("user://standard_opening.fa")
+	dialog_start()
 
 func move_camera(_from:Node3D, _to:Area3D, _event:InputEvent, _event_position:Vector3, _normal:Vector3) -> void:
 	if _event is InputEventMouseButton && _event.pressed && _event.button_index == MOUSE_BUTTON_LEFT:
 		$cheshire.add_stack(_to.get_node(_to.get_meta("camera")), _to.get_node(_to.get_meta("inspectable_item")))
 		$cheshire.move_camera(_to.get_node(_to.get_meta("camera")))
-
-func dialog_wait() -> void:
-	var transposition_table:TranspositionTable = TranspositionTable.new()
-	$pastor.transposition_table = transposition_table
-	if FileAccess.file_exists("user://standard_opening.fa"):
-		transposition_table.load_file("user://standard_opening.fa")
-		dialog_start()
-		return
-	var dialog_1:Dialog = Dialog.create_dialog_instance([	# Pastor的自我介绍，对于棋局的介绍，以及二选一
-		"请等待我准备好我的开局……",
-	])
-	add_child(dialog_1)
-	await dialog_1.on_next
-	dialog_start()
 
 func dialog_start() -> void:
 	var dialog_1:Dialog = Dialog.create_dialog_instance([	# Pastor的自我介绍，对于棋局的介绍，以及二选一

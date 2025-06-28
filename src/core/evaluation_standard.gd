@@ -519,7 +519,7 @@ static func is_check(_state:ChessState) -> bool:
 	var score:float = alphabeta(_state, -THRESHOLD, THRESHOLD, 1, 1 - _state.get_extra(0))
 	return abs(score) >= WIN
 
-static func compare_move(a:int, b:int, _group:int, alpha:int, beta:int, move_to_score:Dictionary, history_table:Dictionary, transposition_table:TranspositionTable) -> bool:
+static func compare_move(a:int, b:int, history_table:Dictionary, move_to_score:Dictionary[int, int]) -> bool:
 	if history_table.get(a, 0) != history_table.get(b, 0):
 		return history_table.get(a, 0) > history_table.get(b, 0)
 	return move_to_score[a] > move_to_score[b]
@@ -528,19 +528,13 @@ static func alphabeta(_state:ChessState, alpha:int, beta:int, depth:int = 5, gro
 	if is_instance_valid(transposition_table):
 		var score:int = transposition_table.probe_hash(_state.zobrist, depth, alpha, beta)
 		if score != 65535:
-			#if debug_output.is_valid():
-			#	print("%d:%x has record %d" % [depth, _state.zobrist, score])
 			return score
 	if depth <= 0:
-		#if debug_output.is_valid():
-		#	print("%d:%x leaf %d" % [depth, _state.zobrist, _state.score])
 		if is_instance_valid(transposition_table):
 			transposition_table.record_hash(_state.zobrist, depth, _state.get_relative_score(group), TranspositionTable.Flag.EXACT)
 		return _state.get_relative_score(group)
 
 	if _state.history.has(_state.zobrist):
-		#if debug_output.is_valid():
-		#	print("%d:%x repeated %d" % [depth, _state.zobrist, _state.score])
 		return 0	# 视作平局，如果局面不太好，也不会选择负分的下法
 
 	if is_timeup.is_valid() && is_timeup.call():
@@ -548,35 +542,34 @@ static func alphabeta(_state:ChessState, alpha:int, beta:int, depth:int = 5, gro
 
 	var line:PackedInt32Array = []
 	var move_list:Array = []
+	var move_to_score:Dictionary[int, int] = {}
 	var flag:TranspositionTable.Flag = TranspositionTable.Flag.ALPHA
 	var value:int = -WIN
 	move_list = _state.get_all_move(group)
-	move_list.sort_custom(func(a:int, b:int) -> bool: return history_table.get(a, 0) > history_table.get(b, 0))
 	for iter:int in move_list:
+		move_to_score[iter] = evaluate(_state, iter) if group == 0 else -evaluate(_state, iter)
+	move_list.sort_custom(compare_move.bind(history_table, move_to_score))
+	var i:int = 0
+	for iter:int in move_list:
+		if debug_output.is_valid():
+			debug_output.call(_state.zobrist, depth, i, move_list.size())
+		i += 1
 		var test_state:ChessState = _state.duplicate()
 		test_state.apply_move(iter)
 		value = -alphabeta(test_state, -beta, -alpha, depth - 1, 1 - group, history_table, line, transposition_table, is_timeup, debug_output)
 		if beta <= value:
-			#if debug_output.is_valid():
-			#	print("%d:%x beta %d" % [depth, _state.zobrist, beta])
 			if is_instance_valid(transposition_table):
 				transposition_table.record_hash(_state.zobrist, depth, _state.get_relative_score(group), TranspositionTable.Flag.BETA)
 			return beta
 		if alpha < value:
-			#if debug_output.is_valid():
-			#	print("%d:%x alpha %d" % [depth, _state.zobrist, value])
 			alpha = value
 			flag = TranspositionTable.Flag.EXACT
 			history_table[iter] = history_table.get(iter, 0) + (1 << depth)
 			main_variation.clear()
 			main_variation.push_back(iter)
 			main_variation.append_array(line)
-	#if debug_output.is_valid():
-	#	print("%d:%x exact %d" % [depth, _state.zobrist, alpha])
 	if is_instance_valid(transposition_table):
 		transposition_table.record_hash(_state.zobrist, depth, alpha, flag)
-	if debug_output.is_valid() && depth > 2:
-		print("%d:%x search %d/%d" % [depth, _state.zobrist, move_list.size(), move_list.size()])
 	return alpha
 
 static func mtdf(state:ChessState, group:int, depth:int, history_table:Dictionary[int, int], main_variation:PackedInt32Array = [], transposition_table:TranspositionTable = null) -> int:
@@ -613,6 +606,6 @@ static func search(state:ChessState, group:int, main_variation:PackedInt32Array 
 	var history_table:Dictionary[int, int] = {}
 	for i:int in range(1, max_depth, 1):
 		#mtdf(state, group, i, history_table, main_variation, transposition_table)
-		alphabeta(state, -WIN, WIN, i, group, history_table, main_variation, transposition_table, is_timeup, debug_output)
-		if debug_output.is_valid():
-			print("layer %d finished")
+		alphabeta(state, -WIN, WIN, i, group, history_table, main_variation, transposition_table, Callable(), debug_output)
+		if is_timeup.is_valid() && is_timeup.call():
+			return
