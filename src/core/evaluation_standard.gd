@@ -638,7 +638,7 @@ static func alphabeta(_state:ChessState, alpha:int, beta:int, depth:int = 5, gro
 	var move_to_score:Dictionary[int, int] = {}
 	var flag:TranspositionTable.Flag = TranspositionTable.Flag.ALPHA
 	var value:int = -WIN
-	move_list = generate_valid_move(_state, group)
+	move_list = generate_move(_state, group)
 	for iter:int in move_list:
 		move_to_score[iter] = evaluate(_state, iter) if group == 0 else -evaluate(_state, iter)
 	move_list.sort_custom(compare_move.bind(history_table, move_to_score))
