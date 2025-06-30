@@ -9,6 +9,17 @@ func _ready() -> void:
 	var thread:Thread = Thread.new()
 	thread.start(make_database)
 
+func performance_test() -> float:
+	var chess_state:ChessState = EvaluationStandard.parse("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
+	var transposition_table:TranspositionTable = null
+	if FileAccess.file_exists("user://standard_opening.fa"):
+		transposition_table = TranspositionTable.new()
+		transposition_table.load_file("user://standard_opening.fa")
+	var time_start:float = Time.get_ticks_usec()
+	EvaluationStandard.search(chess_state, 0, main_variation, transposition_table, Callable(), 6, debug_output)
+	var time_end:float = Time.get_ticks_usec()
+	return time_end - time_start
+
 func _physics_process(_delta:float):
 	while progress_bar_data.size() > progress_bar.size():
 		add_progress_bar()
@@ -22,12 +33,14 @@ func _physics_process(_delta:float):
 		$panel/margin_container/label.text += " "
 
 func make_database() -> void:
+	print("before: %dms" % performance_test())
 	var transposition_table:TranspositionTable = TranspositionTable.new()
 	transposition_table.reserve(1 << 20)
 	var chess_state:ChessState = EvaluationStandard.parse("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
 	EvaluationStandard.search(chess_state, 0, main_variation, transposition_table, Callable(), 10, debug_output)
 	#$pastor.transposition_table = transposition_table
 	transposition_table.save_file("user://standard_opening.fa")
+	print("after: %dms" % performance_test())
 
 func debug_output(_zobrist:int, depth:int, cur:int, total:int) -> void:
 	while depth >= progress_bar_data.size():
