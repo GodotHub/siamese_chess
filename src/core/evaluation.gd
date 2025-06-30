@@ -19,6 +19,9 @@ static func generate_premove(_state:ChessState, _group:int) -> PackedInt32Array:
 static func generate_move(_state:ChessState, _group:int) -> PackedInt32Array:
 	return []
 
+static func generate_valid_move(_state:ChessState, _group:int) -> PackedInt32Array:
+	return []
+
 static func apply_move(_state:ChessState, _move:int) -> void:
 	pass
 
@@ -30,9 +33,6 @@ static func evaluate_move(_state:ChessState, _from:int, _to:int) -> int:
 
 static func evaluate_capture(_state:ChessState, _by:int) -> int:
 	return 0
-
-static func get_valid_move(_state:ChessState, _group:int) -> PackedInt32Array:
-	return []
 
 static func search(_state:ChessState, _group:int, _main_variation:PackedInt32Array = [], _transposition_table:TranspositionTable = null, _is_timeup:Callable = Callable(), _max_depth:int = 1000, debug_output:Callable = Callable()) -> void:
 	pass

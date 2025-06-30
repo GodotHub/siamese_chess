@@ -17,10 +17,13 @@ func _ready() -> void:
 	for iter:Area3D in get_tree().get_nodes_in_group("move_camera"):
 		iter.add_user_signal("input")
 		iter.connect("input", move_camera)
-	var transposition_table:TranspositionTable = TranspositionTable.new()
-	$pastor.transposition_table = transposition_table
+	var transposition_table:TranspositionTable = null
 	if FileAccess.file_exists("user://standard_opening.fa"):
 		transposition_table.load_file("user://standard_opening.fa")
+	else:
+		transposition_table = TranspositionTable.new()
+		transposition_table.reserve(1 << 10)
+	$pastor.transposition_table = transposition_table
 	dialog_start()
 
 func move_camera(_from:Node3D, _to:Area3D, _event:InputEvent, _event_position:Vector3, _normal:Vector3) -> void:

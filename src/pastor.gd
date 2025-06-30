@@ -78,7 +78,7 @@ func is_timeup(duration:float) -> bool:
 	return Time.get_unix_time_from_system() - start_thinking >= duration
 
 func send_opponent_valid_move() -> void:	# 仅限轮到对方时使用
-	var move_list:PackedInt32Array = evaluation.get_valid_move(chess_state, 1)
+	var move_list:PackedInt32Array = evaluation.generate_valid_move(chess_state, 1)
 	if move_list.size() == 0:
 		return
 	send_opponent_move.emit.call_deferred(move_list)

@@ -93,9 +93,6 @@ func reserve_extra(size:int) -> void:	# 预留空间
 		#zobrist ^= zobrist_hash_extra(extra.size(), -1)
 		extra.push_back(-1)
 
-func get_all_move(group:int) -> PackedInt32Array:	# 指定阵营
-	return evaluation.generate_move(self, group)
-
 func apply_move(_move:int) -> void:
 	evaluation.apply_move(self, _move)
 
