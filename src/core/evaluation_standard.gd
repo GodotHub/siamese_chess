@@ -421,7 +421,7 @@ static func generate_good_capture_move(_state:ChessState, _group:int) -> PackedI
 				var front:int = -16 if _group == 0 else 16
 				var on_start:bool = _from / 16 == (6 if _group == 0 else 1)
 				var on_end:bool = _from / 16 == (1 if _group == 0 else 6)
-				if _state.has_piece(_from + front + 1) && !is_same_camp(from_piece, _state.get_piece(_from + front + 1)) || (_from / 16 == 2 || _from / 16 == 5) && _state.get_extra(2) == _from + front + 1 || on_end && abs(_state.get_extra(5) - (_from + front + 1)) <= 1:
+				if _state.has_piece(_from + front + 1) && !is_same_camp(from_piece, _state.get_piece(_from + front + 1)) || (_from / 16 == 2 || _from / 16 == 5) && _state.get_extra(2) == _from + front + 1 || !((_from + front + 1) & 0x88) && on_end && abs(_state.get_extra(5) - (_from + front + 1)) <= 1:
 					if on_end:
 						output.push_back(Move.create(_from, _from + front + 1, 81 if _group == 0 else 113))
 						output.push_back(Move.create(_from, _from + front + 1, 82 if _group == 0 else 114))
@@ -429,7 +429,7 @@ static func generate_good_capture_move(_state:ChessState, _group:int) -> PackedI
 						output.push_back(Move.create(_from, _from + front + 1, 66 if _group == 0 else 98))
 					else:
 						output.push_back(Move.create(_from, _from + front + 1, 0))
-				if _state.has_piece(_from + front - 1) && !is_same_camp(from_piece, _state.get_piece(_from + front - 1)) || (_from / 16 == 2 || _from / 16 == 5) && _state.get_extra(2) == _from + front - 1 || on_end && abs(_state.get_extra(5) - (_from + front - 1)) <= 1:
+				if _state.has_piece(_from + front - 1) && !is_same_camp(from_piece, _state.get_piece(_from + front - 1)) || (_from / 16 == 2 || _from / 16 == 5) && _state.get_extra(2) == _from + front - 1 || !((_from + front - 1) & 0x88) && on_end && abs(_state.get_extra(5) - (_from + front - 1)) <= 1:
 					if on_end:
 						output.push_back(Move.create(_from, _from + front - 1, 81 if _group == 0 else 113))
 						output.push_back(Move.create(_from, _from + front - 1, 82 if _group == 0 else 114))
