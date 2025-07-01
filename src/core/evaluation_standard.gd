@@ -420,7 +420,7 @@ static func generate_good_capture_move(_state:ChessState, _group:int) -> PackedI
 			if from_piece & 95 == 80:
 				var front:int = -16 if _group == 0 else 16
 				var on_end:bool = _from / 16 == (1 if _group == 0 else 6)
-				if _state.has_piece(_from + front + 1) && !is_same_camp(from_piece, _state.get_piece(_from + front + 1)) || (_from / 16 == 2 || _from / 16 == 5) && _state.get_extra(2) == _from + front + 1 || !((_from + front + 1) & 0x88) && on_end && abs(_state.get_extra(5) - (_from + front + 1)) <= 1:
+				if _state.has_piece(_from + front + 1) && !is_same_camp(from_piece, _state.get_piece(_from + front + 1)) || (_from / 16 == 2 || _from / 16 == 5) && _state.get_extra(2) == _from + front + 1 || !((_from + front + 1) & 0x88) && on_end && _state.get_extra(5) != -1 && abs(_state.get_extra(5) - (_from + front + 1)) <= 1:
 					if on_end:
 						output.push_back(Move.create(_from, _from + front + 1, 81 if _group == 0 else 113))
 						output.push_back(Move.create(_from, _from + front + 1, 82 if _group == 0 else 114))
@@ -428,7 +428,7 @@ static func generate_good_capture_move(_state:ChessState, _group:int) -> PackedI
 						output.push_back(Move.create(_from, _from + front + 1, 66 if _group == 0 else 98))
 					else:
 						output.push_back(Move.create(_from, _from + front + 1, 0))
-				if _state.has_piece(_from + front - 1) && !is_same_camp(from_piece, _state.get_piece(_from + front - 1)) || (_from / 16 == 2 || _from / 16 == 5) && _state.get_extra(2) == _from + front - 1 || !((_from + front - 1) & 0x88) && on_end && abs(_state.get_extra(5) - (_from + front - 1)) <= 1:
+				if _state.has_piece(_from + front - 1) && !is_same_camp(from_piece, _state.get_piece(_from + front - 1)) || (_from / 16 == 2 || _from / 16 == 5) && _state.get_extra(2) == _from + front - 1 || !((_from + front - 1) & 0x88) && on_end && _state.get_extra(5) != -1 && abs(_state.get_extra(5) - (_from + front - 1)) <= 1:
 					if on_end:
 						output.push_back(Move.create(_from, _from + front - 1, 81 if _group == 0 else 113))
 						output.push_back(Move.create(_from, _from + front - 1, 82 if _group == 0 else 114))
@@ -450,7 +450,7 @@ static func generate_good_capture_move(_state:ChessState, _group:int) -> PackedI
 				var to:int = _from + iter
 				var to_piece:int = _state.get_piece(to)
 				while !(to & 0x88) && (!to_piece || !is_same_camp(from_piece, to_piece)):
-					if abs(to - _state.get_extra(5)) <= 1:
+					if _state.get_extra(5) != -1 && abs(to - _state.get_extra(5)) <= 1:
 						output.push_back(Move.create(_from, to, 0))
 						break
 					if !(to & 0x88) && to_piece && !is_same_camp(from_piece, to_piece):
@@ -572,7 +572,7 @@ static func evaluate(state:ChessState, move:int) -> int:
 	var score:int = get_piece_score(to, from_piece) - get_piece_score(from, from_piece)
 	if to_piece && !is_same_camp(from_piece, to_piece):
 		score -= get_piece_score(to, to_piece)
-	if abs(state.get_extra(5) - Move.to(move)) <= 1:
+	if state.get_extra(5) != -1 && abs(state.get_extra(5) - Move.to(move)) <= 1:
 		score -= piece_value["k" if group == 0 else "K"]
 	if from_piece == "K".unicode_at(0) && extra != 0:
 		score += get_piece_score((from + to) / 2, "R".unicode_at(0))
@@ -638,7 +638,7 @@ static func alphabeta(_state:ChessState, alpha:int, beta:int, depth:int = 5, gro
 	var move_list:Array = []
 	var flag:TranspositionTable.Flag = TranspositionTable.Flag.ALPHA
 	var value:int = -WIN
-	move_list = generate_move(_state, group)
+	move_list = generate_valid_move(_state, group)
 	var best_move:int = 0
 	if is_instance_valid(transposition_table):
 		best_move = transposition_table.best_move(_state.zobrist)
@@ -696,4 +696,8 @@ static func search(state:ChessState, group:int, main_variation:PackedInt32Array 
 		if is_timeup.is_valid() && is_timeup.call():
 			return
 
-# FIXME: r2r2k1/pppb1ppp/5n2/1Nb1p3/7q/P4P2/1PP2PB1/R4RK1 w KQkq - 0 1
+
+static func test() -> void:
+	var state_list:PackedStringArray = [
+		"1Q6/2R5/7k/5q2/2PP2pp/8/6PK/8 b - - 0 41"
+	] 
