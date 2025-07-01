@@ -12,62 +12,64 @@ enum Flag	{
 	BETA = 3
 }
 
-class Item extends Object:
-	var checksum:int = 0
-	var depth:int = 0
-	var flag:Flag = Flag.UNKNOWN
-	var value:int = 0
+var transposition_table:PackedByteArray = []
 
-var transposition_table:Array[Item] = []
+func get_checksum(index:int) -> int:
+	return transposition_table.decode_s64(index * 14)
+
+func get_depth(index:int) -> int:
+	return transposition_table.decode_u8(index * 14 + 8)
+
+func get_flag(index:int) -> int:
+	return transposition_table.decode_s8(index * 14 + 9)
+
+func get_value(index:int) -> int:
+	return transposition_table.decode_s32(index * 14 + 10)
+
+func set_checksum(index:int, checksum:int) -> void:
+	transposition_table.encode_s64(index * 14, checksum)
+
+func set_depth(index:int, depth:int) -> void:
+	transposition_table.encode_u8(index * 14 + 8, depth)
+
+func set_flag(index:int, flag:int) -> void:
+	transposition_table.encode_s8(index * 14 + 9, flag)
+
+func set_value(index:int, value:int) -> void:
+	transposition_table.encode_s32(index * 14 + 10, value)
 
 func reserve(_table_size:int) -> void:
 	table_size = _table_size
-	transposition_table.resize(table_size)
-	for i:int in range(transposition_table.size()):
-		transposition_table[i] = Item.new()
+	table_size_mask = table_size - 1
+	transposition_table.resize(table_size * 14)
 
 func save_file(path:String) -> void:
-	var file:FileAccess = FileAccess.open_compressed(path, FileAccess.WRITE, FileAccess.COMPRESSION_FASTLZ)
-	file.store_32(table_size)
-	for iter:Item in transposition_table:
-		file.store_64(iter.checksum)
-		file.store_16(iter.depth)
-		file.store_8(iter.flag)
-		file.store_32(iter.value)
+	var file:FileAccess = FileAccess.open(path, FileAccess.WRITE)
+	file.store_buffer(transposition_table)
 	file.close()
 
 func load_file(path:String) -> void:
-	var file:FileAccess = FileAccess.open_compressed(path, FileAccess.READ, FileAccess.COMPRESSION_FASTLZ)
-	table_size = file.get_32()
+	transposition_table = FileAccess.get_file_as_bytes(path)
+	table_size = transposition_table.size() / 14
 	table_size_mask = table_size - 1
-	transposition_table.resize(table_size)
-	for i:int in range(table_size):
-		transposition_table[i] = Item.new()
-		transposition_table[i].checksum = file.get_64()
-		transposition_table[i].depth = file.get_16()
-		transposition_table[i].flag = file.get_8()
-		transposition_table[i].value = file.get_32()
-	file.close()
 
 func probe_hash(checksum:int, depth:int, alpha:int, beta:int) -> int:
 	var index:int = checksum & table_size_mask
-	var item:Item = transposition_table[index]
-	if item.checksum == checksum:
-		if item.depth >= depth:
-			if item.flag == Flag.EXACT:
-				return item.value
-			if item.flag == Flag.ALPHA && item.value < alpha:
+	if get_checksum(index) == checksum:
+		if get_depth(index) >= depth:
+			if get_flag(index) == Flag.EXACT:
+				return get_value(index)
+			if get_flag(index) == Flag.ALPHA && get_value(index) < alpha:
 				return alpha
-			if item.flag == Flag.BETA && item.value > beta:
+			if get_flag(index) == Flag.BETA && get_value(index) > beta:
 				return beta
 	return 65535
 
 func record_hash(checksum:int, depth:int, value:int, flag:Flag)-> void:
 	var index:int = checksum & table_size_mask
-	var item:Item = transposition_table[index]
-	if read_only && item.flag != Flag.UNKNOWN || depth < item.depth:
+	if read_only && get_flag(index) != Flag.UNKNOWN || depth < get_depth(index):
 		return	# 最好不要丢掉开局库内容，这是容不得覆盖的
-	item.checksum = checksum
-	item.depth = depth
-	item.value = value
-	item.flag = flag
+	set_checksum(index, checksum)
+	set_depth(index, depth)
+	set_value(index, value)
+	set_flag(index, flag)

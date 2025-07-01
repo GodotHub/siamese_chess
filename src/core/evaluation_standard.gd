@@ -419,7 +419,6 @@ static func generate_good_capture_move(_state:ChessState, _group:int) -> PackedI
 			var directions:PackedInt32Array
 			if from_piece & 95 == 80:
 				var front:int = -16 if _group == 0 else 16
-				var on_start:bool = _from / 16 == (6 if _group == 0 else 1)
 				var on_end:bool = _from / 16 == (1 if _group == 0 else 6)
 				if _state.has_piece(_from + front + 1) && !is_same_camp(from_piece, _state.get_piece(_from + front + 1)) || (_from / 16 == 2 || _from / 16 == 5) && _state.get_extra(2) == _from + front + 1 || !((_from + front + 1) & 0x88) && on_end && abs(_state.get_extra(5) - (_from + front + 1)) <= 1:
 					if on_end:
@@ -665,7 +664,7 @@ static func alphabeta(_state:ChessState, alpha:int, beta:int, depth:int = 5, gro
 		transposition_table.record_hash(_state.zobrist, depth, alpha, flag)
 	return alpha
 
-static func mtdf(state:ChessState, group:int, depth:int, history_table:Dictionary[int, int], main_variation:PackedInt32Array = [], transposition_table:TranspositionTable = null, debug_output:Callable = Callable()) -> int:
+static func mtdf(state:ChessState, group:int, depth:int, history_table:Dictionary[int, int], main_variation:PackedInt32Array = [], transposition_table:TranspositionTable = null, _debug_output:Callable = Callable()) -> int:
 	var l:int = -WIN
 	var r:int = WIN
 	var m:int = 0
