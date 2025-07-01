@@ -24,6 +24,7 @@ var score:int = 0
 static var randomized:Dictionary[int, int] = {}
 
 static func zobrist_hash_piece(piece:int, from:int) -> int:
+	seed(piece + (from << 8))
 	return randomized.get_or_add(piece + (from << 8), (randi() << 32) + randi())
 
 static func zobrist_hash_extra(_index:int, _extra:int) -> int:
