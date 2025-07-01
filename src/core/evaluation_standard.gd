@@ -226,7 +226,7 @@ static func get_end_type(_state:ChessState) -> String:
 	var group:int = _state.extra[0]
 	var move_list:PackedInt32Array = generate_valid_move(_state, group)
 	if !move_list.size():
-		var null_move_check:int = alphabeta(_state, -WIN, WIN, 1, 1 - group)
+		var null_move_check:int = quies(_state, -WIN, WIN, 1 - group)
 		if abs(null_move_check) >= 500:
 			if group == 0:
 				return "checkmate_black"
@@ -590,7 +590,7 @@ static func evaluate(state:ChessState, move:int) -> int:
 	return score
 
 static func is_check(_state:ChessState) -> bool:
-	var score:float = alphabeta(_state, -THRESHOLD, THRESHOLD, 1, 1 - _state.get_extra(0))
+	var score:float = quies(_state, -THRESHOLD, THRESHOLD, 1 - _state.get_extra(0))
 	return abs(score) >= WIN
 
 static func compare_move(a:int, b:int, best_move:int, history_table:Dictionary) -> bool:
