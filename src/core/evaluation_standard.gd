@@ -593,10 +593,12 @@ static func is_check(_state:ChessState) -> bool:
 	var score:float = alphabeta(_state, -THRESHOLD, THRESHOLD, 1, 1 - _state.get_extra(0))
 	return abs(score) >= WIN
 
-static func compare_move(a:int, b:int, history_table:Dictionary, move_to_score:Dictionary[int, int]) -> bool:
-	if history_table.get(a, 0) != history_table.get(b, 0):
-		return history_table.get(a, 0) > history_table.get(b, 0)
-	return move_to_score[a] > move_to_score[b]
+static func compare_move(a:int, b:int, best_move:int, history_table:Dictionary) -> bool:
+	if best_move == a:
+		return true
+	if best_move == b:
+		return false
+	return history_table.get(a, 0) > history_table.get(b, 0)
 
 static func quies(_state:ChessState, alpha:int, beta:int, group:int = 0) -> int:
 	var value:int = _state.get_relative_score(group)
@@ -623,7 +625,7 @@ static func alphabeta(_state:ChessState, alpha:int, beta:int, depth:int = 5, gro
 	if depth <= 0:
 		var score:int = quies(_state, alpha, beta, group)
 		if is_instance_valid(transposition_table):
-			transposition_table.record_hash(_state.zobrist, depth, score, TranspositionTable.Flag.EXACT)
+			transposition_table.record_hash(_state.zobrist, depth, score, TranspositionTable.Flag.EXACT, 0)
 		return score
 
 	if _state.history.has(_state.zobrist):
@@ -634,13 +636,13 @@ static func alphabeta(_state:ChessState, alpha:int, beta:int, depth:int = 5, gro
 
 	var line:PackedInt32Array = []
 	var move_list:Array = []
-	var move_to_score:Dictionary[int, int] = {}
 	var flag:TranspositionTable.Flag = TranspositionTable.Flag.ALPHA
 	var value:int = -WIN
 	move_list = generate_move(_state, group)
-	for iter:int in move_list:
-		move_to_score[iter] = evaluate(_state, iter) if group == 0 else -evaluate(_state, iter)
-	move_list.sort_custom(compare_move.bind(history_table, move_to_score))
+	var best_move:int = 0
+	if is_instance_valid(transposition_table):
+		best_move = transposition_table.best_move(_state.zobrist)
+	move_list.sort_custom(compare_move.bind(best_move, history_table))
 	var i:int = 0
 	for iter:int in move_list:
 		if debug_output.is_valid():
@@ -651,17 +653,20 @@ static func alphabeta(_state:ChessState, alpha:int, beta:int, depth:int = 5, gro
 		value = -alphabeta(test_state, -beta, -alpha, depth - 1, 1 - group, history_table, line, transposition_table, is_timeup, debug_output)
 		if beta <= value:
 			if is_instance_valid(transposition_table):
-				transposition_table.record_hash(_state.zobrist, depth, _state.get_relative_score(group), TranspositionTable.Flag.BETA)
+				transposition_table.record_hash(_state.zobrist, depth, _state.get_relative_score(group), TranspositionTable.Flag.BETA, 0)
 			return beta
 		if alpha < value:
+			best_move = iter
 			alpha = value
 			flag = TranspositionTable.Flag.EXACT
 			history_table[iter] = history_table.get(iter, 0) + (1 << depth)
 			main_variation.clear()
 			main_variation.push_back(iter)
 			main_variation.append_array(line)
+		if is_instance_valid(transposition_table):
+			transposition_table.record_hash(_state.zobrist, depth, alpha, flag, best_move)
 	if is_instance_valid(transposition_table):
-		transposition_table.record_hash(_state.zobrist, depth, alpha, flag)
+		transposition_table.record_hash(_state.zobrist, depth, alpha, flag, best_move)
 	return alpha
 
 static func mtdf(state:ChessState, group:int, depth:int, history_table:Dictionary[int, int], main_variation:PackedInt32Array = [], transposition_table:TranspositionTable = null, _debug_output:Callable = Callable()) -> int:
@@ -690,3 +695,5 @@ static func search(state:ChessState, group:int, main_variation:PackedInt32Array 
 		alphabeta(state, -WIN, WIN, i, group, history_table, main_variation, transposition_table, is_timeup, debug_output)
 		if is_timeup.is_valid() && is_timeup.call():
 			return
+
+# FIXME: r2r2k1/pppb1ppp/5n2/1Nb1p3/7q/P4P2/1PP2PB1/R4RK1 w KQkq - 0 1

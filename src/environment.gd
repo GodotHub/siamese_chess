@@ -239,7 +239,7 @@ func start() -> void:
 					"现在棋盘已经准备好了。",
 					"根据棋局信息，" + ("目前是白方先手。" if $pastor.chess_state.get_extra(0) == 0 else "目前是黑方先手。")
 				])
-				$pastor.think_time = 1
+				$pastor.think_time = 10
 				add_child(dialog_2)
 				$cheshire.force_set_camera($cheshire/area_chessboard/camera_3d)
 				await dialog_2.on_next
