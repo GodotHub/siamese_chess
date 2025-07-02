@@ -1,0 +1,3 @@
+[submodule "library/godot-cpp"]
+	path = library/godot-cpp
+	url = git@gitee.com:famulan/godot-cpp.git
