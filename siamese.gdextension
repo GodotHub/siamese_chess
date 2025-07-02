@@ -1,0 +1,19 @@
+[configuration]
+
+compatibility_minimum = 4.4
+entry_symbol = "siamese_library_init"
+
+[libraries]
+
+windows.debug.x86_64="res://bin/libsiamese.windows.template_debug.x86_64.a"
+windows.release.x86_64="res://bin/libsiamese.windows.template_release.x86_64.a"
+linux.debug.x86_64="res://bin/libsiamese.linux.template_debug.x86_64.so"
+linux.release.x86_64="res://bin/libsiamese.linux.template_debug.x86_64.so"
+
+[dependencies]
+ios.debug = {
+    "res://library/godot-cpp/bin/libgodot-cpp.ios.template_debug.xcframework": ""
+}
+ios.release = {
+    "res://library/godot-cpp/bin/libgodot-cpp.ios.template_release.xcframework": ""
+}

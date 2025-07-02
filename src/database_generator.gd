@@ -37,7 +37,7 @@ func make_database() -> void:
 	var transposition_table:TranspositionTable = TranspositionTable.new()
 	transposition_table.reserve(1 << 20)
 	var chess_state:ChessState = EvaluationStandard.parse("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
-	EvaluationStandard.search(chess_state, 0, main_variation, transposition_table, Callable(), 6, debug_output)
+	EvaluationStandard.search(chess_state, 0, main_variation, transposition_table, Callable(), 10, debug_output)
 	#$pastor.transposition_table = transposition_table
 	transposition_table.save_file("user://standard_opening.fa")
 	print("after: %dms" % performance_test())

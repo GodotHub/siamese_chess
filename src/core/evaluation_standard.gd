@@ -678,7 +678,7 @@ static func alphabeta(_state:ChessState, alpha:int, beta:int, depth:int = 5, gro
 		transposition_table.record_hash(_state.zobrist, depth, alpha, flag, best_move)
 	return alpha
 
-static func mtdf(state:ChessState, group:int, depth:int, history_table:Dictionary[int, int], main_variation:PackedInt32Array = [], transposition_table:TranspositionTable = null, _debug_output:Callable = Callable()) -> int:
+static func mtdf(state:ChessState, group:int, depth:int, history_table:Dictionary[int, int], main_variation:PackedInt32Array = [], transposition_table:TranspositionTable = null, is_timeup:Callable = Callable(), _debug_output:Callable = Callable()) -> int:
 	var l:int = -WIN
 	var r:int = WIN
 	var m:int = 0
@@ -689,7 +689,7 @@ static func mtdf(state:ChessState, group:int, depth:int, history_table:Dictionar
 			m = l / 2
 		elif m >= 0 && r / 2 > m:
 			m = r / 2
-		value = alphabeta(state, m, m + 1, depth, group, true, history_table, main_variation, transposition_table)
+		value = alphabeta(state, m, m + 1, depth, group, true, history_table, main_variation, transposition_table, is_timeup, _debug_output)
 		if value <= m:
 			r = m
 		else:
@@ -700,7 +700,7 @@ static func search(state:ChessState, group:int, main_variation:PackedInt32Array 
 	# 迭代加深，并准备提前中断
 	var history_table:Dictionary[int, int] = {}
 	for i:int in range(1, max_depth, 1):
-		#mtdf(state, group, i, history_table, main_variation, transposition_table, debug_output)
+		#mtdf(state, group, i, history_table, main_variation, transposition_table, is_timeup, debug_output)
 		alphabeta(state, -WIN, WIN, i, group, true, history_table, main_variation, transposition_table, is_timeup, debug_output)
 		if is_timeup.is_valid() && is_timeup.call():
 			return
