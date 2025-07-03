@@ -9,3 +9,5 @@
 **/*.o
 **/*.a
 **/*.dll
+**/*.exe
+.sconsign.dblite
