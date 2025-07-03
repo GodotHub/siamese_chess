@@ -704,6 +704,7 @@ godot::PackedInt32Array RuleStandard::generate_good_capture_move(State *_state, 
 void RuleStandard::apply_move(State *_state, int _move)
 {
 	_state->push_history(_state->get_zobrist());	// 上一步的局面
+	_state->change_score(evaluate(_state, _move));
 	if (_state->get_extra(0) == 1)
 	{
 		_state->set_extra(4, _state->get_extra(4) + 1);

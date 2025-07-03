@@ -84,6 +84,11 @@ void State::reserve_extra(int _size)
 	}
 }
 
+void State::change_score(int delta)
+{
+	score += delta;
+}
+
 long long State::get_zobrist()
 {
 	return zobrist;
@@ -122,6 +127,7 @@ void State::_bind_methods()
 	godot::ClassDB::bind_method(godot::D_METHOD("get_extra"), &State::get_extra);
 	godot::ClassDB::bind_method(godot::D_METHOD("set_extra"), &State::set_extra);
 	godot::ClassDB::bind_method(godot::D_METHOD("reserve_extra"), &State::reserve_extra);
+	godot::ClassDB::bind_method(godot::D_METHOD("change_score"), &State::change_score);
 	godot::ClassDB::bind_method(godot::D_METHOD("get_relative_score"), &State::get_relative_score);
 	godot::ClassDB::add_signal(get_class_static(), godot::MethodInfo("piece_added", godot::PropertyInfo(godot::Variant::Type::INT, "by")));
 	godot::ClassDB::add_signal(get_class_static(), godot::MethodInfo("piece_captured", godot::PropertyInfo(godot::Variant::Type::INT, "by")));

@@ -21,6 +21,7 @@ class State : public godot::RefCounted
 		int get_extra(int _index);
 		void set_extra(int _index, int _value);
 		void reserve_extra(int _size);
+		void change_score(int delta);
 		long long get_zobrist();
 		int has_history(long long _zobrist);
 		void push_history(long long _zobrist);
