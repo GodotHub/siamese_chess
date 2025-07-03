@@ -1,5 +1,4 @@
 extends RefCounted
-class_name TranspositionTable
 
 var table_size:int = 1024
 var table_size_mask:int = table_size - 1

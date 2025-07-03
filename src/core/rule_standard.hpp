@@ -8,6 +8,7 @@ class RuleStandard : public Rule
 {
 	GDCLASS(RuleStandard, Rule)
 	public:
+		RuleStandard();
 		virtual godot::String get_end_type(State *_state);
 		virtual State *parse(godot::String _str);
 		virtual godot::String stringify(State *_state);
@@ -27,16 +28,16 @@ class RuleStandard : public Rule
 		virtual void search(State *_state, int _group, godot::PackedInt32Array _main_variation = {}, TranspositionTable *_transposition_table = nullptr, godot::Callable _is_timeup = godot::Callable(), int _max_depth = 1000, godot::Callable _debug_output = godot::Callable());
 		static void _bind_methods();
 	private:
-		static int WIN;
-		static int THRESHOLD;
-		static std::unordered_map<int, int> piece_value;
-		static godot::PackedInt32Array directions_diagonal;
-		static godot::PackedInt32Array directions_straight;
-		static godot::PackedInt32Array directions_eight_way;
-		static godot::PackedInt32Array directions_horse;
-		static std::unordered_map<int, godot::PackedInt32Array> position_value;
-		static std::unordered_map<int, godot::String> piece_mapping_instance;
-		static std::unordered_map<int, int> piece_mapping_group;
+		int WIN;
+		int THRESHOLD;
+		std::unordered_map<int, int> piece_value;
+		godot::PackedInt32Array directions_diagonal;
+		godot::PackedInt32Array directions_straight;
+		godot::PackedInt32Array directions_eight_way;
+		godot::PackedInt32Array directions_horse;
+		std::unordered_map<int, godot::PackedInt32Array> position_value;
+		std::unordered_map<int, godot::String> piece_mapping_instance;
+		std::unordered_map<int, int> piece_mapping_group;
 		
 };
 

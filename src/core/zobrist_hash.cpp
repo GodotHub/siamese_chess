@@ -1,17 +1,16 @@
 #include "zobrist_hash.hpp"
 #include <godot_cpp/classes/random_number_generator.hpp>
+#include <random>
 
 ZobristHash *ZobristHash::singleton = nullptr;
 
 ZobristHash::ZobristHash()
 {
-	godot::RandomNumberGenerator *generator = memnew(godot::RandomNumberGenerator);
-	generator->set_seed(0);  //固定值
+	std::mt19937_64 rng(0);
 	for (int i = 0; i < 65536; i++)
 	{
-		randomized[i] = generator->randi() << 32 + generator->randi();
+		randomized[i] = rng();
 	}
-	memfree(generator);
 }
 
 ZobristHash *ZobristHash::get_singleton()

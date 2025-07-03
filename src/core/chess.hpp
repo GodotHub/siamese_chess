@@ -17,22 +17,22 @@ class Chess : public godot::Object
 		static int extra(int _move);
 		static Chess *get_singleton();
 		static void _bind_methods();
-		const static int a8 = 0;
-		const static int b8 = 1;
-		const static int c8 = 2;
-		const static int d8 = 3;
-		const static int e8 = 4;
-		const static int f8 = 5;
-		const static int g8 = 6;
-		const static int h8 = 7;
-		const static int a1 = 16 * 7;
-		const static int b1 = 16 * 7;
-		const static int c1 = 16 * 7 + 2;
-		const static int d1 = 16 * 7 + 3;
-		const static int e1 = 4;
-		const static int f1 = 16 * 7 + 5;
-		const static int g1 = 16 * 7 + 6;
-		const static int h1 = 16 * 7 + 7;
+		inline static int a8() { return 0; }
+		inline static int b8() { return 1; }
+		inline static int c8() { return 2; }
+		inline static int d8() { return 3; }
+		inline static int e8() { return 4; }
+		inline static int f8() { return 5; }
+		inline static int g8() { return 6; }
+		inline static int h8() { return 7; }
+		inline static int a1() { return 16 * 7; }
+		inline static int b1() { return 16 * 7; }
+		inline static int c1() { return 16 * 7 + 2; }
+		inline static int d1() { return 16 * 7 + 3; }
+		inline static int e1() { return 4; }
+		inline static int f1() { return 16 * 7 + 5; }
+		inline static int g1() { return 16 * 7 + 6; }
+		inline static int h1() { return 16 * 7 + 7; }
 	private:
 		static Chess *singleton;
 };

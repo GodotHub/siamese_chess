@@ -16,10 +16,6 @@ run/main_scene="uid://bmyf2h17xaxlj"
 config/features=PackedStringArray("4.4", "GL Compatibility")
 config/icon="uid://gdemlmk1r3x4"
 
-[autoload]
-
-Chess="*res://src/core/chess.gd"
-
 [debug]
 
 gdscript/warnings/integer_division=0

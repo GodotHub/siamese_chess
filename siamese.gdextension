@@ -5,8 +5,8 @@ entry_symbol = "siamese_library_init"
 
 [libraries]
 
-windows.debug.x86_64="res://bin/libsiamese.windows.template_debug.x86_64.a"
-windows.release.x86_64="res://bin/libsiamese.windows.template_release.x86_64.a"
+windows.debug.x86_64="res://bin/libsiamese.windows.template_debug.x86_64.dll"
+windows.release.x86_64="res://bin/libsiamese.windows.template_release.x86_64.dll"
 linux.debug.x86_64="res://bin/libsiamese.linux.template_debug.x86_64.so"
 linux.release.x86_64="res://bin/libsiamese.linux.template_debug.x86_64.so"
 

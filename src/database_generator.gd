@@ -4,19 +4,21 @@ var progress_bar:Array[ProgressBar] = []
 var progress_bar_data:PackedFloat32Array = []
 var zobrist:PackedInt64Array = []
 var main_variation:PackedInt32Array = []
+var rule_standard:RuleStandard = null
 
 func _ready() -> void:
+	rule_standard = RuleStandard.new()
 	var thread:Thread = Thread.new()
 	thread.start(make_database)
 
 func performance_test() -> float:
-	var chess_state:ChessState = EvaluationStandard.parse("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
+	var chess_state:State = rule_standard.parse("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
 	var transposition_table:TranspositionTable = null
 	if FileAccess.file_exists("user://standard_opening.fa"):
 		transposition_table = TranspositionTable.new()
 		transposition_table.load_file("user://standard_opening.fa")
 	var time_start:float = Time.get_ticks_usec()
-	EvaluationStandard.search(chess_state, 0, main_variation, transposition_table, Callable(), 6, debug_output)
+	rule_standard.search(chess_state, 0, main_variation, transposition_table, Callable(), 6, debug_output)
 	var time_end:float = Time.get_ticks_usec()
 	return time_end - time_start
 
@@ -36,8 +38,8 @@ func make_database() -> void:
 	print("before: %dms" % performance_test())
 	var transposition_table:TranspositionTable = TranspositionTable.new()
 	transposition_table.reserve(1 << 20)
-	var chess_state:ChessState = EvaluationStandard.parse("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
-	EvaluationStandard.search(chess_state, 0, main_variation, transposition_table, Callable(), 10, debug_output)
+	var chess_state:State = rule_standard.parse("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
+	rule_standard.search(chess_state, 0, main_variation, transposition_table, Callable(), 10, debug_output)
 	#$pastor.transposition_table = transposition_table
 	transposition_table.save_file("user://standard_opening.fa")
 	print("after: %dms" % performance_test())

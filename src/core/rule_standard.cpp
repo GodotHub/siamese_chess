@@ -5,180 +5,182 @@
 #include "chess.hpp"
 #include "transposition_table.hpp"
 
-int RuleStandard::WIN = 50000;
-int RuleStandard::THRESHOLD = 20000;
+RuleStandard::RuleStandard()
+{
+	WIN = 50000;
+	THRESHOLD = 20000;
 
-std::unordered_map<int, int> RuleStandard::piece_value = {
-	{'K', 60000},
-	{'Q', 929},
-	{'R', 479},
-	{'B', 320},
-	{'N', 280},
-	{'P', 100},
-	{'k', -60000},
-	{'q', -929},
-	{'r', -479},
-	{'b', -320},
-	{'n', -280},
-	{'p', -100}
-};
-godot::PackedInt32Array RuleStandard::directions_diagonal = {-17, -15, 15, 17};
-godot::PackedInt32Array RuleStandard::directions_straight = {-16, -1, 1, 16
-};
-godot::PackedInt32Array RuleStandard::directions_eight_way = {-17, -16, -15, -1, 1, 15, 16, 17};
-godot::PackedInt32Array RuleStandard::directions_horse = {33, 31, 18, 14, -33, -31, -18, -14};
-std::unordered_map<int, godot::PackedInt32Array> RuleStandard::position_value = {
-	{'K', {
-	  4,  54,  47, -99, -99,  60,  83, -62,
-	-32,  10,  55,  56,  56,  55,  10,   3,
-	-62,  12, -57,  44, -67,  28,  37, -31,
-	-55,  50,  11,  -4, -19,  13,   0, -49,
-	-55, -43, -52, -28, -51, -47,  -8, -50,
-	-47, -42, -43, -79, -64, -32, -29, -32,
-	 -4,   3, -14, -50, -57, -18,  13,   4,
-	 17,  30,  -3, -14,   6,  -1,  40,  18
-	}},
-	{'Q', {
-	  6,   1,  -8,-104,  69,  24,  88,  26,
-	 14,  32,  60, -10,  20,  76,  57,  24,
-	 -2,  43,  32,  60,  72,  63,  43,   2,
-	  1, -16,  22,  17,  25,  20, -13,  -6,
-	-14, -15,  -2,  -5,  -1, -10, -20, -22,
-	-30,  -6, -13, -11, -16, -11, -16, -27,
-	-36, -18,   0, -19, -15, -15, -21, -38,
-	-39, -30, -31, -13, -31, -36, -34, -42
-	}},
-	{'R', {
-	 35,  29,  33,   4,  37,  33,  56,  50,
-	 55,  29,  56,  67,  55,  62,  34,  60,
-	 19,  35,  28,  33,  45,  27,  25,  15,
-	  0,   5,  16,  13,  18,  -4,  -9,  -6,
-	-28, -35, -16, -21, -13, -29, -46, -30,
-	-42, -28, -42, -25, -25, -35, -26, -46,
-	-53, -38, -31, -26, -29, -43, -44, -53,
-	-30, -24, -18,   5,  -2, -18, -31, -32
-	}},
-	{'B', {
-	-59, -78, -82, -76, -23,-107, -37, -50,
-	-11,  20,  35, -42, -39,  31,   2, -22,
-	 -9,  39, -32,  41,  52, -10,  28, -14,
-	 25,  17,  20,  34,  26,  25,  15,  10,
-	 13,  10,  17,  23,  17,  16,   0,   7,
-	 14,  25,  24,  15,   8,  25,  20,  15,
-	 19,  20,  11,   6,   7,   6,  20,  16,
-	 -7,   2, -15, -12, -14, -15, -10, -10
-	}},
-	{'N', {
-	-66, -53, -75, -75, -10, -55, -58, -70,
-	 -3,  -6, 100, -36,   4,  62,  -4, -14,
-	 10,  67,   1,  74,  73,  27,  62,  -2,
-	 24,  24,  45,  37,  33,  41,  25,  17,
-	 -1,   5,  31,  21,  22,  35,   2,   0,
-	-18,  10,  13,  22,  18,  15,  11, -14,
-	-23, -15,   2,   0,   2,   0, -23, -20,
-	-74, -23, -26, -24, -19, -35, -22, -69
-	}},
-	{'P', {
-	  0,   0,   0,   0,   0,   0,   0,   0,
-	 78,  83,  86,  73, 102,  82,  85,  90,
-	  7,  29,  21,  44,  40,  31,  44,   7,
-	-17,  16,  -2,  15,  14,   0,  15, -13,
-	-26,   3,  10,   9,   6,   1,   0, -23,
-	-22,   9,   5, -11, -10,  -2,   3, -19,
-	-31,   8,  -7, -37, -36, -14,   3, -31,
-	  0,   0,   0,   0,   0,   0,   0,   0
-	}},
-	{'k', {
-	 17, -30,   3,  14,  -6,   1, -40, -18,
-	  4,  -3,  14,  50,  57,  18, -13,  -4,
-	 47,  42,  43,  79,  64,  32,  29,  32,
-	 55,  43,  52,  28,  51,  47,   8,  50,
-	 55, -50, -11,   4,  19, -13,   0,  49,
-	 62, -12,  57, -44,  67, -28, -37,  31,
-	 32, -10, -55, -56, -56, -55, -10,  -3,
-	 -4, -54, -47,  99,  99, -60, -83,  62,
-	}},
-	{'q', {
-	 39,  30,  31,  13,  31,  36,  34,  42,
-	 36,  18,   0,  19,  15,  15,  21,  38,
-	 30,   6,  13,  11,  16,  11,  16,  27,
-	 14,  15,   2,   5,   1,  10,  20,  22,
-	 -1,  16, -22, -17, -25, -20,  13,   6,
-	  2, -43, -32, -60, -72, -63, -43,  -2,
-	-14, -32, -60,  10, -20, -76, -57, -24,
-	 -6,  -1,   8, 104, -69, -24, -88, -26
-	}},
-	{'r', {
-	 30,  24,  18,  -5,   2,  18,  31,  32,
-	 53,  38,  31,  26,  29,  43,  44,  53,
-	 42,  28,  42,  25,  25,  35,  26,  46,
-	 28,  35,  16,  21,  13,  29,  46,  30,
-	  0,  -5, -16, -13, -18,   4,   9,   6,
-	-19, -35, -28, -33, -45, -27, -25, -15,
-	-55, -29, -56, -67, -55, -62, -34, -60,
-	-35, -29, -33,  -4, -37, -33, -56, -50,
-	}},
-	{'b', {
-	  7,  -2,  15,  12,  14,  15,  10,  10,
-	-19, -20, -11,  -6,  -7,  -6, -20, -16,
-	-14, -25, -24, -15,  -8, -25, -20, -15,
-	-13, -10, -17, -23, -17, -16,   0,  -7,
-	-25, -17, -20, -34, -26, -25, -15, -10,
-	  9, -39,  32, -41, -52,  10, -28,  14,
-	 11, -20, -35,  42,  39, -31,  -2,  22,
-	 59,  78,  82,  76,  23, 107,  37,  50,
-	}},
-	{'n', {
-	 74,  23,  26,  24,  19,  35,  22,  69,
-	 23,  15,  -2,   0,  -2,   0,  23,  20,
-	 18, -10, -13, -22, -18, -15, -11,  14,
-	  1,  -5, -31, -21, -22, -35,  -2,   0,
-	-24, -24, -45, -37, -33, -41, -25, -17,
-	-10, -67,  -1, -74, -73, -27, -62,   2,
-	  3,   6,-100,  36,  -4, -62,   4,  14,
-	 66,  53,  75,  75,  10,  55,  58,  70,
-	}},
-	{'p', {
-	  0,   0,   0,   0,   0,   0,   0,   0,
-	 31,  -8,   7,  37,  36,  14,  -3,  31,
-	 22,  -9,  -5,  11,  10,   2,  -3,  19,
-	 26,  -3, -10,  -9,  -6,  -1,   0,  23,
-	 17, -16,   2, -15, -14,   0, -15,  13,
-	 -7, -29, -21, -44, -40, -31, -44,  -7,
-	-78, -83, -86, -73,-102, -82, -85, -90,
-	  0,   0,   0,   0,   0,   0,   0,   0,
-	}}
-};
+	piece_value = {
+		{'K', 60000},
+		{'Q', 929},
+		{'R', 479},
+		{'B', 320},
+		{'N', 280},
+		{'P', 100},
+		{'k', -60000},
+		{'q', -929},
+		{'r', -479},
+		{'b', -320},
+		{'n', -280},
+		{'p', -100}
+	};
+	directions_diagonal = {-17, -15, 15, 17};
+	directions_straight = {-16, -1, 1, 16};
+	directions_eight_way = {-17, -16, -15, -1, 1, 15, 16, 17};
+	directions_horse = {33, 31, 18, 14, -33, -31, -18, -14};
+	position_value = {
+		{'K', {
+		4,  54,  47, -99, -99,  60,  83, -62,
+		-32,  10,  55,  56,  56,  55,  10,   3,
+		-62,  12, -57,  44, -67,  28,  37, -31,
+		-55,  50,  11,  -4, -19,  13,   0, -49,
+		-55, -43, -52, -28, -51, -47,  -8, -50,
+		-47, -42, -43, -79, -64, -32, -29, -32,
+		-4,   3, -14, -50, -57, -18,  13,   4,
+		17,  30,  -3, -14,   6,  -1,  40,  18
+		}},
+		{'Q', {
+		6,   1,  -8,-104,  69,  24,  88,  26,
+		14,  32,  60, -10,  20,  76,  57,  24,
+		-2,  43,  32,  60,  72,  63,  43,   2,
+		1, -16,  22,  17,  25,  20, -13,  -6,
+		-14, -15,  -2,  -5,  -1, -10, -20, -22,
+		-30,  -6, -13, -11, -16, -11, -16, -27,
+		-36, -18,   0, -19, -15, -15, -21, -38,
+		-39, -30, -31, -13, -31, -36, -34, -42
+		}},
+		{'R', {
+		35,  29,  33,   4,  37,  33,  56,  50,
+		55,  29,  56,  67,  55,  62,  34,  60,
+		19,  35,  28,  33,  45,  27,  25,  15,
+		0,   5,  16,  13,  18,  -4,  -9,  -6,
+		-28, -35, -16, -21, -13, -29, -46, -30,
+		-42, -28, -42, -25, -25, -35, -26, -46,
+		-53, -38, -31, -26, -29, -43, -44, -53,
+		-30, -24, -18,   5,  -2, -18, -31, -32
+		}},
+		{'B', {
+		-59, -78, -82, -76, -23,-107, -37, -50,
+		-11,  20,  35, -42, -39,  31,   2, -22,
+		-9,  39, -32,  41,  52, -10,  28, -14,
+		25,  17,  20,  34,  26,  25,  15,  10,
+		13,  10,  17,  23,  17,  16,   0,   7,
+		14,  25,  24,  15,   8,  25,  20,  15,
+		19,  20,  11,   6,   7,   6,  20,  16,
+		-7,   2, -15, -12, -14, -15, -10, -10
+		}},
+		{'N', {
+		-66, -53, -75, -75, -10, -55, -58, -70,
+		-3,  -6, 100, -36,   4,  62,  -4, -14,
+		10,  67,   1,  74,  73,  27,  62,  -2,
+		24,  24,  45,  37,  33,  41,  25,  17,
+		-1,   5,  31,  21,  22,  35,   2,   0,
+		-18,  10,  13,  22,  18,  15,  11, -14,
+		-23, -15,   2,   0,   2,   0, -23, -20,
+		-74, -23, -26, -24, -19, -35, -22, -69
+		}},
+		{'P', {
+		0,   0,   0,   0,   0,   0,   0,   0,
+		78,  83,  86,  73, 102,  82,  85,  90,
+		7,  29,  21,  44,  40,  31,  44,   7,
+		-17,  16,  -2,  15,  14,   0,  15, -13,
+		-26,   3,  10,   9,   6,   1,   0, -23,
+		-22,   9,   5, -11, -10,  -2,   3, -19,
+		-31,   8,  -7, -37, -36, -14,   3, -31,
+		0,   0,   0,   0,   0,   0,   0,   0
+		}},
+		{'k', {
+		17, -30,   3,  14,  -6,   1, -40, -18,
+		4,  -3,  14,  50,  57,  18, -13,  -4,
+		47,  42,  43,  79,  64,  32,  29,  32,
+		55,  43,  52,  28,  51,  47,   8,  50,
+		55, -50, -11,   4,  19, -13,   0,  49,
+		62, -12,  57, -44,  67, -28, -37,  31,
+		32, -10, -55, -56, -56, -55, -10,  -3,
+		-4, -54, -47,  99,  99, -60, -83,  62,
+		}},
+		{'q', {
+		39,  30,  31,  13,  31,  36,  34,  42,
+		36,  18,   0,  19,  15,  15,  21,  38,
+		30,   6,  13,  11,  16,  11,  16,  27,
+		14,  15,   2,   5,   1,  10,  20,  22,
+		-1,  16, -22, -17, -25, -20,  13,   6,
+		2, -43, -32, -60, -72, -63, -43,  -2,
+		-14, -32, -60,  10, -20, -76, -57, -24,
+		-6,  -1,   8, 104, -69, -24, -88, -26
+		}},
+		{'r', {
+		30,  24,  18,  -5,   2,  18,  31,  32,
+		53,  38,  31,  26,  29,  43,  44,  53,
+		42,  28,  42,  25,  25,  35,  26,  46,
+		28,  35,  16,  21,  13,  29,  46,  30,
+		0,  -5, -16, -13, -18,   4,   9,   6,
+		-19, -35, -28, -33, -45, -27, -25, -15,
+		-55, -29, -56, -67, -55, -62, -34, -60,
+		-35, -29, -33,  -4, -37, -33, -56, -50,
+		}},
+		{'b', {
+		7,  -2,  15,  12,  14,  15,  10,  10,
+		-19, -20, -11,  -6,  -7,  -6, -20, -16,
+		-14, -25, -24, -15,  -8, -25, -20, -15,
+		-13, -10, -17, -23, -17, -16,   0,  -7,
+		-25, -17, -20, -34, -26, -25, -15, -10,
+		9, -39,  32, -41, -52,  10, -28,  14,
+		11, -20, -35,  42,  39, -31,  -2,  22,
+		59,  78,  82,  76,  23, 107,  37,  50,
+		}},
+		{'n', {
+		74,  23,  26,  24,  19,  35,  22,  69,
+		23,  15,  -2,   0,  -2,   0,  23,  20,
+		18, -10, -13, -22, -18, -15, -11,  14,
+		1,  -5, -31, -21, -22, -35,  -2,   0,
+		-24, -24, -45, -37, -33, -41, -25, -17,
+		-10, -67,  -1, -74, -73, -27, -62,   2,
+		3,   6,-100,  36,  -4, -62,   4,  14,
+		66,  53,  75,  75,  10,  55,  58,  70,
+		}},
+		{'p', {
+		0,   0,   0,   0,   0,   0,   0,   0,
+		31,  -8,   7,  37,  36,  14,  -3,  31,
+		22,  -9,  -5,  11,  10,   2,  -3,  19,
+		26,  -3, -10,  -9,  -6,  -1,   0,  23,
+		17, -16,   2, -15, -14,   0, -15,  13,
+		-7, -29, -21, -44, -40, -31, -44,  -7,
+		-78, -83, -86, -73,-102, -82, -85, -90,
+		0,   0,   0,   0,   0,   0,   0,   0,
+		}}
+	};
 
-std::unordered_map<int, godot::String> RuleStandard::piece_mapping_instance = {
-	{'K', "res://scene/piece_king.tscn"},
-	{'Q', "res://scene/piece_queen.tscn"},
-	{'R', "res://scene/piece_rook.tscn"},
-	{'N', "res://scene/piece_knight.tscn"},
-	{'B', "res://scene/piece_bishop.tscn"},
-	{'P', "res://scene/piece_pawn.tscn"},
-	{'k', "res://scene/piece_king.tscn"},
-	{'q', "res://scene/piece_queen.tscn"},
-	{'r', "res://scene/piece_rook.tscn"},
-	{'n', "res://scene/piece_knight.tscn"},
-	{'b', "res://scene/piece_bishop.tscn"},
-	{'p', "res://scene/piece_pawn.tscn"},
-};
+	piece_mapping_instance = {
+		{'K', "res://scene/piece_king.tscn"},
+		{'Q', "res://scene/piece_queen.tscn"},
+		{'R', "res://scene/piece_rook.tscn"},
+		{'N', "res://scene/piece_knight.tscn"},
+		{'B', "res://scene/piece_bishop.tscn"},
+		{'P', "res://scene/piece_pawn.tscn"},
+		{'k', "res://scene/piece_king.tscn"},
+		{'q', "res://scene/piece_queen.tscn"},
+		{'r', "res://scene/piece_rook.tscn"},
+		{'n', "res://scene/piece_knight.tscn"},
+		{'b', "res://scene/piece_bishop.tscn"},
+		{'p', "res://scene/piece_pawn.tscn"},
+	};
 
-std::unordered_map<int, int> RuleStandard::piece_mapping_group = {
-	{'K', 1},
-	{'Q', 1},
-	{'R', 1},
-	{'N', 1},
-	{'B', 1},
-	{'P', 1},
-	{'k', -1},
-	{'q', -1},
-	{'r', -1},
-	{'n', -1},
-	{'b', -1},
-	{'p', -1},
-};
+	piece_mapping_group = {
+		{'K', 1},
+		{'Q', 1},
+		{'R', 1},
+		{'N', 1},
+		{'B', 1},
+		{'P', 1},
+		{'k', -1},
+		{'q', -1},
+		{'r', -1},
+		{'n', -1},
+		{'b', -1},
+		{'p', -1},
+	};
+}
 
 godot::String RuleStandard::get_end_type(State *_state)
 {
@@ -444,21 +446,21 @@ godot::PackedInt32Array RuleStandard::generate_premove(State *_state, int _group
 			}
 		}
 	}
-	if (_group == 0 && _state->get_extra(1) & 8 && !_state->has_piece(Chess::g1) && !_state->has_piece(Chess::f1))
+	if (_group == 0 && _state->get_extra(1) & 8 && !_state->has_piece(Chess::g1()) && !_state->has_piece(Chess::f1()))
 	{
-		output.push_back(Chess::create(Chess::e1, Chess::g1, 75));
+		output.push_back(Chess::create(Chess::e1(), Chess::g1(), 75));
 	}
-	if (_group == 0 && _state->get_extra(1) & 4 && !_state->has_piece(Chess::c1) && !_state->has_piece(Chess::d1))
+	if (_group == 0 && _state->get_extra(1) & 4 && !_state->has_piece(Chess::c1()) && !_state->has_piece(Chess::d1()))
 	{
-		output.push_back(Chess::create(Chess::e1, Chess::c1, 81));
+		output.push_back(Chess::create(Chess::e1(), Chess::c1(), 81));
 	}
-	if (_group == 1 && _state->get_extra(1) & 2 && !_state->has_piece(Chess::g8) && !_state->has_piece(Chess::f8))
+	if (_group == 1 && _state->get_extra(1) & 2 && !_state->has_piece(Chess::g8()) && !_state->has_piece(Chess::f8()))
 	{
-		output.push_back(Chess::create(Chess::e8, Chess::g8, 75));
+		output.push_back(Chess::create(Chess::e8(), Chess::g8(), 75));
 	}
-	if (_group == 1 && _state->get_extra(1) & 1 && !_state->has_piece(Chess::c8) && !_state->has_piece(Chess::d8))
+	if (_group == 1 && _state->get_extra(1) & 1 && !_state->has_piece(Chess::c8()) && !_state->has_piece(Chess::d8()))
 	{
-		output.push_back(Chess::create(Chess::e8, Chess::c8, 81));
+		output.push_back(Chess::create(Chess::e8(), Chess::c8(), 81));
 	}
 	return output;
 }
@@ -574,11 +576,11 @@ godot::PackedInt32Array RuleStandard::generate_move(State *_state, int _group)
 					}
 					if (_from & 15 >= 4 && (from_piece == 82 && _state->get_extra(1) & 8 || from_piece == 114 && _state->get_extra(1) & 2))
 					{
-						output.push_back(Chess::create(to, from_piece == 'R' ? Chess::g1 : Chess::g8, 'K'));
+						output.push_back(Chess::create(to, from_piece == 'R' ? Chess::g1() : Chess::g8(), 'K'));
 					}
 					else if (_from & 15 <= 3 && (from_piece == 82 && _state->get_extra(1) & 4 || from_piece == 114 && _state->get_extra(1) & 2))
 					{
-						output.push_back(Chess::create(to,from_piece == 'R' ? Chess::c1 : Chess::c8, 'Q'));
+						output.push_back(Chess::create(to,from_piece == 'R' ? Chess::c1() : Chess::c8(), 'Q'));
 					}
 				}
 			}
@@ -728,24 +730,24 @@ void RuleStandard::apply_move(State *_state, int _move)
 	{
 		if (from_group == 0)
 		{
-			if (_state->get_piece(Chess::c8) == 'k')
+			if (_state->get_piece(Chess::c8()) == 'k')
 			{
-				_state->capture_piece(Chess::c8);
+				_state->capture_piece(Chess::c8());
 			}
-			if (_state->get_piece(Chess::g8) == 'k')
+			if (_state->get_piece(Chess::g8()) == 'k')
 			{
-				_state->capture_piece(Chess::g8);
+				_state->capture_piece(Chess::g8());
 			}
 		}
 		else
 		{
-			if (_state->get_piece(Chess::c1) == 'K')
+			if (_state->get_piece(Chess::c1()) == 'K')
 			{
-				_state->capture_piece(Chess::c1);
+				_state->capture_piece(Chess::c1());
 			}
-			if (_state->get_piece(Chess::g1) == 'K')
+			if (_state->get_piece(Chess::g1()) == 'K')
 			{
-				_state->capture_piece(Chess::g1);
+				_state->capture_piece(Chess::g1());
 			}
 		}
 	}
@@ -786,25 +788,25 @@ void RuleStandard::apply_move(State *_state, int _move)
 		}
 		if (Chess::extra(_move))
 		{
-			if (Chess::to(_move) == Chess::g1)
+			if (Chess::to(_move) == Chess::g1())
 			{
-				_state->move_piece(Chess::h1, Chess::f1);
-				_state->set_extra(5, Chess::f1);
+				_state->move_piece(Chess::h1(), Chess::f1());
+				_state->set_extra(5, Chess::f1());
 			}
-			if (Chess::to(_move) == Chess::c1)
+			if (Chess::to(_move) == Chess::c1())
 			{
-				_state->move_piece(Chess::a1, Chess::d1);
-				_state->set_extra(5, Chess::d1);
+				_state->move_piece(Chess::a1(), Chess::d1());
+				_state->set_extra(5, Chess::d1());
 			}
-			if (Chess::to(_move) == Chess::g8)
+			if (Chess::to(_move) == Chess::g8())
 			{
-				_state->move_piece(Chess::h8, Chess::f8);
-				_state->set_extra(5, Chess::f8);
+				_state->move_piece(Chess::h8(), Chess::f8());
+				_state->set_extra(5, Chess::f8());
 			}
-			if (Chess::to(_move) == Chess::c8)
+			if (Chess::to(_move) == Chess::c8())
 			{
-				_state->move_piece(Chess::a8, Chess::d8);
-				_state->set_extra(5, Chess::d8);
+				_state->move_piece(Chess::a8(), Chess::d8());
+				_state->set_extra(5, Chess::d8());
 			}
 			has_king_passant = true;
 		}
@@ -859,12 +861,12 @@ int RuleStandard::evaluate(State *_state, int _move)
 	if (from_piece == 'K' && extra != 0)
 	{
 		score += get_piece_score((from + to) / 2, 'R');
-		score -= get_piece_score(to < from ? Chess::a1 : Chess::h1, 'R');
+		score -= get_piece_score(to < from ? Chess::a1() : Chess::h1(), 'R');
 	}
 	if (from_piece == 'k' && extra != 0)
 	{
 		score += get_piece_score((from + to) / 2, 'r');
-		score -= get_piece_score(to < from ? Chess::a8 : Chess::h8, 'r');
+		score -= get_piece_score(to < from ? Chess::a8() : Chess::h8(), 'r');
 	}
 	if (from_piece & 95 == 'P')
 	{

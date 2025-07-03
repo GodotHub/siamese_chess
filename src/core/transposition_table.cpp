@@ -31,13 +31,11 @@ void TranspositionTable::load_file(godot::String path)
 	table.resize(table_size);
 	for (int i = 0; i < table.size(); i++)
 	{
-		table.set(i, {
-			(long long)file->get_64(),
-			file->get_8(),
-			file->get_8(),
-			(int)file->get_32(),
-			(int)file->get_32(),
-		});
+		table[i].checksum = file->get_64();
+		table[i].depth = file->get_8();
+		table[i].flag = file->get_8();
+		table[i].value = file->get_32();
+		table[i].best_move = file->get_32();
 	}
 	file->close();
 }
@@ -79,13 +77,11 @@ void TranspositionTable::record_hash(long long checksum, unsigned char depth, in
 	{
 		return;	// 最好不要丢掉开局库内容，这是容不得覆盖的
 	}
-	table.set(index, {
-		checksum,
-		depth,
-		flag,
-		value,
-		best_move
-	});
+	table[index].checksum = checksum;
+	table[index].depth = depth;
+	table[index].flag = flag;
+	table[index].value = value;
+	table[index].best_move = best_move;
 }
 
 void TranspositionTable::_bind_methods()

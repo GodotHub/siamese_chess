@@ -3,7 +3,7 @@
 
 #include <godot_cpp/godot.hpp>
 #include <godot_cpp/classes/ref_counted.hpp>
-#include <godot_cpp/templates/vector.hpp>
+#include <vector>
 
 enum TranspositionTableFlag	{
 	UNKNOWN = 0,
@@ -36,7 +36,7 @@ class TranspositionTable : public godot::RefCounted
 		bool read_only = false;
 		int table_size;
 		int table_size_mask;
-		godot::Vector<TranspositionTableItem> table;
+		std::vector<TranspositionTableItem> table;
 };
 
 #endif
