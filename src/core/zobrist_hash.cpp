@@ -24,7 +24,7 @@ ZobristHash *ZobristHash::get_singleton()
 
 long long ZobristHash::hash_piece(int _piece, int _by)
 {
-	return (_piece & 0xFF) + (_by << 8);
+	return randomized[((_piece & 0xFF) + (_by << 8)) & 0xFFFF];
 }
 
 void ZobristHash::_bind_methods()

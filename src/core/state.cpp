@@ -91,12 +91,12 @@ long long State::get_zobrist()
 
 int State::has_history(long long _zobrist)
 {
-	return history.has(_zobrist) ? history[_zobrist] : 0;
+	return history.count(_zobrist) ? history[_zobrist] : 0;
 }
 
 void State::push_history(long long _zobrist)
 {
-	if (history.has(_zobrist))
+	if (history.count(_zobrist))
 	{
 		history[_zobrist]++;
 	}

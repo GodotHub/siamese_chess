@@ -14,7 +14,6 @@ class Rule : public godot::Object
 		virtual godot::String get_end_type(State *_state);
 		virtual State *parse(godot::String _str);
 		virtual godot::String stringify(State *_state);
-		virtual godot::Node3D *get_piece_instance(int _piece);
 		virtual godot::PackedInt32Array generate_premove(State *_state, int _group);
 		virtual godot::PackedInt32Array generate_move(State *_state, int _group);
 		virtual godot::PackedInt32Array generate_valid_move(State *_state, int _group);

@@ -269,14 +269,14 @@ godot::String RuleStandard::stringify(State *_state)
 		godot::String line = "";
 		for (int j = 0; j < 8; j++)
 		{
-			if (_state->get_piece(i << 4 + j))
+			if (_state->get_piece((i << 4) + j))
 			{
 				if (null_counter)
 				{
 					line += null_counter + '0';
 					null_counter = 0;
 				}
-				line += _state->get_piece(i << 4 + j);
+				line += _state->get_piece((i << 4) + j);
 			}
 			else
 			{
@@ -293,10 +293,10 @@ godot::String RuleStandard::stringify(State *_state)
 	godot::PackedStringArray output = {godot::String("/").join(chessboard)};
 	output.push_back(_state->get_extra(0) == 0 ? "w" : "b");
 	output.push_back("");
-	output[2] += _state->get_extra(1) & 8 ? "K" : "";
-	output[2] += _state->get_extra(1) & 4 ? "Q" : "";
-	output[2] += _state->get_extra(1) & 2 ? "k" : "";
-	output[2] += _state->get_extra(1) & 1 ? "q" : "";
+	output[2] += (_state->get_extra(1) & 8) ? "K" : "";
+	output[2] += (_state->get_extra(1) & 4) ? "Q" : "";
+	output[2] += (_state->get_extra(1) & 2) ? "k" : "";
+	output[2] += (_state->get_extra(1) & 1) ? "q" : "";
 	if (!output[2])
 	{
 		output[2] = "-";
@@ -371,11 +371,11 @@ godot::PackedInt32Array RuleStandard::generate_premove(State *_state, int _group
 				continue;
 			}
 			godot::PackedInt32Array directions;
-			if (from_piece & 95 == 'P')
+			if ((from_piece & 95) == 'P')
 			{
 				int front = _group == 0 ? -16 : 16;
-				bool on_start = _from >> 4 == (_group == 0 ? 6 : 1);
-				bool on_end = _from >> 4 == (_group == 0 ? 1 : 6);
+				bool on_start = (_from >> 4) == (_group == 0 ? 6 : 1);
+				bool on_end = (_from >> 4) == (_group == 0 ? 1 : 6);
 				if (on_end)
 				{
 					output.push_back(Chess::create(_from, _from + front, _group == 0 ? 'Q' : 'q'));
@@ -415,19 +415,19 @@ godot::PackedInt32Array RuleStandard::generate_premove(State *_state, int _group
 				}
 				continue;
 			}
-			else if (from_piece & 95 == 'K' || from_piece & 95 == 'Q')
+			else if ((from_piece & 95) == 'K' || (from_piece & 95) == 'Q')
 			{
 				directions = directions_eight_way;
 			}
-			else if (from_piece & 95 == 'R')
+			else if ((from_piece & 95) == 'R')
 			{
 				directions = directions_straight;
 			}
-			else if (from_piece & 95 == 'N')
+			else if ((from_piece & 95) == 'N')
 			{
 				directions = directions_horse;
 			}
-			else if (from_piece & 95 == 'B')
+			else if ((from_piece & 95) == 'B')
 			{
 				directions = directions_diagonal;
 			}
@@ -437,7 +437,7 @@ godot::PackedInt32Array RuleStandard::generate_premove(State *_state, int _group
 				while (!(to & 0x88))
 				{
 					output.push_back(Chess::create(_from, to, 0));
-					if (from_piece & 95 == 'K' || from_piece & 95 == 'N')
+					if ((from_piece & 95) == 'K' || (from_piece & 95) == 'N')
 					{
 						break;
 					}
@@ -483,11 +483,11 @@ godot::PackedInt32Array RuleStandard::generate_move(State *_state, int _group)
 				continue;
 			}
 			godot::PackedInt32Array directions;
-			if (from_piece & 95 == 'P')
+			if ((from_piece & 95) == 'P')
 			{
 				int front = from_piece == 'P' ? -16 : 16;
-				bool on_start = _from >> 4 == (from_piece == 'P' ? 6 : 1);
-				bool on_end = _from >> 4 == (from_piece == 'P' ? 1 : 6);
+				bool on_start = (_from >> 4) == (from_piece == 'P' ? 6 : 1);
+				bool on_end = (_from >> 4) == (from_piece == 'P' ? 1 : 6);
 				if (!_state->has_piece(_from + front))
 				{
 					if (on_end)
@@ -506,7 +506,7 @@ godot::PackedInt32Array RuleStandard::generate_move(State *_state, int _group)
 						}
 					}
 				}
-				if (_state->has_piece(_from + front + 1) && !is_same_camp(from_piece, _state->get_piece(_from + front + 1)) || (_from >> 4 == 2 || _from >> 4 == 5) && _state->get_extra(2) == _from + front + 1)
+				if (_state->has_piece(_from + front + 1) && !is_same_camp(from_piece, _state->get_piece(_from + front + 1)) || ((_from >> 4) == 2 || (_from >> 4) == 5) && _state->get_extra(2) == _from + front + 1)
 				{
 					if (on_end)
 					{
@@ -520,7 +520,7 @@ godot::PackedInt32Array RuleStandard::generate_move(State *_state, int _group)
 						output.push_back(Chess::create(_from, _from + front + 1, 0));
 					}
 				}
-				if (_state->has_piece(_from + front - 1) && !is_same_camp(from_piece, _state->get_piece(_from + front - 1)) || (_from >> 4 == 2 || _from >> 4 == 5) && _state->get_extra(2) == _from + front - 1)
+				if (_state->has_piece(_from + front - 1) && !is_same_camp(from_piece, _state->get_piece(_from + front - 1)) || ((_from >> 4) == 2 || (_from >> 4) == 5) && _state->get_extra(2) == _from + front - 1)
 				{
 					if (on_end)
 					{
@@ -536,19 +536,19 @@ godot::PackedInt32Array RuleStandard::generate_move(State *_state, int _group)
 				}
 				continue;
 			}
-			else if (from_piece & 95 == 'K' || from_piece & 95 == 'Q')
+			else if ((from_piece & 95) == 'K' || (from_piece & 95) == 'Q')
 			{
 				directions = directions_eight_way;
 			}
-			else if (from_piece & 95 == 'R')
+			else if ((from_piece & 95) == 'R')
 			{
 				directions = directions_straight;
 			}
-			else if (from_piece & 95 == 'N')
+			else if ((from_piece & 95) == 'N')
 			{
 				directions = directions_horse;
 			}
-			else if (from_piece & 95 == 'B')
+			else if ((from_piece & 95) == 'B')
 			{
 				directions = directions_diagonal;
 			}
@@ -564,7 +564,7 @@ godot::PackedInt32Array RuleStandard::generate_move(State *_state, int _group)
 					{
 						break;
 					}
-					if (from_piece & 95 == 'K' || from_piece & 95 == 'N')
+					if ((from_piece & 95) == 'K' || (from_piece & 95) == 'N')
 					{
 						break;
 					}
@@ -605,7 +605,6 @@ godot::PackedInt32Array RuleStandard::generate_valid_move(State *_state, int _gr
 
 godot::PackedInt32Array RuleStandard::generate_good_capture_move(State *_state, int _group)
 {
-
 	godot::PackedInt32Array output;
 	for (int _from_1 = 0; _from_1 < 8; _from_1++)
 	{
@@ -622,13 +621,13 @@ godot::PackedInt32Array RuleStandard::generate_good_capture_move(State *_state, 
 				continue;
 			}
 			godot::PackedInt32Array directions;
-			if (from_piece & 95 == 'P')
+			if ((from_piece & 95) == 'P')
 			{
 				int front = from_piece == 'P' ? -16 : 16;
-				bool on_start = _from >> 4 == (from_piece == 'P' ? 6 : 1);
-				bool on_end = _from >> 4 == (from_piece == 'P' ? 1 : 6);
+				bool on_start = (_from >> 4) == (from_piece == 'P' ? 6 : 1);
+				bool on_end = (_from >> 4) == (from_piece == 'P' ? 1 : 6);
 				if (_state->has_piece(_from + front + 1) && !is_same_camp(from_piece, _state->get_piece(_from + front + 1))
-				|| (_from >> 4 == 2 || _from >> 4 == 5) && _state->get_extra(2) == _from + front + 1
+				|| ((_from >> 4) == 2 || (_from >> 4) == 5) && _state->get_extra(2) == _from + front + 1
 				|| !((_from + front + 1) & 0x88) && on_end && _state->get_extra(5) != -1 && abs(_state->get_extra(5) - (_from + front + 1)) <= 1)
 				{
 					if (on_end)
@@ -644,7 +643,7 @@ godot::PackedInt32Array RuleStandard::generate_good_capture_move(State *_state, 
 					}
 				}
 				if (_state->has_piece(_from + front - 1) && !is_same_camp(from_piece, _state->get_piece(_from + front - 1))
-				|| (_from >> 4 == 2 || _from >> 4 == 5) && _state->get_extra(2) == _from + front - 1
+				|| ((_from >> 4) == 2 || (_from >> 4) == 5) && _state->get_extra(2) == _from + front - 1
 				|| !((_from + front - 1) & 0x88) && on_end && _state->get_extra(5) != -1 && abs(_state->get_extra(5) - (_from + front - 1)) <= 1)
 				{
 					if (on_end)
@@ -661,19 +660,19 @@ godot::PackedInt32Array RuleStandard::generate_good_capture_move(State *_state, 
 				}
 				continue;
 			}
-			else if (from_piece & 95 == 'K' || from_piece & 95 == 'Q')
+			else if ((from_piece & 95) == 'K' || (from_piece & 95) == 'Q')
 			{
 				directions = directions_eight_way;
 			}
-			else if (from_piece & 95 == 'R')
+			else if ((from_piece & 95) == 'R')
 			{
 				directions = directions_straight;
 			}
-			else if (from_piece & 95 == 'N')
+			else if ((from_piece & 95) == 'N')
 			{
 				directions = directions_horse;
 			}
-			else if (from_piece & 95 == 'B')
+			else if ((from_piece & 95) == 'B')
 			{
 				directions = directions_diagonal;
 			}
@@ -689,7 +688,7 @@ godot::PackedInt32Array RuleStandard::generate_good_capture_move(State *_state, 
 						output.push_back(Chess::create(_from, to, 0));
 						break;
 					}
-					if (from_piece & 95 == 'K' || from_piece & 95 == 'N')
+					if ((from_piece & 95) == 'K' || (from_piece & 95) == 'N')
 					{
 						break;
 					}
@@ -751,7 +750,7 @@ void RuleStandard::apply_move(State *_state, int _move)
 			}
 		}
 	}
-	if (from_piece & 95 == 'R')	// 哪边的车动过，就不能往那个方向易位
+	if ((from_piece & 95) == 'R')	// 哪边的车动过，就不能往那个方向易位
 	{
 		if (Chess::from(_move) & 15 >= 4)
 		{
@@ -776,7 +775,7 @@ void RuleStandard::apply_move(State *_state, int _move)
 			}
 		}
 	}
-	if (from_piece & 95 == 75)
+	if ((from_piece & 95) == 75)
 	{
 		if (from_group == 0)
 		{
@@ -811,7 +810,7 @@ void RuleStandard::apply_move(State *_state, int _move)
 			has_king_passant = true;
 		}
 	}
-	if (from_piece & 95 == 'P')
+	if ((from_piece & 95) == 'P')
 	{
 		int front = from_piece == 'P' ? -16 : 16;
 		_state->set_extra(3, 0);	// 移动兵时重置50步和棋
@@ -820,7 +819,7 @@ void RuleStandard::apply_move(State *_state, int _move)
 			has_en_passant = true;
 			_state->set_extra(2, Chess::from(_move) + front);
 		}
-		if ((Chess::from(_move) >> 4 == 2 || Chess::from(_move) >> 4 == 5) && Chess::to(_move) == _state->get_extra(2))
+		if (((Chess::from(_move) >> 4) == 2 || (Chess::from(_move) >> 4) == 5) && Chess::to(_move) == _state->get_extra(2))
 		{
 			int captured = Chess::to(_move) - front;
 			_state->capture_piece(captured);
@@ -868,7 +867,7 @@ int RuleStandard::evaluate(State *_state, int _move)
 		score += get_piece_score((from + to) / 2, 'r');
 		score -= get_piece_score(to < from ? Chess::a8() : Chess::h8(), 'r');
 	}
-	if (from_piece & 95 == 'P')
+	if ((from_piece & 95) == 'P')
 	{
 		int front = group == 0 ? -16 : 16;
 		if (from / 16 == 0)
@@ -971,9 +970,9 @@ int RuleStandard::alphabeta(State *_state, int _alpha, int _beta, int _depth, in
 	{
 		for (int j = move_list.size() - 2; j >= i; j--)
 		{
-			if (compare_move(move_list[i], move_list[j], best_move, _history_table))
+			if (!compare_move(move_list[j], move_list[j + 1], best_move, _history_table))
 			{
-				std::swap(move_list[i], move_list[j]);
+				std::swap(move_list[j], move_list[j + 1]);
 			}
 		}
 		if (_debug_output.is_valid())
@@ -987,7 +986,7 @@ int RuleStandard::alphabeta(State *_state, int _alpha, int _beta, int _depth, in
 		{
 			if (_transposition_table)
 			{
-				_transposition_table->record_hash(_state->get_zobrist(), _depth, _state->get_relative_score(_group), BETA, move_list[i]);
+				_transposition_table->record_hash(_state->get_zobrist(), _depth, _beta, BETA, move_list[i]);
 			}
 			return _beta;
 		}
@@ -1004,10 +1003,6 @@ int RuleStandard::alphabeta(State *_state, int _alpha, int _beta, int _depth, in
 			_main_variation.clear();
 			_main_variation.push_back(move_list[i]);
 			_main_variation.append_array(line);
-			if (_transposition_table)
-			{
-				_transposition_table->record_hash(_state->get_zobrist(), _depth, _alpha, flag, best_move);
-			}
 		}
 	}
 	if (_transposition_table)
@@ -1020,7 +1015,7 @@ int RuleStandard::alphabeta(State *_state, int _alpha, int _beta, int _depth, in
 void RuleStandard::search(State *_state, int _group, godot::PackedInt32Array _main_variation, TranspositionTable *_transposition_table, godot::Callable _is_timeup, int _max_depth, godot::Callable _debug_output)
 {
 	godot::Dictionary history_table;
-	for (int i = 0; i < _max_depth; i++)
+	for (int i = 1; i < _max_depth; i++)
 	{
 		alphabeta(_state, -WIN, WIN, i, _group, true, history_table, _main_variation, _transposition_table, _is_timeup, _debug_output);
 		if (_is_timeup.is_valid() && _is_timeup.call())

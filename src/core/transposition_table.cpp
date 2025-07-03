@@ -25,7 +25,7 @@ void TranspositionTable::save_file(godot::String path)
 
 void TranspositionTable::load_file(godot::String path)
 {
-	godot::Ref<godot::FileAccess> file = godot::FileAccess::open(path, godot::FileAccess::WRITE);
+	godot::Ref<godot::FileAccess> file = godot::FileAccess::open(path, godot::FileAccess::READ);
 	table_size = file->get_32();
 	table_size_mask = table_size - 1;
 	table.resize(table_size);

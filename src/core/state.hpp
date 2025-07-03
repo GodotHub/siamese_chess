@@ -3,7 +3,7 @@
 
 #include <godot_cpp/classes/ref_counted.hpp>
 #include <godot_cpp/variant/packed_int32_array.hpp>
-#include <godot_cpp/templates/hash_set.hpp>
+#include <unordered_map>
 
 class Rule;
 
@@ -29,7 +29,7 @@ class State : public godot::RefCounted
 	private:
 		int pieces[128];
 		godot::PackedInt32Array extra;
-		godot::HashMap<long long, int> history;
+		std::unordered_map<long long, int> history;
 		long long zobrist = 0;
 		int score = 0;
 };
