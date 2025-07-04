@@ -7,9 +7,9 @@ State::State()
 	memset(pieces, 0, sizeof(pieces));
 }
 
-State *State::duplicate()
+godot::Ref<State>State::duplicate()
 {
-	State *new_state = memnew(State);
+	godot::Ref<State>new_state = memnew(State);
 	memcpy(new_state->pieces, pieces, sizeof(pieces));
 	new_state->extra = extra.duplicate();
 	new_state->score = score;

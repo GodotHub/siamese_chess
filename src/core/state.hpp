@@ -12,7 +12,7 @@ class State : public godot::RefCounted
 	GDCLASS(State, RefCounted)
 	public:
 		State();
-		State *duplicate();
+		godot::Ref<State>duplicate();
 		int get_piece(int _by);
 		int has_piece(int _by);
 		void add_piece(int _by, int _piece);

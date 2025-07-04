@@ -1,45 +1,45 @@
 #include <rule.hpp>
 
-godot::String Rule::get_end_type(State *_state)
+godot::String Rule::get_end_type(godot::Ref<State>_state)
 {
 	return "";
 }
 
-State *Rule::parse(godot::String _str)
+godot::Ref<State>Rule::parse(godot::String _str)
 {
 	return nullptr;
 }
 
-godot::String Rule::stringify(State *_state)
+godot::String Rule::stringify(godot::Ref<State>_state)
 {
 	return "";
 }
-godot::PackedInt32Array Rule::generate_premove(State *_state, int _group)
+godot::PackedInt32Array Rule::generate_premove(godot::Ref<State>_state, int _group)
 {
 	return {};
 }
 
-godot::PackedInt32Array Rule::generate_move(State *_state, int _group)
+godot::PackedInt32Array Rule::generate_move(godot::Ref<State>_state, int _group)
 {
 	return {};
 }
 
-godot::PackedInt32Array Rule::generate_valid_move(State *_state, int _group)
+godot::PackedInt32Array Rule::generate_valid_move(godot::Ref<State>_state, int _group)
 {
 	return {};
 }
 
-void Rule::apply_move(State *_state, int _move)
+void Rule::apply_move(godot::Ref<State>_state, int _move)
 {
 
 }
 
-int Rule::evaluate(State *_state, int _move)
+int Rule::evaluate(godot::Ref<State>_state, int _move)
 {
 	return 0;
 }
 
-void Rule::search(State *_state, int _group, TranspositionTable *_transposition_table, godot::Callable _is_timeup, int _max_depth, godot::Callable _debug_output)
+void Rule::search(godot::Ref<State>_state, int _group, TranspositionTable *_transposition_table, godot::Callable _is_timeup, int _max_depth, godot::Callable _debug_output)
 {
 	
 }

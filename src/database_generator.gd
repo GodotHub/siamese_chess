@@ -20,7 +20,7 @@ func _ready() -> void:
 
 func performance_test() -> float:
 	var time_start:float = Time.get_ticks_usec()
-	rule_standard.search(chess_state, 0, transposition_table, Callable(), 6, Callable(), debug_output)
+	rule_standard.search(chess_state, 0, transposition_table, Callable(), 6, debug_output)
 	var time_end:float = Time.get_ticks_usec()
 	return time_end - time_start
 
@@ -34,7 +34,7 @@ func _physics_process(_delta:float):
 func make_database() -> void:
 	print("before: %dms" % performance_test())
 	var chess_state:State = rule_standard.parse("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
-	rule_standard.search(chess_state, 0, transposition_table, Callable(), 10,  Callable(), debug_output)
+	rule_standard.search(chess_state, 0, transposition_table, Callable(), 10, debug_output)
 	print(main_variation)
 	#$pastor.transposition_table = transposition_table
 	transposition_table.save_file("user://standard_opening.fa")

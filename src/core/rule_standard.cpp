@@ -182,7 +182,7 @@ RuleStandard::RuleStandard()
 	};
 }
 
-godot::String RuleStandard::get_end_type(State *_state)
+godot::String RuleStandard::get_end_type(godot::Ref<State>_state)
 {
 	int group = _state->get_extra(0);
 	godot::PackedInt32Array move_list = generate_valid_move(_state, group);
@@ -209,9 +209,9 @@ godot::String RuleStandard::get_end_type(State *_state)
 	return "";
 }
 
-State *RuleStandard::parse(godot::String _str)
+godot::Ref<State>RuleStandard::parse(godot::String _str)
 {
-	State *state = memnew(State);
+	godot::Ref<State>state = memnew(State);
 	godot::Vector2i pointer = godot::Vector2i(0, 0);
 	godot::PackedStringArray fen_splited = _str.split(" ");
 	if (fen_splited.size() < 6)
@@ -260,7 +260,7 @@ State *RuleStandard::parse(godot::String _str)
 	return state;
 }
 
-godot::String RuleStandard::stringify(State *_state)
+godot::String RuleStandard::stringify(godot::Ref<State>_state)
 {
 	int null_counter = 0;
 	godot::PackedStringArray chessboard;
@@ -331,7 +331,7 @@ int RuleStandard::get_piece_score(int _by, int _piece)
 	return 0;
 }
 
-bool RuleStandard::is_move_valid(State *_state, int _group, int _move)
+bool RuleStandard::is_move_valid(godot::Ref<State>_state, int _group, int _move)
 {
 	int from = Chess::from(_move);
 	int from_piece = _state->get_piece(from);
@@ -339,7 +339,7 @@ bool RuleStandard::is_move_valid(State *_state, int _group, int _move)
 	{
 		return false;
 	}
-	State *test_state = _state->duplicate();
+	godot::Ref<State>test_state = _state->duplicate();
 	apply_move(test_state, _move);
 	godot::PackedInt32Array move_list = generate_good_capture_move(test_state, 1 - _group);
 	for (int i = 0; i < move_list.size(); i++)
@@ -353,7 +353,7 @@ bool RuleStandard::is_move_valid(State *_state, int _group, int _move)
 	return true;
 }
 
-godot::PackedInt32Array RuleStandard::generate_premove(State *_state, int _group)
+godot::PackedInt32Array RuleStandard::generate_premove(godot::Ref<State>_state, int _group)
 {
 	godot::PackedInt32Array output;
 	for (int _from_1 = 0; _from_1 < 8; _from_1++)
@@ -465,7 +465,7 @@ godot::PackedInt32Array RuleStandard::generate_premove(State *_state, int _group
 	return output;
 }
 
-godot::PackedInt32Array RuleStandard::generate_move(State *_state, int _group)
+godot::PackedInt32Array RuleStandard::generate_move(godot::Ref<State>_state, int _group)
 {
 	godot::PackedInt32Array output;
 	for (int _from_1 = 0; _from_1 < 8; _from_1++)
@@ -589,7 +589,7 @@ godot::PackedInt32Array RuleStandard::generate_move(State *_state, int _group)
 	return output;
 }
 
-godot::PackedInt32Array RuleStandard::generate_valid_move(State *_state, int _group)
+godot::PackedInt32Array RuleStandard::generate_valid_move(godot::Ref<State>_state, int _group)
 {
 	godot::PackedInt32Array move_list = generate_move(_state, _group);
 	godot::PackedInt32Array output;
@@ -603,7 +603,7 @@ godot::PackedInt32Array RuleStandard::generate_valid_move(State *_state, int _gr
 	return output;
 }
 
-godot::PackedInt32Array RuleStandard::generate_good_capture_move(State *_state, int _group)
+godot::PackedInt32Array RuleStandard::generate_good_capture_move(godot::Ref<State>_state, int _group)
 {
 	godot::PackedInt32Array output;
 	for (int _from_1 = 0; _from_1 < 8; _from_1++)
@@ -701,7 +701,7 @@ godot::PackedInt32Array RuleStandard::generate_good_capture_move(State *_state, 
 	return output;
 }
 
-void RuleStandard::apply_move(State *_state, int _move)
+void RuleStandard::apply_move(godot::Ref<State>_state, int _move)
 {
 	_state->push_history(_state->get_zobrist());	// 上一步的局面
 	_state->change_score(evaluate(_state, _move));
@@ -841,7 +841,7 @@ void RuleStandard::apply_move(State *_state, int _move)
 		_state->set_extra(5, -1);
 }
 
-int RuleStandard::evaluate(State *_state, int _move)
+int RuleStandard::evaluate(godot::Ref<State>_state, int _move)
 {
 	int from = Chess::from(_move);
 	int from_piece = _state->get_piece(from);
@@ -884,16 +884,18 @@ int RuleStandard::evaluate(State *_state, int _move)
 	return score;
 }
 
-int RuleStandard::compare_move(int a, int b, int best_move, godot::Dictionary history_table)
+int RuleStandard::compare_move(int a, int b, int best_move, std::array<int, 65536> *history_table)
 {
 	if (best_move == a)
 		return true;
 	if (best_move == b)
 		return false;
-	return int(history_table.get(a, 0)) > int(history_table.get(b, 0));
+	if (history_table)
+		return (*history_table)[a & 0xFFFF] > (*history_table)[b & 0xFFFF];
+	return true;
 }
 
-int RuleStandard::quies(State *_state, int _alpha, int _beta, int _group)
+int RuleStandard::quies(godot::Ref<State>_state, int _alpha, int _beta, int _group)
 {
 	int value = _state->get_relative_score(_group);
 	if (value >= _beta)
@@ -907,7 +909,7 @@ int RuleStandard::quies(State *_state, int _alpha, int _beta, int _group)
 	godot::PackedInt32Array move_list = generate_good_capture_move(_state, _group);
 	for (int i = 0; i < move_list.size(); i++)
 	{
-		State *test_state = _state->duplicate();
+		godot::Ref<State>test_state = _state->duplicate();
 		apply_move(test_state, move_list[i]);
 		value = -quies(_state, -_beta, -_alpha, 1 - _group);
 		if (value >= _beta)
@@ -922,7 +924,7 @@ int RuleStandard::quies(State *_state, int _alpha, int _beta, int _group)
 	return _alpha;
 }
 
-int RuleStandard::alphabeta(State *_state, int _alpha, int _beta, int _depth, int _group, bool _can_null, godot::Dictionary _history_table, TranspositionTable *_transposition_table, godot::Callable _is_timeup, godot::Callable _debug_output)
+int RuleStandard::alphabeta(godot::Ref<State>_state, int _alpha, int _beta, int _depth, int _group, bool _can_null, std::array<int, 65536> *_history_table, TranspositionTable *_transposition_table, godot::Callable _is_timeup, godot::Callable _debug_output)
 {
 	if (_transposition_table)
 	{
@@ -979,7 +981,7 @@ int RuleStandard::alphabeta(State *_state, int _alpha, int _beta, int _depth, in
 		{
 			_debug_output.call(_state->get_zobrist(), _depth, i, move_list.size());
 		}
-		State *test_state = _state->duplicate();
+		godot::Ref<State>test_state = _state->duplicate();
 		apply_move(test_state, move_list[i]);
 		value = -alphabeta(test_state, -_beta, -_alpha, _depth - 1, 1 - _group, false, _history_table, _transposition_table, _is_timeup, _debug_output);
 
@@ -996,11 +998,10 @@ int RuleStandard::alphabeta(State *_state, int _alpha, int _beta, int _depth, in
 			best_move = move_list[i];
 			_alpha = value;
 			flag = EXACT;
-			if (!_history_table.has(move_list[i]))
+			if (_history_table)
 			{
-				_history_table[move_list[i]] = 0;
+				(*_history_table)[move_list[i] & 0xFFFF] += (1 << _depth);
 			}
-			_history_table.set(move_list[i], (1 << _depth));
 		}
 	}
 	if (_transposition_table)
@@ -1010,12 +1011,12 @@ int RuleStandard::alphabeta(State *_state, int _alpha, int _beta, int _depth, in
 	return _alpha;
 }
 
-void RuleStandard::search(State *_state, int _group, TranspositionTable *_transposition_table, godot::Callable _is_timeup, int _max_depth, godot::Callable _debug_output)
+void RuleStandard::search(godot::Ref<State>_state, int _group, TranspositionTable *_transposition_table, godot::Callable _is_timeup, int _max_depth, godot::Callable _debug_output)
 {
-	godot::Dictionary history_table;
+	std::array<int, 65536> history_table;
 	for (int i = 1; i < _max_depth; i++)
 	{
-		alphabeta(_state, -WIN, WIN, i, _group, true, history_table, _transposition_table, _is_timeup, _debug_output);
+		alphabeta(_state, -WIN, WIN, i, _group, true, &history_table, _transposition_table, _is_timeup, _debug_output);
 		if (_is_timeup.is_valid() && _is_timeup.call())
 		{
 			return;
@@ -1038,8 +1039,8 @@ void RuleStandard::_bind_methods()
 	godot::ClassDB::bind_method(godot::D_METHOD("generate_good_capture_move"), &RuleStandard::generate_good_capture_move);
 	godot::ClassDB::bind_method(godot::D_METHOD("apply_move"), &RuleStandard::apply_move);
 	godot::ClassDB::bind_method(godot::D_METHOD("evaluate"), &RuleStandard::evaluate);
-	godot::ClassDB::bind_method(godot::D_METHOD("compare_move"), &RuleStandard::compare_move);
-	godot::ClassDB::bind_method(godot::D_METHOD("quies"), &RuleStandard::quies);
-	godot::ClassDB::bind_method(godot::D_METHOD("alphabeta"), &RuleStandard::alphabeta);
+	//godot::ClassDB::bind_method(godot::D_METHOD("compare_move"), &RuleStandard::compare_move);
+	//godot::ClassDB::bind_method(godot::D_METHOD("quies"), &RuleStandard::quies);
+	//godot::ClassDB::bind_method(godot::D_METHOD("alphabeta"), &RuleStandard::alphabeta);
 	godot::ClassDB::bind_method(godot::D_METHOD("search"), &RuleStandard::search);
 }
