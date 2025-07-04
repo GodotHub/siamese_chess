@@ -922,7 +922,7 @@ int RuleStandard::quies(State *_state, int _alpha, int _beta, int _group)
 	return _alpha;
 }
 
-int RuleStandard::alphabeta(State *_state, int _alpha, int _beta, int _depth, int _group, bool _can_null, godot::Dictionary _history_table, TranspositionTable *_transposition_table, godot::Callable _is_timeup, godot::Callable _get_value, godot::Callable _debug_output)
+int RuleStandard::alphabeta(State *_state, int _alpha, int _beta, int _depth, int _group, bool _can_null, godot::Dictionary _history_table, TranspositionTable *_transposition_table, godot::Callable _is_timeup, godot::Callable _debug_output)
 {
 	if (_transposition_table)
 	{
@@ -981,11 +981,7 @@ int RuleStandard::alphabeta(State *_state, int _alpha, int _beta, int _depth, in
 		}
 		State *test_state = _state->duplicate();
 		apply_move(test_state, move_list[i]);
-		value = -alphabeta(test_state, -_beta, -_alpha, _depth - 1, 1 - _group, false, _history_table, _transposition_table, _is_timeup, _get_value, _debug_output);
-		if (_get_value.is_valid())
-		{
-			_get_value.call(_depth, move_list[i], value);
-		}
+		value = -alphabeta(test_state, -_beta, -_alpha, _depth - 1, 1 - _group, false, _history_table, _transposition_table, _is_timeup, _debug_output);
 
 		if (_beta <= value)
 		{
@@ -1014,12 +1010,12 @@ int RuleStandard::alphabeta(State *_state, int _alpha, int _beta, int _depth, in
 	return _alpha;
 }
 
-void RuleStandard::search(State *_state, int _group, TranspositionTable *_transposition_table, godot::Callable _is_timeup, int _max_depth, godot::Callable _get_value, godot::Callable _debug_output)
+void RuleStandard::search(State *_state, int _group, TranspositionTable *_transposition_table, godot::Callable _is_timeup, int _max_depth, godot::Callable _debug_output)
 {
 	godot::Dictionary history_table;
 	for (int i = 1; i < _max_depth; i++)
 	{
-		alphabeta(_state, -WIN, WIN, i, _group, true, history_table, _transposition_table, _is_timeup, _get_value, _debug_output);
+		alphabeta(_state, -WIN, WIN, i, _group, true, history_table, _transposition_table, _is_timeup, _debug_output);
 		if (_is_timeup.is_valid() && _is_timeup.call())
 		{
 			return;

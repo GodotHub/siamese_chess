@@ -19,7 +19,7 @@ class Rule : public godot::Object
 		virtual godot::PackedInt32Array generate_valid_move(State *_state, int _group);
 		virtual void apply_move(State *_state, int _move);
 		virtual int evaluate(State *_state, int _move);
-		virtual void search(State *_state, int _group, TranspositionTable *_transposition_table, godot::Callable _is_timeup, int _max_depth, godot::Callable _get_value, godot::Callable _debug_output);
+		virtual void search(State *_state, int _group, TranspositionTable *_transposition_table, godot::Callable _is_timeup, int _max_depth, godot::Callable _debug_output);
 		static void _bind_methods();
 	private:
 };

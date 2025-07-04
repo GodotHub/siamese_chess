@@ -5,20 +5,22 @@ var progress_bar_data:PackedFloat32Array = []
 var zobrist:PackedInt64Array = []
 var main_variation:PackedInt32Array = []
 var rule_standard:RuleStandard = null
+var chess_state:State = null
+var transposition_table:TranspositionTable = TranspositionTable.new()
 
 func _ready() -> void:
+	if FileAccess.file_exists("user://standard_opening.fa"):
+		transposition_table.load_file("user://standard_opening.fa")
+	else:
+		transposition_table.reserve(1 << 20)
 	rule_standard = RuleStandard.new()
+	chess_state = rule_standard.parse("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
 	var thread:Thread = Thread.new()
 	thread.start(make_database)
 
 func performance_test() -> float:
-	var chess_state:State = rule_standard.parse("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
-	var transposition_table:TranspositionTable = null
-	if FileAccess.file_exists("user://standard_opening.fa"):
-		transposition_table = TranspositionTable.new()
-		transposition_table.load_file("user://standard_opening.fa")
 	var time_start:float = Time.get_ticks_usec()
-	rule_standard.search(chess_state, 0, transposition_table, Callable(), 6, get_value, debug_output)
+	rule_standard.search(chess_state, 0, transposition_table, Callable(), 6, Callable(), debug_output)
 	var time_end:float = Time.get_ticks_usec()
 	return time_end - time_start
 
@@ -27,19 +29,12 @@ func _physics_process(_delta:float):
 		add_progress_bar()
 	for i:int in range(progress_bar_data.size()):
 		progress_bar[i].value = progress_bar_data[i]
-		$panel/margin_container/label.text = ""
-	for iter:int in main_variation:
-		$panel/margin_container/label.text += "%x->%x" % [Move.from(iter), Move.to(iter)]
-		if Move.extra(iter):
-			$panel/margin_container/label.text += ":%d" % [Move.extra(iter)]
-		$panel/margin_container/label.text += " "
+		$panel/margin_container/label.text = "%x" % transposition_table.best_move(chess_state.get_zobrist())
 
 func make_database() -> void:
 	print("before: %dms" % performance_test())
-	var transposition_table:TranspositionTable = TranspositionTable.new()
-	transposition_table.reserve(1 << 20)
 	var chess_state:State = rule_standard.parse("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
-	rule_standard.search(chess_state, 0, transposition_table, Callable(), 10, get_value, debug_output)
+	rule_standard.search(chess_state, 0, transposition_table, Callable(), 10,  Callable(), debug_output)
 	print(main_variation)
 	#$pastor.transposition_table = transposition_table
 	transposition_table.save_file("user://standard_opening.fa")

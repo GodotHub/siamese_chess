@@ -129,6 +129,9 @@ void State::_bind_methods()
 	godot::ClassDB::bind_method(godot::D_METHOD("reserve_extra"), &State::reserve_extra);
 	godot::ClassDB::bind_method(godot::D_METHOD("change_score"), &State::change_score);
 	godot::ClassDB::bind_method(godot::D_METHOD("get_relative_score"), &State::get_relative_score);
+	godot::ClassDB::bind_method(godot::D_METHOD("get_zobrist"), &State::get_zobrist);
+	godot::ClassDB::bind_method(godot::D_METHOD("has_history"), &State::has_history);
+	godot::ClassDB::bind_method(godot::D_METHOD("push_history"), &State::push_history);
 	godot::ClassDB::add_signal(get_class_static(), godot::MethodInfo("piece_added", godot::PropertyInfo(godot::Variant::Type::INT, "by")));
 	godot::ClassDB::add_signal(get_class_static(), godot::MethodInfo("piece_captured", godot::PropertyInfo(godot::Variant::Type::INT, "by")));
 	godot::ClassDB::add_signal(get_class_static(), godot::MethodInfo("piece_moved", godot::PropertyInfo(godot::Variant::Type::INT, "from"), godot::PropertyInfo(godot::Variant::Type::INT, "to")));
