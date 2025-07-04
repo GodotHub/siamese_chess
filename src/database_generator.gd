@@ -18,7 +18,7 @@ func performance_test() -> float:
 		transposition_table = TranspositionTable.new()
 		transposition_table.load_file("user://standard_opening.fa")
 	var time_start:float = Time.get_ticks_usec()
-	rule_standard.search(chess_state, 0, main_variation, transposition_table, Callable(), 6, debug_output)
+	rule_standard.search(chess_state, 0, transposition_table, Callable(), 6, get_value, debug_output)
 	var time_end:float = Time.get_ticks_usec()
 	return time_end - time_start
 
@@ -39,7 +39,7 @@ func make_database() -> void:
 	var transposition_table:TranspositionTable = TranspositionTable.new()
 	transposition_table.reserve(1 << 20)
 	var chess_state:State = rule_standard.parse("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
-	rule_standard.search(chess_state, 0, main_variation, transposition_table, Callable(), 10, debug_output)
+	rule_standard.search(chess_state, 0, transposition_table, Callable(), 10, get_value, debug_output)
 	print(main_variation)
 	#$pastor.transposition_table = transposition_table
 	transposition_table.save_file("user://standard_opening.fa")
@@ -51,6 +51,11 @@ func debug_output(_zobrist:int, depth:int, cur:int, total:int) -> void:
 		progress_bar_data.push_back(0)
 	zobrist[depth] = _zobrist
 	progress_bar_data[depth] = float(cur) / float(total) * 100.0
+
+func get_value(depth:int, move:int, _value:int) -> void:
+	if main_variation.size() <= depth:
+		main_variation.resize(depth + 1)
+	main_variation[depth] = move
 
 func add_progress_bar() -> void:
 	var new_progress_bar:ProgressBar = ProgressBar.new()

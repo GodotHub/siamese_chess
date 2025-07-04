@@ -39,7 +39,7 @@ int Rule::evaluate(State *_state, int _move)
 	return 0;
 }
 
-void Rule::search(State *_state, int _group, godot::PackedInt32Array _main_variation, TranspositionTable *_transposition_table, godot::Callable _is_timeup, int _max_depth, godot::Callable _debug_output)
+void Rule::search(State *_state, int _group, TranspositionTable *_transposition_table, godot::Callable _is_timeup, int _max_depth, godot::Callable get_value, godot::Callable _debug_output)
 {
 	
 }
