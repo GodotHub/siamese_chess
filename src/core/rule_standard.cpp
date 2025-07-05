@@ -726,7 +726,7 @@ void RuleStandard::apply_move(godot::Ref<State>_state, int _move, godot::Callabl
 		_callback_capture_piece.call(Chess::to(_move));
 		_callback_set_extra.call(3, 0);	// 吃子时重置50步和棋
 	}
-	if ((_state->get_extra(5) - Chess::to(_move)) <= 1)
+	if (_state->get_extra(5) != -1 && abs(_state->get_extra(5) - Chess::to(_move)) <= 1)
 	{
 		if (from_group == 0)
 		{
@@ -854,7 +854,7 @@ int RuleStandard::evaluate(godot::Ref<State>_state, int _move)
 	{
 		score -= get_piece_score(to, to_piece);
 	}
-	if (_state->get_extra(5) != -1 && abs(_state->get_extra(5) - Chess::to(_move)) <= 1)
+	if (_state->get_extra(5) != -1 && abs(abs(_state->get_extra(5) - Chess::to(_move))) <= 1)
 	{
 		score -= piece_value[group == 0 ? 'k' : 'K'];
 	}
