@@ -1,7 +1,6 @@
 extends InspectableItem
 
 var history:PackedStringArray = ["", ""]
-var state:ChessState = null
 
 func push_move(move:int) -> void:
 	history.push_back("%x" % move)

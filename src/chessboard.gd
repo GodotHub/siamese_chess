@@ -6,12 +6,13 @@ signal press_timer()
 
 var mouse_start_position_name:String = ""
 var mouse_moved:bool = false
-var chess_state:ChessState = null
+var state:State = null
 var valid_move:Dictionary[int, Array] = {}
 var valid_premove:Dictionary[int, Array] = {}
 var selected:int = -1
 var premove:int = -1
 var piece_instance:Dictionary[int, PieceInstance] = {}
+var rule_standard:RuleStandard = RuleStandard.new()
 
 func _ready() -> void:
 	for iter:Node in get_children():
@@ -35,24 +36,17 @@ func input(_from:Node3D, _to:Area3D, _event:InputEvent, _event_position:Vector3,
 			mouse_moved = true
 		finger_on_position(position_name)
 
-func set_state(_state:ChessState) -> void:
+func set_state(_state:State) -> void:
 	$canvas.clear_move_position()
 	$canvas.clear_select_position()
-	chess_state = _state
-	chess_state.connect("piece_added", add_piece_instance)
-	chess_state.connect("piece_moved", move_piece_instance)
-	chess_state.connect("piece_removed", remove_piece_instance)
+	state = _state
 	for key:int in piece_instance:
 		piece_instance[key].queue_free()
 	piece_instance.clear()
-	var pieces:Array = chess_state.pieces
-	for i:int in range(pieces.size()):
-		if !pieces[i]:
+	for i:int in range(128):
+		if !state.has_piece(i):
 			continue
-		var instance:PieceInstance = chess_state.get_piece_instance(i)
-		instance.chessboard = self
-		piece_instance[i] = instance
-		$pieces.add_child(instance)
+		add_piece_instance(i, state.get_piece(i))
 
 func get_position_name(_position:Vector3) -> String:
 	var chess_pos:Vector2i = Vector2i(int(_position.x + 4) / 1, int(_position.z + 4) / 1)
@@ -65,15 +59,15 @@ func tap_position(position_name:String) -> void:
 	$canvas.clear_select_position()
 	$canvas.clear_premove_position()
 	premove = -1
-	var by:int = Chess.to_int(position_name)
-	if !is_instance_valid(chess_state):
+	var by:int = Chess.to_position_int(position_name)
+	if !is_instance_valid(state):
 		return
-	if chess_state.get_extra(0) == 1:
+	if state.get_extra(0) == 1:
 		if selected != -1:
 			confirm_move(selected, by)
 			selected = -1
 			return
-		if !chess_state.has_piece(by) || !valid_move.has(by):
+		if !state.has_piece(by) || !valid_move.has(by):
 			return
 		for iter:int in valid_move[by]:
 			$canvas.draw_select_position($canvas.convert_name_to_position(Chess.to_position_name(Move.to(iter))))
@@ -82,7 +76,7 @@ func tap_position(position_name:String) -> void:
 			confirm_premove(selected, by)
 			selected = -1
 			return
-		if !chess_state.has_piece(by) || !valid_premove.has(by):
+		if !state.has_piece(by) || !valid_premove.has(by):
 			return
 		for iter:int in valid_premove[by]:
 			$canvas.draw_premove_position($canvas.convert_name_to_position(Chess.to_position_name(Move.to(iter))))
@@ -141,7 +135,8 @@ func confirm_move(from:int, to:int) -> void:
 	$canvas.clear_select_position()
 
 func execute_move(move:int) -> void:
-	chess_state.apply_move(move)
+	rule_standard.apply_move(state, move, add_piece_instance, remove_piece_instance, move_piece_instance, Callable(), Callable(), Callable())
+	rule_standard.apply_move(state, move, state.add_piece, state.capture_piece, state.move_piece, state.set_extra, state.push_history, state.change_score)
 	$canvas.clear_select_position()
 	$canvas.clear_premove_position()
 	$canvas.clear_move_position()
@@ -168,9 +163,25 @@ func set_valid_premove(move_list:PackedInt32Array) -> void:
 			valid_premove[Move.from(move)] = []
 		valid_premove[Move.from(move)].push_back(move)
 
-func add_piece_instance(by:int) -> void:
-	var instance:PieceInstance = chess_state.get_piece_instance(by)
+func add_piece_instance(by:int, piece:int) -> void:
+	const piece_mapping:Dictionary = {
+		"K": {"instance": "res://scene/piece_king.tscn", "group": 0},
+		"Q": {"instance": "res://scene/piece_queen.tscn", "group": 0},
+		"R": {"instance": "res://scene/piece_rook.tscn", "group": 0},
+		"N": {"instance": "res://scene/piece_knight.tscn", "group": 0},
+		"B": {"instance": "res://scene/piece_bishop.tscn", "group": 0},
+		"P": {"instance": "res://scene/piece_pawn.tscn", "group": 0},
+		"k": {"instance": "res://scene/piece_king.tscn", "group": 1},
+		"q": {"instance": "res://scene/piece_queen.tscn", "group": 1},
+		"r": {"instance": "res://scene/piece_rook.tscn", "group": 1},
+		"n": {"instance": "res://scene/piece_knight.tscn", "group": 1},
+		"b": {"instance": "res://scene/piece_bishop.tscn", "group": 1},
+		"p": {"instance": "res://scene/piece_pawn.tscn", "group": 1},
+	}
+	var instance:PieceInstance = load(piece_mapping[char(piece)]["instance"]).instantiate()
 	instance.chessboard = self
+	instance.position_name = Chess.to_position_name(by)
+	instance.group = piece_mapping[char(piece)]["group"]
 	piece_instance[by] = instance
 	$pieces.add_child(instance)
 

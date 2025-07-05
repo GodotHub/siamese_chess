@@ -191,7 +191,7 @@ static func parse(fen:String) -> ChessState:
 	state.reserve_extra(6)
 	state.set_extra(0, 0 if fen_splited[1] == "w" else 1)
 	state.set_extra(1, (int(fen_splited[2].contains("K")) << 3) + (int(fen_splited[2].contains("Q")) << 2) + (int(fen_splited[2].contains("k")) << 1) + int(fen_splited[2].contains("q")))
-	state.set_extra(2, Chess.to_int(fen_splited[3]))
+	state.set_extra(2, Chess.to_position_int(fen_splited[3]))
 	state.set_extra(3, fen_splited[4].to_int())
 	state.set_extra(4, fen_splited[5].to_int())
 	return state

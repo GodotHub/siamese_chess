@@ -829,7 +829,7 @@ void RuleStandard::apply_move(godot::Ref<State>_state, int _move, godot::Callabl
 		{
 			dont_move = true;
 			_callback_capture_piece.call(Chess::from(_move));
-			_state->add_piece(Chess::to(_move), Chess::extra(_move));
+			_callback_add_piece.call(Chess::to(_move), Chess::extra(_move));
 		}
 	}
 	if (!dont_move)

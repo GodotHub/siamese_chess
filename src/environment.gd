@@ -13,7 +13,6 @@ func _ready() -> void:
 	$pastor.connect("win", pastor_win)
 	$pastor.connect("lose", pastor_lose)
 	$pastor.connect("draw", pastor_draw)
-	$pastor.evaluation = EvaluationStandard
 	for iter:Area3D in get_tree().get_nodes_in_group("move_camera"):
 		iter.add_user_signal("input")
 		iter.connect("input", move_camera)
@@ -188,7 +187,7 @@ func start() -> void:
 		add_child(decision_instance)
 		await decision_instance.decided
 		if decision_instance.selected_index in [0, 1, 2]:
-			$pastor.create_state("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", EvaluationStandard)
+			$pastor.create_state("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", RuleStandard.new())
 			var dialog_2:Dialog = Dialog.create_dialog_instance([
 				"现在棋盘已经准备好了。",
 				"您是黑方后手开局，时间有限，请注意合理分配。"
@@ -213,7 +212,7 @@ func start() -> void:
 			$pastor.start_decision()
 			break
 		elif decision_instance.selected_index == 3:
-			$pastor.create_state("8/8/2rbqk2/2pppn2/2NPPP2/2KQBR2/8/8 w - - 0 1", EvaluationStandard)
+			$pastor.create_state("8/8/2rbqk2/2pppn2/2NPPP2/2KQBR2/8/8 w - - 0 1", RuleStandard.new())
 			var dialog_2:Dialog = Dialog.create_dialog_instance([
 				"现在棋盘已经准备好了。",
 				"该对局为特殊布局，时间上较为紧张，注意速战速决。"
@@ -234,7 +233,7 @@ func start() -> void:
 			var text_input_instance:TextInput = TextInput.create_text_input_instance("输入FEN格式的布局：")
 			add_child(text_input_instance)
 			await text_input_instance.confirmed
-			if $pastor.create_state(text_input_instance.text, EvaluationStandard):
+			if $pastor.create_state(text_input_instance.text, RuleStandard.new()):
 				var dialog_2:Dialog = Dialog.create_dialog_instance([
 					"现在棋盘已经准备好了。",
 					"根据棋局信息，" + ("目前是白方先手。" if $pastor.chess_state.get_extra(0) == 0 else "目前是黑方先手。")
