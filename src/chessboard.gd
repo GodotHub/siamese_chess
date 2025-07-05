@@ -70,7 +70,7 @@ func tap_position(position_name:String) -> void:
 		if !state.has_piece(by) || !valid_move.has(by):
 			return
 		for iter:int in valid_move[by]:
-			$canvas.draw_select_position($canvas.convert_name_to_position(Chess.to_position_name(Move.to(iter))))
+			$canvas.draw_select_position($canvas.convert_name_to_position(Chess.to_position_name(Chess.to(iter))))
 	else:
 		if selected != -1:
 			confirm_premove(selected, by)
@@ -79,7 +79,7 @@ func tap_position(position_name:String) -> void:
 		if !state.has_piece(by) || !valid_premove.has(by):
 			return
 		for iter:int in valid_premove[by]:
-			$canvas.draw_premove_position($canvas.convert_name_to_position(Chess.to_position_name(Move.to(iter))))
+			$canvas.draw_premove_position($canvas.convert_name_to_position(Chess.to_position_name(Chess.to(iter))))
 	selected = by
 
 func finger_on_position(position_name:String) -> void:
@@ -94,13 +94,13 @@ func finger_up() -> void:
 func confirm_premove(from:int, to:int) -> void:
 	if from & 0x88 || to & 0x88 || !valid_premove.has(from):
 		return
-	var move_list:PackedInt32Array = valid_premove[from].filter(func (move:int) -> bool: return to == Move.to(move))
+	var move_list:PackedInt32Array = valid_premove[from].filter(func (move:int) -> bool: return to == Chess.to(move))
 	if move_list.size() == 0:
 		return
 	elif move_list.size() > 1:
 		var decision_list:PackedStringArray = []
 		for iter:int in move_list:
-			decision_list.push_back("%c" % Move.extra(iter))
+			decision_list.push_back("%c" % Chess.extra(iter))
 		var decision_instance:Decision = Decision.create_decision_instance(decision_list, true)
 		add_child(decision_instance)
 		await decision_instance.decided
@@ -117,13 +117,13 @@ func confirm_premove(from:int, to:int) -> void:
 func confirm_move(from:int, to:int) -> void:
 	if from & 0x88 || to & 0x88 || !valid_move.has(from):
 		return
-	var move_list:PackedInt32Array = valid_move[from].filter(func (move:int) -> bool: return to == Move.to(move))
+	var move_list:PackedInt32Array = valid_move[from].filter(func (move:int) -> bool: return to == Chess.to(move))
 	if move_list.size() == 0:
 		return
 	elif move_list.size() > 1:
 		var decision_list:PackedStringArray = []
 		for iter:int in move_list:
-			decision_list.push_back("%c" % Move.extra(iter))
+			decision_list.push_back("%c" % Chess.extra(iter))
 		var decision_instance:Decision = Decision.create_decision_instance(decision_list, true)
 		add_child(decision_instance)
 		await decision_instance.decided
@@ -140,8 +140,8 @@ func execute_move(move:int) -> void:
 	$canvas.clear_select_position()
 	$canvas.clear_premove_position()
 	$canvas.clear_move_position()
-	$canvas.draw_move_position($canvas.convert_name_to_position(Chess.to_position_name(Move.from(move))))
-	$canvas.draw_move_position($canvas.convert_name_to_position(Chess.to_position_name(Move.to(move))))
+	$canvas.draw_move_position($canvas.convert_name_to_position(Chess.to_position_name(Chess.from(move))))
+	$canvas.draw_move_position($canvas.convert_name_to_position(Chess.to_position_name(Chess.to(move))))
 	move_played.emit(move)
 	press_timer.emit()
 	selected = -1
@@ -149,19 +149,19 @@ func execute_move(move:int) -> void:
 func set_valid_move(move_list:PackedInt32Array) -> void:
 	valid_move.clear()
 	for move:int in move_list:
-		if !valid_move.has(Move.from(move)):
-			valid_move[Move.from(move)] = []
-		valid_move[Move.from(move)].push_back(move)
-	if premove != -1 && valid_move.has(Move.from(premove)) && valid_move[Move.from(premove)].has(premove):
+		if !valid_move.has(Chess.from(move)):
+			valid_move[Chess.from(move)] = []
+		valid_move[Chess.from(move)].push_back(move)
+	if premove != -1 && valid_move.has(Chess.from(premove)) && valid_move[Chess.from(premove)].has(premove):
 		execute_move(premove)
 	premove = -1
 
 func set_valid_premove(move_list:PackedInt32Array) -> void:
 	valid_premove.clear()
 	for move:int in move_list:
-		if !valid_premove.has(Move.from(move)):
-			valid_premove[Move.from(move)] = []
-		valid_premove[Move.from(move)].push_back(move)
+		if !valid_premove.has(Chess.from(move)):
+			valid_premove[Chess.from(move)] = []
+		valid_premove[Chess.from(move)].push_back(move)
 
 func add_piece_instance(by:int, piece:int) -> void:
 	const piece_mapping:Dictionary = {
