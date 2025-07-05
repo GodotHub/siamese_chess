@@ -340,7 +340,7 @@ bool RuleStandard::is_move_valid(godot::Ref<State>_state, int _group, int _move)
 		return false;
 	}
 	godot::Ref<State>test_state = _state->duplicate();
-	apply_move(test_state, _move);
+	apply_move(test_state, _move, godot::Callable(*test_state, "add_piece"), godot::Callable(*test_state, "capture_piece"), godot::Callable(*test_state, "move_piece"), godot::Callable(*test_state, "set_extra"), godot::Callable(*test_state, "push_history"), godot::Callable(*test_state, "change_score"));
 	godot::PackedInt32Array move_list = generate_good_capture_move(test_state, 1 - _group);
 	for (int i = 0; i < move_list.size(); i++)
 	{
@@ -701,20 +701,20 @@ godot::PackedInt32Array RuleStandard::generate_good_capture_move(godot::Ref<Stat
 	return output;
 }
 
-void RuleStandard::apply_move(godot::Ref<State>_state, int _move)
+void RuleStandard::apply_move(godot::Ref<State>_state, int _move, godot::Callable _callback_add_piece, godot::Callable _callback_capture_piece, godot::Callable _callback_move_piece, godot::Callable _callback_set_extra, godot::Callable _callback_push_history, godot::Callable _callback_change_score)
 {
-	_state->push_history(_state->get_zobrist());	// 上一步的局面
-	_state->change_score(evaluate(_state, _move));
+	_callback_push_history.call(_state->get_zobrist());	// 上一步的局面
+	_callback_change_score.call(evaluate(_state, _move));
 	if (_state->get_extra(0) == 1)
 	{
-		_state->set_extra(4, _state->get_extra(4) + 1);
-		_state->set_extra(0, 0);
+		_callback_set_extra.call(4, _state->get_extra(4) + 1);
+		_callback_set_extra.call(0, 0);
 	}
 	else if (_state->get_extra(0) == 0)
 	{
-		_state->set_extra(0, 1);
+		_callback_set_extra.call(0, 1);
 	}
-	_state->set_extra(3, _state->get_extra(3) + 1);
+	_callback_set_extra.call(3, _state->get_extra(3) + 1);
 	int from_piece = _state->get_piece(Chess::from(_move));
 	int from_group = from_piece >= 'A' && from_piece <= 'Z' ? 0 : 1;
 	int to_piece = _state->get_piece(Chess::to(_move));
@@ -723,31 +723,31 @@ void RuleStandard::apply_move(godot::Ref<State>_state, int _move)
 	bool has_king_passant = false;
 	if (to_piece)
 	{
-		_state->capture_piece(Chess::to(_move));
-		_state->set_extra(3, 0);	// 吃子时重置50步和棋
+		_callback_capture_piece.call(Chess::to(_move));
+		_callback_set_extra.call(3, 0);	// 吃子时重置50步和棋
 	}
-	if (abs(_state->get_extra(5) - Chess::to(_move)) <= 1)
+	if ((_state->get_extra(5) - Chess::to(_move)) <= 1)
 	{
 		if (from_group == 0)
 		{
 			if (_state->get_piece(Chess::c8()) == 'k')
 			{
-				_state->capture_piece(Chess::c8());
+				_callback_capture_piece.call(Chess::c8());
 			}
 			if (_state->get_piece(Chess::g8()) == 'k')
 			{
-				_state->capture_piece(Chess::g8());
+				_callback_capture_piece.call(Chess::g8());
 			}
 		}
 		else
 		{
 			if (_state->get_piece(Chess::c1()) == 'K')
 			{
-				_state->capture_piece(Chess::c1());
+				_callback_capture_piece.call(Chess::c1());
 			}
 			if (_state->get_piece(Chess::g1()) == 'K')
 			{
-				_state->capture_piece(Chess::g1());
+				_callback_capture_piece.call(Chess::g1());
 			}
 		}
 	}
@@ -757,22 +757,22 @@ void RuleStandard::apply_move(godot::Ref<State>_state, int _move)
 		{
 			if (from_group == 0)
 			{
-				_state->set_extra(1, _state->get_extra(1) & 7);
+				_callback_set_extra.call(1, _state->get_extra(1) & 7);
 			}
 			else
 			{
-				_state->set_extra(1, _state->get_extra(1) & 13);
+				_callback_set_extra.call(1, _state->get_extra(1) & 13);
 			}
 		}
 		else if (Chess::from(_move) & 15 <= 3)
 		{
 			if (from_group == 0)
 			{
-				_state->set_extra(1, _state->get_extra(1) & 11);
+				_callback_set_extra.call(1, _state->get_extra(1) & 11);
 			}
 			else
 			{
-				_state->set_extra(1, _state->get_extra(1) & 14);
+				_callback_set_extra.call(1, _state->get_extra(1) & 14);
 			}
 		}
 	}
@@ -780,33 +780,33 @@ void RuleStandard::apply_move(godot::Ref<State>_state, int _move)
 	{
 		if (from_group == 0)
 		{
-			_state->set_extra(1, _state->get_extra(1) & 3);
+			_callback_set_extra.call(1, _state->get_extra(1) & 3);
 		}
 		else
 		{
-			_state->set_extra(1, _state->get_extra(1) & 12);
+			_callback_set_extra.call(1, _state->get_extra(1) & 12);
 		}
 		if (Chess::extra(_move))
 		{
 			if (Chess::to(_move) == Chess::g1())
 			{
-				_state->move_piece(Chess::h1(), Chess::f1());
-				_state->set_extra(5, Chess::f1());
+				_callback_move_piece.call(Chess::h1(), Chess::f1());
+				_callback_set_extra.call(5, Chess::f1());
 			}
 			if (Chess::to(_move) == Chess::c1())
 			{
-				_state->move_piece(Chess::a1(), Chess::d1());
-				_state->set_extra(5, Chess::d1());
+				_callback_move_piece.call(Chess::a1(), Chess::d1());
+				_callback_set_extra.call(5, Chess::d1());
 			}
 			if (Chess::to(_move) == Chess::g8())
 			{
-				_state->move_piece(Chess::h8(), Chess::f8());
-				_state->set_extra(5, Chess::f8());
+				_callback_move_piece.call(Chess::h8(), Chess::f8());
+				_callback_set_extra.call(5, Chess::f8());
 			}
 			if (Chess::to(_move) == Chess::c8())
 			{
-				_state->move_piece(Chess::a8(), Chess::d8());
-				_state->set_extra(5, Chess::d8());
+				_callback_move_piece.call(Chess::a8(), Chess::d8());
+				_callback_set_extra.call(5, Chess::d8());
 			}
 			has_king_passant = true;
 		}
@@ -814,31 +814,31 @@ void RuleStandard::apply_move(godot::Ref<State>_state, int _move)
 	if ((from_piece & 95) == 'P')
 	{
 		int front = from_piece == 'P' ? -16 : 16;
-		_state->set_extra(3, 0);	// 移动兵时重置50步和棋
+		_callback_set_extra.call(3, 0);	// 移动兵时重置50步和棋
 		if (Chess::to(_move) - Chess::from(_move) == front * 2)
 		{
 			has_en_passant = true;
-			_state->set_extra(2, Chess::from(_move) + front);
+			_callback_set_extra.call(2, Chess::from(_move) + front);
 		}
 		if (((Chess::from(_move) >> 4) == 2 || (Chess::from(_move) >> 4) == 5) && Chess::to(_move) == _state->get_extra(2))
 		{
 			int captured = Chess::to(_move) - front;
-			_state->capture_piece(captured);
+			_callback_capture_piece.call(captured);
 		}
 		if (Chess::extra(_move))
 		{
 			dont_move = true;
-			_state->capture_piece(Chess::from(_move));
+			_callback_capture_piece.call(Chess::from(_move));
 			_state->add_piece(Chess::to(_move), Chess::extra(_move));
 		}
 	}
 	if (!dont_move)
-		_state->move_piece(Chess::from(_move), Chess::to(_move));
+		_callback_move_piece.call(Chess::from(_move), Chess::to(_move));
 
 	if (!has_en_passant)
-		_state->set_extra(2, -1);
+		_callback_set_extra.call(2, -1);
 	if (!has_king_passant)
-		_state->set_extra(5, -1);
+		_callback_set_extra.call(5, -1);
 }
 
 int RuleStandard::evaluate(godot::Ref<State>_state, int _move)
@@ -910,7 +910,7 @@ int RuleStandard::quies(godot::Ref<State>_state, int _alpha, int _beta, int _gro
 	for (int i = 0; i < move_list.size(); i++)
 	{
 		godot::Ref<State>test_state = _state->duplicate();
-		apply_move(test_state, move_list[i]);
+		apply_move(test_state, move_list[i], godot::Callable(*test_state, "add_piece"), godot::Callable(*test_state, "capture_piece"), godot::Callable(*test_state, "move_piece"), godot::Callable(*test_state, "set_extra"), godot::Callable(*test_state, "push_history"), godot::Callable(*test_state, "change_score"));
 		value = -quies(_state, -_beta, -_alpha, 1 - _group);
 		if (value >= _beta)
 		{
@@ -977,12 +977,9 @@ int RuleStandard::alphabeta(godot::Ref<State>_state, int _alpha, int _beta, int 
 				std::swap(move_list[j], move_list[j + 1]);
 			}
 		}
-		if (_debug_output.is_valid())
-		{
-			_debug_output.call(_state->get_zobrist(), _depth, i, move_list.size());
-		}
+		_debug_output.call(_state->get_zobrist(), _depth, i, move_list.size());
 		godot::Ref<State>test_state = _state->duplicate();
-		apply_move(test_state, move_list[i]);
+		apply_move(test_state, move_list[i], godot::Callable(*test_state, "add_piece"), godot::Callable(*test_state, "capture_piece"), godot::Callable(*test_state, "move_piece"), godot::Callable(*test_state, "set_extra"), godot::Callable(*test_state, "push_history"), godot::Callable(*test_state, "change_score"));
 		value = -alphabeta(test_state, -_beta, -_alpha, _depth - 1, 1 - _group, false, _history_table, _transposition_table, _is_timeup, _debug_output);
 
 		if (_beta <= value)
@@ -1017,7 +1014,7 @@ void RuleStandard::search(godot::Ref<State>_state, int _group, TranspositionTabl
 	for (int i = 1; i < _max_depth; i++)
 	{
 		alphabeta(_state, -WIN, WIN, i, _group, true, &history_table, _transposition_table, _is_timeup, _debug_output);
-		if (_is_timeup.is_valid() && _is_timeup.call())
+		if (_is_timeup.call())
 		{
 			return;
 		}

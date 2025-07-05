@@ -21,7 +21,7 @@ class RuleStandard : public Rule
 		virtual godot::PackedInt32Array generate_move(godot::Ref<State>_state, int _group);
 		virtual godot::PackedInt32Array generate_valid_move(godot::Ref<State>_state, int _group);
 		virtual godot::PackedInt32Array generate_good_capture_move(godot::Ref<State>_state, int _group);
-		virtual void apply_move(godot::Ref<State>_state, int _move);
+		virtual void apply_move(godot::Ref<State>_state, int _move, godot::Callable _callback_add_piece = godot::Callable(), godot::Callable _callback_capture_piece = godot::Callable(), godot::Callable _callback_move_piece = godot::Callable(), godot::Callable _callback_set_extra = godot::Callable(), godot::Callable _callback_push_history = godot::Callable(), godot::Callable _callback_change_score = godot::Callable());
 		virtual int evaluate(godot::Ref<State>_state, int _move);
 		virtual int compare_move(int a, int b, int best_move, std::array<int, 65536> *history_table = nullptr);
 		virtual int quies(godot::Ref<State>_state, int alpha, int beta, int _group = 0);
