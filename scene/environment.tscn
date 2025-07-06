@@ -52,6 +52,24 @@ surface_material_override/1 = SubResource("StandardMaterial3D_po4na")
 [node name="window_right_000" parent="window_000" index="1"]
 surface_material_override/1 = SubResource("StandardMaterial3D_po4na")
 
+[node name="window_left_003" parent="window_003" index="0"]
+surface_material_override/1 = SubResource("StandardMaterial3D_po4na")
+
+[node name="window_right_003" parent="window_003" index="1"]
+surface_material_override/1 = SubResource("StandardMaterial3D_po4na")
+
+[node name="window_left_004" parent="window_004" index="0"]
+surface_material_override/1 = SubResource("StandardMaterial3D_po4na")
+
+[node name="window_right_004" parent="window_004" index="1"]
+surface_material_override/1 = SubResource("StandardMaterial3D_po4na")
+
+[node name="window_left_005" parent="window_005" index="0"]
+surface_material_override/1 = SubResource("StandardMaterial3D_po4na")
+
+[node name="window_right_005" parent="window_005" index="1"]
+surface_material_override/1 = SubResource("StandardMaterial3D_po4na")
+
 [node name="window_left_001" parent="window_001" index="0"]
 surface_material_override/1 = SubResource("StandardMaterial3D_po4na")
 
