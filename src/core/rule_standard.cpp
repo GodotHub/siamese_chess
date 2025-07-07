@@ -1020,6 +1020,7 @@ void RuleStandard::search(godot::Ref<State>_state, int _group, TranspositionTabl
 		}
 	}
 }
+//FIXME: r4rk1/pQ3pbp/3p1np1/4p3/2P5/1PN5/2qB1PPP/n2K2NR w - - 0 1
 
 void RuleStandard::_bind_methods()
 {

@@ -236,7 +236,7 @@ func start() -> void:
 			if $pastor.create_state(text_input_instance.text, RuleStandard.new()):
 				var dialog_2:Dialog = Dialog.create_dialog_instance([
 					"现在棋盘已经准备好了。",
-					"根据棋局信息，" + ("目前是白方先手。" if $pastor.chess_state.get_extra(0) == 0 else "目前是黑方先手。")
+					"根据棋局信息，" + ("目前是白方先手。" if $pastor.state.get_extra(0) == 0 else "目前是黑方先手。")
 				])
 				$pastor.think_time = 10
 				add_child(dialog_2)
