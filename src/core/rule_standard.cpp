@@ -448,19 +448,19 @@ godot::PackedInt32Array RuleStandard::generate_premove(godot::Ref<State>_state, 
 	}
 	if (_group == 0 && _state->get_extra(1) & 8 && !_state->has_piece(Chess::g1()) && !_state->has_piece(Chess::f1()))
 	{
-		output.push_back(Chess::create(Chess::e1(), Chess::g1(), 75));
+		output.push_back(Chess::create(Chess::e1(), Chess::g1(), 'K'));
 	}
 	if (_group == 0 && _state->get_extra(1) & 4 && !_state->has_piece(Chess::c1()) && !_state->has_piece(Chess::d1()))
 	{
-		output.push_back(Chess::create(Chess::e1(), Chess::c1(), 81));
+		output.push_back(Chess::create(Chess::e1(), Chess::c1(), 'Q'));
 	}
 	if (_group == 1 && _state->get_extra(1) & 2 && !_state->has_piece(Chess::g8()) && !_state->has_piece(Chess::f8()))
 	{
-		output.push_back(Chess::create(Chess::e8(), Chess::g8(), 75));
+		output.push_back(Chess::create(Chess::e8(), Chess::g8(), 'k'));
 	}
 	if (_group == 1 && _state->get_extra(1) & 1 && !_state->has_piece(Chess::c8()) && !_state->has_piece(Chess::d8()))
 	{
-		output.push_back(Chess::create(Chess::e8(), Chess::c8(), 81));
+		output.push_back(Chess::create(Chess::e8(), Chess::c8(), 'q'));
 	}
 	return output;
 }
@@ -570,15 +570,15 @@ godot::PackedInt32Array RuleStandard::generate_move(godot::Ref<State>_state, int
 					}
 					to += directions[i];
 					to_piece = _state->get_piece(to);
-					if (!(from_piece == 82 && to_piece == 'K' || from_piece == 114 && to_piece == 107))
+					if (!(from_piece == 'R' && to_piece == 'K' || from_piece == 'r' && to_piece == 'k'))
 					{
 						continue;
 					}
-					if (_from & 15 >= 4 && (from_piece == 82 && _state->get_extra(1) & 8 || from_piece == 114 && _state->get_extra(1) & 2))
+					if (_from & 15 >= 4 && (from_piece == 'R' && _state->get_extra(1) & 8 || from_piece == 'r' && _state->get_extra(1) & 2))
 					{
 						output.push_back(Chess::create(to, from_piece == 'R' ? Chess::g1() : Chess::g8(), 'K'));
 					}
-					else if (_from & 15 <= 3 && (from_piece == 82 && _state->get_extra(1) & 4 || from_piece == 114 && _state->get_extra(1) & 2))
+					else if (_from & 15 <= 3 && (from_piece == 'R' && _state->get_extra(1) & 4 || from_piece == 'r' && _state->get_extra(1) & 2))
 					{
 						output.push_back(Chess::create(to,from_piece == 'R' ? Chess::c1() : Chess::c8(), 'Q'));
 					}
@@ -683,9 +683,12 @@ godot::PackedInt32Array RuleStandard::generate_good_capture_move(godot::Ref<Stat
 				int to_piece = _state->get_piece(to);
 				while (!(to & 0x88) && (!to_piece || !is_same_camp(from_piece, to_piece)))
 				{
-					if (!(to & 0x88) && to_piece && !is_same_camp(from_piece, to_piece) || _state->get_extra(5) != -1 && abs(to - _state->get_extra(5)) <= 1)
+					if (!(to & 0x88) && to_piece && !is_same_camp(from_piece, to_piece)  || _state->get_extra(5) != -1 && abs(to - _state->get_extra(5)) <= 1)
 					{
-						output.push_back(Chess::create(_from, to, 0));
+						if (abs(get_piece_score(_from, from_piece)) <= abs(get_piece_score(to, to_piece)))
+						{
+							output.push_back(Chess::create(_from, to, 0));
+						}
 						break;
 					}
 					if ((from_piece & 95) == 'K' || (from_piece & 95) == 'N')
@@ -776,7 +779,7 @@ void RuleStandard::apply_move(godot::Ref<State>_state, int _move, godot::Callabl
 			}
 		}
 	}
-	if ((from_piece & 95) == 75)
+	if ((from_piece & 95) == 'K')
 	{
 		if (from_group == 0)
 		{
@@ -911,7 +914,7 @@ int RuleStandard::quies(godot::Ref<State>_state, int _alpha, int _beta, int _gro
 	{
 		godot::Ref<State>test_state = _state->duplicate();
 		apply_move(test_state, move_list[i], godot::Callable(*test_state, "add_piece"), godot::Callable(*test_state, "capture_piece"), godot::Callable(*test_state, "move_piece"), godot::Callable(*test_state, "set_extra"), godot::Callable(*test_state, "push_history"), godot::Callable(*test_state, "change_score"));
-		value = -quies(_state, -_beta, -_alpha, 1 - _group);
+		value = -quies(test_state, -_beta, -_alpha, 1 - _group);
 		if (value >= _beta)
 		{
 			return _beta;
@@ -967,7 +970,7 @@ int RuleStandard::alphabeta(godot::Ref<State>_state, int _alpha, int _beta, int 
 		if (score >= _beta)
 			return _beta;
 	}
-	move_list = generate_move(_state, _group);
+	move_list = generate_valid_move(_state, _group);
 	for (int i = 0; i < move_list.size() - 1; i++)
 	{
 		for (int j = move_list.size() - 2; j >= i; j--)
