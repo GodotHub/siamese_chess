@@ -1017,7 +1017,7 @@ void RuleStandard::search(godot::Ref<State>_state, int _group, TranspositionTabl
 	for (int i = 1; i < _max_depth; i++)
 	{
 		alphabeta(_state, -WIN, WIN, i, _group, true, &history_table, _transposition_table, _is_timeup, _debug_output);
-		if (_is_timeup.call())
+		if (_is_timeup.is_valid() && _is_timeup.call())
 		{
 			return;
 		}

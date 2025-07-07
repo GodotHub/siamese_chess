@@ -65,7 +65,7 @@ func decision() -> void:
 		return
 	send_opponent_valid_premove()
 	timer_start()
-	rule.search(state, 0, transposition_table, Callable(), 6, Callable())
+	rule.search(state, 0, transposition_table, is_timeup.bind(think_time), 100, Callable())
 	decided_move.emit.call_deferred(transposition_table.best_move(state.get_zobrist()))	# 取置换表记录内容
 
 func timer_start() -> void:
