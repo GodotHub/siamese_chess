@@ -189,7 +189,7 @@ godot::String RuleStandard::get_end_type(godot::Ref<State>_state)
 	if (!move_list.size())
 	{
 		int null_move_check = quies(_state, -WIN, WIN, 1 - group);
-		if (abs(null_move_check) >= 500)
+		if (abs(null_move_check) >= 50000)
 		{
 			return group == 0 ? "checkmate_black" : "checkmate_white";
 		}
@@ -683,7 +683,7 @@ godot::PackedInt32Array RuleStandard::generate_good_capture_move(godot::Ref<Stat
 				int to_piece = _state->get_piece(to);
 				while (!(to & 0x88) && (!to_piece || !is_same_camp(from_piece, to_piece)))
 				{
-					if (!(to & 0x88) && to_piece && !is_same_camp(from_piece, to_piece)  || _state->get_extra(5) != -1 && abs(to - _state->get_extra(5)) <= 1)
+					if (!(to & 0x88) && to_piece && !is_same_camp(from_piece, to_piece) || _state->get_extra(5) != -1 && abs(to - _state->get_extra(5)) <= 1)
 					{
 						if (abs(get_piece_score(_from, from_piece)) <= abs(get_piece_score(to, to_piece)))
 						{
@@ -874,7 +874,7 @@ int RuleStandard::evaluate(godot::Ref<State>_state, int _move)
 	if ((from_piece & 95) == 'P')
 	{
 		int front = group == 0 ? -16 : 16;
-		if (from / 16 == 0)
+		if (extra)
 		{
 			score += get_piece_score(to, extra);
 			score -= get_piece_score(from, from_piece);
@@ -1025,6 +1025,23 @@ void RuleStandard::search(godot::Ref<State>_state, int _group, TranspositionTabl
 }
 //FIXME: r4rk1/pQ3pbp/3p1np1/4p3/2P5/1PN5/2qB1PPP/n2K2NR w - - 0 1
 
+unsigned long long RuleStandard::perft(godot::Ref<State> _state, int _depth, int group)
+{
+	if (_depth == 0)
+	{
+		return 1ULL;
+	}
+	godot::PackedInt32Array move_list = generate_valid_move(_state, group);
+	unsigned long long cnt = 0;
+	for (int i = 0; i < move_list.size(); i++)
+	{
+		godot::Ref<State> test_state = _state->duplicate();
+		apply_move(test_state, move_list[i], godot::Callable(*test_state, "add_piece"), godot::Callable(*test_state, "capture_piece"), godot::Callable(*test_state, "move_piece"), godot::Callable(*test_state, "set_extra"), godot::Callable(*test_state, "push_history"), godot::Callable(*test_state, "change_score"));
+		cnt += perft(test_state, _depth - 1, 1 - group);
+	}
+	return cnt;
+}
+
 void RuleStandard::_bind_methods()
 {
 	godot::ClassDB::bind_method(godot::D_METHOD("get_end_type"), &RuleStandard::get_end_type);
@@ -1044,4 +1061,5 @@ void RuleStandard::_bind_methods()
 	//godot::ClassDB::bind_method(godot::D_METHOD("quies"), &RuleStandard::quies);
 	//godot::ClassDB::bind_method(godot::D_METHOD("alphabeta"), &RuleStandard::alphabeta);
 	godot::ClassDB::bind_method(godot::D_METHOD("search"), &RuleStandard::search);
+	godot::ClassDB::bind_method(godot::D_METHOD("perft"), &RuleStandard::perft);
 }

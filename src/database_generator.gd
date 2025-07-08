@@ -24,6 +24,13 @@ func performance_test() -> float:
 	var time_end:float = Time.get_ticks_usec()
 	return time_end - time_start
 
+func perft_test() -> void:
+	var node_count:PackedInt32Array = [1, 20, 400, 8902, 197281, 4865609, 119060324, 3195901860, 84998978956, 2439530234167, 69352859712417]
+	for i:int in range(node_count.size()):
+		var result:int = rule_standard.perft(chess_state, i, 0)
+		print("perft_test depth:%d count:%d" % [i, result])
+		assert(result == node_count[i])
+
 func _physics_process(_delta:float):
 	while progress_bar_data.size() > progress_bar.size():
 		add_progress_bar()
@@ -32,8 +39,8 @@ func _physics_process(_delta:float):
 		$panel/margin_container/label.text = "%x" % transposition_table.best_move(chess_state.get_zobrist())
 
 func make_database() -> void:
+	perft_test()
 	print("before: %dms" % performance_test())
-	var chess_state:State = rule_standard.parse("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
 	rule_standard.search(chess_state, 0, transposition_table, Callable(), 10, debug_output)
 	print(main_variation)
 	#$pastor.transposition_table = transposition_table
