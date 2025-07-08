@@ -335,7 +335,7 @@ bool RuleStandard::is_move_valid(godot::Ref<State>_state, int _group, int _move)
 {
 	int from = Chess::from(_move);
 	int from_piece = _state->get_piece(from);
-	if (!from_piece || (_group == 0) != (from_piece >= 65 && from_piece <= 90))
+	if (!from_piece || (_group == 0) != (from_piece >= 'A' && from_piece <= 'Z'))
 	{
 		return false;
 	}
@@ -506,7 +506,7 @@ godot::PackedInt32Array RuleStandard::generate_move(godot::Ref<State>_state, int
 						}
 					}
 				}
-				if (_state->has_piece(_from + front + 1) && !is_same_camp(from_piece, _state->get_piece(_from + front + 1)) || ((_from >> 4) == 2 || (_from >> 4) == 5) && _state->get_extra(2) == _from + front + 1)
+				if (_state->has_piece(_from + front + 1) && !is_same_camp(from_piece, _state->get_piece(_from + front + 1)) || ((_from >> 4) == 3 || (_from >> 4) == 4) && _state->get_extra(2) == _from + front + 1)
 				{
 					if (on_end)
 					{
@@ -520,7 +520,7 @@ godot::PackedInt32Array RuleStandard::generate_move(godot::Ref<State>_state, int
 						output.push_back(Chess::create(_from, _from + front + 1, 0));
 					}
 				}
-				if (_state->has_piece(_from + front - 1) && !is_same_camp(from_piece, _state->get_piece(_from + front - 1)) || ((_from >> 4) == 2 || (_from >> 4) == 5) && _state->get_extra(2) == _from + front - 1)
+				if (_state->has_piece(_from + front - 1) && !is_same_camp(from_piece, _state->get_piece(_from + front - 1)) || ((_from >> 4) == 3 || (_from >> 4) == 4) && _state->get_extra(2) == _from + front - 1)
 				{
 					if (on_end)
 					{
@@ -627,7 +627,7 @@ godot::PackedInt32Array RuleStandard::generate_good_capture_move(godot::Ref<Stat
 				bool on_start = (_from >> 4) == (from_piece == 'P' ? 6 : 1);
 				bool on_end = (_from >> 4) == (from_piece == 'P' ? 1 : 6);
 				if (_state->has_piece(_from + front + 1) && !is_same_camp(from_piece, _state->get_piece(_from + front + 1))
-				|| ((_from >> 4) == 2 || (_from >> 4) == 5) && _state->get_extra(2) == _from + front + 1
+				|| ((_from >> 4) == 3 || (_from >> 4) == 4) && _state->get_extra(2) == _from + front + 1
 				|| !((_from + front + 1) & 0x88) && on_end && _state->get_extra(5) != -1 && abs(_state->get_extra(5) - (_from + front + 1)) <= 1)
 				{
 					if (on_end)
@@ -643,7 +643,7 @@ godot::PackedInt32Array RuleStandard::generate_good_capture_move(godot::Ref<Stat
 					}
 				}
 				if (_state->has_piece(_from + front - 1) && !is_same_camp(from_piece, _state->get_piece(_from + front - 1))
-				|| ((_from >> 4) == 2 || (_from >> 4) == 5) && _state->get_extra(2) == _from + front - 1
+				|| ((_from >> 4) == 3 || (_from >> 4) == 4) && _state->get_extra(2) == _from + front - 1
 				|| !((_from + front - 1) & 0x88) && on_end && _state->get_extra(5) != -1 && abs(_state->get_extra(5) - (_from + front - 1)) <= 1)
 				{
 					if (on_end)
@@ -823,7 +823,7 @@ void RuleStandard::apply_move(godot::Ref<State>_state, int _move, godot::Callabl
 			has_en_passant = true;
 			_callback_set_extra.call(2, Chess::from(_move) + front);
 		}
-		if (((Chess::from(_move) >> 4) == 2 || (Chess::from(_move) >> 4) == 5) && Chess::to(_move) == _state->get_extra(2))
+		if (((Chess::from(_move) >> 4) == 3 || (Chess::from(_move) >> 4) == 4) && Chess::to(_move) == _state->get_extra(2))
 		{
 			int captured = Chess::to(_move) - front;
 			_callback_capture_piece.call(captured);
