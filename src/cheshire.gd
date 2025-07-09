@@ -9,9 +9,9 @@ var inspectable_item_stack:Array[InspectableItem] = []
 func _ready() -> void:
 	pass
 
-func set_initial_camera(other:Camera3D) -> void:
+func set_initial_camera(other:Camera3D, inspectable_item:InspectableItem = null) -> void:
 	camera_stack = [other]
-	inspectable_item_stack = [null]
+	inspectable_item_stack = [inspectable_item]
 	force_set_camera(other)
 
 func _unhandled_input(event:InputEvent) -> void:
