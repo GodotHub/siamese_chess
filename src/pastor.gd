@@ -79,9 +79,11 @@ func send_opponent_valid_move() -> void:	# 仅限轮到对方时使用
 	if move_list.size() == 0:
 		return
 	send_opponent_move.emit.call_deferred(move_list)
+	#send_opponent_premove.emit.call_deferred([])
 
 func send_opponent_valid_premove() -> void:
 	var move_list:PackedInt32Array = rule.generate_premove(state, 1)
 	if move_list.size() == 0:
 		return
-	send_opponent_premove.emit.call_deferred(move_list)
+	#send_opponent_move.emit.call_deferred([])
+	#send_opponent_premove.emit.call_deferred(move_list)
