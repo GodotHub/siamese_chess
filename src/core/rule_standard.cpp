@@ -446,19 +446,19 @@ godot::PackedInt32Array RuleStandard::generate_premove(godot::Ref<State>_state, 
 			}
 		}
 	}
-	if (_group == 0 && _state->get_extra(1) & 8 && !_state->has_piece(Chess::g1()) && !_state->has_piece(Chess::f1()))
+	if (_group == 0 && (_state->get_extra(1) & 8) && !_state->has_piece(Chess::g1()) && !_state->has_piece(Chess::f1()))
 	{
 		output.push_back(Chess::create(Chess::e1(), Chess::g1(), 'K'));
 	}
-	if (_group == 0 && _state->get_extra(1) & 4 && !_state->has_piece(Chess::c1()) && !_state->has_piece(Chess::d1()))
+	if (_group == 0 && (_state->get_extra(1) & 4) && !_state->has_piece(Chess::c1()) && !_state->has_piece(Chess::d1()))
 	{
 		output.push_back(Chess::create(Chess::e1(), Chess::c1(), 'Q'));
 	}
-	if (_group == 1 && _state->get_extra(1) & 2 && !_state->has_piece(Chess::g8()) && !_state->has_piece(Chess::f8()))
+	if (_group == 1 && (_state->get_extra(1) & 2) && !_state->has_piece(Chess::g8()) && !_state->has_piece(Chess::f8()))
 	{
 		output.push_back(Chess::create(Chess::e8(), Chess::g8(), 'k'));
 	}
-	if (_group == 1 && _state->get_extra(1) & 1 && !_state->has_piece(Chess::c8()) && !_state->has_piece(Chess::d8()))
+	if (_group == 1 && (_state->get_extra(1) & 1) && !_state->has_piece(Chess::c8()) && !_state->has_piece(Chess::d8()))
 	{
 		output.push_back(Chess::create(Chess::e8(), Chess::c8(), 'q'));
 	}
@@ -574,11 +574,11 @@ godot::PackedInt32Array RuleStandard::generate_move(godot::Ref<State>_state, int
 					{
 						continue;
 					}
-					if (_from & 15 >= 4 && (from_piece == 'R' && _state->get_extra(1) & 8 || from_piece == 'r' && _state->get_extra(1) & 2))
+					if ((_from & 15) >= 4 && (from_piece == 'R' && (_state->get_extra(1) & 8) || from_piece == 'r' && (_state->get_extra(1) & 2)))
 					{
 						output.push_back(Chess::create(to, from_piece == 'R' ? Chess::g1() : Chess::g8(), 'K'));
 					}
-					else if (_from & 15 <= 3 && (from_piece == 'R' && _state->get_extra(1) & 4 || from_piece == 'r' && _state->get_extra(1) & 2))
+					else if ((_from & 15) <= 3 && (from_piece == 'R' && (_state->get_extra(1) & 4) || from_piece == 'r' && (_state->get_extra(1) & 1)))
 					{
 						output.push_back(Chess::create(to,from_piece == 'R' ? Chess::c1() : Chess::c8(), 'Q'));
 					}
@@ -756,7 +756,7 @@ void RuleStandard::apply_move(godot::Ref<State>_state, int _move, godot::Callabl
 	}
 	if ((from_piece & 95) == 'R')	// 哪边的车动过，就不能往那个方向易位
 	{
-		if (Chess::from(_move) & 15 >= 4)
+		if ((Chess::from(_move) & 15) >= 4)
 		{
 			if (from_group == 0)
 			{
@@ -767,7 +767,7 @@ void RuleStandard::apply_move(godot::Ref<State>_state, int _move, godot::Callabl
 				_callback_set_extra.call(1, _state->get_extra(1) & 13);
 			}
 		}
-		else if (Chess::from(_move) & 15 <= 3)
+		else if ((Chess::from(_move) & 15) <= 3)
 		{
 			if (from_group == 0)
 			{
