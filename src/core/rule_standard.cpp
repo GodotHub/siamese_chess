@@ -683,12 +683,17 @@ godot::PackedInt32Array RuleStandard::generate_good_capture_move(godot::Ref<Stat
 				int to_piece = _state->get_piece(to);
 				while (!(to & 0x88) && (!to_piece || !is_same_camp(from_piece, to_piece)))
 				{
-					if (!(to & 0x88) && to_piece && !is_same_camp(from_piece, to_piece) || _state->get_extra(5) != -1 && abs(to - _state->get_extra(5)) <= 1)
+					if (!(to & 0x88) && to_piece && !is_same_camp(from_piece, to_piece))
 					{
 						if (abs(get_piece_score(_from, from_piece)) <= abs(get_piece_score(to, to_piece)))
 						{
 							output.push_back(Chess::create(_from, to, 0));
 						}
+						break;
+					}
+					if (_state->get_extra(5) != -1 && abs(to - _state->get_extra(5)) <= 1)
+					{
+						output.push_back(Chess::create(_from, to, 0));
 						break;
 					}
 					if ((from_piece & 95) == 'K' || (from_piece & 95) == 'N')
@@ -851,13 +856,13 @@ int RuleStandard::evaluate(godot::Ref<State>_state, int _move)
 	int to = Chess::to(_move);
 	int to_piece = _state->get_piece(to);
 	int extra = Chess::extra(_move);
-	int group = from >= 'A' && from <= 'Z' ? 0 : 1;
+	int group = from_piece >= 'A' && from_piece <= 'Z' ? 0 : 1;
 	int score = get_piece_score(to, from_piece) - get_piece_score(from, from_piece);
 	if (to_piece && !is_same_camp(from_piece, to_piece))
 	{
 		score -= get_piece_score(to, to_piece);
 	}
-	if (_state->get_extra(5) != -1 && abs(_state->get_extra(5) - Chess::to(_move)) <= 1 && (to_piece & 95) != 'K')
+	if (_state->get_extra(5) != -1 && abs(_state->get_extra(5) - Chess::to(_move)) <= 1)
 	{
 		score -= piece_value[group == 0 ? 'k' : 'K'];
 	}
