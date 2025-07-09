@@ -62,22 +62,17 @@ func tap_position(position_name:String) -> void:
 	var by:int = Chess.to_position_int(position_name)
 	if !is_instance_valid(state):
 		return
-	if state.get_extra(0) == 1:
-		if selected != -1:
-			confirm_move(selected, by)
-			selected = -1
-			return
-		if !state.has_piece(by) || !valid_move.has(by):
-			return
+	if selected != -1:
+		confirm_move(selected, by)
+		confirm_premove(selected, by)
+		selected = -1
+		return
+	if !state.has_piece(by) || !valid_move.has(by) && !valid_premove.has(by):
+		return
+	if valid_move.has(by):
 		for iter:int in valid_move[by]:
 			$canvas.draw_select_position($canvas.convert_name_to_position(Chess.to_position_name(Chess.to(iter))))
-	else:
-		if selected != -1:
-			confirm_premove(selected, by)
-			selected = -1
-			return
-		if !state.has_piece(by) || !valid_premove.has(by):
-			return
+	if valid_premove.has(by):
 		for iter:int in valid_premove[by]:
 			$canvas.draw_premove_position($canvas.convert_name_to_position(Chess.to_position_name(Chess.to(iter))))
 	selected = by
@@ -147,6 +142,7 @@ func execute_move(move:int) -> void:
 	selected = -1
 
 func set_valid_move(move_list:PackedInt32Array) -> void:
+	valid_premove.clear()
 	valid_move.clear()
 	for move:int in move_list:
 		if !valid_move.has(Chess.from(move)):
@@ -158,6 +154,7 @@ func set_valid_move(move_list:PackedInt32Array) -> void:
 
 func set_valid_premove(move_list:PackedInt32Array) -> void:
 	valid_premove.clear()
+	valid_move.clear()
 	for move:int in move_list:
 		if !valid_premove.has(Chess.from(move)):
 			valid_premove[Chess.from(move)] = []
