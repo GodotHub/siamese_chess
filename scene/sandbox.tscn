@@ -1,0 +1,30 @@
+[gd_scene load_steps=7 format=3 uid="uid://bx261kx0v8vew"]
+
+[ext_resource type="Script" uid="uid://df1jvoew7cb6y" path="res://src/sandbox.gd" id="1_23ueg"]
+[ext_resource type="PackedScene" uid="uid://d1s6qj7aofldk" path="res://scene/chessboard.tscn" id="1_h0kme"]
+[ext_resource type="PackedScene" uid="uid://b3ml34bssywkr" path="res://scene/cheshire.tscn" id="3_htjak"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_23ueg"]
+sky_horizon_color = Color(0.662243, 0.671743, 0.686743, 1)
+ground_horizon_color = Color(0.662243, 0.671743, 0.686743, 1)
+
+[sub_resource type="Sky" id="Sky_31ryr"]
+sky_material = SubResource("ProceduralSkyMaterial_23ueg")
+
+[sub_resource type="Environment" id="Environment_htjak"]
+background_mode = 2
+sky = SubResource("Sky_31ryr")
+tonemap_mode = 2
+
+[node name="sandbox" type="Node3D"]
+script = ExtResource("1_23ueg")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_htjak")
+
+[node name="chessboard" parent="." instance=ExtResource("1_h0kme")]
+
+[node name="camera_3d" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0.735594, 0)
+
+[node name="cheshire" parent="." instance=ExtResource("3_htjak")]
