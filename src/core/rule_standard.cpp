@@ -857,7 +857,7 @@ int RuleStandard::evaluate(godot::Ref<State>_state, int _move)
 	{
 		score -= get_piece_score(to, to_piece);
 	}
-	if (_state->get_extra(5) != -1 && abs(abs(_state->get_extra(5) - Chess::to(_move))) <= 1)
+	if (_state->get_extra(5) != -1 && abs(_state->get_extra(5) - Chess::to(_move)) <= 1 && (to_piece & 95) != 'K')
 	{
 		score -= piece_value[group == 0 ? 'k' : 'K'];
 	}
