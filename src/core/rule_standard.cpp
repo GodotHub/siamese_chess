@@ -1033,6 +1033,10 @@ unsigned long long RuleStandard::perft(godot::Ref<State> _state, int _depth, int
 	}
 	godot::PackedInt32Array move_list = generate_valid_move(_state, group);
 	unsigned long long cnt = 0;
+	if (_depth == 1)
+	{
+		return move_list.size();
+	}
 	for (int i = 0; i < move_list.size(); i++)
 	{
 		godot::Ref<State> test_state = _state->duplicate();
