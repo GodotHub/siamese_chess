@@ -16,7 +16,6 @@ func _ready() -> void:
 	update_move()
 
 func receive_move(move:int) -> void:
-	chessboard.execute_move(move)
 	rule_standard.apply_move(state, move, state.add_piece, state.capture_piece, state.move_piece, state.set_extra, state.push_history, state.change_score)
 	update_move()
 

@@ -124,9 +124,9 @@ func confirm_move(from:int, to:int) -> void:
 		await decision_instance.decided
 		if decision_instance.selected_index == -1:
 			return
-		move_played.emit(move_list[decision_instance.selected_index])
+		execute_move(move_list[decision_instance.selected_index])
 	else:
-		move_played.emit(move_list[0])
+		execute_move(move_list[0])
 	$canvas.clear_select_position()
 
 func execute_move(move:int) -> void:
@@ -138,7 +138,12 @@ func execute_move(move:int) -> void:
 	$canvas.draw_move_position($canvas.convert_name_to_position(Chess.to_position_name(Chess.from(move))))
 	$canvas.draw_move_position($canvas.convert_name_to_position(Chess.to_position_name(Chess.to(move))))
 	press_timer.emit()
+	move_played.emit(move)
 	selected = -1
+	if premove != -1 && valid_premove.has(Chess.from(premove)) && valid_premove[Chess.from(premove)].has(premove):
+		var temp:int = premove
+		premove = -1
+		execute_move(temp)
 
 func set_valid_move(move_list:PackedInt32Array) -> void:
 	valid_move.clear()
