@@ -44,6 +44,27 @@ void Rule::search(godot::Ref<State>_state, int _group, TranspositionTable *_tran
 	
 }
 
+unsigned long long Rule::perft(godot::Ref<State> _state, int _depth, int group)
+{
+	if (_depth == 0)
+	{
+		return 1ULL;
+	}
+	godot::PackedInt32Array move_list = generate_valid_move(_state, group);
+	unsigned long long cnt = 0;
+	if (_depth == 1)
+	{
+		return move_list.size();
+	}
+	for (int i = 0; i < move_list.size(); i++)
+	{
+		godot::Ref<State> test_state = _state->duplicate();
+		apply_move(test_state, move_list[i], godot::Callable(*test_state, "add_piece"), godot::Callable(*test_state, "capture_piece"), godot::Callable(*test_state, "move_piece"), godot::Callable(*test_state, "set_extra"), godot::Callable(*test_state, "push_history"), godot::Callable(*test_state, "change_score"));
+		cnt += perft(test_state, _depth - 1, 1 - group);
+	}
+	return cnt;
+}
+
 void Rule::_bind_methods()
 {
 	godot::ClassDB::bind_method(godot::D_METHOD("get_end_type"), &Rule::get_end_type);
@@ -55,4 +76,5 @@ void Rule::_bind_methods()
 	godot::ClassDB::bind_method(godot::D_METHOD("apply_move"), &Rule::apply_move);
 	godot::ClassDB::bind_method(godot::D_METHOD("evaluate"), &Rule::evaluate);
 	godot::ClassDB::bind_method(godot::D_METHOD("search"), &Rule::search);
+	godot::ClassDB::bind_method(godot::D_METHOD("perft"), &Rule::perft);
 }

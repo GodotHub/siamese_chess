@@ -150,36 +150,6 @@ RuleStandard::RuleStandard()
 		0,   0,   0,   0,   0,   0,   0,   0,
 		}}
 	};
-
-	piece_mapping_instance = {
-		{'K', "res://scene/piece_king.tscn"},
-		{'Q', "res://scene/piece_queen.tscn"},
-		{'R', "res://scene/piece_rook.tscn"},
-		{'N', "res://scene/piece_knight.tscn"},
-		{'B', "res://scene/piece_bishop.tscn"},
-		{'P', "res://scene/piece_pawn.tscn"},
-		{'k', "res://scene/piece_king.tscn"},
-		{'q', "res://scene/piece_queen.tscn"},
-		{'r', "res://scene/piece_rook.tscn"},
-		{'n', "res://scene/piece_knight.tscn"},
-		{'b', "res://scene/piece_bishop.tscn"},
-		{'p', "res://scene/piece_pawn.tscn"},
-	};
-
-	piece_mapping_group = {
-		{'K', 1},
-		{'Q', 1},
-		{'R', 1},
-		{'N', 1},
-		{'B', 1},
-		{'P', 1},
-		{'k', -1},
-		{'q', -1},
-		{'r', -1},
-		{'n', -1},
-		{'b', -1},
-		{'p', -1},
-	};
 }
 
 godot::String RuleStandard::get_end_type(godot::Ref<State>_state)
@@ -306,14 +276,6 @@ godot::String RuleStandard::stringify(godot::Ref<State>_state)
 	output.push_back(godot::String::num(_state->get_extra(4), 0));
 	// king_passant是为了判定是否违规走子，临时记录的，这里不做转换
 	return godot::String(" ").join(output);
-}
-
-godot::Node3D *RuleStandard::get_piece_instance(int _piece)
-{
-	godot::Ref<godot::PackedScene> packed_scene = godot::ResourceLoader::get_singleton()->load(piece_mapping_instance[_piece]);
-	godot::Node3D *instance = godot::Object::cast_to<godot::Node3D>(packed_scene->instantiate());
-	//instance->group = piece_mapping_group[_piece]
-	return instance;
 }
 
 bool RuleStandard::is_same_camp(int a, int b)
@@ -1030,33 +992,11 @@ void RuleStandard::search(godot::Ref<State>_state, int _group, TranspositionTabl
 }
 //FIXME: r4rk1/pQ3pbp/3p1np1/4p3/2P5/1PN5/2qB1PPP/n2K2NR w - - 0 1
 
-unsigned long long RuleStandard::perft(godot::Ref<State> _state, int _depth, int group)
-{
-	if (_depth == 0)
-	{
-		return 1ULL;
-	}
-	godot::PackedInt32Array move_list = generate_valid_move(_state, group);
-	unsigned long long cnt = 0;
-	if (_depth == 1)
-	{
-		return move_list.size();
-	}
-	for (int i = 0; i < move_list.size(); i++)
-	{
-		godot::Ref<State> test_state = _state->duplicate();
-		apply_move(test_state, move_list[i], godot::Callable(*test_state, "add_piece"), godot::Callable(*test_state, "capture_piece"), godot::Callable(*test_state, "move_piece"), godot::Callable(*test_state, "set_extra"), godot::Callable(*test_state, "push_history"), godot::Callable(*test_state, "change_score"));
-		cnt += perft(test_state, _depth - 1, 1 - group);
-	}
-	return cnt;
-}
-
 void RuleStandard::_bind_methods()
 {
 	godot::ClassDB::bind_method(godot::D_METHOD("get_end_type"), &RuleStandard::get_end_type);
 	godot::ClassDB::bind_method(godot::D_METHOD("parse"), &RuleStandard::parse);
 	godot::ClassDB::bind_method(godot::D_METHOD("stringify"), &RuleStandard::stringify);
-	godot::ClassDB::bind_method(godot::D_METHOD("get_piece_instance"), &RuleStandard::get_piece_instance);
 	godot::ClassDB::bind_method(godot::D_METHOD("is_same_camp"), &RuleStandard::is_same_camp);
 	godot::ClassDB::bind_method(godot::D_METHOD("get_piece_score"), &RuleStandard::get_piece_score);
 	godot::ClassDB::bind_method(godot::D_METHOD("is_move_valid"), &RuleStandard::is_move_valid);
