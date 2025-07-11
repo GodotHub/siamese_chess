@@ -158,8 +158,7 @@ godot::String RuleStandard::get_end_type(godot::Ref<State>_state)
 	godot::PackedInt32Array move_list = generate_valid_move(_state, group);
 	if (!move_list.size())
 	{
-		int null_move_check = quies(_state, -WIN, WIN, 1 - group);
-		if (abs(null_move_check) >= 50000)
+		if (is_check(_state, 1 - group))
 		{
 			return group == 0 ? "checkmate_black" : "checkmate_white";
 		}
@@ -303,16 +302,89 @@ bool RuleStandard::is_move_valid(godot::Ref<State>_state, int _group, int _move)
 	}
 	godot::Ref<State>test_state = _state->duplicate();
 	apply_move(test_state, _move, godot::Callable(*test_state, "add_piece"), godot::Callable(*test_state, "capture_piece"), godot::Callable(*test_state, "move_piece"), godot::Callable(*test_state, "set_extra"), godot::Callable(*test_state, "push_history"), godot::Callable(*test_state, "change_score"));
-	godot::PackedInt32Array move_list = generate_good_capture_move(test_state, 1 - _group);
-	for (int i = 0; i < move_list.size(); i++)
+	return !is_check(test_state, 1 - _group);
+}
+
+bool RuleStandard::is_check(godot::Ref<State> _state, int _group)
+{
+	for (int _from_1 = 0; _from_1 < 8; _from_1++)
 	{
-		int valid_check = evaluate(test_state, move_list[i]);
-		if (abs(valid_check) >= THRESHOLD)
+		for (int _from_2 = 0; _from_2 < 8; _from_2++)
 		{
-			return false;
+			int _from = (_from_1 << 4) + _from_2;
+			if (!_state->has_piece(_from))
+			{
+				continue;
+			}
+			int from_piece = _state->get_piece(_from);
+			if ((_group == 0) != (from_piece >= 'A' && from_piece <= 'Z'))
+			{
+				continue;
+			}
+			godot::PackedInt32Array directions;
+			if ((from_piece & 95) == 'P')
+			{
+				int front = from_piece == 'P' ? -16 : 16;
+				bool on_start = (_from >> 4) == (from_piece == 'P' ? 6 : 1);
+				bool on_end = (_from >> 4) == (from_piece == 'P' ? 1 : 6);
+				if (_state->has_piece(_from + front + 1) && !is_same_camp(from_piece, _state->get_piece(_from + front + 1)) && (_state->get_piece(_from + front + 1) & 95) == 'K'
+				|| !((_from + front + 1) & 0x88) && on_end && _state->get_extra(5) != -1 && abs(_state->get_extra(5) - (_from + front + 1)) <= 1)
+				{
+					return true;
+				}
+				if (_state->has_piece(_from + front - 1) && !is_same_camp(from_piece, _state->get_piece(_from + front - 1)) && (_state->get_piece(_from + front - 1) & 95) == 'K'
+				|| !((_from + front - 1) & 0x88) && on_end && _state->get_extra(5) != -1 && abs(_state->get_extra(5) - (_from + front - 1)) <= 1)
+				{
+					return true;
+				}
+				continue;
+			}
+			else if ((from_piece & 95) == 'K' || (from_piece & 95) == 'Q')
+			{
+				directions = directions_eight_way;
+			}
+			else if ((from_piece & 95) == 'R')
+			{
+				directions = directions_straight;
+			}
+			else if ((from_piece & 95) == 'N')
+			{
+				directions = directions_horse;
+			}
+			else if ((from_piece & 95) == 'B')
+			{
+				directions = directions_diagonal;
+			}
+
+			for (int i = 0; i < directions.size(); i++)
+			{
+				int to = _from + directions[i];
+				int to_piece = _state->get_piece(to);
+				while (!(to & 0x88) && (!to_piece || !is_same_camp(from_piece, to_piece)))
+				{
+					if (_state->get_extra(5) != -1 && abs(to - _state->get_extra(5)) <= 1)
+					{
+						return true;
+					}
+					if (!(to & 0x88) && to_piece && !is_same_camp(from_piece, to_piece))
+					{
+						if ((to_piece & 95) == 'K')
+						{
+							return true;
+						}
+						break;
+					}
+					if ((from_piece & 95) == 'K' || (from_piece & 95) == 'N')
+					{
+						break;
+					}
+					to += directions[i];
+					to_piece = _state->get_piece(to);
+				}
+			}
 		}
 	}
-	return true;
+	return false;
 }
 
 godot::PackedInt32Array RuleStandard::generate_premove(godot::Ref<State>_state, int _group)
@@ -999,6 +1071,7 @@ void RuleStandard::_bind_methods()
 	godot::ClassDB::bind_method(godot::D_METHOD("stringify"), &RuleStandard::stringify);
 	godot::ClassDB::bind_method(godot::D_METHOD("is_same_camp"), &RuleStandard::is_same_camp);
 	godot::ClassDB::bind_method(godot::D_METHOD("get_piece_score"), &RuleStandard::get_piece_score);
+	godot::ClassDB::bind_method(godot::D_METHOD("is_check"), &RuleStandard::is_check);
 	godot::ClassDB::bind_method(godot::D_METHOD("is_move_valid"), &RuleStandard::is_move_valid);
 	godot::ClassDB::bind_method(godot::D_METHOD("generate_premove"), &RuleStandard::generate_premove);
 	godot::ClassDB::bind_method(godot::D_METHOD("generate_move"), &RuleStandard::generate_move);
@@ -1010,5 +1083,4 @@ void RuleStandard::_bind_methods()
 	//godot::ClassDB::bind_method(godot::D_METHOD("quies"), &RuleStandard::quies);
 	//godot::ClassDB::bind_method(godot::D_METHOD("alphabeta"), &RuleStandard::alphabeta);
 	godot::ClassDB::bind_method(godot::D_METHOD("search"), &RuleStandard::search);
-	godot::ClassDB::bind_method(godot::D_METHOD("perft"), &RuleStandard::perft);
 }

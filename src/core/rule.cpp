@@ -14,6 +14,12 @@ godot::String Rule::stringify(godot::Ref<State>_state)
 {
 	return "";
 }
+
+bool Rule::is_check(godot::Ref<State> _state, int _group)
+{
+	return false;
+}
+
 godot::PackedInt32Array Rule::generate_premove(godot::Ref<State>_state, int _group)
 {
 	return {};
@@ -70,6 +76,7 @@ void Rule::_bind_methods()
 	godot::ClassDB::bind_method(godot::D_METHOD("get_end_type"), &Rule::get_end_type);
 	godot::ClassDB::bind_method(godot::D_METHOD("parse"), &Rule::parse);
 	godot::ClassDB::bind_method(godot::D_METHOD("stringify"), &Rule::stringify);
+	godot::ClassDB::bind_method(godot::D_METHOD("is_check"), &Rule::is_check);
 	godot::ClassDB::bind_method(godot::D_METHOD("generate_premove"), &Rule::generate_premove);
 	godot::ClassDB::bind_method(godot::D_METHOD("generate_move"), &Rule::generate_move);
 	godot::ClassDB::bind_method(godot::D_METHOD("generate_valid_move"), &Rule::generate_valid_move);
