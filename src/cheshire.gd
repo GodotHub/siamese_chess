@@ -12,6 +12,8 @@ func _ready() -> void:
 func set_initial_camera(other:Camera3D, inspectable_item:InspectableItem = null) -> void:
 	camera_stack = [other]
 	inspectable_item_stack = [inspectable_item]
+	if is_instance_valid(inspectable_item):
+		inspectable_item.set_enabled(true)
 	force_set_camera(other)
 
 func _unhandled_input(event:InputEvent) -> void:
@@ -26,12 +28,20 @@ func _unhandled_input(event:InputEvent) -> void:
 			move_camera(camera_stack[-1])
 
 func add_stack(camera:Camera3D, inspectable_item:InspectableItem) -> void:
+	if is_instance_valid(inspectable_item_stack[-1]):
+		inspectable_item_stack[-1].set_enabled(false)
 	camera_stack.push_back(camera)
 	inspectable_item_stack.push_back(inspectable_item)
+	if is_instance_valid(inspectable_item_stack[-1]):
+		inspectable_item_stack[-1].set_enabled(true)
 
 func pop_stack() -> void:
+	if is_instance_valid(inspectable_item_stack[-1]):
+		inspectable_item_stack[-1].set_enabled(false)
 	camera_stack.pop_back()
 	inspectable_item_stack.pop_back()
+	if is_instance_valid(inspectable_item_stack[-1]):
+		inspectable_item_stack[-1].set_enabled(true)
 
 func click_area(screen_position:Vector2) -> Area3D:
 	var from:Vector3 = $camera.project_ray_origin(screen_position)

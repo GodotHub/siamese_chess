@@ -15,10 +15,7 @@ var piece_instance:Dictionary[int, PieceInstance] = {}
 var rule_standard:RuleStandard = RuleStandard.new()
 
 func _ready() -> void:
-	for iter:Node in get_children():
-		if iter is Area3D:
-			iter.add_user_signal("input")
-			iter.connect("input", input)
+	super._ready()
 
 func input(_from:Node3D, _to:Area3D, _event:InputEvent, _event_position:Vector3, _normal:Vector3) -> void:
 	if _event is InputEventMouseButton:

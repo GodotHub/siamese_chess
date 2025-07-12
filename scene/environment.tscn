@@ -44,7 +44,7 @@ size = Vector3(0.511902, 0.0298615, 0.512817)
 size = Vector3(0.328775, 0.0970306, 0.14682)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_560hc"]
-size = Vector3(0.403229, 0.0231934, 0.300537)
+size = Vector3(0.0333634, 0.0231934, 0.125549)
 
 [node name="environment" instance=ExtResource("1_b3374")]
 script = ExtResource("2_7r8ay")
@@ -176,11 +176,11 @@ metadata/camera = NodePath("camera_3d")
 metadata/inspectable_item = NodePath("../../draft")
 
 [node name="collision_shape_3d" type="CollisionShape3D" parent="cheshire/area_draft" index="0"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00733949, -0.00549316, 0.0162355)
+transform = Transform3D(0.264075, 0, -0.964502, 0, 1, 0, 0.964502, 0, 0.264075, 0.0603962, -0.00549316, -0.123369)
 shape = SubResource("BoxShape3D_560hc")
 
 [node name="camera_3d" type="Camera3D" parent="cheshire/area_draft" index="1"]
-transform = Transform3D(1, -4.33591e-08, -3.81731e-08, 4.33591e-08, 0.126701, 0.991941, -3.81731e-08, -0.991941, 0.126701, 0, 0.229753, 0.0445619)
+transform = Transform3D(1, -4.33591e-08, -3.81731e-08, 4.33591e-08, 0.126701, 0.991941, -3.81731e-08, -0.991941, 0.126701, -1.49012e-08, 0.386479, -0.351091)
 
 [node name="draft" parent="." index="19" instance=ExtResource("8_tnamw")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.35787, 0.869977, -0.0607151)
@@ -259,7 +259,10 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.91093, 0, 6.22293)
 [node name="upright_piano" parent="." index="25" instance=ExtResource("16_futd0")]
 transform = Transform3D(-1, 0, 8.74226e-08, 0, 1, 0, -8.74226e-08, 0, -1, -5.83635, 0, 7.78949)
 
-[node name="seat" type="Node3D" parent="." index="26"]
+[node name="pen" parent="." index="26" instance=ExtResource("19_u0pxc")]
+transform = Transform3D(-0.965094, 0.261903, 1.14481e-08, 0, -4.37114e-08, 1, 0.261903, 0.965094, 4.21856e-08, -2.63087, 0.853147, -0.00997519)
+
+[node name="seat" type="Node3D" parent="." index="27"]
 
 [node name="table_0" parent="seat" index="0" instance=ExtResource("14_7clsy")]
 transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -2.32462, 0, 0.240975)
@@ -404,6 +407,3 @@ transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -4.731
 
 [node name="chair_high_35" parent="seat" index="47" instance=ExtResource("18_u0pxc")]
 transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -4.73184, 0, 4.9516)
-
-[node name="pen2" parent="." index="32" instance=ExtResource("19_u0pxc")]
-transform = Transform3D(0.0910845, 0.995843, 4.35297e-08, 0, -4.37114e-08, 1, 0.995843, -0.0910845, -3.98143e-09, -2.53675, 0.850887, 0.249361)

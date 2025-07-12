@@ -1,6 +1,7 @@
 extends InspectableItem
 
 var region:Rect2 = Rect2(0, 0, 384, 512)
+var color:Color = Color(0.5, 0.5, 0.5, 1)
 var lines:Array[Line2D] = []	# 直接暴力搜解决问题
 var drawing_line:Line2D = null
 var uv_mapping:UVMapping = null
@@ -13,10 +14,9 @@ func _ready() -> void:
 	$mesh_instance.mesh = array_mesh
 	uv_mapping = UVMapping.new()
 	uv_mapping.set_mesh($mesh_instance)
-	$area_3d.add_user_signal("input")
-	$area_3d.connect("input", drawing)
+	super._ready()
 
-func drawing(_from:Node3D, _to:Area3D, _event:InputEvent, _event_position:Vector3, _normal:Vector3) -> void:
+func input(_from:Node3D, _to:Area3D, _event:InputEvent, _event_position:Vector3, _normal:Vector3) -> void:
 	var event_position_3d:Vector3 = $mesh_instance.global_transform.affine_inverse() * _event_position
 	var event_normal_3d:Vector3 = $mesh_instance.global_transform.orthonormalized().basis.inverse() * _normal
 	var event_position_2d:Vector2 = Vector2()
@@ -47,7 +47,7 @@ func start_drawing(start_position:Vector2) -> void:
 	new_line.joint_mode = Line2D.LINE_JOINT_ROUND
 	new_line.begin_cap_mode = Line2D.LINE_CAP_ROUND
 	new_line.end_cap_mode = Line2D.LINE_CAP_ROUND
-	new_line.default_color = Color(0, 0, 0, 1)
+	new_line.default_color = color
 	new_line.width = 5
 	new_line.add_point(start_position)
 	drawing_line = new_line
