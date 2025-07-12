@@ -5,6 +5,7 @@ var lines:Array[Line2D] = []	# 直接暴力搜解决问题
 var drawing_line:Line2D = null
 var uv_mapping:UVMapping = null
 var last_event_position_2d:Vector2 = Vector2(-1, -1)
+var use_eraser:bool = false
 
 func _ready() -> void:
 	var array_mesh:ArrayMesh = ArrayMesh.new()
@@ -28,13 +29,18 @@ func drawing(_from:Node3D, _to:Area3D, _event:InputEvent, _event_position:Vector
 		event_position_2d.y *= region.size.y
 	last_event_position_2d = event_position_2d
 	if _event is InputEventMouseButton:
-		if _event.pressed && _event.button_index == MOUSE_BUTTON_LEFT:
-			start_drawing(event_position_2d)
-		else:
-			end_drawing()
+		if !use_eraser:
+			if _event.pressed && _event.button_index == MOUSE_BUTTON_LEFT:
+				start_drawing(event_position_2d)
+			else:
+				end_drawing()
 	elif _event is InputEventMouseMotion:
 		if _event.button_mask & MOUSE_BUTTON_MASK_LEFT:
-			drawing_curve(event_position_2d)
+			if use_eraser || _event.pen_inverted:
+				cancel_drawing()
+				erase_line(event_position_2d)
+			else:
+				drawing_curve(event_position_2d)
 
 func start_drawing(start_position:Vector2) -> void:
 	var new_line:Line2D = Line2D.new()
@@ -79,12 +85,12 @@ func cancel_drawing() -> void:
 
 func erase_line(drawing_position:Vector2) -> void:
 	cancel_drawing()
-	var point_list:Array = get_children()
+	var point_list:Array = $sub_viewport.get_children()
 	for iter:Line2D in point_list:
 		if iter.get_point_count() < 2:
 			iter.queue_free()
-		for point:Vector2 in iter.select_position:
-			if point.distance_squared_to(drawing_position) < 10 * 10:
+		for i:int in iter.get_point_count():
+			if iter.get_point_position(i).distance_squared_to(drawing_position) < 10 * 10:
 				iter.queue_free()
 				break
 
