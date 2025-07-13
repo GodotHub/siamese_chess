@@ -17,8 +17,14 @@ config/features=PackedStringArray("4.4", "GL Compatibility")
 config/icon="uid://gdemlmk1r3x4"
 
 [debug]
-
+	
 gdscript/warnings/integer_division=0
+
+[display]
+
+window/stretch/mode="viewport"
+window/stretch/aspect="expand"
+window/stretch/scale=2
 
 [editor]
 
