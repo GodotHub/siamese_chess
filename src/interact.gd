@@ -6,7 +6,11 @@ class_name Interact
 @export var inspectable_item:Array[InspectableItem] = []
 
 func _ready() -> void:
-	pass
+	add_user_signal("input")
+	connect("input", move_camera)
+	set_enabled(false)
+	for iter:InspectableItem in inspectable_item:
+		iter.set_enabled(false)
 
 func enter() -> void:
 	set_enabled(false)
@@ -26,6 +30,11 @@ func get_camera() -> Camera3D:
 
 func set_enabled(enabled:bool) -> void:
 	if enabled:
-		collision_mask |= 1
+		collision_layer |= 1
 	else:
-		collision_mask &= ^1
+		collision_layer &= ~1
+
+func move_camera(_from:Node3D, _to:Area3D, _event:InputEvent, _event_position:Vector3, _normal:Vector3) -> void:
+	if _event is InputEventMouseButton && _event.pressed && _event.button_index == MOUSE_BUTTON_LEFT:
+		_from.add_stack(_to)
+		_from.move_camera(_to.get_camera())

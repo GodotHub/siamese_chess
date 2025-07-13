@@ -3,18 +3,15 @@ extends Node3D
 
 var mouse_moved:bool = false
 var mouse_start_position_name:String = ""
-var camera_stack:Array[Camera3D] = []
-var inspectable_item_stack:Array[InspectableItem] = []
+var interact_stack:Array[Interact] = []
 
 func _ready() -> void:
 	pass
 
-func set_initial_camera(other:Camera3D, inspectable_item:InspectableItem = null) -> void:
-	camera_stack = [other]
-	inspectable_item_stack = [inspectable_item]
-	if is_instance_valid(inspectable_item):
-		inspectable_item.set_enabled(true)
-	force_set_camera(other)
+func set_initial_interact(interact:Interact) -> void:
+	interact.enter()
+	interact_stack.push_back(interact)
+	force_set_camera(interact.get_camera())
 
 func _unhandled_input(event:InputEvent) -> void:
 	if event is InputEventMouseButton || event is InputEventMouseMotion:
@@ -23,32 +20,27 @@ func _unhandled_input(event:InputEvent) -> void:
 			area.emit_signal("input", self, area, event, $ray_cast.get_collision_point(), $ray_cast.get_collision_normal())
 	if event is InputEventScreenPinch:
 		#cancel_drawing_move.emit()
-		if event.relative < 1 && camera_stack.size() >= 2:
+		if event.relative < 1 && interact_stack.size() >= 2:
 			pop_stack()
-			move_camera(camera_stack[-1])
 
-func add_stack(camera:Camera3D, inspectable_item:InspectableItem) -> void:
-	if is_instance_valid(inspectable_item_stack[-1]):
-		inspectable_item_stack[-1].set_enabled(false)
-	camera_stack.push_back(camera)
-	inspectable_item_stack.push_back(inspectable_item)
-	if is_instance_valid(inspectable_item_stack[-1]):
-		inspectable_item_stack[-1].set_enabled(true)
+func add_stack(interact:Interact) -> void:
+	interact_stack[-1].leave()
+	interact.enter()
+	interact_stack.push_back(interact)
+	move_camera(interact_stack[-1].get_camera())
 
 func pop_stack() -> void:
-	if is_instance_valid(inspectable_item_stack[-1]):
-		inspectable_item_stack[-1].set_enabled(false)
-	camera_stack.pop_back()
-	inspectable_item_stack.pop_back()
-	if is_instance_valid(inspectable_item_stack[-1]):
-		inspectable_item_stack[-1].set_enabled(true)
+	interact_stack[-1].leave()
+	interact_stack.pop_back()
+	interact_stack[-1].enter()
+	move_camera(interact_stack[-1].get_camera())
 
 func click_area(screen_position:Vector2) -> Area3D:
 	var from:Vector3 = $camera.project_ray_origin(screen_position)
 	var to:Vector3 = $camera.project_ray_normal(screen_position) * 200
 	ray_cast.global_position = from
 	ray_cast.target_position = to
-	ray_cast.collision_mask = 2 if is_instance_valid(inspectable_item_stack[-1]) else 1
+	ray_cast.collision_mask = 3
 	ray_cast.force_raycast_update()
 	if ray_cast.is_colliding():
 		return ray_cast.get_collider()

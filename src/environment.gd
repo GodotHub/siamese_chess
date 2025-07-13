@@ -1,7 +1,7 @@
 extends Node3D
 
 func _ready() -> void:
-	$cheshire.set_initial_camera($cheshire/camera_on_seat)
+	$cheshire.set_initial_interact($interact/area_on_seat)
 	$chessboard.connect("move_played", $history.push_move)
 	$chessboard.connect("move_played", $pastor.receive_move)
 	$chessboard.connect("press_timer", $chess_timer.next)
@@ -13,9 +13,6 @@ func _ready() -> void:
 	$pastor.connect("win", pastor_win)
 	$pastor.connect("lose", pastor_lose)
 	$pastor.connect("draw", pastor_draw)
-	for iter:Area3D in get_tree().get_nodes_in_group("move_camera"):
-		iter.add_user_signal("input")
-		iter.connect("input", move_camera)
 	var transposition_table:TranspositionTable = TranspositionTable.new()
 	if FileAccess.file_exists("user://standard_opening.fa"):
 		transposition_table.load_file("user://standard_opening.fa")
@@ -23,11 +20,6 @@ func _ready() -> void:
 		transposition_table.reserve(1 << 10)
 	$pastor.transposition_table = transposition_table
 	dialog_start()
-
-func move_camera(_from:Node3D, _to:Area3D, _event:InputEvent, _event_position:Vector3, _normal:Vector3) -> void:
-	if _event is InputEventMouseButton && _event.pressed && _event.button_index == MOUSE_BUTTON_LEFT:
-		$cheshire.add_stack(_to.get_node(_to.get_meta("camera")), _to.get_node(_to.get_meta("inspectable_item")))
-		$cheshire.move_camera(_to.get_node(_to.get_meta("camera")))
 
 func dialog_start() -> void:
 	var dialog_1:Dialog = Dialog.create_dialog_instance([	# Pastor的自我介绍，对于棋局的介绍，以及二选一
@@ -37,9 +29,9 @@ func dialog_start() -> void:
 	])
 	add_child(dialog_1)
 	await dialog_1.on_next
-	$cheshire.force_set_camera($cheshire/camera_pastor_closeup)
+	$cheshire.force_set_camera($camera/camera_pastor_closeup)
 	await dialog_1.on_next
-	$cheshire.force_set_camera($cheshire/area_chessboard/camera_3d)
+	$cheshire.force_set_camera($camera/camera_chessboard)
 	await dialog_1.on_next
 	start()
 
@@ -81,13 +73,13 @@ func pastor_win() -> void:
 		"我暂时没有其他安排，需要重新进行一场对局吗？",
 	])
 	add_child(dialog_1)
-	$cheshire.force_set_camera($cheshire/area_chessboard/camera_3d)
+	$cheshire.force_set_camera($camera/camera_chessboard)
 	await dialog_1.on_next
-	$cheshire.force_set_camera($cheshire/camera_pastor_closeup)
+	$cheshire.force_set_camera($camera/camera_pastor_closeup)
 	await dialog_1.on_next
-	$cheshire.force_set_camera($cheshire/camera_chessboard_side)
+	$cheshire.force_set_camera($camera/camera_chessboard_side)
 	await dialog_1.on_next
-	$cheshire.force_set_camera($cheshire/camera_on_seat)
+	$cheshire.force_set_camera($camera/camera_on_seat)
 	await dialog_1.on_next
 	start()
 
@@ -101,11 +93,11 @@ func pastor_draw(type:int) -> void:	# 0:长将和 1:白方逼和 2:黑方逼和 
 				"我暂时没有其他安排，需要重新进行一场对局吗？"
 			])
 			add_child(dialog_1)
-			$cheshire.force_set_camera($cheshire/camera_pastor_closeup)
+			$cheshire.force_set_camera($camera/camera_pastor_closeup)
 			await dialog_1.on_next
-			$cheshire.force_set_camera($cheshire/camera_chessboard_side)
+			$cheshire.force_set_camera($camera/camera_chessboard_side)
 			await dialog_1.on_next
-			$cheshire.force_set_camera($cheshire/camera_on_seat)
+			$cheshire.force_set_camera($camera/camera_on_seat)
 			await dialog_1.on_next
 		1:
 			var dialog_1:Dialog = Dialog.create_dialog_instance([
@@ -114,11 +106,11 @@ func pastor_draw(type:int) -> void:	# 0:长将和 1:白方逼和 2:黑方逼和 
 				"我暂时没有其他安排，需要重新进行一场对局吗？"
 			])
 			add_child(dialog_1)
-			$cheshire.force_set_camera($cheshire/camera_pastor_closeup)
+			$cheshire.force_set_camera($camera/camera_pastor_closeup)
 			await dialog_1.on_next
-			$cheshire.force_set_camera($cheshire/camera_chessboard_side)
+			$cheshire.force_set_camera($camera/camera_chessboard_side)
 			await dialog_1.on_next
-			$cheshire.force_set_camera($cheshire/camera_on_seat)
+			$cheshire.force_set_camera($camera/camera_on_seat)
 			await dialog_1.on_next
 		2:
 			var dialog_1:Dialog = Dialog.create_dialog_instance([
@@ -127,11 +119,11 @@ func pastor_draw(type:int) -> void:	# 0:长将和 1:白方逼和 2:黑方逼和 
 				"我暂时没有其他安排，需要重新进行一场对局吗？"
 			])
 			add_child(dialog_1)
-			$cheshire.force_set_camera($cheshire/camera_pastor_closeup)
+			$cheshire.force_set_camera($camera/camera_pastor_closeup)
 			await dialog_1.on_next
-			$cheshire.force_set_camera($cheshire/camera_chessboard_side)
+			$cheshire.force_set_camera($camera/camera_chessboard_side)
 			await dialog_1.on_next
-			$cheshire.force_set_camera($cheshire/camera_on_seat)
+			$cheshire.force_set_camera($camera/camera_on_seat)
 			await dialog_1.on_next
 		3:
 			var dialog_1:Dialog = Dialog.create_dialog_instance([
@@ -140,11 +132,11 @@ func pastor_draw(type:int) -> void:	# 0:长将和 1:白方逼和 2:黑方逼和 
 				"我暂时没有其他安排，需要重新进行一场对局吗？"
 			])
 			add_child(dialog_1)
-			$cheshire.force_set_camera($cheshire/camera_pastor_closeup)
+			$cheshire.force_set_camera($camera/camera_pastor_closeup)
 			await dialog_1.on_next
-			$cheshire.force_set_camera($cheshire/camera_chessboard_side)
+			$cheshire.force_set_camera($camera/camera_chessboard_side)
 			await dialog_1.on_next
-			$cheshire.force_set_camera($cheshire/camera_on_seat)
+			$cheshire.force_set_camera($camera/camera_on_seat)
 			await dialog_1.on_next
 		4:
 			var dialog_1:Dialog = Dialog.create_dialog_instance([
@@ -154,11 +146,11 @@ func pastor_draw(type:int) -> void:	# 0:长将和 1:白方逼和 2:黑方逼和 
 				"我暂时没有其他安排，需要重新进行一场对局吗？"
 			])
 			add_child(dialog_1)
-			$cheshire.force_set_camera($cheshire/camera_pastor_closeup)
+			$cheshire.force_set_camera($camera/camera_pastor_closeup)
 			await dialog_1.on_next
-			$cheshire.force_set_camera($cheshire/camera_chessboard_side)
+			$cheshire.force_set_camera($camera/camera_chessboard_side)
 			await dialog_1.on_next
-			$cheshire.force_set_camera($cheshire/camera_on_seat)
+			$cheshire.force_set_camera($camera/camera_on_seat)
 			await dialog_1.on_next
 	start()
 
@@ -171,13 +163,13 @@ func pastor_lose() -> void:
 		"我暂时没有其他安排，需要重新进行一场对局吗？"
 	])
 	add_child(dialog_1)
-	$cheshire.force_set_camera($cheshire/area_chessboard/camera_3d)
+	$cheshire.force_set_camera($camera/camera_chessboard)
 	await dialog_1.on_next
-	$cheshire.force_set_camera($cheshire/camera_pastor_closeup)
+	$cheshire.force_set_camera($camera/camera_pastor_closeup)
 	await dialog_1.on_next
-	$cheshire.force_set_camera($cheshire/camera_chessboard_side)
+	$cheshire.force_set_camera($camera/camera_chessboard_side)
 	await dialog_1.on_next
-	$cheshire.force_set_camera($cheshire/camera_on_seat)
+	$cheshire.force_set_camera($camera/camera_on_seat)
 	await dialog_1.on_next
 	start()
 
@@ -202,13 +194,12 @@ func start() -> void:
 				$chess_timer.set_time(300, 1, 3)
 				$pastor.think_time = 2
 			add_child(dialog_2)
-			$cheshire.force_set_camera($cheshire/area_chessboard/camera_3d)
+			$cheshire.force_set_camera($camera/camera_chessboard)
 			await dialog_2.on_next
-			$cheshire.force_set_camera($cheshire/camera_pastor_closeup)
+			$cheshire.force_set_camera($camera/camera_pastor_closeup)
 			await dialog_2.on_next
 			$chess_timer.start()
-			$cheshire.add_stack($cheshire/area_chessboard/camera_3d, $chessboard)
-			$cheshire.move_camera($cheshire/area_chessboard/camera_3d)
+			$cheshire.add_stack($interact/area_chessboard)
 			$pastor.start_decision()
 			break
 		elif decision_instance.selected_index == 3:
@@ -220,13 +211,12 @@ func start() -> void:
 			$chess_timer.set_time(30, 1, 0)
 			$pastor.think_time = 1
 			add_child(dialog_2)
-			$cheshire.force_set_camera($cheshire/area_chessboard/camera_3d)
+			$cheshire.force_set_camera($camera/camera_chessboard)
 			await dialog_2.on_next
-			$cheshire.force_set_camera($cheshire/camera_pastor_closeup)
+			$cheshire.force_set_camera($camera/camera_pastor_closeup)
 			await dialog_2.on_next
 			$chess_timer.start()
-			$cheshire.add_stack($cheshire/area_chessboard/camera_3d, $chessboard)
-			$cheshire.move_camera($cheshire/area_chessboard/camera_3d)
+			$cheshire.add_stack($interact/area_chessboard)
 			$pastor.start_decision()
 			break
 		elif decision_instance.selected_index == 4:
@@ -240,14 +230,13 @@ func start() -> void:
 				])
 				$pastor.think_time = 10
 				add_child(dialog_2)
-				$cheshire.force_set_camera($cheshire/area_chessboard/camera_3d)
+				$cheshire.force_set_camera($camera/camera_chessboard)
 				await dialog_2.on_next
 				await dialog_2.on_next
-				$cheshire.add_stack($cheshire/area_chessboard/camera_3d, $chessboard)
-				$cheshire.move_camera($cheshire/area_chessboard/camera_3d)
+				$cheshire.add_stack($interact/area_chessboard)
 				$pastor.start_decision()
 				break
-		$cheshire.force_set_camera($cheshire/area_chessboard/camera_3d)
+		$cheshire.force_set_camera($camera/camera_chessboard)
 		var dialog_illegal:Dialog = Dialog.create_dialog_instance(["您输入的格式有误，务必重新检查一下再尝试。"])
 		add_child(dialog_illegal)
 		await dialog_illegal.on_next
@@ -263,7 +252,7 @@ func select_time_limit() -> void:
 	$cheshire.force_set_camera($cheshire/area_timer/camera_3d)
 	await dialog_1.on_next
 	await dialog_1.on_next
-	$cheshire.force_set_camera($cheshire/camera_pastor_closeup)
+	$cheshire.force_set_camera($camera/camera_pastor_closeup)
 	await dialog_1.on_next
 	await dialog_1.on_next
 	
@@ -288,7 +277,7 @@ func select_time_limit() -> void:
 			add_child(dialog_2)
 			$cheshire.force_set_camera($cheshire/area_timer/camera_3d)
 			await dialog_2.on_next
-			$cheshire.force_set_camera($cheshire/camera_pastor_closeup)
+			$cheshire.force_set_camera($camera/camera_pastor_closeup)
 			await dialog_2.on_next
 			await dialog_2.on_next
 			await dialog_2.on_next
@@ -304,7 +293,7 @@ func select_time_limit() -> void:
 			add_child(dialog_2)
 			$cheshire.force_set_camera($cheshire/area_timer/camera_3d)
 			await dialog_2.on_next
-			$cheshire.force_set_camera($cheshire/camera_pastor_closeup)
+			$cheshire.force_set_camera($camera/camera_pastor_closeup)
 			await dialog_2.on_next
 			await dialog_2.on_next
 			await dialog_2.on_next
@@ -321,10 +310,10 @@ func select_time_limit() -> void:
 			$cheshire.force_set_camera($cheshire/area_timer/camera_3d)
 			await dialog_2.on_next
 			await dialog_2.on_next
-			$cheshire.force_set_camera($cheshire/camera_pastor_closeup)
+			$cheshire.force_set_camera($ccameracamera_pastor_closeup)
 			await dialog_2.on_next
 			await dialog_2.on_next
 			$chess_timer.start()
-	$cheshire.add_stack($cheshire/area_chessboard/camera_3d, $chessboard)
-	$cheshire.move_camera($cheshire/area_chessboard/camera_3d)
+	$cheshire.add_stack($interact/area_chessboard)
+	$cheshire.move_camera($camera/camera_chessboard)
 	$pastor.start_decision()

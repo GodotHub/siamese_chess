@@ -15,7 +15,7 @@ func set_enabled(enabled:bool) -> void:
 	for iter:Area3D in button_list:
 		if enabled:
 			iter.collision_layer |= 2
-		else:
+		else:  
 			iter.collision_layer &= ~2
 
 func input(_from:Node3D, _to:Area3D, _event:InputEvent, _event_position:Vector3, _normal:Vector3) -> void:
