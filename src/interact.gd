@@ -6,6 +6,10 @@ class_name Interact
 @export var inspectable_item:Array[InspectableItem] = []
 
 func _ready() -> void:
+	collision_layer = 0
+	collision_mask = 0
+	monitorable = false
+	monitoring = false
 	add_user_signal("input")
 	connect("input", move_camera)
 	set_enabled(false)
