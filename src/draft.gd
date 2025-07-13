@@ -41,6 +41,9 @@ func input(_from:Node3D, _to:Area3D, _event:InputEvent, _event_position:Vector3,
 				erase_line(event_position_2d)
 			else:
 				drawing_curve(event_position_2d)
+		elif _event.button_mask & MOUSE_BUTTON_MASK_RIGHT:
+			cancel_drawing()
+			erase_line(event_position_2d)
 
 func start_drawing(start_position:Vector2) -> void:
 	var new_line:Line2D = Line2D.new()
