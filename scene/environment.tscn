@@ -1,4 +1,4 @@
-[gd_scene load_steps=50 format=3 uid="uid://bmyf2h17xaxlj"]
+[gd_scene load_steps=51 format=3 uid="uid://bmyf2h17xaxlj"]
 
 [ext_resource type="PackedScene" uid="uid://gdof8yy8yrjv" path="res://assets/model/environment.glb" id="1_b3374"]
 [ext_resource type="PackedScene" uid="uid://d1s6qj7aofldk" path="res://scene/chessboard.tscn" id="2_3p4nk"]
@@ -28,6 +28,7 @@
 [ext_resource type="Texture2D" uid="uid://04h7huliaoxf" path="res://docs/movement_1.svg" id="25_1vkt5"]
 [ext_resource type="Texture2D" uid="uid://xk1d84gyjv37" path="res://docs/game_tree.svg" id="25_okolh"]
 [ext_resource type="PackedScene" uid="uid://h3wcv7lnqe8x" path="res://assets/model/painting_frame_square.glb" id="26_x2qnl"]
+[ext_resource type="AudioStream" uid="uid://www4mdghmloh" path="res://assets/audio/52645__kstein1__white-noise.wav" id="29_x2qnl"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_po4na"]
 transparency = 1
@@ -42,6 +43,10 @@ sky_material = SubResource("ProceduralSkyMaterial_3p4nk")
 background_mode = 2
 sky = SubResource("Sky_1vcsq")
 tonemap_mode = 2
+fog_enabled = true
+fog_light_color = Color(1, 1, 1, 1)
+fog_depth_begin = 1.0
+fog_depth_end = 10.0
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_hgmdq"]
 size = Vector3(0.667816, 1.59277, 1.45321)
@@ -137,10 +142,8 @@ surface_material_override/1 = SubResource("StandardMaterial3D_po4na")
 transform = Transform3D(-0.9258, 0.03546, -0.376347, -0.231734, 0.733336, 0.639154, 0.298653, 0.678941, -0.670705, -2.34371, 0, 0)
 light_color = Color(0.71, 0.65888, 0.5822, 1)
 shadow_enabled = true
-shadow_normal_bias = 0.0
-directional_shadow_split_1 = 0.05
-directional_shadow_split_2 = 0.476
-directional_shadow_split_3 = 0.73
+directional_shadow_split_2 = 0.105
+directional_shadow_split_3 = 0.753
 directional_shadow_blend_splits = true
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." index="19"]
@@ -621,6 +624,11 @@ transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -6.874
 [node name="painting_square" parent="painting_frame_square_3" index="0"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.96599, -0.810736, -4.76837e-07)
 surface_material_override/1 = SubResource("StandardMaterial3D_q0tgb")
+
+[node name="audio_stream_player" type="AudioStreamPlayer" parent="." index="45"]
+stream = ExtResource("29_x2qnl")
+volume_db = 17.71
+autoplay = true
 
 [editable path="painting_frame"]
 [editable path="painting_frame_2"]

@@ -4,8 +4,14 @@ class_name PieceInstance
 var chessboard:Chessboard = null
 var position_name:String = ""
 var group:int = 0
+var sfx:AudioStreamPlayer3D = null
 
 func _ready() -> void:
+	sfx = AudioStreamPlayer3D.new()
+	sfx.stream = load("res://assets/audio/351518__mh2o__chess_move_on_alabaster.wav")
+	add_child(sfx)
+	sfx.unit_size = 2
+	sfx.volume_db = -20
 	if position_name:
 		position = chessboard.convert_name_to_position(position_name)
 	else:
@@ -32,3 +38,4 @@ func move(_position_name:String) -> void:
 	var tween:Tween = create_tween()
 	tween.set_trans(Tween.TRANS_SINE)
 	tween.tween_property(self, "position", chessboard.convert_name_to_position(position_name), 0.4)
+	tween.tween_callback(sfx.play)
