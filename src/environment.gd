@@ -1,7 +1,7 @@
 extends Node3D
 
 func _ready() -> void:
-	$cheshire.set_initial_interact($interact/area_on_seat)
+	$cheshire.set_initial_interact($interact/area_passthrough)
 	$chessboard.connect("move_played", $history.push_move)
 	$chessboard.connect("move_played", $pastor.receive_move)
 	$chessboard.connect("press_timer", $chess_timer.next)
@@ -19,19 +19,14 @@ func _ready() -> void:
 	else:
 		transposition_table.reserve(1 << 10)
 	$pastor.transposition_table = transposition_table
-	dialog_start()
+	$interact/area_pastor.connect("clicked", dialog_start)
 
 func dialog_start() -> void:
 	var dialog_1:Dialog = Dialog.create_dialog_instance([	# Pastor的自我介绍，对于棋局的介绍，以及二选一
-		"……",
-		"长话短说，我是Yulan，目前是测试的程序。",
 		"现在你有若干选项开始游戏",
 	])
 	add_child(dialog_1)
-	await dialog_1.on_next
 	$cheshire.force_set_camera($camera/camera_pastor_closeup)
-	await dialog_1.on_next
-	$cheshire.force_set_camera($camera/camera_chessboard)
 	await dialog_1.on_next
 	start()
 

@@ -1,4 +1,4 @@
-[gd_scene load_steps=51 format=3 uid="uid://bmyf2h17xaxlj"]
+[gd_scene load_steps=52 format=3 uid="uid://bmyf2h17xaxlj"]
 
 [ext_resource type="PackedScene" uid="uid://gdof8yy8yrjv" path="res://assets/model/environment.glb" id="1_b3374"]
 [ext_resource type="PackedScene" uid="uid://d1s6qj7aofldk" path="res://scene/chessboard.tscn" id="2_3p4nk"]
@@ -87,6 +87,9 @@ size = Vector3(0.23291, 2.44122, 2.56915)
 [sub_resource type="BoxShape3D" id="BoxShape3D_okolh"]
 size = Vector3(0.848511, 2.28638, 1.66498)
 
+[sub_resource type="BoxShape3D" id="BoxShape3D_x2qnl"]
+size = Vector3(1, 0.561096, 0.486084)
+
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_i1jpj"]
 albedo_texture = ExtResource("23_hm18b")
 
@@ -155,7 +158,7 @@ environment = SubResource("Environment_7r8ay")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.83693, 1.14653, 0.146468)
 collision_mask = 0
 script = ExtResource("7_hgmdq")
-next_interact = [NodePath("../area_history"), NodePath("../area_chessboard"), NodePath("../area_timer"), NodePath("../area_outside_windows"), NodePath("../area_passthrough")]
+next_interact = [NodePath("../area_history"), NodePath("../area_chessboard"), NodePath("../area_timer"), NodePath("../area_outside_windows"), NodePath("../area_passthrough"), NodePath("../area_pastor")]
 camera = NodePath("../../camera/camera_on_seat")
 metadata/_custom_type_script = "uid://dg85frcnjlauy"
 
@@ -307,6 +310,15 @@ metadata/_custom_type_script = "uid://dg85frcnjlauy"
 [node name="collision_shape_3d" type="CollisionShape3D" parent="interact/area_bookshelf" index="0"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.62954, 1.17493, 2.82647)
 shape = SubResource("BoxShape3D_okolh")
+
+[node name="area_pastor" type="Area3D" parent="interact" index="13"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.61258, 0.810209, 0)
+script = ExtResource("7_hgmdq")
+metadata/_custom_type_script = "uid://dg85frcnjlauy"
+
+[node name="collision_shape_3d" type="CollisionShape3D" parent="interact/area_pastor" index="0"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.335114, -0.0642467)
+shape = SubResource("BoxShape3D_x2qnl")
 
 [node name="camera" type="Node3D" parent="." index="21"]
 
