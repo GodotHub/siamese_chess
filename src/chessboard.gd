@@ -12,6 +12,7 @@ var valid_premove:Dictionary[int, Array] = {}
 var selected:int = -1
 var premove:int = -1
 var piece_instance:Dictionary[int, PieceInstance] = {}
+var king_instance:Array[PieceInstance] = [null, null]
 var rule_standard:RuleStandard = RuleStandard.new()
 
 func _ready() -> void:
@@ -44,6 +45,8 @@ func set_state(_state:State) -> void:
 		if !state.has_piece(i):
 			continue
 		add_piece_instance(i, state.get_piece(i))
+	king_instance[0].set_warning(rule_standard.is_check(state, 1))
+	king_instance[1].set_warning(rule_standard.is_check(state, 0))
 
 func get_position_name(_position:Vector3) -> String:
 	var chess_pos:Vector2i = Vector2i(int(_position.x + 4) / 1, int(_position.z + 4) / 1)
@@ -134,17 +137,19 @@ func execute_move(move:int) -> void:
 	$canvas.clear_move_position()
 	$canvas.draw_move_position($canvas.convert_name_to_position(Chess.to_position_name(Chess.from(move))))
 	$canvas.draw_move_position($canvas.convert_name_to_position(Chess.to_position_name(Chess.to(move))))
+	king_instance[0].set_warning(rule_standard.is_check(state, 1))
+	king_instance[1].set_warning(rule_standard.is_check(state, 0))
 	press_timer.emit()
 	move_played.emit(move)
 	selected = -1
-	if premove != -1 && valid_premove.has(Chess.from(premove)) && valid_premove[Chess.from(premove)].has(premove):
-		var temp:int = premove
-		premove = -1
-		execute_move(temp)
 
 func set_valid_move(move_list:PackedInt32Array) -> void:
 	valid_move.clear()
 	for move:int in move_list:
+		if move == premove:
+			execute_move(premove)
+			premove = -1
+			return
 		if !valid_move.has(Chess.from(move)):
 			valid_move[Chess.from(move)] = []
 		valid_move[Chess.from(move)].push_back(move)
@@ -176,6 +181,10 @@ func add_piece_instance(by:int, piece:int) -> void:
 	instance.position_name = Chess.to_position_name(by)
 	instance.group = piece_mapping[char(piece)]["group"]
 	piece_instance[by] = instance
+	if piece == "K".unicode_at(0):
+		king_instance[0] = instance
+	if piece == "k".unicode_at(0):
+		king_instance[1] = instance
 	$pieces.add_child(instance)
 
 func move_piece_instance(from:int, to:int) -> void:

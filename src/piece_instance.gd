@@ -23,7 +23,7 @@ func _ready() -> void:
 	next_pass_material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
 	next_pass_material.cull_mode = BaseMaterial3D.CULL_FRONT
 	next_pass_material.grow = true
-	next_pass_material.grow_amount = 0.001
+	next_pass_material.grow_amount = 0.005
 	if group == 1:
 		material.albedo_color = Color(0.3, 0.3, 0.3, 1)
 		next_pass_material.albedo_color = Color(1, 1, 1, 1)
@@ -39,3 +39,11 @@ func move(_position_name:String) -> void:
 	tween.set_trans(Tween.TRANS_SINE)
 	tween.tween_property(self, "position", chessboard.convert_name_to_position(position_name), 0.4)
 	tween.tween_callback(sfx.play)
+
+func set_warning(enabled:bool) -> void:
+	if enabled:
+		$piece.get_surface_override_material(0).next_pass.albedo_color = Color(1, 0, 0, 1)
+	elif group == 1:
+		$piece.get_surface_override_material(0).next_pass.albedo_color = Color(1, 1, 1, 1)
+	else:
+		$piece.get_surface_override_material(0).next_pass.albedo_color = Color(0, 0, 0, 1)
