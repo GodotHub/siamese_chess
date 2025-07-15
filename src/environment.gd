@@ -17,9 +17,12 @@ func _ready() -> void:
 	if FileAccess.file_exists("user://standard_opening.fa"):
 		transposition_table.load_file("user://standard_opening.fa")
 	else:
-		transposition_table.reserve(1 << 10)
+		transposition_table.reserve(1 << 20)
 	$pastor.transposition_table = transposition_table
-	$interact/area_pastor.connect("clicked", dialog_start)
+	$interact/area_pastor.connect("clicked", dialog_select)
+
+func dialog_select() -> void:
+	pass
 
 func dialog_start() -> void:
 	var dialog_1:Dialog = Dialog.create_dialog_instance([	# Pastor的自我介绍，对于棋局的介绍，以及二选一
@@ -235,80 +238,3 @@ func start() -> void:
 		var dialog_illegal:Dialog = Dialog.create_dialog_instance(["您输入的格式有误，务必重新检查一下再尝试。"])
 		add_child(dialog_illegal)
 		await dialog_illegal.on_next
-
-func select_time_limit() -> void:
-	var dialog_1:Dialog = Dialog.create_dialog_instance([
-		"对了，最近我准备了个棋钟。",
-		"如果您选择开启棋钟，那么这局中某一方的倒计时结束时，这人将会被判负。",
-		"虽然您是在和软件算法进行对决，不过可以锻炼一下思考深度和决策效率。",
-		"那么您是否需要开启计时？"
-	])
-	add_child(dialog_1)
-	$cheshire.force_set_camera($cheshire/area_timer/camera_3d)
-	await dialog_1.on_next
-	await dialog_1.on_next
-	$cheshire.force_set_camera($camera/camera_pastor_closeup)
-	await dialog_1.on_next
-	await dialog_1.on_next
-	
-	var decision_instance:Decision = Decision.create_decision_instance(["不开启计时", "慢棋（30+0）", "快棋（10+5）", "超快棋（5+3）"], false)
-	add_child(decision_instance)
-	await decision_instance.decided
-	match decision_instance.selected_index:
-		0:
-			var dialog_2:Dialog = Dialog.create_dialog_instance([
-				"好吧，那先不管计时，你可以按照你喜欢的思考节奏来进行对局。",
-			])
-			add_child(dialog_2)
-			await dialog_2.on_next
-		1:
-			$chess_timer.set_time(1800, 1, 0)
-			var dialog_2:Dialog = Dialog.create_dialog_instance([
-				"这次，你我双方分别有30分钟的时间，都有充足的思考时间。",
-				"对于外行而言，这个时间其实偏多了，请您充分利用好其中每一分每一秒。",
-				"虽然不代表您可以无限地拖延下去，不过中途上个厕所再回到对局应该没太大问题。",
-				"稍后正式开始对局，您现在就可以思考用什么样的开局来打败我。"
-			])
-			add_child(dialog_2)
-			$cheshire.force_set_camera($cheshire/area_timer/camera_3d)
-			await dialog_2.on_next
-			$cheshire.force_set_camera($camera/camera_pastor_closeup)
-			await dialog_2.on_next
-			await dialog_2.on_next
-			await dialog_2.on_next
-			$chess_timer.start()
-		2:
-			$chess_timer.set_time(600, 1, 5)
-			var dialog_2:Dialog = Dialog.create_dialog_instance([
-				"双方初始10分钟时间，与您在与其他人休闲对弈时的时长类似。",
-				"您有足够的时间去挑选有争议的着法，但过久的犹豫会导致全盘皆输。",
-				"另外，您的每次落子都有5秒钟的加时，请不必紧张。",
-				"请充分平衡好你的时间，在保证不漏着的前提下果断出击。"
-			])
-			add_child(dialog_2)
-			$cheshire.force_set_camera($cheshire/area_timer/camera_3d)
-			await dialog_2.on_next
-			$cheshire.force_set_camera($camera/camera_pastor_closeup)
-			await dialog_2.on_next
-			await dialog_2.on_next
-			await dialog_2.on_next
-			$chess_timer.start()
-		3:
-			$chess_timer.set_time(300, 1, 3)
-			var dialog_2:Dialog = Dialog.create_dialog_instance([
-				"双方初始5分钟，是非常考验直觉的对局，只适合高阶棋手游玩。",
-				"在超快棋下，请做好开局准备，一旦出现开局漏着，中盘对局会变得非常痛苦。",
-				"尽量让局面变得让自己下起来足够舒适，不需要所谓绝对正确的着法。",
-				"此外，每次落子有3秒钟加时。"
-			])
-			add_child(dialog_2)
-			$cheshire.force_set_camera($cheshire/area_timer/camera_3d)
-			await dialog_2.on_next
-			await dialog_2.on_next
-			$cheshire.force_set_camera($ccameracamera_pastor_closeup)
-			await dialog_2.on_next
-			await dialog_2.on_next
-			$chess_timer.start()
-	$cheshire.add_stack($interact/area_chessboard)
-	$cheshire.move_camera($camera/camera_chessboard)
-	$pastor.start_decision()
