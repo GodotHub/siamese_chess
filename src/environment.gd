@@ -1,5 +1,7 @@
 extends Node3D
 
+var known_dialog:PackedInt32Array = []
+
 func _ready() -> void:
 	$cheshire.set_initial_interact($interact/area_passthrough)
 	$chessboard.connect("move_played", $history.push_move)
@@ -19,13 +21,13 @@ func _ready() -> void:
 	else:
 		transposition_table.reserve(1 << 20)
 	$pastor.transposition_table = transposition_table
-	$interact/area_pastor.connect("clicked", dialog_select)
+	$interact/area_pastor.connect("clicked", dialog_start_game)
 
-func dialog_select() -> void:
+func select_dialog() -> void:
 	pass
 
-func dialog_start() -> void:
-	var dialog_1:Dialog = Dialog.create_dialog_instance([	# Pastor的自我介绍，对于棋局的介绍，以及二选一
+func dialog_start_game() -> void:
+	var dialog_1:Dialog = Dialog.create_dialog_instance([
 		"现在你有若干选项开始游戏",
 	])
 	add_child(dialog_1)

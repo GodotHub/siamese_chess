@@ -49,7 +49,7 @@ fog_depth_begin = 1.0
 fog_depth_end = 10.0
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_hgmdq"]
-size = Vector3(0.667816, 1.59277, 1.45321)
+size = Vector3(2.00383, 1.59277, 1.45321)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_po4na"]
 size = Vector3(0.407043, 0.00946045, 0.313843)
@@ -163,7 +163,7 @@ camera = NodePath("../../camera/camera_on_seat")
 metadata/_custom_type_script = "uid://dg85frcnjlauy"
 
 [node name="collision_shape_3d" type="CollisionShape3D" parent="interact/area_on_seat" index="0"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.564591, -0.296387, -0.20851)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.103416, -0.296387, -0.20851)
 shape = SubResource("BoxShape3D_hgmdq")
 
 [node name="area_history" type="Area3D" parent="interact" index="1" node_paths=PackedStringArray("camera")]
