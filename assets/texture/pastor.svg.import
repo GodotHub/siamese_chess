@@ -4,15 +4,16 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://dek8oxeuratus"
 path.s3tc="res://.godot/imported/pastor.svg-9cf68ba95532be9ee60f61e5d8832e13.s3tc.ctex"
+path.etc2="res://.godot/imported/pastor.svg-9cf68ba95532be9ee60f61e5d8832e13.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
 }
 
 [deps]
 
 source_file="res://assets/texture/pastor.svg"
-dest_files=["res://.godot/imported/pastor.svg-9cf68ba95532be9ee60f61e5d8832e13.s3tc.ctex"]
+dest_files=["res://.godot/imported/pastor.svg-9cf68ba95532be9ee60f61e5d8832e13.s3tc.ctex", "res://.godot/imported/pastor.svg-9cf68ba95532be9ee60f61e5d8832e13.etc2.ctex"]
 
 [params]
 

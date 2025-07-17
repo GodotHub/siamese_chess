@@ -9,6 +9,8 @@ windows.debug.x86_64="res://bin/libsiamese.windows.template_debug.x86_64.dll"
 windows.release.x86_64="res://bin/libsiamese.windows.template_release.x86_64.dll"
 linux.debug.x86_64="res://bin/libsiamese.linux.template_debug.x86_64.so"
 linux.release.x86_64="res://bin/libsiamese.linux.template_debug.x86_64.so"
+web.debug.wasm32="res://bin/libsiamese.web.template_debug.wasm32.wasm"
+web.release.wasm32="res://bin/libsiamese.web.template_release.wasm32.wasm"
 
 [dependencies]
 ios.debug = {

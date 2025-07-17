@@ -4,8 +4,9 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://caipc0l03lgnd"
 path.s3tc="res://.godot/imported/pastor_face.png-bc137614a9afd2ccecf2748d603bb392.s3tc.ctex"
+path.etc2="res://.godot/imported/pastor_face.png-bc137614a9afd2ccecf2748d603bb392.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
 }
 generator_parameters={
@@ -15,7 +16,7 @@ generator_parameters={
 [deps]
 
 source_file="res://assets/model/pastor_face.png"
-dest_files=["res://.godot/imported/pastor_face.png-bc137614a9afd2ccecf2748d603bb392.s3tc.ctex"]
+dest_files=["res://.godot/imported/pastor_face.png-bc137614a9afd2ccecf2748d603bb392.s3tc.ctex", "res://.godot/imported/pastor_face.png-bc137614a9afd2ccecf2748d603bb392.etc2.ctex"]
 
 [params]
 
