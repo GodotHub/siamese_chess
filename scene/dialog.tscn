@@ -43,21 +43,20 @@ texture = SubResource("GradientTexture1D_ggi1b")
 expand_mode = 1
 stretch_mode = 1
 
-[node name="label" type="Label" parent="texture_rect_bottom"]
+[node name="label" type="RichTextLabel" parent="texture_rect_bottom"]
 layout_mode = 1
 anchors_preset = -1
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_fonts/font = ExtResource("2_ow5ht")
-theme_override_font_sizes/font_size = 20
-text = "请输入文本"
+theme_override_fonts/normal_font = ExtResource("2_ow5ht")
+bbcode_enabled = true
 horizontal_alignment = 1
 vertical_alignment = 1
-autowrap_mode = 3
 
 [node name="texture_rect_full" type="TextureRect" parent="."]
+visible = false
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0

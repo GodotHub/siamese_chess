@@ -24,7 +24,6 @@ gdscript/warnings/integer_division=0
 
 window/stretch/mode="viewport"
 window/stretch/aspect="expand"
-window/stretch/scale=2
 
 [editor]
 
