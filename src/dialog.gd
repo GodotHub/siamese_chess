@@ -4,7 +4,7 @@ class_name Dialog
 signal on_next()
 
 const packed_scene:PackedScene = preload("res://scene/dialog.tscn")
-var selected:String = ""
+var selected:int = 0
 var click_anywhere:bool = false
 var force_selection:bool = false
 
@@ -49,8 +49,8 @@ func push_selection(selection:PackedStringArray, _force_selection:bool = true, b
 	var text = ""
 	click_anywhere = false
 	force_selection = _force_selection
-	for iter:String in selection:
-		text += "[url link=\"" + iter + "\"]" + tr(iter) + "[/url]  "
+	for i:int in selection.size():
+		text += "[url link=\"" + ("%d" % i) + "\"]" + tr(selection[i]) + "[/url]  "
 	var tween:Tween = create_tween()
 	if blackscreen:
 		tween.tween_property($texture_rect_full, "visible", true, 0)
@@ -65,5 +65,5 @@ func next() -> void:
 	on_next.emit()
 
 func clicked_selection(_selected:String) -> void:
-	selected = _selected
+	selected = _selected.to_int()
 	next()

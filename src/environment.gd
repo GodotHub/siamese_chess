@@ -72,18 +72,17 @@ func pastor_lose() -> void:
 
 func start() -> void:
 	while true:
-		var decision_instance:Decision = Decision.create_decision_instance(["标准棋局（30+0）", "快棋（10+5）", "超快棋（5+3）", "子弹棋（小规模布局，1/2+0）", "导入棋局"], false)
-		add_child(decision_instance)
-		await decision_instance.decided
-		if decision_instance.selected_index in [0, 1, 2]:
+		$dialog.push_selection(["标准棋局（30+0）", "快棋（10+5）", "超快棋（5+3）", "子弹棋（小规模布局，1/2+0）", "导入棋局"], true, true)
+		await $dialog.on_next
+		if $dialog.selected in [0, 1, 2]:
 			$pastor.create_state("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", RuleStandard.new())
-			if decision_instance.selected_index == 0:
+			if $dialog.selected == 0:
 				$chess_timer.set_time(1800, 1, 0)
 				$pastor.think_time = 5
-			elif decision_instance.selected_index == 1:
+			elif $dialog.selected == 1:
 				$chess_timer.set_time(600, 1, 5)
 				$pastor.think_time = 3
-			elif decision_instance.selected_index == 2:
+			elif $dialog.selected == 2:
 				$chess_timer.set_time(300, 1, 3)
 				$pastor.think_time = 2
 			$dialog.push_dialog("现在棋盘已经准备好了。", true, true)
@@ -96,7 +95,7 @@ func start() -> void:
 			$cheshire.add_stack($interact/area_chessboard)
 			$pastor.start_decision()
 			break
-		elif decision_instance.selected_index == 3:
+		elif $dialog.selected == 3:
 			$pastor.create_state("8/8/2rbqk2/2pppn2/2NPPP2/2KQBR2/8/8 w - - 0 1", RuleStandard.new())
 			$chess_timer.set_time(30, 1, 0)
 			$pastor.think_time = 1
@@ -110,7 +109,7 @@ func start() -> void:
 			$cheshire.add_stack($interact/area_chessboard)
 			$pastor.start_decision()
 			break
-		elif decision_instance.selected_index == 4:
+		elif $dialog.selected == 4:
 			var text_input_instance:TextInput = TextInput.create_text_input_instance("输入FEN格式的布局：")
 			add_child(text_input_instance)
 			await text_input_instance.confirmed
