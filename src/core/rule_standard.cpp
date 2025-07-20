@@ -743,6 +743,93 @@ godot::PackedInt32Array RuleStandard::generate_good_capture_move(godot::Ref<Stat
 	return output;
 }
 
+godot::String RuleStandard::get_move_name(godot::Ref<State> _state, int move)
+{
+	int from = Chess::get_singleton()->from(move);
+	int to = Chess::get_singleton()->to(move);
+	int from_piece = _state->get_piece(from);
+	int extra = Chess::get_singleton()->extra(move);
+	int group = from_piece >= 'a' && from_piece <= 'z';
+	if ((from_piece & 95) == 'K' && extra)
+	{
+		if ((extra & 95) == 'K')
+		{
+			return "O-O";
+		}
+		else if ((extra & 95) == 'Q')
+		{
+			return "O-O-O";
+		}
+	}
+	godot::String ans;
+	if ((from_piece & 95) != 'P')
+	{
+		ans += (from_piece & 95);
+	}
+
+	godot::PackedInt32Array move_list = generate_valid_move(_state, group);
+	godot::PackedInt32Array same_to;
+	bool has_same_piece = false;
+	bool has_same_col = false;
+	bool has_same_row = false;
+	for (int i = 0; i < move_list.size(); i++)
+	{
+		int _from = Chess::get_singleton()->from(move_list[i]);
+		if (_from != from && _state->get_piece(_from) == from_piece && Chess::get_singleton()->to(move_list[i]) == to)
+		{
+			has_same_piece = true;
+			if ((_from & 0xF0) == (from & 0xF0))
+			{
+				has_same_row = true;
+			}
+			if ((_from & 0x0F) == (from & 0x0F))
+			{
+				has_same_col = true;
+			}
+		}
+	}
+	if (has_same_piece)
+	{
+		if (has_same_row)
+		{
+			ans += (from & 0x0F) + 'a';
+		}
+		if (has_same_col)
+		{
+			ans +=  7 - (from >> 4) + '1';
+		}
+	}
+	if (_state->get_piece(to) && (from_piece & 95 != 'P'))
+	{
+		ans += 'x';
+	}
+	ans += (to & 0x0F) + 'a';
+	ans +=  7 - (to >> 4) + '1';
+	if (_state->get_piece(to) && (from_piece & 95 == 'P'))
+	{
+		ans += 'x';
+	}
+	if (extra)
+	{
+		ans += '=';
+		ans += extra;
+	}
+	godot::Ref<State> next_state = _state->duplicate();
+	apply_move(next_state, move, godot::Callable(*next_state, "add_piece"), godot::Callable(*next_state, "capture_piece"), godot::Callable(*next_state, "move_piece"), godot::Callable(*next_state, "set_extra"), godot::Callable(*next_state, "push_history"), godot::Callable(*next_state, "change_score"));
+	if (is_check(next_state, group))
+	{
+		if (generate_valid_move(next_state, 1 - group).size() == 0)
+		{
+			ans += '#';
+		}
+		else
+		{
+			ans += '+';
+		}
+	}
+	return ans;
+}
+
 void RuleStandard::apply_move(godot::Ref<State>_state, int _move, godot::Callable _callback_add_piece, godot::Callable _callback_capture_piece, godot::Callable _callback_move_piece, godot::Callable _callback_set_extra, godot::Callable _callback_push_history, godot::Callable _callback_change_score)
 {
 	_callback_push_history.call(_state->get_zobrist());	// 上一步的局面
@@ -1077,6 +1164,7 @@ void RuleStandard::_bind_methods()
 	godot::ClassDB::bind_method(godot::D_METHOD("generate_move"), &RuleStandard::generate_move);
 	godot::ClassDB::bind_method(godot::D_METHOD("generate_valid_move"), &RuleStandard::generate_valid_move);
 	godot::ClassDB::bind_method(godot::D_METHOD("generate_good_capture_move"), &RuleStandard::generate_good_capture_move);
+	godot::ClassDB::bind_method(godot::D_METHOD("get_move_name"), &RuleStandard::get_move_name);
 	godot::ClassDB::bind_method(godot::D_METHOD("apply_move"), &RuleStandard::apply_move);
 	godot::ClassDB::bind_method(godot::D_METHOD("evaluate"), &RuleStandard::evaluate);
 	//godot::ClassDB::bind_method(godot::D_METHOD("compare_move"), &RuleStandard::compare_move);

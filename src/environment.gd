@@ -9,6 +9,7 @@ func _ready() -> void:
 	$chessboard.connect("press_timer", $chess_timer.next)
 	$chess_timer.connect("timeout", timeout)
 	$pastor.connect("send_initial_state", $chessboard.set_state)
+	$pastor.connect("send_initial_state", $history.set_state)
 	$pastor.connect("decided_move", $chessboard.execute_move)
 	$pastor.connect("send_opponent_move", $chessboard.set_valid_move)
 	$pastor.connect("send_opponent_premove", $chessboard.set_valid_premove)

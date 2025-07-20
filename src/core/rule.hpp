@@ -18,6 +18,7 @@ class Rule : public godot::Object
 		virtual godot::PackedInt32Array generate_premove(godot::Ref<State> _state, int _group);
 		virtual godot::PackedInt32Array generate_move(godot::Ref<State> _state, int _group);
 		virtual godot::PackedInt32Array generate_valid_move(godot::Ref<State> _state, int _group);
+		virtual godot::String get_move_name(godot::Ref<State> _state, int move);
 		virtual void apply_move(godot::Ref<State> _state, int _move, godot::Callable _callback_add_piece = godot::Callable(), godot::Callable _callback_capture_piece = godot::Callable(), godot::Callable _callback_move_piece = godot::Callable(), godot::Callable _callback_set_extra = godot::Callable(), godot::Callable _callback_push_history = godot::Callable(), godot::Callable _callback_change_score = godot::Callable());
 		virtual int evaluate(godot::Ref<State> _state, int _move);
 		virtual void search(godot::Ref<State> _state, int _group, TranspositionTable *_transposition_table, godot::Callable _is_timeup, int _max_depth, godot::Callable _debug_output);

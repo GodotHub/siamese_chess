@@ -35,6 +35,11 @@ godot::PackedInt32Array Rule::generate_valid_move(godot::Ref<State>_state, int _
 	return {};
 }
 
+godot::String Rule::get_move_name(godot::Ref<State> _state, int move)
+{
+	return "";
+}
+
 void Rule::apply_move(godot::Ref<State>_state, int _move, godot::Callable _callback_add_piece, godot::Callable _callback_capture_piece, godot::Callable _callback_move_piece, godot::Callable _callback_set_extra, godot::Callable _callback_push_history, godot::Callable _callback_change_score)
 {
 
@@ -80,6 +85,7 @@ void Rule::_bind_methods()
 	godot::ClassDB::bind_method(godot::D_METHOD("generate_premove"), &Rule::generate_premove);
 	godot::ClassDB::bind_method(godot::D_METHOD("generate_move"), &Rule::generate_move);
 	godot::ClassDB::bind_method(godot::D_METHOD("generate_valid_move"), &Rule::generate_valid_move);
+	godot::ClassDB::bind_method(godot::D_METHOD("get_move_name"), &Rule::get_move_name);
 	godot::ClassDB::bind_method(godot::D_METHOD("apply_move"), &Rule::apply_move);
 	godot::ClassDB::bind_method(godot::D_METHOD("evaluate"), &Rule::evaluate);
 	godot::ClassDB::bind_method(godot::D_METHOD("search"), &Rule::search);
