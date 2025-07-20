@@ -5,7 +5,7 @@ var state:State = null
 @onready var chessboard = $chessboard
 
 func _ready() -> void:
-	$cheshire.set_initial_camera($camera_3d, $chessboard)
+	$cheshire.set_initial_interact($interact)
 	chessboard.connect("move_played", receive_move)
 	while !is_instance_valid(state):
 		var text_input_instance:TextInput = TextInput.create_text_input_instance("输入FEN格式的布局：")
