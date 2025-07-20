@@ -26,10 +26,10 @@ class Chess : public godot::Object
 		inline static int g8() { return 6; }
 		inline static int h8() { return 7; }
 		inline static int a1() { return 16 * 7; }
-		inline static int b1() { return 16 * 7; }
+		inline static int b1() { return 16 * 7 + 1; }
 		inline static int c1() { return 16 * 7 + 2; }
 		inline static int d1() { return 16 * 7 + 3; }
-		inline static int e1() { return 4; }
+		inline static int e1() { return 16 * 7 + 4; }
 		inline static int f1() { return 16 * 7 + 5; }
 		inline static int g1() { return 16 * 7 + 6; }
 		inline static int h1() { return 16 * 7 + 7; }
