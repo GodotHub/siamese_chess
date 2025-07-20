@@ -362,7 +362,7 @@ bool RuleStandard::is_check(godot::Ref<State> _state, int _group)
 				int to_piece = _state->get_piece(to);
 				while (!(to & 0x88) && (!to_piece || !is_same_camp(from_piece, to_piece)))
 				{
-					if (_state->get_extra(5) != -1 && abs(to - _state->get_extra(5)) <= 1 && (to >> 4) == _state->get_extra(0) * 7)
+					if (_state->get_extra(5) != -1 && abs(to - _state->get_extra(5)) <= 1 && (to >> 4) == _group * 7)
 					{
 						return true;
 					}
