@@ -7,7 +7,7 @@
 
 ## 阵营
 
-![image](camp.svg)
+![image](imgs/camp.svg)
 
 - 主要有黑白两方阵营，棋子也使用黑白表示；
 - 双方都能共有绝大多数的棋子种类；
@@ -31,7 +31,7 @@
 
 ## 棋盘
 
-![image](chessboard.svg)
+![image](imgs/chessboard.svg)
 
 - 8 * 8正方形网格，基底与国际象棋棋盘类似；
 - 棋盘周围有坐标标注；
@@ -46,7 +46,7 @@
 
 ## 棋子
 
-![image](piece.svg)
+![image](imgs/piece.svg)
 
 - 包含了玩家、敌人、中立角色、道具等；
 - 多个棋子不能挤在同一格子上；
@@ -69,7 +69,7 @@
 
 ## 数据库
 
-![image](database.svg)
+![image](imgs/database.svg)
 
 - 在搜索时，系统可以直接查询当前状态下的着法，以最精确最高效的方式开局；
 - 着法数据以规则区分数据库文件，以初始状态（关卡）区分不同的表格，以Zobrist为键，以目前局面的着法评分为值；
@@ -79,7 +79,7 @@
 
 ## 着法
 
-![image](movement_1.svg)
+![image](imgs/movement_1.svg)
 
 - 可以通过点击、滑动来确定着法；
 - 一回合只能够指定一颗棋子，指向一次方向；
@@ -98,7 +98,7 @@
 
 ## 同种着法额外选项
 
-![image](extra_selection.svg)
+![image](imgs/extra_selection.svg)
 
 - 由于我们需要处理兵的升变、以及比较诡异的王车易位，特此在着法上增加此类信息；
 - 额外信息仍然是通过规则生成的，玩家无法自行填入；
@@ -107,7 +107,7 @@
 
 ## 预先走子
 
-![image](premovement.svg)
+![image](imgs/premovement.svg)
 
 - 为了适应子弹棋等时间限制极其苛刻的环境，设立该机制；
 - 在对手的回合中，玩家仍然可以选择己方的棋子移动，只不过不会立刻生效；
@@ -120,7 +120,7 @@
 
 ## 草稿
 
-![image](sketch.svg)
+![image](imgs/sketch.svg)
 
 - 可以加载指定草稿，“贴”在棋盘上；
 - 允许绘制自由线条，同时以线条形式保存，以线条为单位进行擦除；
@@ -130,7 +130,7 @@
 
 ## 棋钟
 
-![image](timing.svg)
+![image](imgs/timing.svg)
 
 - 取决于关卡设计需求，通常情况为正计时；
 - 部分情况为倒计时，对双方计时；
@@ -138,7 +138,7 @@
 
 ## 悔棋
 
-![image](rollback.svg)
+![image](imgs/rollback.svg)
 
 - 每次悔棋都可以撤销到落子之前的状态；
 - 新游戏时，玩家可以自愿选择关闭悔棋以及不限次数悔棋；
@@ -147,7 +147,7 @@
 
 ## 棋谱
 
-![image](history.svg)
+![image](imgs/history.svg)
 
 - 用于记录双方在当前棋盘中的对局过程；
 - 一份棋谱中主要保存了以下这些信息：
@@ -170,7 +170,7 @@
 
 ## 目标
 
-![image](winning.svg)
+![image](imgs/winning.svg)
 
 - 游戏为解谜游戏，设计关卡时小心别设计成策略游戏；
 - 某一方的着法，使得对方空着后能直接获得胜利，那么这方的着法会被视为“将军”；
@@ -179,7 +179,7 @@
 
 ## 环境
 
-![image](environment.svg)
+![image](imgs/environment.svg)
 
 - 特指棋盘之外的环境，包含了棋盘本身、棋钟、对手Pastor、玩家Cheshire、以及周围的布景；
 - 下棋的环境是多变的，可能是咖啡厅、可能是酒馆、也可能是审讯室；
@@ -189,7 +189,7 @@
 
 ## 博弈树
 
-![image](game_tree.svg)
+![image](imgs/game_tree.svg)
 
 - 这一条将会描述游戏AI的具体实现，但是也会要求玩家穷尽所有着法（含剪枝规则），以解开更深层的谜题；
 - 简单来讲，对于Pastor，他会以当前思考能力下最优策略进行决策；
