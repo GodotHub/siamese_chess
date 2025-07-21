@@ -1,7 +1,8 @@
-[gd_scene load_steps=6 format=3 uid="uid://b0ots07uggqyg"]
+[gd_scene load_steps=7 format=3 uid="uid://b0ots07uggqyg"]
 
 [ext_resource type="Script" uid="uid://dovrsks1cn8gl" path="res://src/history.gd" id="1_1i63t"]
 [ext_resource type="Theme" uid="uid://d32bwe36vwxip" path="res://assets/theme.tres" id="2_ysvxy"]
+[ext_resource type="Texture2D" uid="uid://b4743axykk2uc" path="res://assets/texture/history.svg" id="3_o7yno"]
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_6vnsk"]
 size = Vector2(0.3, 0.4)
@@ -21,20 +22,1645 @@ mesh = SubResource("PlaneMesh_6vnsk")
 surface_material_override/0 = SubResource("StandardMaterial3D_o7yno")
 
 [node name="sub_viewport" type="SubViewport" parent="."]
-size = Vector2i(384, 512)
+size = Vector2i(576, 768)
+
+[node name="history" type="Sprite2D" parent="sub_viewport"]
+position = Vector2(292, 379)
+scale = Vector2(0.695, 0.695)
+texture = ExtResource("3_o7yno")
 
 [node name="label_title" type="Label" parent="sub_viewport"]
-offset_left = 150.0
-offset_top = 10.0
-offset_right = 219.0
-offset_bottom = 33.0
+offset_left = 121.0
+offset_top = 12.0
+offset_right = 190.0
+offset_bottom = 35.0
 theme = ExtResource("2_ysvxy")
 text = "Notation"
 
-[node name="rich_text_label" type="RichTextLabel" parent="sub_viewport"]
-offset_left = 28.0
-offset_top = 57.0
-offset_right = 348.0
-offset_bottom = 527.0
+[node name="label_date" type="Label" parent="sub_viewport"]
+offset_left = 73.0
+offset_top = 59.0
+offset_right = 114.0
+offset_bottom = 82.0
 theme = ExtResource("2_ysvxy")
-bbcode_enabled = true
+text = "Date:"
+
+[node name="label_event" type="Label" parent="sub_viewport"]
+offset_left = 67.0
+offset_top = 95.0
+offset_right = 115.0
+offset_bottom = 118.0
+theme = ExtResource("2_ysvxy")
+text = "Event:"
+
+[node name="label_white" type="Label" parent="sub_viewport"]
+offset_left = 66.0
+offset_top = 134.0
+offset_right = 116.0
+offset_bottom = 157.0
+theme = ExtResource("2_ysvxy")
+text = "White:"
+
+[node name="label_black" type="Label" parent="sub_viewport"]
+offset_left = 68.0
+offset_top = 168.0
+offset_right = 114.0
+offset_bottom = 191.0
+theme = ExtResource("2_ysvxy")
+text = "Black:"
+
+[node name="label_recorder" type="Label" parent="sub_viewport"]
+offset_left = 41.0
+offset_top = 202.0
+offset_right = 116.0
+offset_bottom = 225.0
+theme = ExtResource("2_ysvxy")
+text = "Recorder:"
+
+[node name="header" type="Control" parent="sub_viewport"]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+theme = ExtResource("2_ysvxy")
+
+[node name="label_1" type="Label" parent="sub_viewport/header"]
+layout_mode = 0
+offset_left = 93.0
+offset_top = 252.0
+offset_right = 139.0
+offset_bottom = 275.0
+text = "White"
+horizontal_alignment = 2
+
+[node name="label_2" type="Label" parent="sub_viewport/header"]
+layout_mode = 0
+offset_left = 156.0
+offset_top = 252.0
+offset_right = 202.0
+offset_bottom = 275.0
+text = "Black"
+horizontal_alignment = 2
+
+[node name="label_3" type="Label" parent="sub_viewport/header"]
+layout_mode = 0
+offset_left = 268.0
+offset_top = 252.0
+offset_right = 314.0
+offset_bottom = 275.0
+text = "White"
+horizontal_alignment = 2
+
+[node name="label_4" type="Label" parent="sub_viewport/header"]
+layout_mode = 0
+offset_left = 331.0
+offset_top = 252.0
+offset_right = 377.0
+offset_bottom = 275.0
+text = "Black"
+horizontal_alignment = 2
+
+[node name="label_5" type="Label" parent="sub_viewport/header"]
+layout_mode = 0
+offset_left = 443.0
+offset_top = 252.0
+offset_right = 489.0
+offset_bottom = 275.0
+text = "White"
+horizontal_alignment = 2
+
+[node name="label_6" type="Label" parent="sub_viewport/header"]
+layout_mode = 0
+offset_left = 505.0
+offset_top = 252.0
+offset_right = 551.0
+offset_bottom = 275.0
+text = "Black"
+horizontal_alignment = 2
+
+[node name="sequence" type="Control" parent="sub_viewport"]
+layout_mode = 3
+anchors_preset = 0
+offset_left = 121.0
+offset_top = 12.0
+offset_right = 161.0
+offset_bottom = 52.0
+theme = ExtResource("2_ysvxy")
+
+[node name="label_1" type="Label" parent="sub_viewport/sequence"]
+layout_mode = 0
+offset_left = -86.0
+offset_top = 264.0
+offset_right = -46.0
+offset_bottom = 287.0
+text = "1"
+horizontal_alignment = 2
+
+[node name="label_2" type="Label" parent="sub_viewport/sequence"]
+layout_mode = 0
+offset_left = -86.0
+offset_top = 288.0
+offset_right = -46.0
+offset_bottom = 311.0
+text = "2"
+horizontal_alignment = 2
+
+[node name="label_3" type="Label" parent="sub_viewport/sequence"]
+layout_mode = 0
+offset_left = -86.0
+offset_top = 311.0
+offset_right = -46.0
+offset_bottom = 334.0
+text = "3"
+horizontal_alignment = 2
+
+[node name="label_4" type="Label" parent="sub_viewport/sequence"]
+layout_mode = 0
+offset_left = -86.0
+offset_top = 335.0
+offset_right = -46.0
+offset_bottom = 358.0
+text = "4"
+horizontal_alignment = 2
+
+[node name="label_5" type="Label" parent="sub_viewport/sequence"]
+layout_mode = 0
+offset_left = -86.0
+offset_top = 359.0
+offset_right = -46.0
+offset_bottom = 382.0
+text = "5"
+horizontal_alignment = 2
+
+[node name="label_6" type="Label" parent="sub_viewport/sequence"]
+layout_mode = 0
+offset_left = -86.0
+offset_top = 382.0
+offset_right = -46.0
+offset_bottom = 405.0
+text = "6"
+horizontal_alignment = 2
+
+[node name="label_7" type="Label" parent="sub_viewport/sequence"]
+layout_mode = 0
+offset_left = -86.0
+offset_top = 407.0
+offset_right = -46.0
+offset_bottom = 430.0
+text = "7"
+horizontal_alignment = 2
+
+[node name="label_8" type="Label" parent="sub_viewport/sequence"]
+layout_mode = 0
+offset_left = -86.0
+offset_top = 431.0
+offset_right = -46.0
+offset_bottom = 454.0
+text = "8"
+horizontal_alignment = 2
+
+[node name="label_9" type="Label" parent="sub_viewport/sequence"]
+layout_mode = 0
+offset_left = -86.0
+offset_top = 454.0
+offset_right = -46.0
+offset_bottom = 477.0
+text = "9"
+horizontal_alignment = 2
+
+[node name="label_10" type="Label" parent="sub_viewport/sequence"]
+layout_mode = 0
+offset_left = -86.0
+offset_top = 478.0
+offset_right = -46.0
+offset_bottom = 501.0
+text = "10"
+horizontal_alignment = 2
+
+[node name="label_11" type="Label" parent="sub_viewport/sequence"]
+layout_mode = 0
+offset_left = -86.0
+offset_top = 502.0
+offset_right = -46.0
+offset_bottom = 525.0
+text = "11"
+horizontal_alignment = 2
+
+[node name="label_12" type="Label" parent="sub_viewport/sequence"]
+layout_mode = 0
+offset_left = -86.0
+offset_top = 525.0
+offset_right = -46.0
+offset_bottom = 548.0
+text = "12"
+horizontal_alignment = 2
+
+[node name="label_13" type="Label" parent="sub_viewport/sequence"]
+layout_mode = 0
+offset_left = -86.0
+offset_top = 549.0
+offset_right = -46.0
+offset_bottom = 572.0
+text = "13"
+horizontal_alignment = 2
+
+[node name="label_14" type="Label" parent="sub_viewport/sequence"]
+layout_mode = 0
+offset_left = -86.0
+offset_top = 573.0
+offset_right = -46.0
+offset_bottom = 596.0
+text = "14"
+horizontal_alignment = 2
+
+[node name="label_15" type="Label" parent="sub_viewport/sequence"]
+layout_mode = 0
+offset_left = -86.0
+offset_top = 596.0
+offset_right = -46.0
+offset_bottom = 619.0
+text = "15"
+horizontal_alignment = 2
+
+[node name="label_16" type="Label" parent="sub_viewport/sequence"]
+layout_mode = 0
+offset_left = -86.0
+offset_top = 620.0
+offset_right = -46.0
+offset_bottom = 643.0
+text = "16"
+horizontal_alignment = 2
+
+[node name="label_17" type="Label" parent="sub_viewport/sequence"]
+layout_mode = 0
+offset_left = -86.0
+offset_top = 644.0
+offset_right = -46.0
+offset_bottom = 667.0
+text = "17"
+horizontal_alignment = 2
+
+[node name="label_18" type="Label" parent="sub_viewport/sequence"]
+layout_mode = 0
+offset_left = -86.0
+offset_top = 667.0
+offset_right = -46.0
+offset_bottom = 690.0
+text = "18"
+horizontal_alignment = 2
+
+[node name="label_19" type="Label" parent="sub_viewport/sequence"]
+layout_mode = 0
+offset_left = -86.0
+offset_top = 692.0
+offset_right = -46.0
+offset_bottom = 715.0
+text = "19"
+horizontal_alignment = 2
+
+[node name="label_20" type="Label" parent="sub_viewport/sequence"]
+layout_mode = 0
+offset_left = -86.0
+offset_top = 716.0
+offset_right = -46.0
+offset_bottom = 739.0
+text = "20"
+horizontal_alignment = 2
+
+[node name="label_21" type="Label" parent="sub_viewport/sequence"]
+layout_mode = 0
+offset_left = 90.0
+offset_top = 264.0
+offset_right = 130.0
+offset_bottom = 287.0
+text = "21"
+horizontal_alignment = 2
+
+[node name="label_22" type="Label" parent="sub_viewport/sequence"]
+layout_mode = 0
+offset_left = 90.0
+offset_top = 288.0
+offset_right = 130.0
+offset_bottom = 311.0
+text = "22"
+horizontal_alignment = 2
+
+[node name="label_23" type="Label" parent="sub_viewport/sequence"]
+layout_mode = 0
+offset_left = 90.0
+offset_top = 311.0
+offset_right = 130.0
+offset_bottom = 334.0
+text = "23"
+horizontal_alignment = 2
+
+[node name="label_24" type="Label" parent="sub_viewport/sequence"]
+layout_mode = 0
+offset_left = 90.0
+offset_top = 335.0
+offset_right = 130.0
+offset_bottom = 358.0
+text = "24"
+horizontal_alignment = 2
+
+[node name="label_25" type="Label" parent="sub_viewport/sequence"]
+layout_mode = 0
+offset_left = 90.0
+offset_top = 359.0
+offset_right = 130.0
+offset_bottom = 382.0
+text = "25"
+horizontal_alignment = 2
+
+[node name="label_26" type="Label" parent="sub_viewport/sequence"]
+layout_mode = 0
+offset_left = 90.0
+offset_top = 382.0
+offset_right = 130.0
+offset_bottom = 405.0
+text = "26"
+horizontal_alignment = 2
+
+[node name="label_27" type="Label" parent="sub_viewport/sequence"]
+layout_mode = 0
+offset_left = 90.0
+offset_top = 407.0
+offset_right = 130.0
+offset_bottom = 430.0
+text = "27"
+horizontal_alignment = 2
+
+[node name="label_28" type="Label" parent="sub_viewport/sequence"]
+layout_mode = 0
+offset_left = 90.0
+offset_top = 431.0
+offset_right = 130.0
+offset_bottom = 454.0
+text = "28"
+horizontal_alignment = 2
+
+[node name="label_29" type="Label" parent="sub_viewport/sequence"]
+layout_mode = 0
+offset_left = 90.0
+offset_top = 454.0
+offset_right = 130.0
+offset_bottom = 477.0
+text = "29"
+horizontal_alignment = 2
+
+[node name="label_30" type="Label" parent="sub_viewport/sequence"]
+layout_mode = 0
+offset_left = 90.0
+offset_top = 478.0
+offset_right = 130.0
+offset_bottom = 501.0
+text = "30"
+horizontal_alignment = 2
+
+[node name="label_31" type="Label" parent="sub_viewport/sequence"]
+layout_mode = 0
+offset_left = 90.0
+offset_top = 502.0
+offset_right = 130.0
+offset_bottom = 525.0
+text = "31"
+horizontal_alignment = 2
+
+[node name="label_32" type="Label" parent="sub_viewport/sequence"]
+layout_mode = 0
+offset_left = 90.0
+offset_top = 525.0
+offset_right = 130.0
+offset_bottom = 548.0
+text = "32"
+horizontal_alignment = 2
+
+[node name="label_33" type="Label" parent="sub_viewport/sequence"]
+layout_mode = 0
+offset_left = 90.0
+offset_top = 549.0
+offset_right = 130.0
+offset_bottom = 572.0
+text = "33"
+horizontal_alignment = 2
+
+[node name="label_34" type="Label" parent="sub_viewport/sequence"]
+layout_mode = 0
+offset_left = 90.0
+offset_top = 573.0
+offset_right = 130.0
+offset_bottom = 596.0
+text = "34"
+horizontal_alignment = 2
+
+[node name="label_35" type="Label" parent="sub_viewport/sequence"]
+layout_mode = 0
+offset_left = 90.0
+offset_top = 596.0
+offset_right = 130.0
+offset_bottom = 619.0
+text = "35"
+horizontal_alignment = 2
+
+[node name="label_36" type="Label" parent="sub_viewport/sequence"]
+layout_mode = 0
+offset_left = 90.0
+offset_top = 620.0
+offset_right = 130.0
+offset_bottom = 643.0
+text = "36"
+horizontal_alignment = 2
+
+[node name="label_37" type="Label" parent="sub_viewport/sequence"]
+layout_mode = 0
+offset_left = 90.0
+offset_top = 644.0
+offset_right = 130.0
+offset_bottom = 667.0
+text = "37"
+horizontal_alignment = 2
+
+[node name="label_38" type="Label" parent="sub_viewport/sequence"]
+layout_mode = 0
+offset_left = 90.0
+offset_top = 667.0
+offset_right = 130.0
+offset_bottom = 690.0
+text = "38"
+horizontal_alignment = 2
+
+[node name="label_39" type="Label" parent="sub_viewport/sequence"]
+layout_mode = 0
+offset_left = 90.0
+offset_top = 692.0
+offset_right = 130.0
+offset_bottom = 715.0
+text = "39"
+horizontal_alignment = 2
+
+[node name="label_40" type="Label" parent="sub_viewport/sequence"]
+layout_mode = 0
+offset_left = 90.0
+offset_top = 716.0
+offset_right = 130.0
+offset_bottom = 739.0
+text = "40"
+horizontal_alignment = 2
+
+[node name="label_41" type="Label" parent="sub_viewport/sequence"]
+layout_mode = 0
+offset_left = 265.0
+offset_top = 264.0
+offset_right = 305.0
+offset_bottom = 287.0
+text = "41"
+horizontal_alignment = 2
+
+[node name="label_42" type="Label" parent="sub_viewport/sequence"]
+layout_mode = 0
+offset_left = 265.0
+offset_top = 288.0
+offset_right = 305.0
+offset_bottom = 311.0
+text = "42"
+horizontal_alignment = 2
+
+[node name="label_43" type="Label" parent="sub_viewport/sequence"]
+layout_mode = 0
+offset_left = 265.0
+offset_top = 311.0
+offset_right = 305.0
+offset_bottom = 334.0
+text = "43"
+horizontal_alignment = 2
+
+[node name="label_44" type="Label" parent="sub_viewport/sequence"]
+layout_mode = 0
+offset_left = 265.0
+offset_top = 335.0
+offset_right = 305.0
+offset_bottom = 358.0
+text = "44"
+horizontal_alignment = 2
+
+[node name="label_45" type="Label" parent="sub_viewport/sequence"]
+layout_mode = 0
+offset_left = 265.0
+offset_top = 359.0
+offset_right = 305.0
+offset_bottom = 382.0
+text = "45"
+horizontal_alignment = 2
+
+[node name="label_46" type="Label" parent="sub_viewport/sequence"]
+layout_mode = 0
+offset_left = 265.0
+offset_top = 382.0
+offset_right = 305.0
+offset_bottom = 405.0
+text = "46"
+horizontal_alignment = 2
+
+[node name="label_47" type="Label" parent="sub_viewport/sequence"]
+layout_mode = 0
+offset_left = 265.0
+offset_top = 407.0
+offset_right = 305.0
+offset_bottom = 430.0
+text = "47"
+horizontal_alignment = 2
+
+[node name="label_48" type="Label" parent="sub_viewport/sequence"]
+layout_mode = 0
+offset_left = 265.0
+offset_top = 431.0
+offset_right = 305.0
+offset_bottom = 454.0
+text = "48"
+horizontal_alignment = 2
+
+[node name="label_49" type="Label" parent="sub_viewport/sequence"]
+layout_mode = 0
+offset_left = 265.0
+offset_top = 454.0
+offset_right = 305.0
+offset_bottom = 477.0
+text = "49"
+horizontal_alignment = 2
+
+[node name="label_50" type="Label" parent="sub_viewport/sequence"]
+layout_mode = 0
+offset_left = 265.0
+offset_top = 478.0
+offset_right = 305.0
+offset_bottom = 501.0
+text = "50"
+horizontal_alignment = 2
+
+[node name="label_51" type="Label" parent="sub_viewport/sequence"]
+layout_mode = 0
+offset_left = 265.0
+offset_top = 502.0
+offset_right = 305.0
+offset_bottom = 525.0
+text = "51"
+horizontal_alignment = 2
+
+[node name="label_52" type="Label" parent="sub_viewport/sequence"]
+layout_mode = 0
+offset_left = 265.0
+offset_top = 525.0
+offset_right = 305.0
+offset_bottom = 548.0
+text = "52"
+horizontal_alignment = 2
+
+[node name="label_53" type="Label" parent="sub_viewport/sequence"]
+layout_mode = 0
+offset_left = 265.0
+offset_top = 549.0
+offset_right = 305.0
+offset_bottom = 572.0
+text = "53"
+horizontal_alignment = 2
+
+[node name="label_54" type="Label" parent="sub_viewport/sequence"]
+layout_mode = 0
+offset_left = 265.0
+offset_top = 573.0
+offset_right = 305.0
+offset_bottom = 596.0
+text = "54"
+horizontal_alignment = 2
+
+[node name="label_55" type="Label" parent="sub_viewport/sequence"]
+layout_mode = 0
+offset_left = 265.0
+offset_top = 596.0
+offset_right = 305.0
+offset_bottom = 619.0
+text = "55"
+horizontal_alignment = 2
+
+[node name="label_56" type="Label" parent="sub_viewport/sequence"]
+layout_mode = 0
+offset_left = 265.0
+offset_top = 620.0
+offset_right = 305.0
+offset_bottom = 643.0
+text = "56"
+horizontal_alignment = 2
+
+[node name="label_57" type="Label" parent="sub_viewport/sequence"]
+layout_mode = 0
+offset_left = 265.0
+offset_top = 644.0
+offset_right = 305.0
+offset_bottom = 667.0
+text = "57"
+horizontal_alignment = 2
+
+[node name="label_58" type="Label" parent="sub_viewport/sequence"]
+layout_mode = 0
+offset_left = 265.0
+offset_top = 667.0
+offset_right = 305.0
+offset_bottom = 690.0
+text = "58"
+horizontal_alignment = 2
+
+[node name="label_59" type="Label" parent="sub_viewport/sequence"]
+layout_mode = 0
+offset_left = 265.0
+offset_top = 692.0
+offset_right = 305.0
+offset_bottom = 715.0
+text = "59"
+horizontal_alignment = 2
+
+[node name="label_60" type="Label" parent="sub_viewport/sequence"]
+layout_mode = 0
+offset_left = 265.0
+offset_top = 716.0
+offset_right = 305.0
+offset_bottom = 739.0
+text = "60"
+horizontal_alignment = 2
+
+[node name="white" type="Control" parent="sub_viewport"]
+layout_mode = 3
+anchors_preset = 0
+offset_left = 185.0
+offset_top = 12.0
+offset_right = 225.0
+offset_bottom = 52.0
+theme = ExtResource("2_ysvxy")
+
+[node name="label_1" type="Label" parent="sub_viewport/white"]
+layout_mode = 0
+offset_left = -106.0
+offset_top = 264.0
+offset_right = -48.0
+offset_bottom = 287.0
+horizontal_alignment = 2
+
+[node name="label_2" type="Label" parent="sub_viewport/white"]
+layout_mode = 0
+offset_left = -106.0
+offset_top = 288.0
+offset_right = -48.0
+offset_bottom = 311.0
+horizontal_alignment = 2
+
+[node name="label_3" type="Label" parent="sub_viewport/white"]
+layout_mode = 0
+offset_left = -106.0
+offset_top = 311.0
+offset_right = -48.0
+offset_bottom = 334.0
+horizontal_alignment = 2
+
+[node name="label_4" type="Label" parent="sub_viewport/white"]
+layout_mode = 0
+offset_left = -106.0
+offset_top = 335.0
+offset_right = -48.0
+offset_bottom = 358.0
+horizontal_alignment = 2
+
+[node name="label_5" type="Label" parent="sub_viewport/white"]
+layout_mode = 0
+offset_left = -106.0
+offset_top = 359.0
+offset_right = -48.0
+offset_bottom = 382.0
+horizontal_alignment = 2
+
+[node name="label_6" type="Label" parent="sub_viewport/white"]
+layout_mode = 0
+offset_left = -106.0
+offset_top = 382.0
+offset_right = -48.0
+offset_bottom = 405.0
+horizontal_alignment = 2
+
+[node name="label_7" type="Label" parent="sub_viewport/white"]
+layout_mode = 0
+offset_left = -106.0
+offset_top = 407.0
+offset_right = -48.0
+offset_bottom = 430.0
+horizontal_alignment = 2
+
+[node name="label_8" type="Label" parent="sub_viewport/white"]
+layout_mode = 0
+offset_left = -106.0
+offset_top = 431.0
+offset_right = -48.0
+offset_bottom = 454.0
+horizontal_alignment = 2
+
+[node name="label_9" type="Label" parent="sub_viewport/white"]
+layout_mode = 0
+offset_left = -106.0
+offset_top = 454.0
+offset_right = -48.0
+offset_bottom = 477.0
+horizontal_alignment = 2
+
+[node name="label_10" type="Label" parent="sub_viewport/white"]
+layout_mode = 0
+offset_left = -106.0
+offset_top = 478.0
+offset_right = -48.0
+offset_bottom = 501.0
+horizontal_alignment = 2
+
+[node name="label_11" type="Label" parent="sub_viewport/white"]
+layout_mode = 0
+offset_left = -106.0
+offset_top = 502.0
+offset_right = -48.0
+offset_bottom = 525.0
+horizontal_alignment = 2
+
+[node name="label_12" type="Label" parent="sub_viewport/white"]
+layout_mode = 0
+offset_left = -106.0
+offset_top = 525.0
+offset_right = -48.0
+offset_bottom = 548.0
+horizontal_alignment = 2
+
+[node name="label_13" type="Label" parent="sub_viewport/white"]
+layout_mode = 0
+offset_left = -106.0
+offset_top = 549.0
+offset_right = -48.0
+offset_bottom = 572.0
+horizontal_alignment = 2
+
+[node name="label_14" type="Label" parent="sub_viewport/white"]
+layout_mode = 0
+offset_left = -106.0
+offset_top = 573.0
+offset_right = -48.0
+offset_bottom = 596.0
+horizontal_alignment = 2
+
+[node name="label_15" type="Label" parent="sub_viewport/white"]
+layout_mode = 0
+offset_left = -106.0
+offset_top = 596.0
+offset_right = -48.0
+offset_bottom = 619.0
+horizontal_alignment = 2
+
+[node name="label_16" type="Label" parent="sub_viewport/white"]
+layout_mode = 0
+offset_left = -106.0
+offset_top = 620.0
+offset_right = -48.0
+offset_bottom = 643.0
+horizontal_alignment = 2
+
+[node name="label_17" type="Label" parent="sub_viewport/white"]
+layout_mode = 0
+offset_left = -106.0
+offset_top = 644.0
+offset_right = -48.0
+offset_bottom = 667.0
+horizontal_alignment = 2
+
+[node name="label_18" type="Label" parent="sub_viewport/white"]
+layout_mode = 0
+offset_left = -106.0
+offset_top = 667.0
+offset_right = -48.0
+offset_bottom = 690.0
+horizontal_alignment = 2
+
+[node name="label_19" type="Label" parent="sub_viewport/white"]
+layout_mode = 0
+offset_left = -106.0
+offset_top = 692.0
+offset_right = -48.0
+offset_bottom = 715.0
+horizontal_alignment = 2
+
+[node name="label_20" type="Label" parent="sub_viewport/white"]
+layout_mode = 0
+offset_left = -106.0
+offset_top = 716.0
+offset_right = -48.0
+offset_bottom = 739.0
+horizontal_alignment = 2
+
+[node name="label_21" type="Label" parent="sub_viewport/white"]
+layout_mode = 0
+offset_left = 70.0
+offset_top = 264.0
+offset_right = 128.0
+offset_bottom = 287.0
+horizontal_alignment = 2
+
+[node name="label_22" type="Label" parent="sub_viewport/white"]
+layout_mode = 0
+offset_left = 70.0
+offset_top = 288.0
+offset_right = 128.0
+offset_bottom = 311.0
+horizontal_alignment = 2
+
+[node name="label_23" type="Label" parent="sub_viewport/white"]
+layout_mode = 0
+offset_left = 70.0
+offset_top = 311.0
+offset_right = 128.0
+offset_bottom = 334.0
+horizontal_alignment = 2
+
+[node name="label_24" type="Label" parent="sub_viewport/white"]
+layout_mode = 0
+offset_left = 70.0
+offset_top = 335.0
+offset_right = 128.0
+offset_bottom = 358.0
+horizontal_alignment = 2
+
+[node name="label_25" type="Label" parent="sub_viewport/white"]
+layout_mode = 0
+offset_left = 70.0
+offset_top = 359.0
+offset_right = 128.0
+offset_bottom = 382.0
+horizontal_alignment = 2
+
+[node name="label_26" type="Label" parent="sub_viewport/white"]
+layout_mode = 0
+offset_left = 70.0
+offset_top = 382.0
+offset_right = 128.0
+offset_bottom = 405.0
+horizontal_alignment = 2
+
+[node name="label_27" type="Label" parent="sub_viewport/white"]
+layout_mode = 0
+offset_left = 70.0
+offset_top = 407.0
+offset_right = 128.0
+offset_bottom = 430.0
+horizontal_alignment = 2
+
+[node name="label_28" type="Label" parent="sub_viewport/white"]
+layout_mode = 0
+offset_left = 70.0
+offset_top = 431.0
+offset_right = 128.0
+offset_bottom = 454.0
+horizontal_alignment = 2
+
+[node name="label_29" type="Label" parent="sub_viewport/white"]
+layout_mode = 0
+offset_left = 70.0
+offset_top = 454.0
+offset_right = 128.0
+offset_bottom = 477.0
+horizontal_alignment = 2
+
+[node name="label_30" type="Label" parent="sub_viewport/white"]
+layout_mode = 0
+offset_left = 70.0
+offset_top = 478.0
+offset_right = 128.0
+offset_bottom = 501.0
+horizontal_alignment = 2
+
+[node name="label_31" type="Label" parent="sub_viewport/white"]
+layout_mode = 0
+offset_left = 70.0
+offset_top = 502.0
+offset_right = 128.0
+offset_bottom = 525.0
+horizontal_alignment = 2
+
+[node name="label_32" type="Label" parent="sub_viewport/white"]
+layout_mode = 0
+offset_left = 70.0
+offset_top = 525.0
+offset_right = 128.0
+offset_bottom = 548.0
+horizontal_alignment = 2
+
+[node name="label_33" type="Label" parent="sub_viewport/white"]
+layout_mode = 0
+offset_left = 70.0
+offset_top = 549.0
+offset_right = 128.0
+offset_bottom = 572.0
+horizontal_alignment = 2
+
+[node name="label_34" type="Label" parent="sub_viewport/white"]
+layout_mode = 0
+offset_left = 70.0
+offset_top = 573.0
+offset_right = 128.0
+offset_bottom = 596.0
+horizontal_alignment = 2
+
+[node name="label_35" type="Label" parent="sub_viewport/white"]
+layout_mode = 0
+offset_left = 70.0
+offset_top = 596.0
+offset_right = 128.0
+offset_bottom = 619.0
+horizontal_alignment = 2
+
+[node name="label_36" type="Label" parent="sub_viewport/white"]
+layout_mode = 0
+offset_left = 70.0
+offset_top = 620.0
+offset_right = 128.0
+offset_bottom = 643.0
+horizontal_alignment = 2
+
+[node name="label_37" type="Label" parent="sub_viewport/white"]
+layout_mode = 0
+offset_left = 70.0
+offset_top = 644.0
+offset_right = 128.0
+offset_bottom = 667.0
+horizontal_alignment = 2
+
+[node name="label_38" type="Label" parent="sub_viewport/white"]
+layout_mode = 0
+offset_left = 70.0
+offset_top = 667.0
+offset_right = 128.0
+offset_bottom = 690.0
+horizontal_alignment = 2
+
+[node name="label_39" type="Label" parent="sub_viewport/white"]
+layout_mode = 0
+offset_left = 70.0
+offset_top = 692.0
+offset_right = 128.0
+offset_bottom = 715.0
+horizontal_alignment = 2
+
+[node name="label_40" type="Label" parent="sub_viewport/white"]
+layout_mode = 0
+offset_left = 70.0
+offset_top = 716.0
+offset_right = 128.0
+offset_bottom = 739.0
+horizontal_alignment = 2
+
+[node name="label_41" type="Label" parent="sub_viewport/white"]
+layout_mode = 0
+offset_left = 245.0
+offset_top = 264.0
+offset_right = 303.0
+offset_bottom = 287.0
+horizontal_alignment = 2
+
+[node name="label_42" type="Label" parent="sub_viewport/white"]
+layout_mode = 0
+offset_left = 245.0
+offset_top = 288.0
+offset_right = 303.0
+offset_bottom = 311.0
+horizontal_alignment = 2
+
+[node name="label_43" type="Label" parent="sub_viewport/white"]
+layout_mode = 0
+offset_left = 245.0
+offset_top = 311.0
+offset_right = 303.0
+offset_bottom = 334.0
+horizontal_alignment = 2
+
+[node name="label_44" type="Label" parent="sub_viewport/white"]
+layout_mode = 0
+offset_left = 245.0
+offset_top = 335.0
+offset_right = 303.0
+offset_bottom = 358.0
+horizontal_alignment = 2
+
+[node name="label_45" type="Label" parent="sub_viewport/white"]
+layout_mode = 0
+offset_left = 245.0
+offset_top = 359.0
+offset_right = 303.0
+offset_bottom = 382.0
+horizontal_alignment = 2
+
+[node name="label_46" type="Label" parent="sub_viewport/white"]
+layout_mode = 0
+offset_left = 245.0
+offset_top = 382.0
+offset_right = 303.0
+offset_bottom = 405.0
+horizontal_alignment = 2
+
+[node name="label_47" type="Label" parent="sub_viewport/white"]
+layout_mode = 0
+offset_left = 245.0
+offset_top = 407.0
+offset_right = 303.0
+offset_bottom = 430.0
+horizontal_alignment = 2
+
+[node name="label_48" type="Label" parent="sub_viewport/white"]
+layout_mode = 0
+offset_left = 245.0
+offset_top = 431.0
+offset_right = 303.0
+offset_bottom = 454.0
+horizontal_alignment = 2
+
+[node name="label_49" type="Label" parent="sub_viewport/white"]
+layout_mode = 0
+offset_left = 245.0
+offset_top = 454.0
+offset_right = 303.0
+offset_bottom = 477.0
+horizontal_alignment = 2
+
+[node name="label_50" type="Label" parent="sub_viewport/white"]
+layout_mode = 0
+offset_left = 245.0
+offset_top = 478.0
+offset_right = 303.0
+offset_bottom = 501.0
+horizontal_alignment = 2
+
+[node name="label_51" type="Label" parent="sub_viewport/white"]
+layout_mode = 0
+offset_left = 245.0
+offset_top = 502.0
+offset_right = 303.0
+offset_bottom = 525.0
+horizontal_alignment = 2
+
+[node name="label_52" type="Label" parent="sub_viewport/white"]
+layout_mode = 0
+offset_left = 245.0
+offset_top = 525.0
+offset_right = 303.0
+offset_bottom = 548.0
+horizontal_alignment = 2
+
+[node name="label_53" type="Label" parent="sub_viewport/white"]
+layout_mode = 0
+offset_left = 245.0
+offset_top = 549.0
+offset_right = 303.0
+offset_bottom = 572.0
+horizontal_alignment = 2
+
+[node name="label_54" type="Label" parent="sub_viewport/white"]
+layout_mode = 0
+offset_left = 245.0
+offset_top = 573.0
+offset_right = 303.0
+offset_bottom = 596.0
+horizontal_alignment = 2
+
+[node name="label_55" type="Label" parent="sub_viewport/white"]
+layout_mode = 0
+offset_left = 245.0
+offset_top = 596.0
+offset_right = 303.0
+offset_bottom = 619.0
+horizontal_alignment = 2
+
+[node name="label_56" type="Label" parent="sub_viewport/white"]
+layout_mode = 0
+offset_left = 245.0
+offset_top = 620.0
+offset_right = 303.0
+offset_bottom = 643.0
+horizontal_alignment = 2
+
+[node name="label_57" type="Label" parent="sub_viewport/white"]
+layout_mode = 0
+offset_left = 245.0
+offset_top = 644.0
+offset_right = 303.0
+offset_bottom = 667.0
+horizontal_alignment = 2
+
+[node name="label_58" type="Label" parent="sub_viewport/white"]
+layout_mode = 0
+offset_left = 245.0
+offset_top = 667.0
+offset_right = 303.0
+offset_bottom = 690.0
+horizontal_alignment = 2
+
+[node name="label_59" type="Label" parent="sub_viewport/white"]
+layout_mode = 0
+offset_left = 245.0
+offset_top = 692.0
+offset_right = 303.0
+offset_bottom = 715.0
+horizontal_alignment = 2
+
+[node name="label_60" type="Label" parent="sub_viewport/white"]
+layout_mode = 0
+offset_left = 245.0
+offset_top = 716.0
+offset_right = 303.0
+offset_bottom = 739.0
+horizontal_alignment = 2
+
+[node name="black" type="Control" parent="sub_viewport"]
+layout_mode = 3
+anchors_preset = 0
+offset_left = 185.0
+offset_top = 12.0
+offset_right = 225.0
+offset_bottom = 52.0
+theme = ExtResource("2_ysvxy")
+
+[node name="label_1" type="Label" parent="sub_viewport/black"]
+layout_mode = 0
+offset_left = -44.0
+offset_top = 264.0
+offset_right = 14.0
+offset_bottom = 287.0
+horizontal_alignment = 2
+
+[node name="label_2" type="Label" parent="sub_viewport/black"]
+layout_mode = 0
+offset_left = -44.0
+offset_top = 288.0
+offset_right = 14.0
+offset_bottom = 311.0
+horizontal_alignment = 2
+
+[node name="label_3" type="Label" parent="sub_viewport/black"]
+layout_mode = 0
+offset_left = -44.0
+offset_top = 311.0
+offset_right = 14.0
+offset_bottom = 334.0
+horizontal_alignment = 2
+
+[node name="label_4" type="Label" parent="sub_viewport/black"]
+layout_mode = 0
+offset_left = -44.0
+offset_top = 335.0
+offset_right = 14.0
+offset_bottom = 358.0
+horizontal_alignment = 2
+
+[node name="label_5" type="Label" parent="sub_viewport/black"]
+layout_mode = 0
+offset_left = -44.0
+offset_top = 359.0
+offset_right = 14.0
+offset_bottom = 382.0
+horizontal_alignment = 2
+
+[node name="label_6" type="Label" parent="sub_viewport/black"]
+layout_mode = 0
+offset_left = -44.0
+offset_top = 382.0
+offset_right = 14.0
+offset_bottom = 405.0
+horizontal_alignment = 2
+
+[node name="label_7" type="Label" parent="sub_viewport/black"]
+layout_mode = 0
+offset_left = -44.0
+offset_top = 407.0
+offset_right = 14.0
+offset_bottom = 430.0
+horizontal_alignment = 2
+
+[node name="label_8" type="Label" parent="sub_viewport/black"]
+layout_mode = 0
+offset_left = -44.0
+offset_top = 431.0
+offset_right = 14.0
+offset_bottom = 454.0
+horizontal_alignment = 2
+
+[node name="label_9" type="Label" parent="sub_viewport/black"]
+layout_mode = 0
+offset_left = -44.0
+offset_top = 454.0
+offset_right = 14.0
+offset_bottom = 477.0
+horizontal_alignment = 2
+
+[node name="label_10" type="Label" parent="sub_viewport/black"]
+layout_mode = 0
+offset_left = -44.0
+offset_top = 478.0
+offset_right = 14.0
+offset_bottom = 501.0
+horizontal_alignment = 2
+
+[node name="label_11" type="Label" parent="sub_viewport/black"]
+layout_mode = 0
+offset_left = -44.0
+offset_top = 502.0
+offset_right = 14.0
+offset_bottom = 525.0
+horizontal_alignment = 2
+
+[node name="label_12" type="Label" parent="sub_viewport/black"]
+layout_mode = 0
+offset_left = -44.0
+offset_top = 525.0
+offset_right = 14.0
+offset_bottom = 548.0
+horizontal_alignment = 2
+
+[node name="label_13" type="Label" parent="sub_viewport/black"]
+layout_mode = 0
+offset_left = -44.0
+offset_top = 549.0
+offset_right = 14.0
+offset_bottom = 572.0
+horizontal_alignment = 2
+
+[node name="label_14" type="Label" parent="sub_viewport/black"]
+layout_mode = 0
+offset_left = -44.0
+offset_top = 573.0
+offset_right = 14.0
+offset_bottom = 596.0
+horizontal_alignment = 2
+
+[node name="label_15" type="Label" parent="sub_viewport/black"]
+layout_mode = 0
+offset_left = -44.0
+offset_top = 596.0
+offset_right = 14.0
+offset_bottom = 619.0
+horizontal_alignment = 2
+
+[node name="label_16" type="Label" parent="sub_viewport/black"]
+layout_mode = 0
+offset_left = -44.0
+offset_top = 620.0
+offset_right = 14.0
+offset_bottom = 643.0
+horizontal_alignment = 2
+
+[node name="label_17" type="Label" parent="sub_viewport/black"]
+layout_mode = 0
+offset_left = -44.0
+offset_top = 644.0
+offset_right = 14.0
+offset_bottom = 667.0
+horizontal_alignment = 2
+
+[node name="label_18" type="Label" parent="sub_viewport/black"]
+layout_mode = 0
+offset_left = -44.0
+offset_top = 667.0
+offset_right = 14.0
+offset_bottom = 690.0
+horizontal_alignment = 2
+
+[node name="label_19" type="Label" parent="sub_viewport/black"]
+layout_mode = 0
+offset_left = -44.0
+offset_top = 692.0
+offset_right = 14.0
+offset_bottom = 715.0
+horizontal_alignment = 2
+
+[node name="label_20" type="Label" parent="sub_viewport/black"]
+layout_mode = 0
+offset_left = -44.0
+offset_top = 716.0
+offset_right = 14.0
+offset_bottom = 739.0
+horizontal_alignment = 2
+
+[node name="label_21" type="Label" parent="sub_viewport/black"]
+layout_mode = 0
+offset_left = 132.0
+offset_top = 264.0
+offset_right = 190.0
+offset_bottom = 287.0
+horizontal_alignment = 2
+
+[node name="label_22" type="Label" parent="sub_viewport/black"]
+layout_mode = 0
+offset_left = 132.0
+offset_top = 288.0
+offset_right = 190.0
+offset_bottom = 311.0
+horizontal_alignment = 2
+
+[node name="label_23" type="Label" parent="sub_viewport/black"]
+layout_mode = 0
+offset_left = 132.0
+offset_top = 311.0
+offset_right = 190.0
+offset_bottom = 334.0
+horizontal_alignment = 2
+
+[node name="label_24" type="Label" parent="sub_viewport/black"]
+layout_mode = 0
+offset_left = 132.0
+offset_top = 335.0
+offset_right = 190.0
+offset_bottom = 358.0
+horizontal_alignment = 2
+
+[node name="label_25" type="Label" parent="sub_viewport/black"]
+layout_mode = 0
+offset_left = 132.0
+offset_top = 359.0
+offset_right = 190.0
+offset_bottom = 382.0
+horizontal_alignment = 2
+
+[node name="label_26" type="Label" parent="sub_viewport/black"]
+layout_mode = 0
+offset_left = 132.0
+offset_top = 382.0
+offset_right = 190.0
+offset_bottom = 405.0
+horizontal_alignment = 2
+
+[node name="label_27" type="Label" parent="sub_viewport/black"]
+layout_mode = 0
+offset_left = 132.0
+offset_top = 407.0
+offset_right = 190.0
+offset_bottom = 430.0
+horizontal_alignment = 2
+
+[node name="label_28" type="Label" parent="sub_viewport/black"]
+layout_mode = 0
+offset_left = 132.0
+offset_top = 431.0
+offset_right = 190.0
+offset_bottom = 454.0
+horizontal_alignment = 2
+
+[node name="label_29" type="Label" parent="sub_viewport/black"]
+layout_mode = 0
+offset_left = 132.0
+offset_top = 454.0
+offset_right = 190.0
+offset_bottom = 477.0
+horizontal_alignment = 2
+
+[node name="label_30" type="Label" parent="sub_viewport/black"]
+layout_mode = 0
+offset_left = 132.0
+offset_top = 478.0
+offset_right = 190.0
+offset_bottom = 501.0
+horizontal_alignment = 2
+
+[node name="label_31" type="Label" parent="sub_viewport/black"]
+layout_mode = 0
+offset_left = 132.0
+offset_top = 502.0
+offset_right = 190.0
+offset_bottom = 525.0
+horizontal_alignment = 2
+
+[node name="label_32" type="Label" parent="sub_viewport/black"]
+layout_mode = 0
+offset_left = 132.0
+offset_top = 525.0
+offset_right = 190.0
+offset_bottom = 548.0
+horizontal_alignment = 2
+
+[node name="label_33" type="Label" parent="sub_viewport/black"]
+layout_mode = 0
+offset_left = 132.0
+offset_top = 549.0
+offset_right = 190.0
+offset_bottom = 572.0
+horizontal_alignment = 2
+
+[node name="label_34" type="Label" parent="sub_viewport/black"]
+layout_mode = 0
+offset_left = 132.0
+offset_top = 573.0
+offset_right = 190.0
+offset_bottom = 596.0
+horizontal_alignment = 2
+
+[node name="label_35" type="Label" parent="sub_viewport/black"]
+layout_mode = 0
+offset_left = 132.0
+offset_top = 596.0
+offset_right = 190.0
+offset_bottom = 619.0
+horizontal_alignment = 2
+
+[node name="label_36" type="Label" parent="sub_viewport/black"]
+layout_mode = 0
+offset_left = 132.0
+offset_top = 620.0
+offset_right = 190.0
+offset_bottom = 643.0
+horizontal_alignment = 2
+
+[node name="label_37" type="Label" parent="sub_viewport/black"]
+layout_mode = 0
+offset_left = 132.0
+offset_top = 644.0
+offset_right = 190.0
+offset_bottom = 667.0
+horizontal_alignment = 2
+
+[node name="label_38" type="Label" parent="sub_viewport/black"]
+layout_mode = 0
+offset_left = 132.0
+offset_top = 667.0
+offset_right = 190.0
+offset_bottom = 690.0
+horizontal_alignment = 2
+
+[node name="label_39" type="Label" parent="sub_viewport/black"]
+layout_mode = 0
+offset_left = 132.0
+offset_top = 692.0
+offset_right = 190.0
+offset_bottom = 715.0
+horizontal_alignment = 2
+
+[node name="label_40" type="Label" parent="sub_viewport/black"]
+layout_mode = 0
+offset_left = 132.0
+offset_top = 716.0
+offset_right = 190.0
+offset_bottom = 739.0
+horizontal_alignment = 2
+
+[node name="label_41" type="Label" parent="sub_viewport/black"]
+layout_mode = 0
+offset_left = 307.0
+offset_top = 264.0
+offset_right = 365.0
+offset_bottom = 287.0
+horizontal_alignment = 2
+
+[node name="label_42" type="Label" parent="sub_viewport/black"]
+layout_mode = 0
+offset_left = 307.0
+offset_top = 288.0
+offset_right = 365.0
+offset_bottom = 311.0
+horizontal_alignment = 2
+
+[node name="label_43" type="Label" parent="sub_viewport/black"]
+layout_mode = 0
+offset_left = 307.0
+offset_top = 311.0
+offset_right = 365.0
+offset_bottom = 334.0
+horizontal_alignment = 2
+
+[node name="label_44" type="Label" parent="sub_viewport/black"]
+layout_mode = 0
+offset_left = 307.0
+offset_top = 335.0
+offset_right = 365.0
+offset_bottom = 358.0
+horizontal_alignment = 2
+
+[node name="label_45" type="Label" parent="sub_viewport/black"]
+layout_mode = 0
+offset_left = 307.0
+offset_top = 359.0
+offset_right = 365.0
+offset_bottom = 382.0
+horizontal_alignment = 2
+
+[node name="label_46" type="Label" parent="sub_viewport/black"]
+layout_mode = 0
+offset_left = 307.0
+offset_top = 382.0
+offset_right = 365.0
+offset_bottom = 405.0
+horizontal_alignment = 2
+
+[node name="label_47" type="Label" parent="sub_viewport/black"]
+layout_mode = 0
+offset_left = 307.0
+offset_top = 407.0
+offset_right = 365.0
+offset_bottom = 430.0
+horizontal_alignment = 2
+
+[node name="label_48" type="Label" parent="sub_viewport/black"]
+layout_mode = 0
+offset_left = 307.0
+offset_top = 431.0
+offset_right = 365.0
+offset_bottom = 454.0
+horizontal_alignment = 2
+
+[node name="label_49" type="Label" parent="sub_viewport/black"]
+layout_mode = 0
+offset_left = 307.0
+offset_top = 454.0
+offset_right = 365.0
+offset_bottom = 477.0
+horizontal_alignment = 2
+
+[node name="label_50" type="Label" parent="sub_viewport/black"]
+layout_mode = 0
+offset_left = 307.0
+offset_top = 478.0
+offset_right = 365.0
+offset_bottom = 501.0
+horizontal_alignment = 2
+
+[node name="label_51" type="Label" parent="sub_viewport/black"]
+layout_mode = 0
+offset_left = 307.0
+offset_top = 502.0
+offset_right = 365.0
+offset_bottom = 525.0
+horizontal_alignment = 2
+
+[node name="label_52" type="Label" parent="sub_viewport/black"]
+layout_mode = 0
+offset_left = 307.0
+offset_top = 525.0
+offset_right = 365.0
+offset_bottom = 548.0
+horizontal_alignment = 2
+
+[node name="label_53" type="Label" parent="sub_viewport/black"]
+layout_mode = 0
+offset_left = 307.0
+offset_top = 549.0
+offset_right = 365.0
+offset_bottom = 572.0
+horizontal_alignment = 2
+
+[node name="label_54" type="Label" parent="sub_viewport/black"]
+layout_mode = 0
+offset_left = 307.0
+offset_top = 573.0
+offset_right = 365.0
+offset_bottom = 596.0
+horizontal_alignment = 2
+
+[node name="label_55" type="Label" parent="sub_viewport/black"]
+layout_mode = 0
+offset_left = 307.0
+offset_top = 596.0
+offset_right = 365.0
+offset_bottom = 619.0
+horizontal_alignment = 2
+
+[node name="label_56" type="Label" parent="sub_viewport/black"]
+layout_mode = 0
+offset_left = 307.0
+offset_top = 620.0
+offset_right = 365.0
+offset_bottom = 643.0
+horizontal_alignment = 2
+
+[node name="label_57" type="Label" parent="sub_viewport/black"]
+layout_mode = 0
+offset_left = 307.0
+offset_top = 644.0
+offset_right = 365.0
+offset_bottom = 667.0
+horizontal_alignment = 2
+
+[node name="label_58" type="Label" parent="sub_viewport/black"]
+layout_mode = 0
+offset_left = 307.0
+offset_top = 667.0
+offset_right = 365.0
+offset_bottom = 690.0
+horizontal_alignment = 2
+
+[node name="label_59" type="Label" parent="sub_viewport/black"]
+layout_mode = 0
+offset_left = 307.0
+offset_top = 692.0
+offset_right = 365.0
+offset_bottom = 715.0
+horizontal_alignment = 2
+
+[node name="label_60" type="Label" parent="sub_viewport/black"]
+layout_mode = 0
+offset_left = 307.0
+offset_top = 716.0
+offset_right = 365.0
+offset_bottom = 739.0
+horizontal_alignment = 2

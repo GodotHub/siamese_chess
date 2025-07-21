@@ -1,7 +1,7 @@
 extends InspectableItem
 
 var state:State = null
-var history:PackedStringArray = ["", ""]
+var history:PackedStringArray = []
 var rule:Rule = null
 
 func _ready() -> void:
@@ -16,11 +16,11 @@ func push_move(move:int) -> void:
 	update_table()
 
 func update_table() -> void:
-	$sub_viewport/rich_text_label.text = "[table=3]"
 	for i:int in range(history.size()):
 		if i % 2 == 0:
-			$sub_viewport/rich_text_label.text += "[cell]%d[/cell]" % (i / 2)
-		$sub_viewport/rich_text_label.text += "[cell]%s[/cell]" % history[i]
+			get_node("sub_viewport/white/label_%d" % (i / 2 + 1)).text = history[i]
+		else:
+			get_node("sub_viewport/black/label_%d" % (i / 2 + 1)).text = history[i]
 
 func add_blank_line() -> void:
 	history.push_back("")
