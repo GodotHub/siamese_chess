@@ -799,13 +799,13 @@ godot::String RuleStandard::get_move_name(godot::Ref<State> _state, int move)
 			ans +=  7 - (from >> 4) + '1';
 		}
 	}
-	if (_state->get_piece(to) && (from_piece & 95 != 'P'))
+	if (_state->get_piece(to) && ((from_piece & 95) != 'P'))
 	{
 		ans += 'x';
 	}
 	ans += (to & 0x0F) + 'a';
 	ans +=  7 - (to >> 4) + '1';
-	if (_state->get_piece(to) && (from_piece & 95 == 'P'))
+	if (_state->get_piece(to) && ((from_piece & 95) == 'P') || to == _state->get_extra(3))
 	{
 		ans += 'x';
 	}
