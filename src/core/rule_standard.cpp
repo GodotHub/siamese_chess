@@ -8,7 +8,7 @@
 RuleStandard::RuleStandard()
 {
 	WIN = 50000;
-	THRESHOLD = 20000;
+	THRESHOLD = 60000;
 
 	piece_value = {
 		{'K', 60000},
@@ -1063,14 +1063,6 @@ int RuleStandard::alphabeta(godot::Ref<State>_state, int _alpha, int _beta, int 
 			return score;
 		}
 	}
-	if (_state->get_relative_score(_group) > THRESHOLD)
-	{
-		return WIN - _ply;
-	}
-	if (_state->get_relative_score(_group) < -THRESHOLD)
-	{
-		return -WIN + _ply;
-	}
 	if (_depth <= 0)
 	{
 		int score = quies(_state, _alpha, _beta, _group);
@@ -1104,8 +1096,19 @@ int RuleStandard::alphabeta(godot::Ref<State>_state, int _alpha, int _beta, int 
 		if (score >= _beta)
 			return _beta;
 	}
-	move_list = generate_move(_state, _group);
-	for (int i = 0; i < move_list.size() - 1; i++)
+	move_list = generate_valid_move(_state, _group);
+	if (move_list.size() == 0)
+	{
+		if (is_check(_state, 1 - _group))
+		{
+			return -WIN + _ply;
+		}
+		else
+		{
+			return 0;
+		}
+	}
+	for (int i = 0; i < move_list.size(); i++)
 	{
 		for (int j = move_list.size() - 2; j >= i; j--)
 		{
@@ -1150,7 +1153,7 @@ void RuleStandard::search(godot::Ref<State>_state, int _group, TranspositionTabl
 	std::array<int, 65536> history_table;
 	for (int i = 1; i < _max_depth; i++)
 	{
-		alphabeta(_state, -WIN, WIN, i, _group, 0, true, &history_table, _transposition_table, _is_timeup, _debug_output);
+		alphabeta(_state, -THRESHOLD, THRESHOLD, i, _group, 0, true, &history_table, _transposition_table, _is_timeup, _debug_output);
 		if (_is_timeup.is_valid() && _is_timeup.call())
 		{
 			return;
