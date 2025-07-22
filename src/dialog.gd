@@ -50,7 +50,7 @@ func push_selection(selection:PackedStringArray, _force_selection:bool = true, b
 	click_anywhere = false
 	force_selection = _force_selection
 	for i:int in selection.size():
-		text += "[url link=\"" + ("%d" % i) + "\"]" + tr(selection[i]) + "[/url]  "
+		text += "[url=\"" + ("%d" % i) + "\"]" + tr(selection[i]) + "[/url]  "
 	var tween:Tween = create_tween()
 	if blackscreen:
 		tween.tween_property($texture_rect_full, "visible", true, 0)
