@@ -1053,7 +1053,7 @@ int RuleStandard::quies(godot::Ref<State>_state, int _alpha, int _beta, int _gro
 	return _alpha;
 }
 
-int RuleStandard::alphabeta(godot::Ref<State>_state, int _alpha, int _beta, int _depth, int _group, bool _can_null, std::array<int, 65536> *_history_table, TranspositionTable *_transposition_table, godot::Callable _is_timeup, godot::Callable _debug_output)
+int RuleStandard::alphabeta(godot::Ref<State>_state, int _alpha, int _beta, int _depth, int _group, int _ply, bool _can_null, std::array<int, 65536> *_history_table, TranspositionTable *_transposition_table, godot::Callable _is_timeup, godot::Callable _debug_output)
 {
 	if (_transposition_table)
 	{
@@ -1062,6 +1062,14 @@ int RuleStandard::alphabeta(godot::Ref<State>_state, int _alpha, int _beta, int 
 		{
 			return score;
 		}
+	}
+	if (_state->get_relative_score(_group) > THRESHOLD)
+	{
+		return WIN - _ply;
+	}
+	if (_state->get_relative_score(_group) < -THRESHOLD)
+	{
+		return -WIN + _ply;
 	}
 	if (_depth <= 0)
 	{
@@ -1092,11 +1100,11 @@ int RuleStandard::alphabeta(godot::Ref<State>_state, int _alpha, int _beta, int 
 	}
 	if (_can_null)
 	{
-		int score = alphabeta(_state, -_beta, -_beta + 1, _depth - 3, 1 - _group, false);
+		int score = -alphabeta(_state, -_beta, -_beta + 1, _depth - 3, 1 - _group, false);
 		if (score >= _beta)
 			return _beta;
 	}
-	move_list = generate_valid_move(_state, _group);
+	move_list = generate_move(_state, _group);
 	for (int i = 0; i < move_list.size() - 1; i++)
 	{
 		for (int j = move_list.size() - 2; j >= i; j--)
@@ -1109,7 +1117,7 @@ int RuleStandard::alphabeta(godot::Ref<State>_state, int _alpha, int _beta, int 
 		_debug_output.call(_state->get_zobrist(), _depth, i, move_list.size());
 		godot::Ref<State>test_state = _state->duplicate();
 		apply_move(test_state, move_list[i], godot::Callable(*test_state, "add_piece"), godot::Callable(*test_state, "capture_piece"), godot::Callable(*test_state, "move_piece"), godot::Callable(*test_state, "set_extra"), godot::Callable(*test_state, "push_history"), godot::Callable(*test_state, "change_score"));
-		value = -alphabeta(test_state, -_beta, -_alpha, _depth - 1, 1 - _group, false, _history_table, _transposition_table, _is_timeup, _debug_output);
+		value = -alphabeta(test_state, -_beta, -_alpha, _depth - 1, 1 - _group, _ply + 1, false, _history_table, _transposition_table, _is_timeup, _debug_output);
 
 		if (_beta <= value)
 		{
@@ -1142,7 +1150,7 @@ void RuleStandard::search(godot::Ref<State>_state, int _group, TranspositionTabl
 	std::array<int, 65536> history_table;
 	for (int i = 1; i < _max_depth; i++)
 	{
-		alphabeta(_state, -WIN, WIN, i, _group, true, &history_table, _transposition_table, _is_timeup, _debug_output);
+		alphabeta(_state, -WIN, WIN, i, _group, 0, true, &history_table, _transposition_table, _is_timeup, _debug_output);
 		if (_is_timeup.is_valid() && _is_timeup.call())
 		{
 			return;
