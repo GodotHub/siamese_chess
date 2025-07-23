@@ -1,4 +1,4 @@
-[gd_scene load_steps=49 format=3 uid="uid://bmyf2h17xaxlj"]
+[gd_scene load_steps=51 format=3 uid="uid://bmyf2h17xaxlj"]
 
 [ext_resource type="PackedScene" uid="uid://gdof8yy8yrjv" path="res://assets/model/environment.glb" id="1_b3374"]
 [ext_resource type="PackedScene" uid="uid://d1s6qj7aofldk" path="res://scene/chessboard.tscn" id="2_3p4nk"]
@@ -24,6 +24,8 @@
 [ext_resource type="PackedScene" uid="uid://dtu3l0xkrwcvx" path="res://assets/model/bookshelf.glb" id="21_71yyv"]
 [ext_resource type="PackedScene" uid="uid://324uto1yslin" path="res://assets/model/painting_frame_rect.glb" id="22_cjf2n"]
 [ext_resource type="PackedScene" uid="uid://h3wcv7lnqe8x" path="res://assets/model/painting_frame_square.glb" id="26_x2qnl"]
+[ext_resource type="PackedScene" uid="uid://doi00wvde4ogg" path="res://assets/model/menu.glb" id="27_okolh"]
+[ext_resource type="PackedScene" uid="uid://dtrbfbjh5ccs0" path="res://assets/model/rose.glb" id="28_x2qnl"]
 [ext_resource type="AudioStream" uid="uid://www4mdghmloh" path="res://assets/audio/52645__kstein1__white-noise.wav" id="29_x2qnl"]
 [ext_resource type="PackedScene" uid="uid://kqoc0aycgs35" path="res://scene/dialog.tscn" id="30_b1ytd"]
 
@@ -638,6 +640,12 @@ volume_db = 17.71
 autoplay = true
 
 [node name="dialog" parent="." index="46" instance=ExtResource("30_b1ytd")]
+
+[node name="rose2" parent="." index="47" instance=ExtResource("28_x2qnl")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.43895, 0.842041, -0.718518)
+
+[node name="menu2" parent="." index="48" instance=ExtResource("27_okolh")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.31515, 0.847289, -0.72478)
 
 [editable path="painting_frame"]
 [editable path="painting_frame_2"]
