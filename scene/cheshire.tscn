@@ -16,5 +16,7 @@ exclude_parent = false
 collide_with_areas = true
 collide_with_bodies = false
 
-[node name="camera" type="Camera3D" parent="."]
+[node name="head" type="Node3D" parent="."]
+
+[node name="camera" type="Camera3D" parent="head"]
 current = true

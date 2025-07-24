@@ -8,6 +8,11 @@ var interact_stack:Array[Interact] = []
 func _ready() -> void:
 	pass
 
+func _physics_process(_delta:float) -> void:
+	$head/camera.set_rotation(Vector3(deg_to_rad(sin(Time.get_unix_time_from_system())), 0, 0))
+	$head/camera.set_rotation(Vector3(0, deg_to_rad(sin(Time.get_unix_time_from_system())) * 0.5, 0))
+	$head/camera.set_rotation(Vector3(0, 0, deg_to_rad(sin(Time.get_unix_time_from_system()) * 0.5)))
+
 func set_initial_interact(interact:Interact) -> void:
 	interact.enter()
 	interact_stack.push_back(interact)
@@ -36,8 +41,8 @@ func pop_stack() -> void:
 	move_camera(interact_stack[-1].get_camera())
 
 func click_area(screen_position:Vector2) -> Area3D:
-	var from:Vector3 = $camera.project_ray_origin(screen_position)
-	var to:Vector3 = $camera.project_ray_normal(screen_position) * 200
+	var from:Vector3 = $head/camera.project_ray_origin(screen_position)
+	var to:Vector3 = $head/camera.project_ray_normal(screen_position) * 200
 	ray_cast.global_position = from
 	ray_cast.target_position = to
 	ray_cast.collision_mask = 3
@@ -50,10 +55,10 @@ func move_camera(other:Camera3D) -> void:
 	if !is_instance_valid(other):
 		return
 	var tween:Tween = create_tween()
-	tween.tween_property($camera, "global_transform", other.global_transform, 1).set_trans(Tween.TRANS_SINE)
+	tween.tween_property($head, "global_transform", other.global_transform, 1).set_trans(Tween.TRANS_SINE)
 	tween.set_parallel()
-	tween.tween_property($camera, "fov", other.fov, 1).set_trans(Tween.TRANS_SINE)
+	tween.tween_property($head/camera, "fov", other.fov, 1).set_trans(Tween.TRANS_SINE)
 
 func force_set_camera(other:Camera3D) -> void:
-	$camera.global_transform = other.global_transform
-	$camera.fov = other.fov
+	$head.global_transform = other.global_transform
+	$head/camera.fov = other.fov
