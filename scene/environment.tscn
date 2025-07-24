@@ -92,9 +92,10 @@ background_mode = 2
 sky = SubResource("Sky_1vcsq")
 tonemap_mode = 2
 fog_enabled = true
+fog_mode = 1
 fog_light_color = Color(1, 1, 1, 1)
-fog_depth_begin = 1.0
-fog_depth_end = 10.0
+fog_density = 1.0
+fog_depth_end = 54.4
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_hgmdq"]
 size = Vector3(2.00383, 1.59277, 1.45321)
@@ -678,7 +679,6 @@ transform = Transform3D(5.5732e-08, 0, 0.425, 0, 0.425, 0, -0.425, 0, 5.5732e-08
 transform = Transform3D(0.07162, 0, -0.997431, 0, 1, 0, 0.997431, 0, 0.07162, -2.73957, 0.850589, -0.463588)
 
 [node name="cheshire" parent="." index="25" instance=ExtResource("3_1vcsq")]
-transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -3.05663, 1.40416, -0.0600458)
 
 [node name="draft" parent="." index="26" instance=ExtResource("8_tnamw")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.35787, 0.869977, -0.0607151)
