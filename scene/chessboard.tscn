@@ -1,11 +1,53 @@
-[gd_scene load_steps=4 format=3 uid="uid://d1s6qj7aofldk"]
+[gd_scene load_steps=11 format=3 uid="uid://d1s6qj7aofldk"]
 
 [ext_resource type="PackedScene" uid="uid://dk81n85kf8ln0" path="res://assets/model/chessboard.glb" id="1_tntyj"]
 [ext_resource type="Script" uid="uid://d1qn0lbk66o3i" path="res://src/chessboard.gd" id="2_m6gnn"]
+[ext_resource type="Shader" uid="uid://dd7xsr1eeq6mo" path="res://src/unmoving_plaid.gdshader" id="3_lln3j"]
+[ext_resource type="Texture2D" uid="uid://d15qcqdl3xuf3" path="res://assets/texture/Texturelabs_Fabric_186S.jpg" id="4_bbdsi"]
 [ext_resource type="PackedScene" uid="uid://bmt1hscjfvqcg" path="res://scene/canvas.tscn" id="5_07eby"]
+[ext_resource type="Texture2D" uid="uid://dc1bupw2qibgu" path="res://assets/texture/Texturelabs_Paper_374S.jpg" id="5_bbdsi"]
+[ext_resource type="Texture2D" uid="uid://c41qgg7cur57o" path="res://assets/texture/Texturelabs_Stone_131S.jpg" id="6_bbdsi"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_bbdsi"]
+render_priority = 0
+shader = ExtResource("3_lln3j")
+shader_parameter/texture_albedo = ExtResource("4_bbdsi")
+shader_parameter/scale = 1.0
+shader_parameter/hue_shift = 4.75e-08
+shader_parameter/saturation_mult = 0.628
+shader_parameter/value_mult = 1.0
+shader_parameter/brightness_add = -0.262
+shader_parameter/contrast_mult = 0.902
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_lln3j"]
+render_priority = 0
+shader = ExtResource("3_lln3j")
+shader_parameter/texture_albedo = ExtResource("5_bbdsi")
+shader_parameter/scale = 1.0
+shader_parameter/hue_shift = 0.0
+shader_parameter/saturation_mult = 1.0
+shader_parameter/value_mult = 1.0
+shader_parameter/brightness_add = -0.055
+shader_parameter/contrast_mult = 1.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_07eby"]
+render_priority = 0
+shader = ExtResource("3_lln3j")
+shader_parameter/texture_albedo = ExtResource("6_bbdsi")
+shader_parameter/scale = 1.0
+shader_parameter/hue_shift = 0.0
+shader_parameter/saturation_mult = 0.421
+shader_parameter/value_mult = 0.932
+shader_parameter/brightness_add = 0.251
+shader_parameter/contrast_mult = 0.792
 
 [node name="chessboard" instance=ExtResource("1_tntyj")]
 script = ExtResource("2_m6gnn")
+
+[node name="chessbase" parent="." index="0"]
+surface_material_override/0 = SubResource("ShaderMaterial_bbdsi")
+surface_material_override/1 = SubResource("ShaderMaterial_lln3j")
+surface_material_override/2 = SubResource("ShaderMaterial_07eby")
 
 [node name="canvas" parent="." index="3" instance=ExtResource("5_07eby")]
 

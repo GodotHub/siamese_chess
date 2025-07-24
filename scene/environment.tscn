@@ -1,4 +1,4 @@
-[gd_scene load_steps=51 format=3 uid="uid://bmyf2h17xaxlj"]
+[gd_scene load_steps=54 format=3 uid="uid://bmyf2h17xaxlj"]
 
 [ext_resource type="PackedScene" uid="uid://gdof8yy8yrjv" path="res://assets/model/environment.glb" id="1_b3374"]
 [ext_resource type="PackedScene" uid="uid://d1s6qj7aofldk" path="res://scene/chessboard.tscn" id="2_3p4nk"]
@@ -20,7 +20,9 @@
 [ext_resource type="PackedScene" uid="uid://cd30yi3gohbq5" path="res://assets/model/upright_piano.glb" id="16_futd0"]
 [ext_resource type="PackedScene" uid="uid://b63o3y2sbsav0" path="res://assets/model/table_high.glb" id="17_pv5um"]
 [ext_resource type="PackedScene" uid="uid://ppw81bokufcf" path="res://assets/model/chair_high.glb" id="18_u0pxc"]
+[ext_resource type="Shader" uid="uid://dd7xsr1eeq6mo" path="res://src/unmoving_plaid.gdshader" id="19_b1ytd"]
 [ext_resource type="PackedScene" uid="uid://fql23rvu2hyk" path="res://assets/model/pen.glb" id="19_u0pxc"]
+[ext_resource type="Texture2D" uid="uid://h85ppsibn8xk" path="res://assets/texture/Texturelabs_Wood_256S.jpg" id="20_b1ytd"]
 [ext_resource type="PackedScene" uid="uid://dtu3l0xkrwcvx" path="res://assets/model/bookshelf.glb" id="21_71yyv"]
 [ext_resource type="PackedScene" uid="uid://324uto1yslin" path="res://assets/model/painting_frame_rect.glb" id="22_cjf2n"]
 [ext_resource type="PackedScene" uid="uid://h3wcv7lnqe8x" path="res://assets/model/painting_frame_square.glb" id="26_x2qnl"]
@@ -88,6 +90,17 @@ size = Vector3(0.848511, 2.28638, 1.66498)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_x2qnl"]
 size = Vector3(1, 0.561096, 0.486084)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_r5n28"]
+render_priority = 0
+shader = ExtResource("19_b1ytd")
+shader_parameter/texture_albedo = ExtResource("20_b1ytd")
+shader_parameter/scale = 1.0
+shader_parameter/hue_shift = 0.0
+shader_parameter/saturation_mult = 1.0
+shader_parameter/value_mult = 1.0
+shader_parameter/brightness_add = 0.0
+shader_parameter/contrast_mult = 1.0
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_i1jpj"]
 
@@ -491,6 +504,9 @@ transform = Transform3D(-0.0669528, 0.997756, 4.36133e-08, -8.57176e-16, -4.3711
 [node name="table_0" parent="seat" index="0" instance=ExtResource("14_7clsy")]
 transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -2.32462, 0, 0.240975)
 
+[node name="table_000" parent="seat/table_0" index="0"]
+surface_material_override/0 = SubResource("ShaderMaterial_r5n28")
+
 [node name="sofa_0" parent="seat" index="1" instance=ExtResource("15_futd0")]
 transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -1.4244, 0, 0.195626)
 
@@ -647,6 +663,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.43895, 0.842041, -0.718518
 [node name="menu2" parent="." index="48" instance=ExtResource("27_okolh")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.31515, 0.847289, -0.72478)
 
+[editable path="seat/table_0"]
 [editable path="painting_frame"]
 [editable path="painting_frame_2"]
 [editable path="painting_frame_square"]

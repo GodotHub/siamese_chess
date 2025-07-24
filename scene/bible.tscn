@@ -2,21 +2,6 @@
 
 [ext_resource type="PackedScene" uid="uid://bcu5vlysl22wu" path="res://assets/model/bible.glb" id="1_hgbbb"]
 
-[sub_resource type="Animation" id="Animation_hgbbb"]
-resource_name = "idle"
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("skeleton/Skeleton3D/single_page:visible")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [false]
-}
-
 [sub_resource type="Animation" id="Animation_hjen1"]
 length = 0.001
 tracks/0/type = "value"
@@ -171,6 +156,21 @@ tracks/20/path = NodePath("skeleton/Skeleton3D:骨骼.004")
 tracks/20/interp = 1
 tracks/20/loop_wrap = true
 tracks/20/keys = PackedFloat32Array(0, 1, 1, 1, 1)
+
+[sub_resource type="Animation" id="Animation_hgbbb"]
+resource_name = "idle"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("skeleton/Skeleton3D/single_page:visible")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
 
 [sub_resource type="Animation" id="Animation_2s732"]
 resource_name = "next"
@@ -494,22 +494,29 @@ _data = {
 
 [node name="Skeleton3D" parent="skeleton" index="0"]
 bones/1/rotation = Quaternion(6.95875e-08, 1.85722e-15, -0.291871, 0.956458)
-bones/1/scale = Vector3(1, 1, 1)
 bones/2/rotation = Quaternion(4.03966e-08, 8.56148e-15, -0.169436, 0.985541)
-bones/2/scale = Vector3(1, 1, 1)
 bones/3/rotation = Quaternion(2.72853e-08, -6.70539e-16, -0.114443, 0.99343)
-bones/3/scale = Vector3(1, 1, 1)
 bones/4/rotation = Quaternion(5.62847e-08, 1.73662e-14, -0.236075, 0.971735)
-bones/4/scale = Vector3(1, 1, 1)
 bones/5/rotation = Quaternion(-5.26381e-10, 3.13248e-15, 0.00220783, 0.999998)
-bones/5/scale = Vector3(1, 1, 1)
 bones/6/rotation = Quaternion(6.92688e-08, -1.83774e-08, -0.316228, 0.948683)
+bones/6/scale = Vector3(1, 1, 1)
 bones/7/rotation = Quaternion(1.64423e-08, -7.39489e-08, -0.131455, 0.991322)
+bones/7/scale = Vector3(1, 1, 1)
 bones/8/rotation = Quaternion(3.24297e-08, 1.62046e-07, -0.151248, 0.988496)
+bones/8/scale = Vector3(1, 1, 1)
+bones/9/scale = Vector3(1, 1, 1)
 bones/10/rotation = Quaternion(-1.87089e-08, 2.85713e-07, 0.0193472, 0.999813)
+bones/10/scale = Vector3(1, 1, 1)
 bones/11/rotation = Quaternion(-7.25673e-08, -8.48189e-09, 0.316228, 0.948683)
+bones/11/scale = Vector3(1, 1, 1)
+bones/12/scale = Vector3(1, 1, 1)
 bones/13/rotation = Quaternion(-5.50171e-09, -1.58249e-07, 0.151248, 0.988496)
+bones/13/scale = Vector3(1, 1, 1)
+bones/14/scale = Vector3(1, 1, 1)
 bones/15/rotation = Quaternion(-1.75538e-08, -3.45409e-07, -0.0193472, 0.999813)
+bones/15/scale = Vector3(1, 1, 1)
+bones/17/scale = Vector3(1, 1, 1)
+bones/19/scale = Vector3(1, 1, 1)
 
 [node name="single_page" parent="skeleton/Skeleton3D" index="4"]
 visible = false
