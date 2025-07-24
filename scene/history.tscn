@@ -1,6 +1,7 @@
-[gd_scene load_steps=7 format=3 uid="uid://b0ots07uggqyg"]
+[gd_scene load_steps=8 format=3 uid="uid://b0ots07uggqyg"]
 
 [ext_resource type="Script" uid="uid://dovrsks1cn8gl" path="res://src/history.gd" id="1_1i63t"]
+[ext_resource type="Texture2D" uid="uid://bhyrjuctg4vsr" path="res://assets/texture/Texturelabs_Paper_312S.jpg" id="2_0su6n"]
 [ext_resource type="Theme" uid="uid://d32bwe36vwxip" path="res://assets/theme.tres" id="2_ysvxy"]
 [ext_resource type="Texture2D" uid="uid://b4743axykk2uc" path="res://assets/texture/history.svg" id="3_o7yno"]
 
@@ -23,6 +24,11 @@ surface_material_override/0 = SubResource("StandardMaterial3D_o7yno")
 
 [node name="sub_viewport" type="SubViewport" parent="."]
 size = Vector2i(576, 768)
+
+[node name="material" type="Sprite2D" parent="sub_viewport"]
+position = Vector2(231.61, 350)
+scale = Vector2(1.3, 1.3)
+texture = ExtResource("2_0su6n")
 
 [node name="history" type="Sprite2D" parent="sub_viewport"]
 position = Vector2(292, 379)

@@ -1,4 +1,4 @@
-[gd_scene load_steps=54 format=3 uid="uid://bmyf2h17xaxlj"]
+[gd_scene load_steps=78 format=3 uid="uid://bmyf2h17xaxlj"]
 
 [ext_resource type="PackedScene" uid="uid://gdof8yy8yrjv" path="res://assets/model/environment.glb" id="1_b3374"]
 [ext_resource type="PackedScene" uid="uid://d1s6qj7aofldk" path="res://scene/chessboard.tscn" id="2_3p4nk"]
@@ -6,6 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://b3ml34bssywkr" path="res://scene/cheshire.tscn" id="3_1vcsq"]
 [ext_resource type="PackedScene" uid="uid://n5i2mcgyqj3k" path="res://scene/chess_timer.tscn" id="3_po4na"]
 [ext_resource type="PackedScene" uid="uid://caqylflasg3lw" path="res://assets/model/upright_piano_chair.glb" id="4_i1jpj"]
+[ext_resource type="Texture2D" uid="uid://c41qgg7cur57o" path="res://assets/texture/Texturelabs_Stone_131S.jpg" id="4_r5n28"]
 [ext_resource type="PackedScene" uid="uid://b0ots07uggqyg" path="res://scene/history.tscn" id="5_4qusu"]
 [ext_resource type="Script" uid="uid://dg85frcnjlauy" path="res://src/interact.gd" id="7_hgmdq"]
 [ext_resource type="PackedScene" uid="uid://de73qrhtkiaka" path="res://scene/draft.tscn" id="8_tnamw"]
@@ -17,6 +18,7 @@
 [ext_resource type="PackedScene" uid="uid://dbxji8pi5nulg" path="res://assets/model/tree.glb" id="13_sel54"]
 [ext_resource type="PackedScene" uid="uid://c2r0g1i6eu65r" path="res://assets/model/table.glb" id="14_7clsy"]
 [ext_resource type="PackedScene" uid="uid://df443q5sl4vaj" path="res://assets/model/sofa.glb" id="15_futd0"]
+[ext_resource type="Texture2D" uid="uid://dc1bupw2qibgu" path="res://assets/texture/Texturelabs_Paper_374S.jpg" id="15_wlijh"]
 [ext_resource type="PackedScene" uid="uid://cd30yi3gohbq5" path="res://assets/model/upright_piano.glb" id="16_futd0"]
 [ext_resource type="PackedScene" uid="uid://b63o3y2sbsav0" path="res://assets/model/table_high.glb" id="17_pv5um"]
 [ext_resource type="PackedScene" uid="uid://ppw81bokufcf" path="res://assets/model/chair_high.glb" id="18_u0pxc"]
@@ -25,11 +27,56 @@
 [ext_resource type="Texture2D" uid="uid://h85ppsibn8xk" path="res://assets/texture/Texturelabs_Wood_256S.jpg" id="20_b1ytd"]
 [ext_resource type="PackedScene" uid="uid://dtu3l0xkrwcvx" path="res://assets/model/bookshelf.glb" id="21_71yyv"]
 [ext_resource type="PackedScene" uid="uid://324uto1yslin" path="res://assets/model/painting_frame_rect.glb" id="22_cjf2n"]
+[ext_resource type="Texture2D" uid="uid://d15qcqdl3xuf3" path="res://assets/texture/Texturelabs_Fabric_186S.jpg" id="23_wlijh"]
 [ext_resource type="PackedScene" uid="uid://h3wcv7lnqe8x" path="res://assets/model/painting_frame_square.glb" id="26_x2qnl"]
 [ext_resource type="PackedScene" uid="uid://doi00wvde4ogg" path="res://assets/model/menu.glb" id="27_okolh"]
 [ext_resource type="PackedScene" uid="uid://dtrbfbjh5ccs0" path="res://assets/model/rose.glb" id="28_x2qnl"]
 [ext_resource type="AudioStream" uid="uid://www4mdghmloh" path="res://assets/audio/52645__kstein1__white-noise.wav" id="29_x2qnl"]
 [ext_resource type="PackedScene" uid="uid://kqoc0aycgs35" path="res://scene/dialog.tscn" id="30_b1ytd"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_e7hh8"]
+render_priority = 0
+shader = ExtResource("19_b1ytd")
+shader_parameter/texture_albedo = ExtResource("4_r5n28")
+shader_parameter/scale = 1.0
+shader_parameter/hue_shift = 0.0
+shader_parameter/saturation_mult = 1.0
+shader_parameter/value_mult = 0.813
+shader_parameter/brightness_add = 0.817
+shader_parameter/contrast_mult = 0.11
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_neu4h"]
+render_priority = 0
+shader = ExtResource("19_b1ytd")
+shader_parameter/texture_albedo = ExtResource("20_b1ytd")
+shader_parameter/scale = 1.0
+shader_parameter/hue_shift = 0.0
+shader_parameter/saturation_mult = 1.0
+shader_parameter/value_mult = 1.0
+shader_parameter/brightness_add = 0.0
+shader_parameter/contrast_mult = 1.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_wlijh"]
+render_priority = 0
+shader = ExtResource("19_b1ytd")
+shader_parameter/texture_albedo = ExtResource("20_b1ytd")
+shader_parameter/scale = 1.0
+shader_parameter/hue_shift = 0.0
+shader_parameter/saturation_mult = 0.76
+shader_parameter/value_mult = 0.77
+shader_parameter/brightness_add = 0.0
+shader_parameter/contrast_mult = 1.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_eosfh"]
+render_priority = 0
+shader = ExtResource("19_b1ytd")
+shader_parameter/texture_albedo = ExtResource("4_r5n28")
+shader_parameter/scale = 1.0
+shader_parameter/hue_shift = 0.0
+shader_parameter/saturation_mult = 0.85
+shader_parameter/value_mult = 0.728
+shader_parameter/brightness_add = 0.676
+shader_parameter/contrast_mult = 0.099
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_po4na"]
 transparency = 1
@@ -91,6 +138,94 @@ size = Vector3(0.848511, 2.28638, 1.66498)
 [sub_resource type="BoxShape3D" id="BoxShape3D_x2qnl"]
 size = Vector3(1, 0.561096, 0.486084)
 
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_vtg4w"]
+render_priority = 0
+shader = ExtResource("19_b1ytd")
+shader_parameter/texture_albedo = ExtResource("15_wlijh")
+shader_parameter/scale = 1.0
+shader_parameter/hue_shift = 0.0
+shader_parameter/saturation_mult = 1.0
+shader_parameter/value_mult = 1.0
+shader_parameter/brightness_add = 0.498
+shader_parameter/contrast_mult = 1.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_vloyq"]
+render_priority = 0
+shader = ExtResource("19_b1ytd")
+shader_parameter/texture_albedo = ExtResource("23_wlijh")
+shader_parameter/scale = 1.0
+shader_parameter/hue_shift = 0.0
+shader_parameter/saturation_mult = 1.0
+shader_parameter/value_mult = 1.0
+shader_parameter/brightness_add = -0.245
+shader_parameter/contrast_mult = 1.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_b2ntd"]
+render_priority = 0
+shader = ExtResource("19_b1ytd")
+shader_parameter/texture_albedo = ExtResource("15_wlijh")
+shader_parameter/scale = 1.0
+shader_parameter/hue_shift = 0.0
+shader_parameter/saturation_mult = 1.0
+shader_parameter/value_mult = 1.0
+shader_parameter/brightness_add = 0.498
+shader_parameter/contrast_mult = 1.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_1nkwo"]
+render_priority = 0
+shader = ExtResource("19_b1ytd")
+shader_parameter/texture_albedo = ExtResource("23_wlijh")
+shader_parameter/scale = 1.0
+shader_parameter/hue_shift = 0.0
+shader_parameter/saturation_mult = 1.0
+shader_parameter/value_mult = 1.0
+shader_parameter/brightness_add = -0.245
+shader_parameter/contrast_mult = 1.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_r35em"]
+render_priority = 0
+shader = ExtResource("19_b1ytd")
+shader_parameter/texture_albedo = ExtResource("20_b1ytd")
+shader_parameter/scale = 1.0
+shader_parameter/hue_shift = 0.0
+shader_parameter/saturation_mult = 1.0
+shader_parameter/value_mult = 1.0
+shader_parameter/brightness_add = 0.0
+shader_parameter/contrast_mult = 1.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_pnrqh"]
+render_priority = 0
+shader = ExtResource("19_b1ytd")
+shader_parameter/texture_albedo = ExtResource("20_b1ytd")
+shader_parameter/scale = 1.0
+shader_parameter/hue_shift = 0.0
+shader_parameter/saturation_mult = 1.0
+shader_parameter/value_mult = 1.0
+shader_parameter/brightness_add = 0.0
+shader_parameter/contrast_mult = 1.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_pa2h5"]
+render_priority = 0
+shader = ExtResource("19_b1ytd")
+shader_parameter/texture_albedo = ExtResource("20_b1ytd")
+shader_parameter/scale = 1.0
+shader_parameter/hue_shift = 0.0
+shader_parameter/saturation_mult = 1.0
+shader_parameter/value_mult = 1.0
+shader_parameter/brightness_add = 0.0
+shader_parameter/contrast_mult = 1.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_hpj8v"]
+render_priority = 0
+shader = ExtResource("19_b1ytd")
+shader_parameter/texture_albedo = ExtResource("20_b1ytd")
+shader_parameter/scale = 1.0
+shader_parameter/hue_shift = 0.0
+shader_parameter/saturation_mult = 1.0
+shader_parameter/value_mult = 1.0
+shader_parameter/brightness_add = 0.0
+shader_parameter/contrast_mult = 1.0
+
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_r5n28"]
 render_priority = 0
 shader = ExtResource("19_b1ytd")
@@ -102,6 +237,94 @@ shader_parameter/value_mult = 1.0
 shader_parameter/brightness_add = 0.0
 shader_parameter/contrast_mult = 1.0
 
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_gw0lo"]
+render_priority = 0
+shader = ExtResource("19_b1ytd")
+shader_parameter/texture_albedo = ExtResource("23_wlijh")
+shader_parameter/scale = 1.0
+shader_parameter/hue_shift = 0.0
+shader_parameter/saturation_mult = 0.76
+shader_parameter/value_mult = 0.77
+shader_parameter/brightness_add = 0.0
+shader_parameter/contrast_mult = 1.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ps37q"]
+render_priority = 0
+shader = ExtResource("19_b1ytd")
+shader_parameter/texture_albedo = ExtResource("23_wlijh")
+shader_parameter/scale = 1.0
+shader_parameter/hue_shift = 0.0
+shader_parameter/saturation_mult = 0.76
+shader_parameter/value_mult = 0.77
+shader_parameter/brightness_add = 0.0
+shader_parameter/contrast_mult = 1.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_o3obr"]
+render_priority = 0
+shader = ExtResource("19_b1ytd")
+shader_parameter/texture_albedo = ExtResource("23_wlijh")
+shader_parameter/scale = 1.0
+shader_parameter/hue_shift = 0.0
+shader_parameter/saturation_mult = 0.76
+shader_parameter/value_mult = 0.77
+shader_parameter/brightness_add = 0.0
+shader_parameter/contrast_mult = 1.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_xqn0k"]
+render_priority = 0
+shader = ExtResource("19_b1ytd")
+shader_parameter/texture_albedo = ExtResource("23_wlijh")
+shader_parameter/scale = 1.0
+shader_parameter/hue_shift = 0.0
+shader_parameter/saturation_mult = 0.76
+shader_parameter/value_mult = 0.77
+shader_parameter/brightness_add = 0.0
+shader_parameter/contrast_mult = 1.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_vndhl"]
+render_priority = 0
+shader = ExtResource("19_b1ytd")
+shader_parameter/texture_albedo = ExtResource("23_wlijh")
+shader_parameter/scale = 1.0
+shader_parameter/hue_shift = 0.0
+shader_parameter/saturation_mult = 0.76
+shader_parameter/value_mult = 0.77
+shader_parameter/brightness_add = 0.0
+shader_parameter/contrast_mult = 1.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_geasp"]
+render_priority = 0
+shader = ExtResource("19_b1ytd")
+shader_parameter/texture_albedo = ExtResource("23_wlijh")
+shader_parameter/scale = 1.0
+shader_parameter/hue_shift = 0.0
+shader_parameter/saturation_mult = 0.76
+shader_parameter/value_mult = 0.77
+shader_parameter/brightness_add = 0.0
+shader_parameter/contrast_mult = 1.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_r58fw"]
+render_priority = 0
+shader = ExtResource("19_b1ytd")
+shader_parameter/texture_albedo = ExtResource("23_wlijh")
+shader_parameter/scale = 1.0
+shader_parameter/hue_shift = 0.0
+shader_parameter/saturation_mult = 0.76
+shader_parameter/value_mult = 0.77
+shader_parameter/brightness_add = 0.0
+shader_parameter/contrast_mult = 1.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_oo81l"]
+render_priority = 0
+shader = ExtResource("19_b1ytd")
+shader_parameter/texture_albedo = ExtResource("23_wlijh")
+shader_parameter/scale = 1.0
+shader_parameter/hue_shift = 0.0
+shader_parameter/saturation_mult = 0.76
+shader_parameter/value_mult = 0.77
+shader_parameter/brightness_add = 0.0
+shader_parameter/contrast_mult = 1.0
+
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_i1jpj"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_giber"]
@@ -110,43 +333,105 @@ shader_parameter/contrast_mult = 1.0
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_q0tgb"]
 
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_m4o3h"]
+render_priority = 0
+shader = ExtResource("19_b1ytd")
+shader_parameter/texture_albedo = ExtResource("15_wlijh")
+shader_parameter/scale = 1.0
+shader_parameter/hue_shift = 0.0
+shader_parameter/saturation_mult = 1.0
+shader_parameter/value_mult = 1.0
+shader_parameter/brightness_add = 0.0
+shader_parameter/contrast_mult = 1.0
+
 [node name="environment" instance=ExtResource("1_b3374")]
 script = ExtResource("2_7r8ay")
 
+[node name="wall" parent="." index="1"]
+surface_material_override/0 = SubResource("ShaderMaterial_e7hh8")
+
+[node name="ceil" parent="." index="2"]
+surface_material_override/0 = SubResource("ShaderMaterial_neu4h")
+
+[node name="counter" parent="." index="3"]
+surface_material_override/0 = SubResource("ShaderMaterial_wlijh")
+
+[node name="hang" parent="." index="4"]
+surface_material_override/0 = SubResource("ShaderMaterial_wlijh")
+
+[node name="floor_001" parent="." index="5"]
+surface_material_override/0 = SubResource("ShaderMaterial_eosfh")
+
+[node name="door_000" parent="." index="6"]
+surface_material_override/0 = SubResource("ShaderMaterial_wlijh")
+
+[node name="door_face_000" parent="door_000" index="0"]
+surface_material_override/0 = SubResource("ShaderMaterial_wlijh")
+
+[node name="window_000" parent="." index="7"]
+surface_material_override/0 = SubResource("ShaderMaterial_wlijh")
+
 [node name="window_left_000" parent="window_000" index="0"]
+surface_material_override/0 = SubResource("ShaderMaterial_wlijh")
 surface_material_override/1 = SubResource("StandardMaterial3D_po4na")
 
 [node name="window_right_000" parent="window_000" index="1"]
+surface_material_override/0 = SubResource("ShaderMaterial_wlijh")
 surface_material_override/1 = SubResource("StandardMaterial3D_po4na")
 
+[node name="window_003" parent="." index="8"]
+surface_material_override/0 = SubResource("ShaderMaterial_wlijh")
+
 [node name="window_left_003" parent="window_003" index="0"]
+surface_material_override/0 = SubResource("ShaderMaterial_wlijh")
 surface_material_override/1 = SubResource("StandardMaterial3D_po4na")
 
 [node name="window_right_003" parent="window_003" index="1"]
+surface_material_override/0 = SubResource("ShaderMaterial_wlijh")
 surface_material_override/1 = SubResource("StandardMaterial3D_po4na")
 
+[node name="window_004" parent="." index="9"]
+surface_material_override/0 = SubResource("ShaderMaterial_wlijh")
+
 [node name="window_left_004" parent="window_004" index="0"]
+surface_material_override/0 = SubResource("ShaderMaterial_wlijh")
 surface_material_override/1 = SubResource("StandardMaterial3D_po4na")
 
 [node name="window_right_004" parent="window_004" index="1"]
+surface_material_override/0 = SubResource("ShaderMaterial_wlijh")
 surface_material_override/1 = SubResource("StandardMaterial3D_po4na")
 
+[node name="window_005" parent="." index="10"]
+surface_material_override/0 = SubResource("ShaderMaterial_wlijh")
+
 [node name="window_left_005" parent="window_005" index="0"]
+surface_material_override/0 = SubResource("ShaderMaterial_wlijh")
 surface_material_override/1 = SubResource("StandardMaterial3D_po4na")
 
 [node name="window_right_005" parent="window_005" index="1"]
+surface_material_override/0 = SubResource("ShaderMaterial_wlijh")
 surface_material_override/1 = SubResource("StandardMaterial3D_po4na")
 
+[node name="window_001" parent="." index="11"]
+surface_material_override/0 = SubResource("ShaderMaterial_wlijh")
+
 [node name="window_left_001" parent="window_001" index="0"]
+surface_material_override/0 = SubResource("ShaderMaterial_wlijh")
 surface_material_override/1 = SubResource("StandardMaterial3D_po4na")
 
 [node name="window_right_001" parent="window_001" index="1"]
+surface_material_override/0 = SubResource("ShaderMaterial_wlijh")
 surface_material_override/1 = SubResource("StandardMaterial3D_po4na")
 
+[node name="window_002" parent="." index="12"]
+surface_material_override/0 = SubResource("ShaderMaterial_wlijh")
+
 [node name="window_left_002" parent="window_002" index="0"]
+surface_material_override/0 = SubResource("ShaderMaterial_wlijh")
 surface_material_override/1 = SubResource("StandardMaterial3D_po4na")
 
 [node name="window_right_002" parent="window_002" index="1"]
+surface_material_override/0 = SubResource("ShaderMaterial_wlijh")
 surface_material_override/1 = SubResource("StandardMaterial3D_po4na")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="." index="18"]
@@ -407,8 +692,20 @@ transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -1.935
 [node name="cup_pastor" parent="." index="29" instance=ExtResource("10_u78ad")]
 transform = Transform3D(-0.666767, 0, -0.745266, 0, 1, 0, 0.745266, 0, -0.666767, -1.92466, 0.853505, 0.469984)
 
+[node name="cup" parent="cup_pastor" index="0"]
+surface_material_override/0 = SubResource("ShaderMaterial_vtg4w")
+
+[node name="drink" parent="cup_pastor" index="1"]
+surface_material_override/0 = SubResource("ShaderMaterial_vloyq")
+
 [node name="cup_cheshire" parent="." index="30" instance=ExtResource("10_u78ad")]
 transform = Transform3D(-0.593447, 0, 0.804873, 0, 1, 0, -0.804873, 0, -0.593447, -2.69562, 0.853505, 0.400202)
+
+[node name="cup" parent="cup_cheshire" index="0"]
+surface_material_override/0 = SubResource("ShaderMaterial_b2ntd")
+
+[node name="drink" parent="cup_cheshire" index="1"]
+surface_material_override/0 = SubResource("ShaderMaterial_1nkwo")
 
 [node name="outside" type="Node3D" parent="." index="31"]
 
@@ -475,14 +772,26 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.08241, 0, -7.18705)
 [node name="tree_0" parent="outside" index="20" instance=ExtResource("13_sel54")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.13836, 0, -4.83603)
 
+[node name="tree_root_001" parent="outside/tree_0" index="0"]
+surface_material_override/0 = SubResource("ShaderMaterial_r35em")
+
 [node name="tree_1" parent="outside" index="21" instance=ExtResource("13_sel54")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.91093, 0, -4.83603)
+
+[node name="tree_root_001" parent="outside/tree_1" index="0"]
+surface_material_override/0 = SubResource("ShaderMaterial_pnrqh")
 
 [node name="tree_2" parent="outside" index="22" instance=ExtResource("13_sel54")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.91093, 0, 6.22293)
 
+[node name="tree_root_001" parent="outside/tree_2" index="0"]
+surface_material_override/0 = SubResource("ShaderMaterial_pa2h5")
+
 [node name="tree_3" parent="outside" index="23" instance=ExtResource("13_sel54")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.14427, 0, -4.83603)
+
+[node name="tree_root_001" parent="outside/tree_3" index="0"]
+surface_material_override/0 = SubResource("ShaderMaterial_hpj8v")
 
 [node name="fence_7" parent="outside" index="24" instance=ExtResource("12_cqi1n")]
 transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 11.5094, 0, -1.48815)
@@ -493,8 +802,14 @@ transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 11.509
 [node name="upright_piano" parent="." index="32" instance=ExtResource("16_futd0")]
 transform = Transform3D(-1, 0, 8.74226e-08, 0, 1, 0, -8.74226e-08, 0, -1, -5.83635, 0, 7.78949)
 
+[node name="piano" parent="upright_piano" index="0"]
+surface_material_override/0 = SubResource("ShaderMaterial_wlijh")
+
 [node name="upright_piano_chair" parent="." index="33" instance=ExtResource("4_i1jpj")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.82224, 0, 6.61988)
+
+[node name="piano_chair" parent="upright_piano_chair" index="0"]
+surface_material_override/0 = SubResource("ShaderMaterial_wlijh")
 
 [node name="pen" parent="." index="34" instance=ExtResource("19_u0pxc")]
 transform = Transform3D(-0.0669528, 0.997756, 4.36133e-08, -8.57176e-16, -4.37114e-08, 1, 0.997756, 0.0669528, 2.92664e-09, -2.48507, 0.853147, 0.209584)
@@ -510,125 +825,244 @@ surface_material_override/0 = SubResource("ShaderMaterial_r5n28")
 [node name="sofa_0" parent="seat" index="1" instance=ExtResource("15_futd0")]
 transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -1.4244, 0, 0.195626)
 
+[node name="sofa" parent="seat/sofa_0" index="0"]
+surface_material_override/0 = SubResource("ShaderMaterial_r5n28")
+surface_material_override/1 = SubResource("ShaderMaterial_gw0lo")
+surface_material_override/2 = SubResource("ShaderMaterial_ps37q")
+
 [node name="sofa_1" parent="seat" index="2" instance=ExtResource("15_futd0")]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -3.42301, 0, 0.192173)
+
+[node name="sofa" parent="seat/sofa_1" index="0"]
+surface_material_override/0 = SubResource("ShaderMaterial_r5n28")
+surface_material_override/1 = SubResource("ShaderMaterial_o3obr")
+surface_material_override/2 = SubResource("ShaderMaterial_xqn0k")
 
 [node name="table_1" parent="seat" index="3" instance=ExtResource("14_7clsy")]
 transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -5.31414, 0, 0.240975)
 
+[node name="table_000" parent="seat/table_1" index="0"]
+surface_material_override/0 = SubResource("ShaderMaterial_wlijh")
+
 [node name="sofa_2" parent="seat" index="4" instance=ExtResource("15_futd0")]
 transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -4.25756, 0, 0.195626)
+
+[node name="sofa" parent="seat/sofa_2" index="0"]
+surface_material_override/0 = SubResource("ShaderMaterial_wlijh")
+surface_material_override/1 = SubResource("ShaderMaterial_vndhl")
+surface_material_override/2 = SubResource("ShaderMaterial_geasp")
 
 [node name="sofa_3" parent="seat" index="5" instance=ExtResource("15_futd0")]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -6.43618, 0, 0.192173)
 
+[node name="sofa" parent="seat/sofa_3" index="0"]
+surface_material_override/0 = SubResource("ShaderMaterial_wlijh")
+surface_material_override/1 = SubResource("ShaderMaterial_r58fw")
+surface_material_override/2 = SubResource("ShaderMaterial_oo81l")
+
 [node name="table_high_0" parent="seat" index="6" instance=ExtResource("17_pv5um")]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -0.165249, 0, 3.18239)
+
+[node name="table_001" parent="seat/table_high_0" index="0"]
+surface_material_override/0 = SubResource("ShaderMaterial_wlijh")
 
 [node name="chair_high_0" parent="seat" index="7" instance=ExtResource("18_u0pxc")]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -0.573239, 0, 2.48842)
 
+[node name="chair" parent="seat/chair_high_0" index="0"]
+surface_material_override/0 = SubResource("ShaderMaterial_wlijh")
+
 [node name="chair_high_1" parent="seat" index="8" instance=ExtResource("18_u0pxc")]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -0.573239, 0, 3.12217)
+
+[node name="chair" parent="seat/chair_high_1" index="0"]
+surface_material_override/0 = SubResource("ShaderMaterial_wlijh")
 
 [node name="chair_high_2" parent="seat" index="9" instance=ExtResource("18_u0pxc")]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -0.573239, 0, 3.75695)
 
+[node name="chair" parent="seat/chair_high_2" index="0"]
+surface_material_override/0 = SubResource("ShaderMaterial_wlijh")
+
 [node name="chair_high_3" parent="seat" index="10" instance=ExtResource("18_u0pxc")]
 transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 0.267799, 0, 3.75661)
+
+[node name="chair" parent="seat/chair_high_3" index="0"]
+surface_material_override/0 = SubResource("ShaderMaterial_wlijh")
 
 [node name="chair_high_4" parent="seat" index="11" instance=ExtResource("18_u0pxc")]
 transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 0.267799, 0, 3.12286)
 
+[node name="chair" parent="seat/chair_high_4" index="0"]
+surface_material_override/0 = SubResource("ShaderMaterial_wlijh")
+
 [node name="chair_high_5" parent="seat" index="12" instance=ExtResource("18_u0pxc")]
 transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 0.267799, 0, 2.48808)
+
+[node name="chair" parent="seat/chair_high_5" index="0"]
+surface_material_override/0 = SubResource("ShaderMaterial_wlijh")
 
 [node name="table_high_1" parent="seat" index="13" instance=ExtResource("17_pv5um")]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -2.23317, 0, 3.18239)
 
+[node name="table_001" parent="seat/table_high_1" index="0"]
+surface_material_override/0 = SubResource("ShaderMaterial_wlijh")
+
 [node name="chair_high_6" parent="seat" index="14" instance=ExtResource("18_u0pxc")]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -2.64116, 0, 2.48842)
+
+[node name="chair" parent="seat/chair_high_6" index="0"]
+surface_material_override/0 = SubResource("ShaderMaterial_wlijh")
 
 [node name="chair_high_7" parent="seat" index="15" instance=ExtResource("18_u0pxc")]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -2.64116, 0, 3.12217)
 
+[node name="chair" parent="seat/chair_high_7" index="0"]
+surface_material_override/0 = SubResource("ShaderMaterial_wlijh")
+
 [node name="chair_high_8" parent="seat" index="16" instance=ExtResource("18_u0pxc")]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -2.64116, 0, 3.75695)
+
+[node name="chair" parent="seat/chair_high_8" index="0"]
+surface_material_override/0 = SubResource("ShaderMaterial_wlijh")
 
 [node name="chair_high_9" parent="seat" index="17" instance=ExtResource("18_u0pxc")]
 transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -1.80012, 0, 3.75661)
 
+[node name="chair" parent="seat/chair_high_9" index="0"]
+surface_material_override/0 = SubResource("ShaderMaterial_wlijh")
+
 [node name="chair_high_10" parent="seat" index="18" instance=ExtResource("18_u0pxc")]
 transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -1.80012, 0, 3.12286)
+
+[node name="chair" parent="seat/chair_high_10" index="0"]
+surface_material_override/0 = SubResource("ShaderMaterial_wlijh")
 
 [node name="chair_high_11" parent="seat" index="19" instance=ExtResource("18_u0pxc")]
 transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -1.80012, 0, 2.48808)
 
+[node name="chair" parent="seat/chair_high_11" index="0"]
+surface_material_override/0 = SubResource("ShaderMaterial_wlijh")
+
 [node name="table_high_3" parent="seat" index="20" instance=ExtResource("17_pv5um")]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -0.165249, 0, 5.64591)
+
+[node name="table_001" parent="seat/table_high_3" index="0"]
+surface_material_override/0 = SubResource("ShaderMaterial_wlijh")
 
 [node name="chair_high_18" parent="seat" index="21" instance=ExtResource("18_u0pxc")]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -0.573239, 0, 4.95194)
 
+[node name="chair" parent="seat/chair_high_18" index="0"]
+surface_material_override/0 = SubResource("ShaderMaterial_wlijh")
+
 [node name="chair_high_19" parent="seat" index="22" instance=ExtResource("18_u0pxc")]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -0.573239, 0, 5.5857)
+
+[node name="chair" parent="seat/chair_high_19" index="0"]
+surface_material_override/0 = SubResource("ShaderMaterial_wlijh")
 
 [node name="chair_high_20" parent="seat" index="23" instance=ExtResource("18_u0pxc")]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -0.573239, 0, 6.22048)
 
+[node name="chair" parent="seat/chair_high_20" index="0"]
+surface_material_override/0 = SubResource("ShaderMaterial_wlijh")
+
 [node name="chair_high_21" parent="seat" index="24" instance=ExtResource("18_u0pxc")]
 transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 0.267799, 0, 6.22013)
+
+[node name="chair" parent="seat/chair_high_21" index="0"]
+surface_material_override/0 = SubResource("ShaderMaterial_wlijh")
 
 [node name="chair_high_22" parent="seat" index="25" instance=ExtResource("18_u0pxc")]
 transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 0.267799, 0, 5.58638)
 
+[node name="chair" parent="seat/chair_high_22" index="0"]
+surface_material_override/0 = SubResource("ShaderMaterial_wlijh")
+
 [node name="chair_high_23" parent="seat" index="26" instance=ExtResource("18_u0pxc")]
 transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 0.267799, 0, 4.9516)
+
+[node name="chair" parent="seat/chair_high_23" index="0"]
+surface_material_override/0 = SubResource("ShaderMaterial_wlijh")
 
 [node name="table_high_4" parent="seat" index="27" instance=ExtResource("17_pv5um")]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -2.23317, 0, 5.64591)
 
+[node name="table_001" parent="seat/table_high_4" index="0"]
+surface_material_override/0 = SubResource("ShaderMaterial_wlijh")
+
 [node name="chair_high_24" parent="seat" index="28" instance=ExtResource("18_u0pxc")]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -2.64116, 0, 4.95194)
+
+[node name="chair" parent="seat/chair_high_24" index="0"]
+surface_material_override/0 = SubResource("ShaderMaterial_wlijh")
 
 [node name="chair_high_25" parent="seat" index="29" instance=ExtResource("18_u0pxc")]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -2.64116, 0, 5.5857)
 
+[node name="chair" parent="seat/chair_high_25" index="0"]
+surface_material_override/0 = SubResource("ShaderMaterial_wlijh")
+
 [node name="chair_high_26" parent="seat" index="30" instance=ExtResource("18_u0pxc")]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -2.64116, 0, 6.22048)
+
+[node name="chair" parent="seat/chair_high_26" index="0"]
+surface_material_override/0 = SubResource("ShaderMaterial_wlijh")
 
 [node name="chair_high_27" parent="seat" index="31" instance=ExtResource("18_u0pxc")]
 transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -1.80012, 0, 6.22013)
 
+[node name="chair" parent="seat/chair_high_27" index="0"]
+surface_material_override/0 = SubResource("ShaderMaterial_wlijh")
+
 [node name="chair_high_28" parent="seat" index="32" instance=ExtResource("18_u0pxc")]
 transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -1.80012, 0, 5.58638)
+
+[node name="chair" parent="seat/chair_high_28" index="0"]
+surface_material_override/0 = SubResource("ShaderMaterial_wlijh")
 
 [node name="chair_high_29" parent="seat" index="33" instance=ExtResource("18_u0pxc")]
 transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -1.80012, 0, 4.9516)
 
-[node name="bookshelf" parent="." index="36" instance=ExtResource("21_71yyv")]
-transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -6.52695, 0, 2.81752)
+[node name="chair" parent="seat/chair_high_29" index="0"]
+surface_material_override/0 = SubResource("ShaderMaterial_wlijh")
 
-[node name="painting_frame" parent="." index="37" instance=ExtResource("22_cjf2n")]
+[node name="painting_frame" parent="." index="36" instance=ExtResource("22_cjf2n")]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -6.87407, 1.53993, 4.45094)
 
 [node name="painting" parent="painting_frame" index="0"]
 surface_material_override/1 = SubResource("StandardMaterial3D_i1jpj")
 
-[node name="painting_frame_2" parent="." index="38" instance=ExtResource("22_cjf2n")]
+[node name="painting_frame_2" parent="." index="37" instance=ExtResource("22_cjf2n")]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -6.87407, 1.87309, 5.22777)
 
 [node name="painting" parent="painting_frame_2" index="0"]
 surface_material_override/1 = SubResource("StandardMaterial3D_giber")
 
+[node name="bookshelf" parent="." index="38" instance=ExtResource("21_71yyv")]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -6.52695, 0, 2.81752)
+
+[node name="bookshelf" parent="bookshelf" index="0"]
+surface_material_override/0 = SubResource("ShaderMaterial_wlijh")
+
 [node name="bookshelf_2" parent="." index="39" instance=ExtResource("21_71yyv")]
 transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, -3.01157, 0, 7.96477)
+
+[node name="bookshelf" parent="bookshelf_2" index="0"]
+surface_material_override/0 = SubResource("ShaderMaterial_wlijh")
 
 [node name="bookshelf_3" parent="." index="40" instance=ExtResource("21_71yyv")]
 transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, -1.26677, 0, 7.96477)
 
+[node name="bookshelf" parent="bookshelf_3" index="0"]
+surface_material_override/0 = SubResource("ShaderMaterial_wlijh")
+
 [node name="bookshelf_4" parent="." index="41" instance=ExtResource("21_71yyv")]
 transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0.443182, 0, 7.96477)
+
+[node name="bookshelf" parent="bookshelf_4" index="0"]
+surface_material_override/0 = SubResource("ShaderMaterial_wlijh")
 
 [node name="painting_frame_square" parent="." index="42" instance=ExtResource("26_x2qnl")]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -6.8745, 2.32117, 0.456253)
@@ -657,15 +1091,64 @@ autoplay = true
 
 [node name="dialog" parent="." index="46" instance=ExtResource("30_b1ytd")]
 
-[node name="rose2" parent="." index="47" instance=ExtResource("28_x2qnl")]
+[node name="rose" parent="." index="47" instance=ExtResource("28_x2qnl")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.43895, 0.842041, -0.718518)
 
-[node name="menu2" parent="." index="48" instance=ExtResource("27_okolh")]
+[node name="flower_bottle" parent="rose" index="0"]
+surface_material_override/0 = SubResource("ShaderMaterial_m4o3h")
+
+[node name="menu" parent="." index="48" instance=ExtResource("27_okolh")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.31515, 0.847289, -0.72478)
 
+[editable path="cup_pastor"]
+[editable path="cup_cheshire"]
+[editable path="outside/tree_0"]
+[editable path="outside/tree_1"]
+[editable path="outside/tree_2"]
+[editable path="outside/tree_3"]
+[editable path="upright_piano"]
+[editable path="upright_piano_chair"]
 [editable path="seat/table_0"]
+[editable path="seat/sofa_0"]
+[editable path="seat/sofa_1"]
+[editable path="seat/table_1"]
+[editable path="seat/sofa_2"]
+[editable path="seat/sofa_3"]
+[editable path="seat/table_high_0"]
+[editable path="seat/chair_high_0"]
+[editable path="seat/chair_high_1"]
+[editable path="seat/chair_high_2"]
+[editable path="seat/chair_high_3"]
+[editable path="seat/chair_high_4"]
+[editable path="seat/chair_high_5"]
+[editable path="seat/table_high_1"]
+[editable path="seat/chair_high_6"]
+[editable path="seat/chair_high_7"]
+[editable path="seat/chair_high_8"]
+[editable path="seat/chair_high_9"]
+[editable path="seat/chair_high_10"]
+[editable path="seat/chair_high_11"]
+[editable path="seat/table_high_3"]
+[editable path="seat/chair_high_18"]
+[editable path="seat/chair_high_19"]
+[editable path="seat/chair_high_20"]
+[editable path="seat/chair_high_21"]
+[editable path="seat/chair_high_22"]
+[editable path="seat/chair_high_23"]
+[editable path="seat/table_high_4"]
+[editable path="seat/chair_high_24"]
+[editable path="seat/chair_high_25"]
+[editable path="seat/chair_high_26"]
+[editable path="seat/chair_high_27"]
+[editable path="seat/chair_high_28"]
+[editable path="seat/chair_high_29"]
 [editable path="painting_frame"]
 [editable path="painting_frame_2"]
+[editable path="bookshelf"]
+[editable path="bookshelf_2"]
+[editable path="bookshelf_3"]
+[editable path="bookshelf_4"]
 [editable path="painting_frame_square"]
 [editable path="painting_frame_square_2"]
 [editable path="painting_frame_square_3"]
+[editable path="rose"]
