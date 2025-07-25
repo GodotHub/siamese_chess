@@ -10,8 +10,8 @@ func _ready() -> void:
 
 func _physics_process(_delta:float) -> void:
 	$head/camera.set_rotation(Vector3(deg_to_rad(sin(Time.get_unix_time_from_system())), 0, 0))
-	$head/camera.set_rotation(Vector3(0, deg_to_rad(sin(Time.get_unix_time_from_system())) * 0.5, 0))
-	$head/camera.set_rotation(Vector3(0, 0, deg_to_rad(sin(Time.get_unix_time_from_system()) * 0.5)))
+	#$head/camera.set_rotation(Vector3(0, deg_to_rad(sin(Time.get_unix_time_from_system() + 5)) * 0.5, 0))
+	#$head/camera.set_rotation(Vector3(0, 0, deg_to_rad(sin(Time.get_unix_time_from_system()) * 0.5)))
 
 func set_initial_interact(interact:Interact) -> void:
 	interact.enter()
