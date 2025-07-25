@@ -1,4 +1,4 @@
-[gd_scene load_steps=78 format=3 uid="uid://bmyf2h17xaxlj"]
+[gd_scene load_steps=82 format=3 uid="uid://bmyf2h17xaxlj"]
 
 [ext_resource type="PackedScene" uid="uid://gdof8yy8yrjv" path="res://assets/model/environment.glb" id="1_b3374"]
 [ext_resource type="PackedScene" uid="uid://d1s6qj7aofldk" path="res://scene/chessboard.tscn" id="2_3p4nk"]
@@ -116,13 +116,13 @@ size = Vector3(0.0333634, 0.0231934, 0.125549)
 size = Vector3(2.66605, 2.85291, 0.171173)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_cjf2n"]
-size = Vector3(2.38367, 0.844055, 1.01123)
+size = Vector3(3.38373, 0.844055, 1.01123)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_vgaxo"]
 size = Vector3(0.966568, 2.55042, 1)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_hm18b"]
-size = Vector3(1.57355, 1.75305, 2.85352)
+size = Vector3(1.57355, 1.16119, 2.68262)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_1vkt5"]
 size = Vector3(1.81757, 1.55554, 0.81842)
@@ -138,6 +138,18 @@ size = Vector3(0.848511, 2.28638, 1.66498)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_x2qnl"]
 size = Vector3(1, 0.561096, 0.486084)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_wlijh"]
+size = Vector3(0.197998, 0.307373, 0.0737305)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_e7hh8"]
+size = Vector3(2.94971, 1, 2.70023)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_eosfh"]
+size = Vector3(1.7439, 3.47151, 4.58435)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_gw0lo"]
+size = Vector3(1.52936, 1.15137, 4.12207)
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_vtg4w"]
 render_priority = 0
@@ -452,7 +464,7 @@ environment = SubResource("Environment_7r8ay")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.83693, 1.14653, 0.146468)
 collision_mask = 0
 script = ExtResource("7_hgmdq")
-next_interact = [NodePath("../area_history"), NodePath("../area_chessboard"), NodePath("../area_timer"), NodePath("../area_outside_windows"), NodePath("../area_passthrough"), NodePath("../area_pastor")]
+next_interact = [NodePath("../area_history"), NodePath("../area_chessboard"), NodePath("../area_timer"), NodePath("../area_outside_windows"), NodePath("../area_passthrough"), NodePath("../area_pastor"), NodePath("../area_menu")]
 camera = NodePath("../../camera/camera_on_seat")
 metadata/_custom_type_script = "uid://dg85frcnjlauy"
 
@@ -499,7 +511,7 @@ collision_mask = 0
 monitoring = false
 monitorable = false
 script = ExtResource("7_hgmdq")
-next_interact = [NodePath("../area_chessboard")]
+next_interact = [NodePath("../area_chessboard"), NodePath("../area_menu")]
 camera = NodePath("../../camera/camera_timer")
 metadata/_custom_type_script = "uid://dg85frcnjlauy"
 metadata/camera = NodePath("../../camera/camera_timer")
@@ -539,12 +551,12 @@ shape = SubResource("BoxShape3D_71yyv")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.44741, 1.15338, 1.65279)
 collision_mask = 0
 script = ExtResource("7_hgmdq")
-next_interact = [NodePath("../area_on_seat"), NodePath("../area_outside_windows"), NodePath("../area_door"), NodePath("../area_high_table")]
+next_interact = [NodePath("../area_on_seat"), NodePath("../area_outside_windows"), NodePath("../area_door"), NodePath("../area_high_table"), NodePath("../area_back"), NodePath("../area_bar_table")]
 camera = NodePath("../../camera/camera_table_side")
 metadata/_custom_type_script = "uid://dg85frcnjlauy"
 
 [node name="collision_shape_3d" type="CollisionShape3D" parent="interact/area_passthrough" index="0"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.987122, 0.0779724, -0.109131)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.487092, 0.0779724, -0.109131)
 shape = SubResource("BoxShape3D_cjf2n")
 
 [node name="area_door" type="Area3D" parent="interact" index="7" node_paths=PackedStringArray("camera")]
@@ -565,7 +577,7 @@ camera = NodePath("../../camera/camera_high_table")
 metadata/_custom_type_script = "uid://dg85frcnjlauy"
 
 [node name="collision_shape_3d" type="CollisionShape3D" parent="interact/area_high_table" index="0"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.28951, 0.868787, 0.226148)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.28951, 0.572858, 0.311598)
 shape = SubResource("BoxShape3D_hm18b")
 
 [node name="area_piano" type="Area3D" parent="interact" index="9" node_paths=PackedStringArray("camera")]
@@ -581,7 +593,7 @@ shape = SubResource("BoxShape3D_1vkt5")
 [node name="area_wall" type="Area3D" parent="interact" index="10" node_paths=PackedStringArray("next_interact", "camera")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.25531, 0, 5.64257)
 script = ExtResource("7_hgmdq")
-next_interact = [NodePath("../area_piano"), NodePath("../area_painting"), NodePath("../area_bookshelf")]
+next_interact = [NodePath("../area_piano"), NodePath("../area_painting"), NodePath("../area_bookshelf"), NodePath("../area_back")]
 camera = NodePath("../../camera/camera_wall")
 metadata/_custom_type_script = "uid://dg85frcnjlauy"
 
@@ -616,6 +628,48 @@ metadata/_custom_type_script = "uid://dg85frcnjlauy"
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.335114, -0.0642467)
 shape = SubResource("BoxShape3D_x2qnl")
 
+[node name="area_menu" type="Area3D" parent="interact" index="14" node_paths=PackedStringArray("camera")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.38886, 0.979831, -0.680034)
+script = ExtResource("7_hgmdq")
+camera = NodePath("../../camera/camera_menu")
+metadata/_custom_type_script = "uid://dg85frcnjlauy"
+
+[node name="collision_shape_3d" type="CollisionShape3D" parent="interact/area_menu" index="0"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0130961, 0.0207212, -0.0419176)
+shape = SubResource("BoxShape3D_wlijh")
+
+[node name="area_back" type="Area3D" parent="interact" index="15" node_paths=PackedStringArray("next_interact", "camera")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.57952, 1.2138, 2.81943)
+script = ExtResource("7_hgmdq")
+next_interact = [NodePath("../area_passthrough"), NodePath("../area_wall")]
+camera = NodePath("../../camera/camera_back")
+metadata/_custom_type_script = "uid://dg85frcnjlauy"
+
+[node name="collision_shape_3d" type="CollisionShape3D" parent="interact/area_back" index="0"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.79336, 0, -2.15097)
+shape = SubResource("BoxShape3D_e7hh8")
+
+[node name="area_bar_table" type="Area3D" parent="interact" index="16" node_paths=PackedStringArray("next_interact", "camera")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.27896, 0, 3.5194)
+script = ExtResource("7_hgmdq")
+next_interact = [NodePath("../area_bar_table_inside")]
+camera = NodePath("../../camera/camera_bar_table")
+metadata/_custom_type_script = "uid://dg85frcnjlauy"
+
+[node name="collision_shape_3d" type="CollisionShape3D" parent="interact/area_bar_table" index="0"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.838989, 1.77184, 0.729431)
+shape = SubResource("BoxShape3D_eosfh")
+
+[node name="area_bar_table_inside" type="Area3D" parent="interact" index="17" node_paths=PackedStringArray("camera")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.36619, 0.814663, 4.40239)
+script = ExtResource("7_hgmdq")
+camera = NodePath("../../camera/camera_bar_table_inside")
+metadata/_custom_type_script = "uid://dg85frcnjlauy"
+
+[node name="collision_shape_3d" type="CollisionShape3D" parent="interact/area_bar_table_inside" index="0"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.350677, -0.343262, -0.00830078)
+shape = SubResource("BoxShape3D_gw0lo")
+
 [node name="camera" type="Node3D" parent="." index="21"]
 
 [node name="camera_history" type="Camera3D" parent="camera" index="0"]
@@ -643,7 +697,7 @@ transform = Transform3D(-4.33734e-08, 0.124103, -0.992269, 5.42471e-09, 0.992269
 fov = 44.5266
 
 [node name="camera_table_side" type="Camera3D" parent="camera" index="7"]
-transform = Transform3D(0.534757, 0.263534, -0.802861, -0.00311955, 0.950733, 0.309995, 0.845, -0.163267, 0.509233, -3.41382, 1.77469, 1.84027)
+transform = Transform3D(0.514207, 0.267398, -0.814918, -0.00311952, 0.950733, 0.309994, 0.85766, -0.156859, 0.489707, -3.41382, 1.77469, 1.84027)
 
 [node name="camera_outside_window" type="Camera3D" parent="camera" index="8"]
 transform = Transform3D(0.985589, 0, -0.16916, 0, 1, 0, 0.16916, 0, 0.985589, -3.29193, 1.40087, -0.16569)
@@ -668,6 +722,15 @@ transform = Transform3D(1.31134e-07, 0, 1, 0, 1, 0, -1, 0, 1.31134e-07, -5.18151
 
 [node name="camera_bookshelf" type="Camera3D" parent="camera" index="15"]
 transform = Transform3D(-4.29837e-08, -0.181704, 0.983353, -7.94251e-09, 0.983353, 0.181704, -1, 0, -4.37114e-08, -5.01286, 1.53189, 2.85234)
+
+[node name="camera_menu" type="Camera3D" parent="camera" index="16"]
+transform = Transform3D(0.820409, 0.346464, -0.454853, -0.132741, 0.889183, 0.437873, 0.556155, -0.298858, 0.775484, -2.49786, 1.12085, -0.395186)
+
+[node name="camera_back" type="Camera3D" parent="camera" index="17"]
+transform = Transform3D(0.934875, 0, 0.354976, 0, 1, 0, -0.354976, 0, 0.934875, -3.57952, 1.2138, 2.81943)
+
+[node name="camera_bar_table_inside" type="Camera3D" parent="camera" index="18"]
+transform = Transform3D(0.896683, -0.103898, 0.430308, 0.046067, 0.98869, 0.142724, -0.44027, -0.108156, 0.891328, 3.73393, 1.64845, 5.64143)
 
 [node name="chess_timer" parent="." index="22" instance=ExtResource("3_po4na")]
 transform = Transform3D(1, 0, -1.06581e-14, 0, 1, 0, 1.06581e-14, 0, 1, -2.35362, 0.857578, -0.481859)
