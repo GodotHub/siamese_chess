@@ -17,8 +17,8 @@ var thread:Thread = null
 var score:int = 0
 var think_time:int = 10
 var rule:Rule = null
-var timer:Timer = null
 var start_thinking:float = 0
+var interrupted:bool = false
 var transposition_table:TranspositionTable = null
 
 func create_state(fen:String, _rule:Rule) -> bool:
@@ -30,6 +30,7 @@ func create_state(fen:String, _rule:Rule) -> bool:
 	return true
 
 func start_decision() -> void:
+	interrupted = false
 	thread = Thread.new()
 	thread.start(decision, Thread.PRIORITY_HIGH)
 
@@ -66,13 +67,14 @@ func decision() -> void:
 	send_opponent_valid_premove()
 	timer_start()
 	rule.search(state, 0, transposition_table, is_timeup.bind(think_time), 100, Callable())
-	decided_move.emit.call_deferred(transposition_table.best_move(state.get_zobrist()))	# 取置换表记录内容
+	if !interrupted:
+		decided_move.emit.call_deferred(transposition_table.best_move(state.get_zobrist()))	# 取置换表记录内容
 
 func timer_start() -> void:
 	start_thinking = Time.get_unix_time_from_system()
 
 func is_timeup(duration:float) -> bool:
-	return Time.get_unix_time_from_system() - start_thinking >= duration
+	return Time.get_unix_time_from_system() - start_thinking >= duration || interrupted
 
 func send_opponent_valid_move() -> void:	# 仅限轮到对方时使用
 	var move_list:PackedInt32Array = rule.generate_valid_move(state, 1)
