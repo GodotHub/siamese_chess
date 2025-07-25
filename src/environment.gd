@@ -1,6 +1,6 @@
 extends Node3D
 
-var known_dialog:PackedInt32Array = []
+var pastor_state:String = "idle"
 
 func _ready() -> void:
 	$cheshire.set_initial_interact($interact/area_passthrough)
@@ -22,58 +22,54 @@ func _ready() -> void:
 	else:
 		transposition_table.reserve(1 << 20)
 	$pastor.transposition_table = transposition_table
-	$interact/area_pastor.connect("clicked", dialog_start_game)
+	$interact/area_pastor.connect("clicked", select_dialog)
 
 func select_dialog() -> void:
-	pass
+	if has_method("dialog_" + pastor_state):
+		call("dialog_" + pastor_state)
 
-func dialog_start_game() -> void:
-	$dialog.push_dialog("现在你有若干选项开始游戏", true, true)
+func dialog_idle() -> void:
+	$cheshire.force_set_camera($camera/camera_pastor_closeup)
+	$dialog.push_selection(["下棋？", "询问规则", "返回"])
+	await $dialog.on_next
+	if $dialog.selected == 0:
+		dialog_start_game()
+	elif $dialog.selected == 1:
+		dialog_description_chess()
+
+func dialog_description_chess() -> void:
+	$dialog.push_dialog("这只是标准的国际象棋。", true, true)
 	$cheshire.force_set_camera($camera/camera_pastor_closeup)
 	await $dialog.on_next
-	start()
-
-func timeout(group:int) -> void:
-	if group == 0:	# 棋钟的阵营1才是Pastor的
-		$dialog.push_dialog("棋局结束，黑方超时", true, true)
-		await $dialog.on_next
-	else:
-		$dialog.push_dialog("棋局结束，白方超时", true, true)
-		await $dialog.on_next
-
-func pastor_win() -> void:
-	$chess_timer.stop()
-	$dialog.push_dialog("棋局结束，白方将杀胜利", true, true)
+	$dialog.push_dialog("在这里，您至少需要了解国际象棋的基本规则。", true, true)
+	$cheshire.force_set_camera($camera/camera_pastor_closeup)
+	await $dialog.on_next
+	$dialog.push_dialog("不过，如果您对这种游戏仍然一头雾水，您也可以试着上手，", true, true)
+	$cheshire.force_set_camera($camera/camera_pastor_closeup)
+	await $dialog.on_next
+	$dialog.push_dialog("您可以边对照规则边上手实践，我也会提示一些可走的着法，", true, true)
+	$cheshire.force_set_camera($camera/camera_pastor_closeup)
+	await $dialog.on_next
+	$dialog.push_dialog("不过……我不会放水，请做好输棋的心理准备吧。", true, true)
+	$cheshire.force_set_camera($camera/camera_pastor_closeup)
 	await $dialog.on_next
 
-func pastor_draw(type:int) -> void:	# 0:长将和 1:白方逼和 2:黑方逼和 3:50步和 4:子力不足
-	$chess_timer.stop()
-	match type:
-		0:
-			$dialog.push_dialog("长将和棋", true, true)
-			await $dialog.on_next
-		1:
-			$dialog.push_dialog("黑方逼和", true, true)
-			await $dialog.on_next
-		2:
-			$dialog.push_dialog("白方逼和", true, true)
-			await $dialog.on_next
-		3:
-			$dialog.push_dialog("50步和棋", true, true)
-			await $dialog.on_next
-		4:
-			$dialog.push_dialog("子力不足和棋", true, true)
-			await $dialog.on_next
-	start()
-
-func pastor_lose() -> void:
-	$chess_timer.stop()
-	$dialog.push_dialog("棋局结束，黑方将杀胜利", true, true)
+func dialog_in_game() -> void:
+	$dialog.push_selection(["结束棋局", "取消"])
+	$cheshire.force_set_camera($camera/camera_pastor_closeup)
 	await $dialog.on_next
+	if $dialog.selected == 0:
+		$pastor.interrupted = true
+		$chess_timer.stop()
+		$chessboard.set_valid_move([])
+		$chessboard.set_valid_premove([])
+		pastor_state = "idle"
+	elif $dialog.selected == 1:
+		return
 
-func start() -> void:
+func dialog_start_game() -> void:
 	while true:
-		$dialog.push_selection(["标准棋局（30+0）", "快棋（10+5）", "超快棋（5+3）", "子弹棋（小规模布局，1/2+0）", "导入棋局"], true, true)
+		$dialog.push_selection(["标准棋局（30+0）", "快棋（10+5）", "超快棋（5+3）", "子弹棋（小规模布局，1/2+0）", "导入棋局"])
 		await $dialog.on_next
 		if $dialog.selected in [0, 1, 2]:
 			$pastor.create_state("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", RuleStandard.new())
@@ -115,7 +111,7 @@ func start() -> void:
 			add_child(text_input_instance)
 			await text_input_instance.confirmed
 			if $pastor.create_state(text_input_instance.text, RuleStandard.new()):
-				$pastor.think_time = 10
+				$pastor.think_time = 5
 				$dialog.push_dialog("现在棋盘已经准备好了。", true, true)
 				$cheshire.force_set_camera($camera/camera_chessboard)
 				await $dialog.on_next
@@ -125,7 +121,48 @@ func start() -> void:
 				$cheshire.add_stack($interact/area_chessboard)
 				$pastor.start_decision()
 				break
-		$cheshire.force_set_camera($camera/camera_chessboard)	
 		$dialog.push_dialog("您输入的格式有误，请重新检查。", true, true)
 		$cheshire.force_set_camera($camera/camera_chessboard)
 		await $dialog.on_next
+	pastor_state = "in_game"
+
+func timeout(group:int) -> void:
+	if group == 0:	# 棋钟的阵营1才是Pastor的
+		$dialog.push_dialog("棋局结束，黑方超时", true, true)
+		await $dialog.on_next
+	else:
+		$dialog.push_dialog("棋局结束，白方超时", true, true)
+		await $dialog.on_next
+	pastor_state = "idle"
+
+func pastor_win() -> void:
+	$chess_timer.stop()
+	$dialog.push_dialog("棋局结束，白方将杀胜利", true, true)
+	await $dialog.on_next
+	pastor_state = "idle"
+
+func pastor_draw(type:int) -> void:	# 0:长将和 1:白方逼和 2:黑方逼和 3:50步和 4:子力不足
+	$chess_timer.stop()
+	match type:
+		0:
+			$dialog.push_dialog("长将和棋", true, true)
+			await $dialog.on_next
+		1:
+			$dialog.push_dialog("黑方逼和", true, true)
+			await $dialog.on_next
+		2:
+			$dialog.push_dialog("白方逼和", true, true)
+			await $dialog.on_next
+		3:
+			$dialog.push_dialog("50步和棋", true, true)
+			await $dialog.on_next
+		4:
+			$dialog.push_dialog("子力不足和棋", true, true)
+			await $dialog.on_next
+	pastor_state = "idle"
+
+func pastor_lose() -> void:
+	$chess_timer.stop()
+	$dialog.push_dialog("棋局结束，黑方将杀胜利", true, true)
+	await $dialog.on_next
+	pastor_state = "idle"
