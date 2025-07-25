@@ -7,8 +7,12 @@ var group:int = 0
 var sfx:AudioStreamPlayer3D = null
 
 func _ready() -> void:
+	var audio_stream_randomizer:AudioStreamRandomizer = AudioStreamRandomizer.new()
+	audio_stream_randomizer.random_pitch = 1.3
+	audio_stream_randomizer.random_volume_offset_db = 2.0
+	audio_stream_randomizer.add_stream(-1, load("res://assets/audio/351518__mh2o__chess_move_on_alabaster.wav"))
 	sfx = AudioStreamPlayer3D.new()
-	sfx.stream = load("res://assets/audio/351518__mh2o__chess_move_on_alabaster.wav")
+	sfx.stream = audio_stream_randomizer
 	add_child(sfx)
 	sfx.unit_size = 2
 	sfx.volume_db = -20
