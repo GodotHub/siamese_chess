@@ -29,7 +29,7 @@ func _ready() -> void:
 		button.add_theme_stylebox_override("focus", StyleBoxEmpty.new())
 		button.add_theme_stylebox_override("hover", StyleBoxEmpty.new())
 		button.add_theme_stylebox_override("pressed", StyleBoxEmpty.new())
-		button.add_theme_font_override("font", preload("res://assets/fonts/TW-Sung-98-1-2.ttf"))
+		button.add_theme_font_override("font", preload("res://assets/fonts/FangZhengShuSongJianTi-1.ttf"))
 		button.connect("button_up", button_pressed.bind(i))
 		$texture_rect/v_box_container.add_child(button)
 	if has_cancel:
@@ -44,7 +44,7 @@ func _ready() -> void:
 		cancel_button.add_theme_stylebox_override("focus", StyleBoxEmpty.new())
 		cancel_button.add_theme_stylebox_override("hover", StyleBoxEmpty.new())
 		cancel_button.add_theme_stylebox_override("pressed", StyleBoxEmpty.new())
-		cancel_button.add_theme_font_override("font", preload("res://assets/fonts/TW-Sung-98-1-2.ttf"))
+		cancel_button.add_theme_font_override("font", preload("res://assets/fonts/FangZhengShuSongJianTi-1.ttf"))
 		cancel_button.connect("button_up", button_pressed.bind(-1))
 		$texture_rect/v_box_container.add_child(cancel_button)
 	$texture_rect/v_box_container.hide()

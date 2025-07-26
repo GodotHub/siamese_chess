@@ -2,13 +2,13 @@
 
 importer="font_data_dynamic"
 type="FontFile"
-uid="uid://dsrato22kirdu"
-path="res://.godot/imported/TW-Sung-98-1-2.ttf-411fe1e75e341e491d6a15d9e1f0ab36.fontdata"
+uid="uid://cmbwnmrpuigxx"
+path="res://.godot/imported/FangZhengShuSongJianTi-1.ttf-cc15dd002ffec703e7d74e5ce9dca9e6.fontdata"
 
 [deps]
 
-source_file="res://assets/fonts/TW-Sung-98-1-2.ttf"
-dest_files=["res://.godot/imported/TW-Sung-98-1-2.ttf-411fe1e75e341e491d6a15d9e1f0ab36.fontdata"]
+source_file="res://assets/fonts/FangZhengShuSongJianTi-1.ttf"
+dest_files=["res://.godot/imported/FangZhengShuSongJianTi-1.ttf-cc15dd002ffec703e7d74e5ce9dca9e6.fontdata"]
 
 [params]
 

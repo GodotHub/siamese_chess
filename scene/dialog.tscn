@@ -1,7 +1,7 @@
 [gd_scene load_steps=7 format=3 uid="uid://kqoc0aycgs35"]
 
 [ext_resource type="Script" uid="uid://dljb1yngj8m5g" path="res://src/dialog.gd" id="1_up5xw"]
-[ext_resource type="FontFile" uid="uid://dsrato22kirdu" path="res://assets/fonts/TW-Sung-98-1-2.ttf" id="2_ow5ht"]
+[ext_resource type="FontFile" uid="uid://cmbwnmrpuigxx" path="res://assets/fonts/FangZhengShuSongJianTi-1.ttf" id="2_ow5ht"]
 
 [sub_resource type="Gradient" id="Gradient_gckm1"]
 offsets = PackedFloat32Array(0)

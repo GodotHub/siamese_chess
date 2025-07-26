@@ -1,6 +1,7 @@
-[gd_scene load_steps=7 format=3 uid="uid://dweywda5mojmf"]
+[gd_scene load_steps=8 format=3 uid="uid://dweywda5mojmf"]
 
 [ext_resource type="Script" uid="uid://bvuqnv0fsx2gn" path="res://src/text_input.gd" id="1_nu684"]
+[ext_resource type="FontFile" uid="uid://cmbwnmrpuigxx" path="res://assets/fonts/FangZhengShuSongJianTi-1.ttf" id="2_l1wpo"]
 
 [sub_resource type="Gradient" id="Gradient_j3y3i"]
 offsets = PackedFloat32Array(0)
@@ -44,6 +45,7 @@ offset_right = -0.463989
 offset_bottom = 0.127991
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_fonts/font = ExtResource("2_l1wpo")
 theme_override_font_sizes/font_size = 30
 theme_override_styles/focus = SubResource("StyleBoxEmpty_nu684")
 theme_override_styles/normal = SubResource("StyleBoxEmpty_l1wpo")
@@ -63,5 +65,6 @@ offset_right = 2.12799
 offset_bottom = -0.168015
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_fonts/font = ExtResource("2_l1wpo")
 text = "请输入："
 label_settings = SubResource("LabelSettings_nu684")
