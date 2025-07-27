@@ -12,7 +12,8 @@
 **/*.dll
 **/*.exe
 /bin
-*.obj.import
-*.obj
-*.uid
+/src/core/*.obj.import
+/src/core/*.obj
+/library/godot-cpp/**/*.obj.import
+/library/tiny-dnn/**/*.obj
 .sconsign.dblite
