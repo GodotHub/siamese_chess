@@ -19,6 +19,7 @@ var think_time:int = 10
 var start_thinking:float = 0
 var interrupted:bool = false
 var transposition_table:TranspositionTable = null
+var ai: AI = CatAI.new();
 
 func create_state(fen:String) -> bool:
 	state = RuleStandard.parse(fen)
@@ -64,7 +65,7 @@ func decision() -> void:
 		return
 	send_opponent_valid_premove()
 	timer_start()
-	RuleStandard.search(state, 0, transposition_table, is_timeup.bind(think_time), 100, Callable())
+	ai.search(state, 0, is_timeup.bind(think_time), Callable())
 	if !interrupted:
 		decided_move.emit.call_deferred(transposition_table.best_move(state.get_zobrist()))	# 取置换表记录内容
 

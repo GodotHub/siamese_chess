@@ -6,12 +6,14 @@ var zobrist:PackedInt64Array = []
 var main_variation:PackedInt32Array = []
 var chess_state:State = null
 var transposition_table:TranspositionTable = TranspositionTable.new()
+var ai: AI = CatAI.new()
 
 func _ready() -> void:
 	if FileAccess.file_exists("user://standard_opening.fa"):
 		transposition_table.load_file("user://standard_opening.fa")
 	else:
 		transposition_table.reserve(1 << 20)
+	ai.init({"transposition_table": transposition_table, "max_depth": 6})
 	chess_state = RuleStandard.parse("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
 	var thread:Thread = Thread.new()
 	thread.start(make_database)
@@ -19,7 +21,8 @@ func _ready() -> void:
 func performance_test() -> float:
 	chess_state = RuleStandard.parse("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
 	var time_start:float = Time.get_ticks_usec()
-	RuleStandard.search(chess_state, 0, transposition_table, Callable(), 6, debug_output)
+	# RuleStandard.search(chess_state, 0, transposition_table, Callable(), 6, debug_output)
+	ai.search(chess_state, 0, Callable(), debug_output);
 	var time_end:float = Time.get_ticks_usec()
 	return time_end - time_start
 
@@ -72,7 +75,8 @@ func make_database() -> void:
 	perft_test()
 	print("before: %dms" % performance_test())
 	chess_state = RuleStandard.parse("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
-	RuleStandard.search(chess_state, 0, transposition_table, Callable(), 10, debug_output)
+	# RuleStandard.search(chess_state, 0, transposition_table, Callable(), 10, debug_output)
+	ai.search(chess_state, 0, Callable(), debug_output);
 	print(main_variation)
 	#$pastor.transposition_table = transposition_table
 	transposition_table.save_file("user://standard_opening.fa")
