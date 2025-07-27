@@ -113,7 +113,7 @@ int CatAI::search(const godot::Ref<State> &_state, int _group,
     alphabeta(_state, -THRESHOLD, THRESHOLD, i, _group, 0, true, &history_table,
               _is_timeup, _debug_output);
     if (_is_timeup.is_valid() && _is_timeup.call()) {
-      return 0;
+      return _transposition_table->best_move(_state->get_zobrist());
     }
   }
   return _transposition_table->best_move(_state->get_zobrist());
