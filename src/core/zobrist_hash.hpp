@@ -10,13 +10,13 @@ class ZobristHash : public godot::Object
 	public:
 		ZobristHash();  //随机数打表
 		static ZobristHash *get_singleton();
-		long long hash_piece(int _piece, int _by);
+		int64_t hash_piece(int _piece, int _by);
 		static void _bind_methods();
 	private:
 		static ZobristHash *singleton;
 		//已知棋子是32位、位置是8位……
 		//棋子只取小8位，总共16位
-		long long randomized[65536];
+		int64_t randomized[65536];
 };
 
 #endif

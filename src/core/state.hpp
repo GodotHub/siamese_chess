@@ -22,16 +22,16 @@ class State : public godot::RefCounted
 		void set_extra(int _index, int _value);
 		void reserve_extra(int _size);
 		void change_score(int delta);
-		long long get_zobrist();
-		int has_history(long long _zobrist);
-		void push_history(long long _zobrist);
+		int64_t get_zobrist();
+		int has_history(int64_t _zobrist);
+		void push_history(int64_t _zobrist);
 		int get_relative_score(int _group);
 		static void _bind_methods();
 	private:
 		int pieces[128];
 		godot::PackedInt32Array extra;
-		std::unordered_map<long long, int> history;
-		long long zobrist = 0;
+		std::unordered_map<int64_t, int> history;
+		int64_t zobrist = 0;
 		int score = 0;
 };
 

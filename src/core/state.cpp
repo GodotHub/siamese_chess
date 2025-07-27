@@ -89,17 +89,17 @@ void State::change_score(int delta)
 	score += delta;
 }
 
-long long State::get_zobrist()
+int64_t State::get_zobrist()
 {
 	return zobrist;
 }
 
-int State::has_history(long long _zobrist)
+int State::has_history(int64_t _zobrist)
 {
 	return history.count(_zobrist) ? history[_zobrist] : 0;
 }
 
-void State::push_history(long long _zobrist)
+void State::push_history(int64_t _zobrist)
 {
 	if (history.count(_zobrist))
 	{
