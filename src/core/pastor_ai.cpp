@@ -17,18 +17,15 @@ void PastorAI::init(const Dictionary &args) {
 
 int PastorAI::alphabeta(const godot::Ref<State> &_state, int _alpha, int _beta, int _depth, int _group, int _ply, bool _can_null, std::array<int, 65536> *_history_table, const godot::Callable &_is_timeup, const godot::Callable &_debug_output) {
 	if (_transposition_table) {
-		int score = _transposition_table->probe_hash(_state->get_zobrist(), _depth,
-				_alpha, _beta);
+		int score = _transposition_table->probe_hash(_state->get_zobrist(), _depth, _alpha, _beta);
 		if (score != 65535) {
 			return score;
 		}
 	}
 	if (_depth <= 0) {
-		int score =
-				RuleStandard::get_singleton()->quies(_state, _alpha, _beta, _group);
+		int score = RuleStandard::get_singleton()->quies(_state, _alpha, _beta, _group);
 		if (_transposition_table) {
-			_transposition_table->record_hash(_state->get_zobrist(), _depth, score,
-					EXACT, 0);
+			_transposition_table->record_hash(_state->get_zobrist(), _depth, score, EXACT, 0);
 		}
 		return score;
 	}
@@ -48,8 +45,7 @@ int PastorAI::alphabeta(const godot::Ref<State> &_state, int _alpha, int _beta, 
 		best_move = _transposition_table->best_move(_state->get_zobrist());
 	}
 	if (_can_null) {
-		int score =
-				-alphabeta(_state, -_beta, -_beta + 1, _depth - 3, 1 - _group, false);
+		int score = -alphabeta(_state, -_beta, -_beta + 1, _depth - 3, 1 - _group, false);
 		if (score >= _beta)
 			return _beta;
 	}

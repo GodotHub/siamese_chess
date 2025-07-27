@@ -13,7 +13,7 @@ func _ready() -> void:
 		transposition_table.load_file("user://standard_opening.fa")
 	else:
 		transposition_table.reserve(1 << 20)
-	ai.init({"transposition_table": transposition_table, "max_depth": 6})
+	ai.init({"transposition_table": transposition_table, "max_depth": 10})
 	chess_state = RuleStandard.parse("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
 	var thread:Thread = Thread.new()
 	thread.start(make_database)

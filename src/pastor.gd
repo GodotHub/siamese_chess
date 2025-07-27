@@ -65,9 +65,9 @@ func decision() -> void:
 		return
 	send_opponent_valid_premove()
 	timer_start()
-	ai.search(state, 0, is_timeup.bind(think_time), Callable())
+	var move: int = ai.search(state, 0, is_timeup.bind(think_time), Callable())
 	if !interrupted:
-		decided_move.emit.call_deferred(transposition_table.best_move(state.get_zobrist()))	# 取置换表记录内容
+		decided_move.emit.call_deferred(move)	# 取置换表记录内容
 
 func timer_start() -> void:
 	start_thinking = Time.get_unix_time_from_system()
