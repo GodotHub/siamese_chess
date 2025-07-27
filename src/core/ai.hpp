@@ -4,12 +4,16 @@
 #include "./state.hpp"
 #include "./transposition_table.hpp"
 #include <godot_cpp/classes/ref_counted.hpp>
+#include <godot_cpp/core/gdvirtual.gen.inc>
 #include <godot_cpp/variant/dictionary.hpp>
 
 using namespace godot;
 
 class AI : public RefCounted {
   GDCLASS(AI, RefCounted);
+
+protected:
+  static void _bind_methods();
 
 public:
   virtual void init(const Dictionary &args) = 0;
