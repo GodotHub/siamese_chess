@@ -2,6 +2,7 @@
 .godot/
 .vscode/
 /android/
+bin/
 **/*.tmp
 **/*.blend
 **/*.blend*
@@ -11,9 +12,7 @@
 **/*.a
 **/*.dll
 **/*.exe
-/bin
-/src/core/*.obj.import
-/src/core/*.obj
-/library/godot-cpp/**/*.obj.import
-/library/tiny-dnn/**/*.obj
+**/*.obj.import
+**/*.obj
+**/*.os
 .sconsign.dblite
