@@ -22,7 +22,7 @@ ZobristHash *ZobristHash::get_singleton()
 	return singleton;
 }
 
-long long ZobristHash::hash_piece(int _piece, int _by)
+int64_t ZobristHash::hash_piece(int _piece, int _by)
 {
 	return randomized[((_piece & 0xFF) + (_by << 8)) & 0xFFFF];
 }

@@ -2,6 +2,7 @@
 .godot/
 .vscode/
 /android/
+bin/
 **/*.tmp
 **/*.blend
 **/*.blend*
@@ -11,4 +12,5 @@
 **/*.a
 **/*.dll
 **/*.exe
+**/*.os
 .sconsign.dblite

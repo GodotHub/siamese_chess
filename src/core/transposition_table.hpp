@@ -14,7 +14,7 @@ enum TranspositionTableFlag	{
 
 struct TranspositionTableItem
 {
-	long long checksum;
+	int64_t checksum;
 	unsigned char depth;
 	unsigned char flag;
 	int value;
@@ -28,9 +28,9 @@ class TranspositionTable : public godot::RefCounted
 		void reserve(int _table_size);
 		void save_file(godot::String path);
 		void load_file(godot::String path);
-		int probe_hash(long long checksum, unsigned char depth, int alpha, int beta);
-		int best_move(long long checksum);
-		void record_hash(long long checksum, unsigned char depth, int value, unsigned char flag, int best_move);
+		int probe_hash(int64_t checksum, unsigned char depth, int alpha, int beta);
+		int best_move(int64_t checksum);
+		void record_hash(int64_t checksum, unsigned char depth, int value, unsigned char flag, int best_move);
 		static void _bind_methods();
 	private:
 		bool read_only = false;

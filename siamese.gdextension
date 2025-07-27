@@ -11,6 +11,14 @@ linux.debug.x86_64="res://bin/libsiamese.linux.template_debug.x86_64.so"
 linux.release.x86_64="res://bin/libsiamese.linux.template_debug.x86_64.so"
 web.debug.wasm32="res://bin/libsiamese.web.template_debug.wasm32.wasm"
 web.release.wasm32="res://bin/libsiamese.web.template_release.wasm32.wasm"
+android.debug.arm64="res://bin/libsiamese.android.template_debug.arm64.so"
+android.release.arm64="res://bin/libsiamese.android.template_release.arm64.so"
+android.debug.arm32="res://bin/libsiamese.android.template_debug.arm32.so"
+android.release.arm32="res://bin/libsiamese.android.template_release.arm32.so"
+android.debug.x86="res://bin/libsiamese.android.template_debug.x86.so"
+android.release.x86="res://bin/libsiamese.android.template_release.x86.so"
+android.debug.x86_64="res://bin/libsiamese.android.template_debug.x86_64.so"
+android.release.x86_64="res://bin/libsiamese.android.template_release.x86_64.so"
 
 [dependencies]
 ios.debug = {

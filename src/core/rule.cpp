@@ -55,14 +55,14 @@ void Rule::search(godot::Ref<State>_state, int _group, TranspositionTable *_tran
 	
 }
 
-unsigned long long Rule::perft(godot::Ref<State> _state, int _depth, int group)
+uint64_t Rule::perft(godot::Ref<State> _state, int _depth, int group)
 {
 	if (_depth == 0)
 	{
 		return 1ULL;
 	}
 	godot::PackedInt32Array move_list = generate_valid_move(_state, group);
-	unsigned long long cnt = 0;
+	uint64_t cnt = 0;
 	if (_depth == 1)
 	{
 		return move_list.size();

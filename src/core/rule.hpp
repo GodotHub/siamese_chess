@@ -22,7 +22,7 @@ class Rule : public godot::Object
 		virtual void apply_move(godot::Ref<State> _state, int _move, godot::Callable _callback_add_piece = godot::Callable(), godot::Callable _callback_capture_piece = godot::Callable(), godot::Callable _callback_move_piece = godot::Callable(), godot::Callable _callback_set_extra = godot::Callable(), godot::Callable _callback_push_history = godot::Callable(), godot::Callable _callback_change_score = godot::Callable());
 		virtual int evaluate(godot::Ref<State> _state, int _move);
 		virtual void search(godot::Ref<State> _state, int _group, TranspositionTable *_transposition_table, godot::Callable _is_timeup, int _max_depth, godot::Callable _debug_output);
-		virtual unsigned long long perft(godot::Ref<State> _state, int _depth, int group);
+		virtual uint64_t perft(godot::Ref<State> _state, int _depth, int group);
 		static void _bind_methods();
 	private:
 };
