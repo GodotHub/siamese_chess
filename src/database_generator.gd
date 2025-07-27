@@ -6,7 +6,7 @@ var zobrist:PackedInt64Array = []
 var main_variation:PackedInt32Array = []
 var chess_state:State = null
 var transposition_table:TranspositionTable = TranspositionTable.new()
-var ai: AI = CatAI.new()
+var ai: AI = PastorAI.new()
 
 func _ready() -> void:
 	if FileAccess.file_exists("user://standard_opening.fa"):

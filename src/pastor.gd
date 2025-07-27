@@ -19,7 +19,7 @@ var think_time:int = 10
 var start_thinking:float = 0
 var interrupted:bool = false
 var transposition_table:TranspositionTable = null
-var ai: AI = CatAI.new();
+var ai: AI = PastorAI.new();
 
 func create_state(fen:String) -> bool:
 	state = RuleStandard.parse(fen)
