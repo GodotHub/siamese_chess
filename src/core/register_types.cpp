@@ -29,6 +29,7 @@ void initialize_siamese_module(godot::ModuleInitializationLevel p_level)
 	
 	godot::Engine::get_singleton()->register_singleton("Chess", Chess::get_singleton());
 	godot::Engine::get_singleton()->register_singleton("ZobristHash", ZobristHash::get_singleton());
+	godot::Engine::get_singleton()->register_singleton("RuleStandard", RuleStandard::get_singleton());
 }
 
 void uninitialize_siamese_module(godot::ModuleInitializationLevel p_level) {

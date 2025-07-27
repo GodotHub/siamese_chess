@@ -11,4 +11,8 @@
 **/*.a
 **/*.dll
 **/*.exe
+/bin
+*.obj.import
+*.obj
+*.uid
 .sconsign.dblite
