@@ -45,11 +45,6 @@ void Rule::apply_move(godot::Ref<State>_state, int _move, godot::Callable _callb
 
 }
 
-int Rule::evaluate(godot::Ref<State>_state, int _move)
-{
-	return 0;
-}
-
 void Rule::search(godot::Ref<State>_state, int _group, TranspositionTable *_transposition_table, godot::Callable _is_timeup, int _max_depth, godot::Callable _debug_output)
 {
 	
@@ -87,7 +82,6 @@ void Rule::_bind_methods()
 	godot::ClassDB::bind_method(godot::D_METHOD("generate_valid_move"), &Rule::generate_valid_move);
 	godot::ClassDB::bind_method(godot::D_METHOD("get_move_name"), &Rule::get_move_name);
 	godot::ClassDB::bind_method(godot::D_METHOD("apply_move"), &Rule::apply_move);
-	godot::ClassDB::bind_method(godot::D_METHOD("evaluate"), &Rule::evaluate);
 	godot::ClassDB::bind_method(godot::D_METHOD("search"), &Rule::search);
 	godot::ClassDB::bind_method(godot::D_METHOD("perft"), &Rule::perft);
 }

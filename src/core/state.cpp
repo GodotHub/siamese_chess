@@ -1,5 +1,6 @@
 #include "state.hpp"
 #include "zobrist_hash.hpp"
+#include "rule_standard.hpp"
 #include <cstring>
 
 State::State()
@@ -109,6 +110,12 @@ void State::push_history(int64_t _zobrist)
 	{
 		history[_zobrist] = 1;
 	}
+}
+
+void State::apply_move(int _move, int _score)
+{
+	RuleStandard::get_singleton()->apply_move(this, _move, godot::Callable(this, "add_piece"), godot::Callable(this, "capture_piece"), godot::Callable(this, "move_piece"), godot::Callable(this, "set_extra"), godot::Callable(this, "push_history"));
+	change_score(_score);
 }
 
 int State::get_relative_score(int _group)
