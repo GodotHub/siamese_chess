@@ -8,7 +8,6 @@ band_db/3200_hz = -41.4
 band_db/10000_hz = -53.5
 
 [resource]
-bus/0/send = &"Wind"
 bus/1/name = &"Wind"
 bus/1/solo = false
 bus/1/mute = false

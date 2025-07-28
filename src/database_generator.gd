@@ -4,63 +4,62 @@ var progress_bar:Array[ProgressBar] = []
 var progress_bar_data:PackedFloat32Array = []
 var zobrist:PackedInt64Array = []
 var main_variation:PackedInt32Array = []
-var rule_standard:RuleStandard = null
 var chess_state:State = null
-var transposition_table:TranspositionTable = TranspositionTable.new()
+var ai: PastorAI = PastorAI.new()
 
 func _ready() -> void:
 	if FileAccess.file_exists("user://standard_opening.fa"):
-		transposition_table.load_file("user://standard_opening.fa")
+		ai.get_transposition_table().load_file("user://standard_opening.fa")
 	else:
-		transposition_table.reserve(1 << 20)
-	rule_standard = RuleStandard.new()
-	chess_state = rule_standard.parse("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
+		ai.get_transposition_table().reserve(1 << 20)
+	chess_state = RuleStandard.parse("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
 	var thread:Thread = Thread.new()
 	thread.start(make_database)
 
 func performance_test() -> float:
-	chess_state = rule_standard.parse("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
+	chess_state = RuleStandard.parse("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
 	var time_start:float = Time.get_ticks_usec()
-	rule_standard.search(chess_state, 0, transposition_table, Callable(), 6, debug_output)
+	# RuleStandard.search(chess_state, 0, transposition_table, Callable(), 6, debug_output)
+	ai.search(chess_state, 0, Callable(), debug_output);
 	var time_end:float = Time.get_ticks_usec()
 	return time_end - time_start
 
 func perft_test() -> void:
 	var node_count:PackedInt32Array
-	chess_state = rule_standard.parse("r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq - 0 1")
+	chess_state = RuleStandard.parse("r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq - 0 1")
 	node_count = [1, 48, 2039, 97862, 4085603, 193690690]
 	for i:int in range(node_count.size()):
-		var result:int = rule_standard.perft(chess_state, i, 0)
+		var result:int = RuleStandard.perft(chess_state, i, 0)
 		print("perft_test_2 depth:%d expect:%d actual:%d" % [i, node_count[i], result])
-	chess_state = rule_standard.parse("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
+	chess_state = RuleStandard.parse("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
 	node_count = [1, 20, 400, 8902, 197281, 4865609, 119060324]
 	for i:int in range(node_count.size()):
-		var result:int = rule_standard.perft(chess_state, i, 0)
+		var result:int = RuleStandard.perft(chess_state, i, 0)
 		print("perft_test_1 depth:%d expect:%d actual:%d" % [i, node_count[i], result])
-	chess_state = rule_standard.parse("8/2p5/3p4/KP5r/1R3p1k/8/4P1P1/8 w - - 0 1")
+	chess_state = RuleStandard.parse("8/2p5/3p4/KP5r/1R3p1k/8/4P1P1/8 w - - 0 1")
 	node_count = [1, 14, 191, 2812, 43238, 674624, 11030083]
 	for i:int in range(node_count.size()):
-		var result:int = rule_standard.perft(chess_state, i, 0)
+		var result:int = RuleStandard.perft(chess_state, i, 0)
 		print("perft_test_3 depth:%d expect:%d actual:%d" % [i, node_count[i], result])
-	chess_state = rule_standard.parse("r3k2r/Pppp1ppp/1b3nbN/nP6/BBP1P3/q4N2/Pp1P2PP/R2Q1RK1 w kq - 0 1")
+	chess_state = RuleStandard.parse("r3k2r/Pppp1ppp/1b3nbN/nP6/BBP1P3/q4N2/Pp1P2PP/R2Q1RK1 w kq - 0 1")
 	node_count = [1, 6, 264, 9467, 422333, 15833292]
 	for i:int in range(node_count.size()):
-		var result:int = rule_standard.perft(chess_state, i, 0)
+		var result:int = RuleStandard.perft(chess_state, i, 0)
 		print("perft_test_4 depth:%d expect:%d actual:%d" % [i, node_count[i], result])
-	chess_state = rule_standard.parse("r2q1rk1/pP1p2pp/Q4n2/bbp1p3/Np6/1B3NBn/pPPP1PPP/R3K2R b KQ - 0 1")
+	chess_state = RuleStandard.parse("r2q1rk1/pP1p2pp/Q4n2/bbp1p3/Np6/1B3NBn/pPPP1PPP/R3K2R b KQ - 0 1")
 	node_count = [1, 6, 264, 9467, 422333, 15833292]
 	for i:int in range(node_count.size()):
-		var result:int = rule_standard.perft(chess_state, i, 1)
+		var result:int = RuleStandard.perft(chess_state, i, 1)
 		print("perft_test_5 depth:%d expect:%d actual:%d" % [i, node_count[i], result])
-	chess_state = rule_standard.parse("rnbq1k1r/pp1Pbppp/2p5/8/2B5/8/PPP1NnPP/RNBQK2R w KQ - 1 8")
+	chess_state = RuleStandard.parse("rnbq1k1r/pp1Pbppp/2p5/8/2B5/8/PPP1NnPP/RNBQK2R w KQ - 1 8")
 	node_count = [1, 44, 1486, 62379, 2103487, 89941194]
 	for i:int in range(node_count.size()):
-		var result:int = rule_standard.perft(chess_state, i, 0)
+		var result:int = RuleStandard.perft(chess_state, i, 0)
 		print("perft_test_6 depth:%d expect:%d actual:%d" % [i, node_count[i], result])
-	chess_state = rule_standard.parse("r4rk1/1pp1qppp/p1np1n2/2b1p1B1/2B1P1b1/P1NP1N2/1PP1QPPP/R4RK1 w - - 0 10")
+	chess_state = RuleStandard.parse("r4rk1/1pp1qppp/p1np1n2/2b1p1B1/2B1P1b1/P1NP1N2/1PP1QPPP/R4RK1 w - - 0 10")
 	node_count = [1, 46, 2079, 89890, 3894594, 89941194]
 	for i:int in range(node_count.size()):
-		var result:int = rule_standard.perft(chess_state, i, 0)
+		var result:int = RuleStandard.perft(chess_state, i, 0)
 		print("perft_test_7 depth:%d expect:%d actual:%d" % [i, node_count[i], result])
 	
 func _physics_process(_delta:float):
@@ -68,16 +67,17 @@ func _physics_process(_delta:float):
 		add_progress_bar()
 	for i:int in range(progress_bar_data.size()):
 		progress_bar[i].value = progress_bar_data[i]
-		$panel/margin_container/label.text = "%x" % transposition_table.best_move(chess_state.get_zobrist())
+		$panel/margin_container/label.text = "%x" % ai.get_transposition_table().best_move(chess_state.get_zobrist())
 
 func make_database() -> void:
 	perft_test()
 	print("before: %dms" % performance_test())
-	chess_state = rule_standard.parse("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
-	rule_standard.search(chess_state, 0, transposition_table, Callable(), 10, debug_output)
+	chess_state = RuleStandard.parse("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
+	# RuleStandard.search(chess_state, 0, transposition_table, Callable(), 10, debug_output)
+	ai.search(chess_state, 0, Callable(), debug_output);
 	print(main_variation)
 	#$pastor.transposition_table = transposition_table
-	transposition_table.save_file("user://standard_opening.fa")
+	ai.transposition_table.save_file("user://standard_opening.fa")
 	print("after: %dms" % performance_test())
 
 func debug_output(_zobrist:int, depth:int, cur:int, total:int) -> void:
