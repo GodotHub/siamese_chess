@@ -12,8 +12,5 @@ bin/
 **/*.a
 **/*.dll
 **/*.exe
-**/*.obj.import
-**/*.obj
 **/*.os
 .sconsign.dblite
-vc140.pdb

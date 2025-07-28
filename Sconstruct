@@ -13,8 +13,8 @@ env = SConscript("library/godot-cpp/SConstruct")
 # - LINKFLAGS are for linking flags
 
 # tweak this if you want to use different folders, or more folders, to store your source code in.
-env.Append(CPPPATH=["src/core", "library/tiny-dnn"])
-# env.Append(CCFLAGS=["library/"])
+env.Append(CPPPATH=["src/core/"])
+env.Append(CCFLAGS=["library/"])
 sources = Glob("src/core/*.cpp")
 
 if env["platform"] == "macos":

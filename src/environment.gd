@@ -22,7 +22,6 @@ func _ready() -> void:
 	else:
 		transposition_table.reserve(1 << 20)
 	$pastor.transposition_table = transposition_table
-	$pastor.ai.init({ "transposition_table": transposition_table, "max_depth": 100});
 	$interact/area_pastor.connect("clicked", select_dialog)
 
 func select_dialog() -> void:
@@ -73,7 +72,7 @@ func dialog_start_game() -> void:
 		$dialog.push_selection(["标准棋局（30+0）", "快棋（10+5）", "超快棋（5+3）", "子弹棋（小规模布局，1/2+0）", "导入棋局"])
 		await $dialog.on_next
 		if $dialog.selected in [0, 1, 2]:
-			$pastor.create_state("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
+			$pastor.create_state("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", RuleStandard.new())
 			if $dialog.selected == 0:
 				$chess_timer.set_time(1800, 1, 0)
 				$pastor.think_time = 5
@@ -94,7 +93,7 @@ func dialog_start_game() -> void:
 			$pastor.start_decision()
 			break
 		elif $dialog.selected == 3:
-			$pastor.create_state("8/8/2rbqk2/2pppn2/2NPPP2/2KQBR2/8/8 w - - 0 1")
+			$pastor.create_state("8/8/2rbqk2/2pppn2/2NPPP2/2KQBR2/8/8 w - - 0 1", RuleStandard.new())
 			$chess_timer.set_time(30, 1, 0)
 			$pastor.think_time = 1
 			$dialog.push_dialog("现在棋盘已经准备好了。", true, true)
@@ -111,7 +110,7 @@ func dialog_start_game() -> void:
 			var text_input_instance:TextInput = TextInput.create_text_input_instance("输入FEN格式的布局：")
 			add_child(text_input_instance)
 			await text_input_instance.confirmed
-			if $pastor.create_state(text_input_instance.text):
+			if $pastor.create_state(text_input_instance.text, RuleStandard.new()):
 				$pastor.think_time = 5
 				$dialog.push_dialog("现在棋盘已经准备好了。", true, true)
 				$cheshire.force_set_camera($camera/camera_chessboard)

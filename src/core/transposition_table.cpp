@@ -40,7 +40,7 @@ void TranspositionTable::load_file(godot::String path)
 	file->close();
 }
 
-int TranspositionTable::probe_hash(int64_t checksum, int8_t depth, int alpha, int beta)
+int TranspositionTable::probe_hash(int64_t checksum, unsigned char depth, int alpha, int beta)
 {
 	int index = checksum & table_size_mask;
 	if (table[index].checksum == checksum)
@@ -70,7 +70,7 @@ int TranspositionTable::best_move(int64_t checksum)
 	return table[index].best_move;
 }
 
-void TranspositionTable::record_hash(int64_t checksum, int8_t depth, int value, int8_t flag, int best_move)
+void TranspositionTable::record_hash(int64_t checksum, unsigned char depth, int value, unsigned char flag, int best_move)
 {
 	int index = checksum & table_size_mask;
 	if ((read_only && table[index].flag != UNKNOWN || depth < table[index].depth))

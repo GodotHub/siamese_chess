@@ -13,6 +13,7 @@ var selected:int = -1
 var premove:int = -1
 var piece_instance:Dictionary[int, PieceInstance] = {}
 var king_instance:Array[PieceInstance] = [null, null]
+var rule_standard:RuleStandard = RuleStandard.new()
 
 func _ready() -> void:
 	super._ready()
@@ -44,8 +45,8 @@ func set_state(_state:State) -> void:
 		if !state.has_piece(i):
 			continue
 		add_piece_instance(i, state.get_piece(i))
-	king_instance[0].set_warning(RuleStandard.is_check(state, 1))
-	king_instance[1].set_warning(RuleStandard.is_check(state, 0))
+	king_instance[0].set_warning(rule_standard.is_check(state, 1))
+	king_instance[1].set_warning(rule_standard.is_check(state, 0))
 
 func get_position_name(_position:Vector3) -> String:
 	var chess_pos:Vector2i = Vector2i(int(_position.x + 4) / 1, int(_position.z + 4) / 1)
@@ -129,15 +130,15 @@ func confirm_move(from:int, to:int) -> void:
 	$canvas.clear_select_position()
 
 func execute_move(move:int) -> void:
-	RuleStandard.apply_move(state, move, add_piece_instance, remove_piece_instance, move_piece_instance, Callable(), Callable(), Callable())
-	RuleStandard.apply_move(state, move, state.add_piece, state.capture_piece, state.move_piece, state.set_extra, state.push_history, state.change_score)
+	rule_standard.apply_move(state, move, add_piece_instance, remove_piece_instance, move_piece_instance, Callable(), Callable(), Callable())
+	rule_standard.apply_move(state, move, state.add_piece, state.capture_piece, state.move_piece, state.set_extra, state.push_history, state.change_score)
 	$canvas.clear_select_position()
 	$canvas.clear_premove_position()
 	$canvas.clear_move_position()
 	$canvas.draw_move_position($canvas.convert_name_to_position(Chess.to_position_name(Chess.from(move))))
 	$canvas.draw_move_position($canvas.convert_name_to_position(Chess.to_position_name(Chess.to(move))))
-	king_instance[0].set_warning(RuleStandard.is_check(state, 1))
-	king_instance[1].set_warning(RuleStandard.is_check(state, 0))
+	king_instance[0].set_warning(rule_standard.is_check(state, 1))
+	king_instance[1].set_warning(rule_standard.is_check(state, 0))
 	press_timer.emit()
 	move_played.emit(move)
 	selected = -1
