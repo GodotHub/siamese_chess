@@ -5,15 +5,13 @@ var progress_bar_data:PackedFloat32Array = []
 var zobrist:PackedInt64Array = []
 var main_variation:PackedInt32Array = []
 var chess_state:State = null
-var transposition_table:TranspositionTable = TranspositionTable.new()
-var ai: AI = PastorAI.new()
+var ai: PastorAI = PastorAI.new()
 
 func _ready() -> void:
 	if FileAccess.file_exists("user://standard_opening.fa"):
-		transposition_table.load_file("user://standard_opening.fa")
+		ai.transposition_table.load_file("user://standard_opening.fa")
 	else:
-		transposition_table.reserve(1 << 20)
-	ai.init({"transposition_table": transposition_table, "max_depth": 10})
+		ai.transposition_table.reserve(1 << 20)
 	chess_state = RuleStandard.parse("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
 	var thread:Thread = Thread.new()
 	thread.start(make_database)
@@ -69,7 +67,7 @@ func _physics_process(_delta:float):
 		add_progress_bar()
 	for i:int in range(progress_bar_data.size()):
 		progress_bar[i].value = progress_bar_data[i]
-		$panel/margin_container/label.text = "%x" % transposition_table.best_move(chess_state.get_zobrist())
+		$panel/margin_container/label.text = "%x" % ai.transposition_table.best_move(chess_state.get_zobrist())
 
 func make_database() -> void:
 	perft_test()
@@ -79,7 +77,7 @@ func make_database() -> void:
 	ai.search(chess_state, 0, Callable(), debug_output);
 	print(main_variation)
 	#$pastor.transposition_table = transposition_table
-	transposition_table.save_file("user://standard_opening.fa")
+	ai.transposition_table.save_file("user://standard_opening.fa")
 	print("after: %dms" % performance_test())
 
 func debug_output(_zobrist:int, depth:int, cur:int, total:int) -> void:

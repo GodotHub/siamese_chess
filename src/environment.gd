@@ -16,13 +16,6 @@ func _ready() -> void:
 	$pastor.connect("win", pastor_win)
 	$pastor.connect("lose", pastor_lose)
 	$pastor.connect("draw", pastor_draw)
-	var transposition_table:TranspositionTable = TranspositionTable.new()
-	if FileAccess.file_exists("user://standard_opening.fa"):
-		transposition_table.load_file("user://standard_opening.fa")
-	else:
-		transposition_table.reserve(1 << 20)
-	$pastor.transposition_table = transposition_table
-	$pastor.ai.init({ "transposition_table": transposition_table, "max_depth": 100});
 	$interact/area_pastor.connect("clicked", select_dialog)
 
 func select_dialog() -> void:
