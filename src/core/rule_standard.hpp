@@ -26,12 +26,9 @@ class RuleStandard : public Rule
 		virtual int evaluate(godot::Ref<State> _state, int _move);
 		virtual int compare_move(int a, int b, int best_move, std::array<int, 65536> *history_table = nullptr);
 		virtual int quies(godot::Ref<State> _state, int alpha, int beta, int _group = 0);
-		virtual int alphabeta(godot::Ref<State> _state, int _alpha, int _beta, int _depth, int _group = 0, int _ply = 0, bool _can_null = true, std::array<int, 65536> *_history_table = nullptr, TranspositionTable *_transposition_table = nullptr, godot::Callable _is_timeup = godot::Callable(), godot::Callable _debug_output = godot::Callable());
-		virtual void search(godot::Ref<State> _state, int _group, TranspositionTable *_transposition_table = nullptr, godot::Callable _is_timeup = godot::Callable(), int _max_depth = 1000, godot::Callable _debug_output = godot::Callable());
 		static void _bind_methods();
+		static RuleStandard *get_singleton();
 	private:
-		int WIN;
-		int THRESHOLD;
 		std::unordered_map<int, int> piece_value;
 		godot::PackedInt32Array directions_diagonal;
 		godot::PackedInt32Array directions_straight;

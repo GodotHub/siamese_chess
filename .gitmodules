@@ -1,3 +1,6 @@
 [submodule "library/godot-cpp"]
 	path = library/godot-cpp
 	url = https://gitcode.com/godothub/godot-cpp.git
+[submodule "library/tiny-dnn"]
+	path = library/tiny-dnn
+	url = https://github.com/JustDooooIt/tiny-dnn.git
