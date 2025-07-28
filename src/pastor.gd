@@ -39,7 +39,7 @@ func start_decision() -> void:
 	thread.start(decision, Thread.PRIORITY_HIGH)
 
 func receive_move(move:int) -> void:
-	RuleStandard.apply_move(state, move, state.add_piece, state.capture_piece, state.move_piece, state.set_extra, state.push_history, state.change_score)
+	RuleStandard.apply_move(state, move, state.add_piece, state.capture_piece, state.move_piece, state.set_extra, state.push_history)
 
 	var end_type:String = RuleStandard.get_end_type(state)
 	if end_type:

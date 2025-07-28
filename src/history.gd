@@ -12,7 +12,7 @@ func push_move(move:int) -> void:
 	if history.size() >= 60:
 		return
 	history.push_back(RuleStandard.get_move_name(state, move))
-	RuleStandard.apply_move(state, move, state.add_piece, state.capture_piece, state.move_piece, state.set_extra, state.push_history, state.change_score)
+	RuleStandard.apply_move(state, move, state.add_piece, state.capture_piece, state.move_piece, state.set_extra, state.push_history)
 	update_table()
 
 func update_table() -> void:

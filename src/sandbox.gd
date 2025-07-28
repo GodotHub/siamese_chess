@@ -15,7 +15,7 @@ func _ready() -> void:
 	update_move()
 
 func receive_move(move:int) -> void:
-	RuleStandard.apply_move(state, move, state.add_piece, state.capture_piece, state.move_piece, state.set_extra, state.push_history, state.change_score)
+	RuleStandard.apply_move(state, move, state.add_piece, state.capture_piece, state.move_piece, state.set_extra, state.push_history)
 	update_move()
 
 func update_move() -> void:
