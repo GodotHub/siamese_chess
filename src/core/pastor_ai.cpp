@@ -47,10 +47,11 @@ int PastorAI::alphabeta(const godot::Ref<State> &_state, int _alpha, int _beta, 
 	if (_can_null) {
 		int score = -alphabeta(_state, -_beta, -_beta + 1, _depth - 3, 1 - _group, false);
 		if (score >= _beta)
+		{
 			return _beta;
+		}
 	}
-	move_list =
-			RuleStandard::get_singleton()->generate_valid_move(_state, _group);
+	move_list = RuleStandard::get_singleton()->generate_valid_move(_state, _group);
 	if (move_list.size() == 0) {
 		if (RuleStandard::get_singleton()->is_check(_state, 1 - _group)) {
 			return -WIN + _ply;
@@ -98,8 +99,7 @@ int PastorAI::alphabeta(const godot::Ref<State> &_state, int _alpha, int _beta, 
 int PastorAI::search(const godot::Ref<State> &_state, int _group, const godot::Callable &_is_timeup, const godot::Callable &_debug_output) {
 	std::array<int, 65536> history_table;
 	for (int i = 1; i < _max_depth; i++) {
-		alphabeta(_state, -THRESHOLD, THRESHOLD, i, _group, 0, true, &history_table,
-				_is_timeup, _debug_output);
+		alphabeta(_state, -THRESHOLD, THRESHOLD, i, _group, 0, true, &history_table, _is_timeup, _debug_output);
 		if (_is_timeup.is_valid() && _is_timeup.call()) {
 			return _transposition_table->best_move(_state->get_zobrist());
 		}
