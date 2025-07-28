@@ -1,14 +1,15 @@
 #include "pastor_ai.hpp"
 #include "rule_standard.hpp"
 #include <godot_cpp/core/error_macros.hpp>
+#include <godot_cpp/classes/file_access.hpp>
 
 PastorAI::PastorAI() {
-	_transposition_table = memnew(TranspositionTable);
+	_transposition_table.instantiate();
 	_max_depth = 100;
 }
 
 int PastorAI::alphabeta(const godot::Ref<State> &_state, int _alpha, int _beta, int _depth, int _group, int _ply, bool _can_null, std::array<int, 65536> *_history_table, const godot::Callable &_is_timeup, const godot::Callable &_debug_output) {
-	if (_transposition_table) {
+	if (!_transposition_table.is_null()) {
 		int score = _transposition_table->probe_hash(_state->get_zobrist(), _depth, _alpha, _beta);
 		if (score != 65535) {
 			return score;
@@ -16,7 +17,7 @@ int PastorAI::alphabeta(const godot::Ref<State> &_state, int _alpha, int _beta, 
 	}
 	if (_depth <= 0) {
 		int score = RuleStandard::get_singleton()->quies(_state, _alpha, _beta, _group);
-		if (_transposition_table) {
+		if (!_transposition_table.is_null()) {
 			_transposition_table->record_hash(_state->get_zobrist(), _depth, score, EXACT, 0);
 		}
 		return score;
@@ -33,7 +34,7 @@ int PastorAI::alphabeta(const godot::Ref<State> &_state, int _alpha, int _beta, 
 	unsigned char flag = ALPHA;
 	int value = -WIN;
 	int best_move = 0;
-	if (_transposition_table) {
+	if (!_transposition_table.is_null()) {
 		best_move = _transposition_table->best_move(_state->get_zobrist());
 	}
 	if (_can_null) {
@@ -62,7 +63,7 @@ int PastorAI::alphabeta(const godot::Ref<State> &_state, int _alpha, int _beta, 
 		value = -alphabeta(test_state, -_beta, -_alpha, _depth - 1, 1 - _group, _ply + 1, false, _history_table, _is_timeup, _debug_output);
 
 		if (_beta <= value) {
-			if (_transposition_table) {
+			if (!_transposition_table.is_null()) {
 				_transposition_table->record_hash(_state->get_zobrist(), _depth, _beta,
 						BETA, move_list[i]);
 			}
@@ -77,7 +78,7 @@ int PastorAI::alphabeta(const godot::Ref<State> &_state, int _alpha, int _beta, 
 			}
 		}
 	}
-	if (_transposition_table) {
+	if (!_transposition_table.is_null()) {
 		_transposition_table->record_hash(_state->get_zobrist(), _depth, _alpha, flag, best_move);
 	}
 	return _alpha;
@@ -104,10 +105,10 @@ int PastorAI::get_max_depth() const {
 }
 
 void PastorAI::set_transposition_table(const Ref<TranspositionTable> &transposition_table) {
-	this->_transposition_table = transposition_table.ptr();
+	this->_transposition_table = transposition_table;
 }
 
-TranspositionTable *PastorAI::get_transposition_table() const {
+Ref<TranspositionTable> PastorAI::get_transposition_table() const {
 	return this->_transposition_table;
 }
 

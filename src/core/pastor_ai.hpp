@@ -9,7 +9,7 @@ class PastorAI : public AI {
 	GDCLASS(PastorAI, AI);
 
 private:
-	TranspositionTable *_transposition_table;
+	Ref<TranspositionTable> _transposition_table;
 	int _max_depth;
 	int WIN = 50000;
 	int THRESHOLD = 60000;
@@ -28,7 +28,7 @@ public:
 	void set_max_depth(int max_depth);
 	int get_max_depth() const;
 	void set_transposition_table(const Ref<TranspositionTable> &transposition_table);
-	TranspositionTable* get_transposition_table() const;
+	Ref<TranspositionTable> get_transposition_table() const;
 };
 
 #endif // __CAT_AI_H__
