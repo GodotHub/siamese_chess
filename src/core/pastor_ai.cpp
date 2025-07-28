@@ -116,8 +116,8 @@ void PastorAI::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("search", "state", "group", "is_timeup", "debug_output"), &PastorAI::search);
 	ClassDB::bind_method(D_METHOD("set_max_depth", "max_depth"), &PastorAI::set_max_depth);
 	ClassDB::bind_method(D_METHOD("get_max_depth"), &PastorAI::get_max_depth);
-	ClassDB::bind_method(D_METHOD("set_transposition_table", "transposition_table"), &PastorAI::set_transposition_table);
+	// ClassDB::bind_method(D_METHOD("set_transposition_table", "transposition_table"), &PastorAI::set_transposition_table);
 	ClassDB::bind_method(D_METHOD("get_transposition_table"), &PastorAI::get_transposition_table);
 	ADD_PROPERTY(PropertyInfo(Variant::INT, "max_depth"), "set_max_depth", "get_max_depth");
-	ADD_PROPERTY(PropertyInfo(Variant::OBJECT, "transposition_table"), "set_transposition_table", "get_transposition_table");
+	// ADD_PROPERTY(PropertyInfo(Variant::OBJECT, "transposition_table"), "set_transposition_table", "get_transposition_table");
 }

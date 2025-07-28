@@ -22,9 +22,9 @@ var ai: PastorAI = PastorAI.new();
 
 func _ready() -> void:
 	if FileAccess.file_exists("user://standard_opening.fa"):
-		ai.transposition_table.load_file("user://standard_opening.fa")
+		ai.get_transposition_table().load_file("user://standard_opening.fa")
 	else:
-		ai.transposition_table.reserve(1 << 20)
+		ai.get_transposition_table().reserve(1 << 20)
 
 func create_state(fen:String) -> bool:
 	state = RuleStandard.parse(fen)
