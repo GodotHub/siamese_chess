@@ -13,7 +13,6 @@ class RuleStandard : public Rule
 		virtual godot::String get_end_type(godot::Ref<State> _state);
 		virtual godot::Ref<State> parse(godot::String _str);
 		virtual godot::String stringify(godot::Ref<State> _state);
-		virtual bool is_same_camp(int a, int b);
 		virtual bool is_move_valid(godot::Ref<State> _state, int _group, int _move);
 		virtual bool is_check(godot::Ref<State> _state, int _group);
 		virtual godot::PackedInt32Array generate_premove(godot::Ref<State> _state, int _group);

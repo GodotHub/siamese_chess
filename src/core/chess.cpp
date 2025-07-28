@@ -8,6 +8,16 @@ Chess::Chess()
 
 }
 
+int Chess::group(int piece)
+{
+	return piece >= 'a' && piece <= 'z';
+}
+
+bool Chess::is_same_group(int piece_1, int piece_2)
+{
+	return (piece_1 >= 'A' && piece_1 <= 'Z') == (piece_2 >= 'A' && piece_2 <= 'Z');
+}
+
 int Chess::to_position_int(godot::String _position_name)
 {
 	return ((7 - (_position_name[1] - '1')) << 4) + _position_name[0] - 'a';

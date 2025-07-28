@@ -9,6 +9,8 @@ class Chess : public godot::Object
 	GDCLASS(Chess, godot::Object)
 	public:
 		Chess();
+		static int group(int piece);
+		static bool is_same_group(int piece_1, int piece_2);
 		static int to_position_int(godot::String _position_name);
 		static godot::String to_position_name(int _position);
 		static int create(int _from, int _to, int _extra);

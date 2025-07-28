@@ -138,16 +138,11 @@ godot::String RuleStandard::stringify(godot::Ref<State>_state)
 	return godot::String(" ").join(output);
 }
 
-bool RuleStandard::is_same_camp(int a, int b)
-{
-	return (a >= 'A' && a <= 'Z') == (b >= 'A' && b <= 'Z');
-}
-
 bool RuleStandard::is_move_valid(godot::Ref<State>_state, int _group, int _move)
 {
 	int from = Chess::from(_move);
 	int from_piece = _state->get_piece(from);
-	if (!from_piece || (_group == 0) != (from_piece >= 'A' && from_piece <= 'Z'))
+	if (!from_piece || _group != Chess::group(from_piece))
 	{
 		return false;
 	}
@@ -168,7 +163,7 @@ bool RuleStandard::is_check(godot::Ref<State> _state, int _group)
 				continue;
 			}
 			int from_piece = _state->get_piece(_from);
-			if ((_group == 0) != (from_piece >= 'A' && from_piece <= 'Z'))
+			if (_group != Chess::group(from_piece))
 			{
 				continue;
 			}
@@ -178,12 +173,12 @@ bool RuleStandard::is_check(godot::Ref<State> _state, int _group)
 				int front = from_piece == 'P' ? -16 : 16;
 				bool on_start = (_from >> 4) == (from_piece == 'P' ? 6 : 1);
 				bool on_end = (_from >> 4) == (from_piece == 'P' ? 1 : 6);
-				if (_state->has_piece(_from + front + 1) && !is_same_camp(from_piece, _state->get_piece(_from + front + 1)) && (_state->get_piece(_from + front + 1) & 95) == 'K'
+				if (_state->has_piece(_from + front + 1) && !Chess::is_same_group(from_piece, _state->get_piece(_from + front + 1)) && (_state->get_piece(_from + front + 1) & 95) == 'K'
 				|| !((_from + front + 1) & 0x88) && on_end && _state->get_extra(5) != -1 && abs(_state->get_extra(5) - (_from + front + 1)) <= 1)
 				{
 					return true;
 				}
-				if (_state->has_piece(_from + front - 1) && !is_same_camp(from_piece, _state->get_piece(_from + front - 1)) && (_state->get_piece(_from + front - 1) & 95) == 'K'
+				if (_state->has_piece(_from + front - 1) && !Chess::is_same_group(from_piece, _state->get_piece(_from + front - 1)) && (_state->get_piece(_from + front - 1) & 95) == 'K'
 				|| !((_from + front - 1) & 0x88) && on_end && _state->get_extra(5) != -1 && abs(_state->get_extra(5) - (_from + front - 1)) <= 1)
 				{
 					return true;
@@ -211,13 +206,13 @@ bool RuleStandard::is_check(godot::Ref<State> _state, int _group)
 			{
 				int to = _from + directions[i];
 				int to_piece = _state->get_piece(to);
-				while (!(to & 0x88) && (!to_piece || !is_same_camp(from_piece, to_piece)))
+				while (!(to & 0x88) && (!to_piece || !Chess::is_same_group(from_piece, to_piece)))
 				{
 					if (_state->get_extra(5) != -1 && abs(to - _state->get_extra(5)) <= 1 && (to >> 4) == _group * 7)
 					{
 						return true;
 					}
-					if (!(to & 0x88) && to_piece && !is_same_camp(from_piece, to_piece))
+					if (!(to & 0x88) && to_piece && !Chess::is_same_group(from_piece, to_piece))
 					{
 						if ((to_piece & 95) == 'K')
 						{
@@ -251,7 +246,7 @@ godot::PackedInt32Array RuleStandard::generate_premove(godot::Ref<State>_state, 
 				continue;
 			}
 			int from_piece = _state->get_piece(_from);
-			if ((_group == 0) != (from_piece >= 'A' && from_piece <= 'Z'))
+			if (_group != Chess::group(from_piece))
 			{
 				continue;
 			}
@@ -363,7 +358,7 @@ godot::PackedInt32Array RuleStandard::generate_move(godot::Ref<State>_state, int
 				continue;
 			}
 			int from_piece = _state->get_piece(_from);
-			if ((_group == 0) != (from_piece >= 'A' && from_piece <= 'Z'))
+			if (_group != Chess::group(from_piece))
 			{
 				continue;
 			}
@@ -391,7 +386,7 @@ godot::PackedInt32Array RuleStandard::generate_move(godot::Ref<State>_state, int
 						}
 					}
 				}
-				if (_state->has_piece(_from + front + 1) && !is_same_camp(from_piece, _state->get_piece(_from + front + 1)) || ((_from >> 4) == 3 || (_from >> 4) == 4) && _state->get_extra(2) == _from + front + 1)
+				if (_state->has_piece(_from + front + 1) && !Chess::is_same_group(from_piece, _state->get_piece(_from + front + 1)) || ((_from >> 4) == 3 || (_from >> 4) == 4) && _state->get_extra(2) == _from + front + 1)
 				{
 					if (on_end)
 					{
@@ -405,7 +400,7 @@ godot::PackedInt32Array RuleStandard::generate_move(godot::Ref<State>_state, int
 						output.push_back(Chess::create(_from, _from + front + 1, 0));
 					}
 				}
-				if (_state->has_piece(_from + front - 1) && !is_same_camp(from_piece, _state->get_piece(_from + front - 1)) || ((_from >> 4) == 3 || (_from >> 4) == 4) && _state->get_extra(2) == _from + front - 1)
+				if (_state->has_piece(_from + front - 1) && !Chess::is_same_group(from_piece, _state->get_piece(_from + front - 1)) || ((_from >> 4) == 3 || (_from >> 4) == 4) && _state->get_extra(2) == _from + front - 1)
 				{
 					if (on_end)
 					{
@@ -442,10 +437,10 @@ godot::PackedInt32Array RuleStandard::generate_move(godot::Ref<State>_state, int
 			{
 				int to = _from + directions[i];
 				int to_piece = _state->get_piece(to);
-				while (!(to & 0x88) && (!to_piece || !is_same_camp(from_piece, to_piece)))
+				while (!(to & 0x88) && (!to_piece || !Chess::is_same_group(from_piece, to_piece)))
 				{
 					output.push_back(Chess::create(_from, to, 0));
-					if (!(to & 0x88) && to_piece && !is_same_camp(from_piece, to_piece))
+					if (!(to & 0x88) && to_piece && !Chess::is_same_group(from_piece, to_piece))
 					{
 						break;
 					}
@@ -494,7 +489,7 @@ godot::String RuleStandard::get_move_name(godot::Ref<State> _state, int move)
 	int to = Chess::get_singleton()->to(move);
 	int from_piece = _state->get_piece(from);
 	int extra = Chess::get_singleton()->extra(move);
-	int group = from_piece >= 'a' && from_piece <= 'z';
+	int group = Chess::group(from_piece);
 	if ((from_piece & 95) == 'K' && extra)
 	{
 		if ((extra & 95) == 'K')
@@ -589,7 +584,7 @@ void RuleStandard::apply_move(godot::Ref<State>_state, int _move, godot::Callabl
 	}
 	_callback_set_extra.call(3, _state->get_extra(3) + 1);
 	int from_piece = _state->get_piece(Chess::from(_move));
-	int from_group = from_piece >= 'A' && from_piece <= 'Z' ? 0 : 1;
+	int from_group = Chess::group(from_piece);
 	int to_piece = _state->get_piece(Chess::to(_move));
 	bool dont_move = false;
 	bool has_en_passant = false;
@@ -725,7 +720,6 @@ void RuleStandard::_bind_methods()
 	godot::ClassDB::bind_method(godot::D_METHOD("get_end_type"), &RuleStandard::get_end_type);
 	godot::ClassDB::bind_method(godot::D_METHOD("parse"), &RuleStandard::parse);
 	godot::ClassDB::bind_method(godot::D_METHOD("stringify"), &RuleStandard::stringify);
-	godot::ClassDB::bind_method(godot::D_METHOD("is_same_camp"), &RuleStandard::is_same_camp);
 	godot::ClassDB::bind_method(godot::D_METHOD("is_check"), &RuleStandard::is_check);
 	godot::ClassDB::bind_method(godot::D_METHOD("is_move_valid"), &RuleStandard::is_move_valid);
 	godot::ClassDB::bind_method(godot::D_METHOD("generate_premove"), &RuleStandard::generate_premove);

@@ -163,7 +163,7 @@ godot::PackedInt32Array PastorAI::generate_good_capture_move(godot::Ref<State>_s
 				continue;
 			}
 			int from_piece = _state->get_piece(_from);
-			if ((_group == 0) != (from_piece >= 'A' && from_piece <= 'Z'))
+			if (_group != Chess::group(from_piece))
 			{
 				continue;
 			}
@@ -173,7 +173,7 @@ godot::PackedInt32Array PastorAI::generate_good_capture_move(godot::Ref<State>_s
 				int front = from_piece == 'P' ? -16 : 16;
 				bool on_start = (_from >> 4) == (from_piece == 'P' ? 6 : 1);
 				bool on_end = (_from >> 4) == (from_piece == 'P' ? 1 : 6);
-				if (_state->has_piece(_from + front + 1) && !RuleStandard::get_singleton()->is_same_camp(from_piece, _state->get_piece(_from + front + 1))
+				if (_state->has_piece(_from + front + 1) && !Chess::is_same_group(from_piece, _state->get_piece(_from + front + 1))
 				|| ((_from >> 4) == 3 || (_from >> 4) == 4) && _state->get_extra(2) == _from + front + 1
 				|| !((_from + front + 1) & 0x88) && on_end && _state->get_extra(5) != -1 && abs(_state->get_extra(5) - (_from + front + 1)) <= 1)
 				{
@@ -189,7 +189,7 @@ godot::PackedInt32Array PastorAI::generate_good_capture_move(godot::Ref<State>_s
 						output.push_back(Chess::create(_from, _from + front + 1, 0));
 					}
 				}
-				if (_state->has_piece(_from + front - 1) && !RuleStandard::get_singleton()->is_same_camp(from_piece, _state->get_piece(_from + front - 1))
+				if (_state->has_piece(_from + front - 1) && !Chess::is_same_group(from_piece, _state->get_piece(_from + front - 1))
 				|| ((_from >> 4) == 3 || (_from >> 4) == 4) && _state->get_extra(2) == _from + front - 1
 				|| !((_from + front - 1) & 0x88) && on_end && _state->get_extra(5) != -1 && abs(_state->get_extra(5) - (_from + front - 1)) <= 1)
 				{
@@ -228,9 +228,9 @@ godot::PackedInt32Array PastorAI::generate_good_capture_move(godot::Ref<State>_s
 			{
 				int to = _from + directions[i];
 				int to_piece = _state->get_piece(to);
-				while (!(to & 0x88) && (!to_piece || !RuleStandard::get_singleton()->is_same_camp(from_piece, to_piece)))
+				while (!(to & 0x88) && (!to_piece || !Chess::is_same_group(from_piece, to_piece)))
 				{
-					if (!(to & 0x88) && to_piece && !RuleStandard::get_singleton()->is_same_camp(from_piece, to_piece))
+					if (!(to & 0x88) && to_piece && !Chess::is_same_group(from_piece, to_piece))
 					{
 						if (abs(get_piece_score(_from, from_piece)) <= abs(get_piece_score(to, to_piece)))
 						{
@@ -275,9 +275,9 @@ int PastorAI::evaluate(godot::Ref<State>_state, int _move)
 	int to = Chess::to(_move);
 	int to_piece = _state->get_piece(to);
 	int extra = Chess::extra(_move);
-	int group = from_piece >= 'A' && from_piece <= 'Z' ? 0 : 1;
+	int group = Chess::group(from_piece);
 	int score = get_piece_score(to, from_piece) - get_piece_score(from, from_piece);
-	if (to_piece && !RuleStandard::get_singleton()->is_same_camp(from_piece, to_piece))
+	if (to_piece && !Chess::is_same_group(from_piece, to_piece))
 	{
 		score -= get_piece_score(to, to_piece);
 	}
