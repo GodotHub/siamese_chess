@@ -352,6 +352,7 @@ int PastorAI::quies(godot::Ref<State>_state, int _alpha, int _beta, int _group)
 }
 
 int PastorAI::alphabeta(const godot::Ref<State> &_state, int _alpha, int _beta, int _depth, int _group, int _ply, bool _can_null, std::array<int, 65536> *_history_table, const godot::Callable &_is_timeup, const godot::Callable &_debug_output) {
+	bool found_pv = false;
 	if (!transposition_table.is_null()) {
 		int score = transposition_table->probe_hash(_state->get_zobrist(), _depth, _alpha, _beta);
 		if (score != 65535) {
@@ -402,7 +403,15 @@ int PastorAI::alphabeta(const godot::Ref<State> &_state, int _alpha, int _beta, 
 		_debug_output.call(_state->get_zobrist(), _depth, i, move_list.size());
 		godot::Ref<State> test_state = _state->duplicate();
 		test_state->apply_move(move_list[i], evaluate(test_state, move_list[i]));
-		value = -alphabeta(test_state, -_beta, -_alpha, _depth - 1, 1 - _group, _ply + 1, false, _history_table, _is_timeup, _debug_output);
+
+		if (found_pv)
+		{
+			value = -alphabeta(test_state, -_alpha - 1, -_alpha, _depth - 1, 1 - _group, _ply + 1, false, _history_table, _is_timeup, _debug_output);
+		}
+		if (!found_pv || value > _alpha && value < _beta)
+		{
+			value = -alphabeta(test_state, -_beta, -_alpha, _depth - 1, 1 - _group, _ply + 1, false, _history_table, _is_timeup, _debug_output);
+		}
 
 		if (_beta <= value) {
 			if (!transposition_table.is_null()) {
@@ -412,6 +421,7 @@ int PastorAI::alphabeta(const godot::Ref<State> &_state, int _alpha, int _beta, 
 			return _beta;
 		}
 		if (_alpha < value) {
+			found_pv = true;
 			best_move = move_list[i];
 			_alpha = value;
 			flag = EXACT;

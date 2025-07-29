@@ -10,7 +10,7 @@
 using namespace godot;
 
 class AI : public RefCounted {
-	GDCLASS(AI, RefCounted);
+	GDCLASS(AI, RefCounted)
 
 protected:
 	static void _bind_methods();

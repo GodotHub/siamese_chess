@@ -7,7 +7,7 @@
 using namespace godot;
 
 class PastorAI : public AI {
-	GDCLASS(PastorAI, AI);
+	GDCLASS(PastorAI, AI)
 
 private:
 	Ref<TranspositionTable> transposition_table;
