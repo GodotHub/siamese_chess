@@ -4,13 +4,11 @@
 #include "ai.hpp"
 #include <unordered_map>
 
-using namespace godot;
-
 class PastorAI : public AI {
 	GDCLASS(PastorAI, AI)
 
 private:
-	Ref<TranspositionTable> transposition_table;
+	godot::Ref<TranspositionTable> transposition_table;
 	int max_depth;
 	int WIN = 50000;
 	int THRESHOLD = 60000;
@@ -32,13 +30,13 @@ private:
 	int compare_move(int a, int b, int best_move, std::array<int, 65536> *history_table = nullptr);
 	int quies(godot::Ref<State> _state, int alpha, int beta, int _group = 0);
 	godot::PackedInt32Array generate_good_capture_move(godot::Ref<State> _state, int _group);
-	int alphabeta(const Ref<State> &_state, int _alpha, int _beta, int _depth, int _group = 0, int _ply = 0, bool _can_null = true, std::array<int, 65536> *_history_table = nullptr, const Callable &_is_timeup = Callable(), const Callable &_debug_output = Callable());
+	int alphabeta(const godot::Ref<State> &_state, int _alpha, int _beta, int _depth, int _group = 0, int _ply = 0, bool _can_null = true, std::array<int, 65536> *_history_table = nullptr, const godot::Callable &_is_timeup = godot::Callable(), const godot::Callable &_debug_output = godot::Callable());
 public:
-	int search(const Ref<State> &_state, int _group, const Callable &_is_timeup, const Callable &_debug_output) override;
+	int search(const godot::Ref<State> &_state, int _group, const godot::Callable &_is_timeup, const godot::Callable &_debug_output) override;
 	void set_max_depth(int max_depth);
 	int get_max_depth() const;
-	void set_transposition_table(const Ref<TranspositionTable> &transposition_table);
-	Ref<TranspositionTable> get_transposition_table() const;
+	void set_transposition_table(const godot::Ref<TranspositionTable> &transposition_table);
+	godot::Ref<TranspositionTable> get_transposition_table() const;
 };
 
 #endif // _PASTOR_AI_H_

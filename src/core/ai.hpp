@@ -7,10 +7,8 @@
 #include <godot_cpp/core/gdvirtual.gen.inc>
 #include <godot_cpp/variant/dictionary.hpp>
 
-using namespace godot;
-
-class AI : public RefCounted {
-	GDCLASS(AI, RefCounted)
+class AI : public godot::RefCounted {
+	GDCLASS(AI, godot::RefCounted)
 
 protected:
 	static void _bind_methods();

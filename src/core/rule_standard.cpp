@@ -701,12 +701,18 @@ void RuleStandard::apply_move(godot::Ref<State>_state, int _move, godot::Callabl
 		}
 	}
 	if (!dont_move)
+	{
 		_callback_move_piece.call(Chess::from(_move), Chess::to(_move));
+	}
 
 	if (!has_en_passant)
+	{
 		_callback_set_extra.call(2, -1);
+	}
 	if (!has_king_passant)
+	{
 		_callback_set_extra.call(5, -1);
+	}
 }
 
 RuleStandard *RuleStandard::get_singleton()
