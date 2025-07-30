@@ -1,0 +1,26 @@
+#ifndef _OPENING_BOOK_HPP_
+#define _OPENING_BOOK_HPP_
+
+
+#include <godot_cpp/godot.hpp>
+#include <godot_cpp/classes/object.hpp>
+#include "state.hpp"
+
+class OpeningBook : public godot::Object
+{
+	GDCLASS(OpeningBook, Object)
+	public:
+		void load_file(godot::String _path);
+		void save_file(godot::String _path);
+		bool has_record(godot::Ref<State> _state);
+		godot::String get_opening_name(godot::Ref<State> _state);
+		godot::String get_opening_description(godot::Ref<State> _state);
+		godot::PackedInt32Array get_suggest_move(godot::Ref<State> _state);
+		void set_opening(godot::Ref<State> _state, godot::String name, godot::String description);
+		static void _bind_methods();
+	private:
+		godot::Dictionary opening_book;
+};
+
+
+#endif

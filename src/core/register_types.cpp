@@ -10,6 +10,7 @@
 #include "rule.hpp"
 #include "rule_standard.hpp"
 #include "state.hpp"
+#include "opening_book.hpp"
 #include "transposition_table.hpp"
 #include "zobrist_hash.hpp"
 #include "ai.hpp"
@@ -26,6 +27,7 @@ void initialize_siamese_module(godot::ModuleInitializationLevel p_level)
 	godot::ClassDB::register_class<Rule>();
 	godot::ClassDB::register_class<RuleStandard>();
 	godot::ClassDB::register_class<State>();
+	godot::ClassDB::register_class<OpeningBook>();
 	godot::ClassDB::register_class<TranspositionTable>();
 	godot::ClassDB::register_class<ZobristHash>();
 	godot::ClassDB::register_abstract_class<AI>();
