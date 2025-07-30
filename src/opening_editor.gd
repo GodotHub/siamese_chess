@@ -1,0 +1,41 @@
+extends Node3D
+
+var state:State = null
+var opening_book:OpeningBook = OpeningBook.new()
+@onready var chessboard = $chessboard
+@onready var text_edit_name:TextEdit = $canvas_layer/panel/v_box_container/margin_container_1/text_edit_name
+@onready var text_edit_description:TextEdit = $canvas_layer/panel/v_box_container/margin_container_2/text_edit_description
+
+func _ready() -> void:
+	if FileAccess.file_exists("user://standard_opening.json"):
+		opening_book.load_file("user://standard_opening.json")
+	$cheshire.set_initial_interact($interact)
+	chessboard.connect("move_played", receive_move)
+	$canvas_layer/panel/v_box_container/margin_container/button.connect("button_down", set_text)
+	state = RuleStandard.parse("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
+	chessboard.set_state(state.duplicate())
+	get_text()
+	update_move()
+
+func receive_move(move:int) -> void:
+	RuleStandard.apply_move(state, move, state.add_piece, state.capture_piece, state.move_piece, state.set_extra, state.push_history)
+	get_text()
+	update_move()
+
+func update_move() -> void:
+	var move_list:PackedInt32Array = RuleStandard.generate_valid_move(state, state.get_extra(0))
+	var premove_list:PackedInt32Array = RuleStandard.generate_premove(state, 1 - state.get_extra(0))
+	chessboard.set_valid_move(move_list)
+	chessboard.set_valid_premove(premove_list)
+
+func get_text() -> void:
+	if !opening_book.has_record(state):
+		text_edit_name.text = ""
+		text_edit_description.text = ""
+		return
+	text_edit_name.text = opening_book.get_opening_name(state)
+	text_edit_description.text = opening_book.get_opening_description(state)
+
+func set_text() -> void:
+	opening_book.set_opening(state, text_edit_name.text, text_edit_description.text)
+	opening_book.save_file("user://standard_opening.json")
