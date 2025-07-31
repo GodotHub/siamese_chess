@@ -36,7 +36,6 @@ void State::add_piece(int _by, int _piece)
 {
 	pieces[_by] = _piece;
 	zobrist ^= ZobristHash::get_singleton()->hash_piece(_piece, _by);
-	//emit_signal("piece_added", _by);	//存疑，很像性能瓶颈
 }
 
 void State::capture_piece(int _by)
@@ -46,7 +45,6 @@ void State::capture_piece(int _by)
 		zobrist ^= ZobristHash::get_singleton()->hash_piece(pieces[_by], _by);
 		pieces[_by] = 0;
 		// 虽然大多数情况是攻击者移到被攻击者上，但是吃过路兵是例外，后续可能会出现类似情况，所以还是得手多一下
-		//emit_signal("piece_captured", _by);
 	}
 }
 
@@ -57,7 +55,6 @@ void State::move_piece(int _from, int _to)
 	zobrist ^= ZobristHash::get_singleton()->hash_piece(piece, _to);
 	pieces[_to] = pieces[_from];
 	pieces[_from] = 0;
-	//emit_signal("piece_moved", _from, _to);
 }
 
 int State::get_extra(int _index)

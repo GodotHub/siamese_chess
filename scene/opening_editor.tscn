@@ -27,7 +27,7 @@ environment = SubResource("Environment_htjak")
 [node name="chessboard" parent="." instance=ExtResource("2_0yhrm")]
 
 [node name="camera_3d" type="Camera3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0.735594, 0)
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0.425, 0.946, 0)
 
 [node name="cheshire" parent="." instance=ExtResource("3_85lqa")]
 
@@ -86,7 +86,23 @@ theme_override_constants/margin_top = 0
 theme_override_constants/margin_right = 20
 theme_override_constants/margin_bottom = 21
 
-[node name="button" type="Button" parent="canvas_layer/panel/v_box_container/margin_container"]
+[node name="h_box_container" type="HBoxContainer" parent="canvas_layer/panel/v_box_container/margin_container"]
 layout_mode = 2
+
+[node name="button_prev" type="Button" parent="canvas_layer/panel/v_box_container/margin_container/h_box_container"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_fonts/font = ExtResource("5_0yhrm")
+text = "上一步"
+
+[node name="button_save" type="Button" parent="canvas_layer/panel/v_box_container/margin_container/h_box_container"]
+layout_mode = 2
+size_flags_horizontal = 3
 theme_override_fonts/font = ExtResource("5_0yhrm")
 text = "保存"
+
+[node name="button_next" type="Button" parent="canvas_layer/panel/v_box_container/margin_container/h_box_container"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_fonts/font = ExtResource("5_0yhrm")
+text = "下一步"

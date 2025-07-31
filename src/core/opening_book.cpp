@@ -41,7 +41,7 @@ void OpeningBook::set_opening(godot::Ref<State> _state, godot::String name, godo
 	godot::Dictionary dict;
 	dict["name"] = name;
 	dict["description"] = description;
-	opening_book[_state->get_zobrist()] = dict;
+	opening_book[godot::String::num_int64(_state->get_zobrist())] = dict;
 }
 
 void OpeningBook::_bind_methods()

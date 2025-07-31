@@ -4,7 +4,6 @@
 #include <godot_cpp/classes/ref_counted.hpp>
 #include <godot_cpp/variant/packed_int32_array.hpp>
 #include <unordered_map>
-#include <set>
 
 class Rule;
 
@@ -31,7 +30,6 @@ class State : public godot::RefCounted
 		static void _bind_methods();
 	private:
 		int pieces[128];
-		std::set<int> position;
 		godot::PackedInt32Array extra;
 		std::unordered_map<int64_t, int> history;
 		int64_t zobrist = 0;
