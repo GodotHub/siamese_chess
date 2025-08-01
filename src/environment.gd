@@ -49,16 +49,19 @@ func dialog_description_chess() -> void:
 	await $dialog.on_next
 
 func dialog_in_game() -> void:
-	$dialog.push_selection(["结束棋局", "取消"])
+	$dialog.push_selection(["提出悔棋", "结束棋局", "取消"])
 	$cheshire.force_set_camera($camera/camera_pastor_closeup)
 	await $dialog.on_next
+	$cheshire.add_stack($interact/area_chessboard)
 	if $dialog.selected == 0:
+		$pastor.rollback()
+	elif $dialog.selected == 1:
 		$pastor.interrupted = true
 		$chess_timer.stop()
 		$chessboard.set_valid_move([])
 		$chessboard.set_valid_premove([])
 		pastor_state = "idle"
-	elif $dialog.selected == 1:
+	elif $dialog.selected == 2:
 		return
 
 func dialog_start_game() -> void:
