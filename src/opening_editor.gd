@@ -9,8 +9,8 @@ var opening_book:OpeningBook = OpeningBook.new()
 @onready var text_edit_description:TextEdit = $canvas_layer/panel/v_box_container/margin_container_2/text_edit_description
 
 func _ready() -> void:
-	if FileAccess.file_exists("user://standard_opening.json"):
-		opening_book.load_file("user://standard_opening.json")
+	if FileAccess.file_exists("user://standard_opening_document.fa"):
+		opening_book.load_file("user://standard_opening_document.fa")
 	$cheshire.set_initial_interact($interact)
 	chessboard.connect("move_played", receive_move)
 	$canvas_layer/panel/v_box_container/margin_container/h_box_container/button_save.connect("button_down", set_text)
@@ -42,7 +42,7 @@ func get_text() -> void:
 
 func set_text() -> void:
 	opening_book.set_opening(state, text_edit_name.text, text_edit_description.text)
-	opening_book.save_file("user://standard_opening.json")
+	opening_book.save_file("user://standard_opening_document.fa")
 
 func prev() -> void:
 	if history_prev.size() <= 1:

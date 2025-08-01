@@ -5,6 +5,14 @@
 #include <godot_cpp/godot.hpp>
 #include <godot_cpp/classes/object.hpp>
 #include "state.hpp"
+#include <map>
+
+struct Opening
+{
+	godot::String name;
+	godot::String description;
+	godot::PackedInt32Array move;
+};
 
 class OpeningBook : public godot::Object
 {
@@ -19,7 +27,7 @@ class OpeningBook : public godot::Object
 		void set_opening(godot::Ref<State> _state, godot::String name, godot::String description);
 		static void _bind_methods();
 	private:
-		godot::Dictionary opening_book;
+		std::map<int64_t, Opening> opening_book;
 };
 
 

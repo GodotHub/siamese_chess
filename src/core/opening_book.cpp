@@ -5,30 +5,50 @@
 void OpeningBook::load_file(godot::String _path)
 {
 	godot::Ref<godot::FileAccess> file = godot::FileAccess::open(_path, godot::FileAccess::ModeFlags::READ);
-	opening_book = godot::JSON::parse_string(file->get_as_text());
+	int size = file->get_32();
+	for (int i = 0; i < size; i++)
+	{
+		int64_t zobrist = file->get_64();
+		Opening opening = {file->get_pascal_string(), file->get_pascal_string()};
+		opening_book[zobrist] = opening;
+	}
 	file->close();
 }
 
 void OpeningBook::save_file(godot::String _path)
 {
 	godot::Ref<godot::FileAccess> file = godot::FileAccess::open(_path, godot::FileAccess::ModeFlags::WRITE);
-	file->store_string(godot::JSON::stringify(opening_book, "\t"));
+	file->store_32(opening_book.size());
+	for (std::map<int64_t, Opening>::iterator iter = opening_book.begin(); iter != opening_book.end(); iter++)
+	{
+		file->store_64(iter->first);
+		file->store_pascal_string(iter->second.name);
+		file->store_pascal_string(iter->second.description);
+	}
 	file->close();
 }
 
 bool OpeningBook::has_record(godot::Ref<State> _state)
 {
-	return opening_book.has(godot::String::num_int64(_state->get_zobrist()));
+	return opening_book.count(_state->get_zobrist());
 }
 
 godot::String OpeningBook::get_opening_name(godot::Ref<State> _state)
 {
-	return godot::Dictionary(opening_book.get(godot::String::num_int64(_state->get_zobrist()), godot::Dictionary())).get("name", "");
+	if (!has_record(_state))
+	{
+		return "";
+	}
+	return opening_book[_state->get_zobrist()].name;
 }
 
 godot::String OpeningBook::get_opening_description(godot::Ref<State> _state)
 {
-	return godot::Dictionary(opening_book.get(godot::String::num_int64(_state->get_zobrist()), godot::Dictionary())).get("description", "");
+	if (!has_record(_state))
+	{
+		return "";
+	}
+	return opening_book[_state->get_zobrist()].description;
 }
 
 godot::PackedInt32Array OpeningBook::get_suggest_move(godot::Ref<State> _state)
@@ -38,10 +58,7 @@ godot::PackedInt32Array OpeningBook::get_suggest_move(godot::Ref<State> _state)
 
 void OpeningBook::set_opening(godot::Ref<State> _state, godot::String name, godot::String description)
 {
-	godot::Dictionary dict;
-	dict["name"] = name;
-	dict["description"] = description;
-	opening_book[godot::String::num_int64(_state->get_zobrist())] = dict;
+	opening_book[_state->get_zobrist()] = {name, description};
 }
 
 void OpeningBook::_bind_methods()
