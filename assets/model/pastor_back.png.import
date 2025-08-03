@@ -2,21 +2,21 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://6ilud2o50ndr"
-path.s3tc="res://.godot/imported/pastor_suit.png-706da463d89393f981b68860fdb84fa5.s3tc.ctex"
-path.etc2="res://.godot/imported/pastor_suit.png-706da463d89393f981b68860fdb84fa5.etc2.ctex"
+uid="uid://dtls3uocackx8"
+path.s3tc="res://.godot/imported/pastor_back.png-b925aa39520843eeb71ab68938ea8bfd.s3tc.ctex"
+path.etc2="res://.godot/imported/pastor_back.png-b925aa39520843eeb71ab68938ea8bfd.etc2.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
 }
 generator_parameters={
-"md5": "ca2d3a5804aa53960ae3ad93263ea8fe"
+"md5": "0154949308f8e6f66e67e8ecee230686"
 }
 
 [deps]
 
-source_file="res://assets/model/pastor_suit.png"
-dest_files=["res://.godot/imported/pastor_suit.png-706da463d89393f981b68860fdb84fa5.s3tc.ctex", "res://.godot/imported/pastor_suit.png-706da463d89393f981b68860fdb84fa5.etc2.ctex"]
+source_file="res://assets/model/pastor_back.png"
+dest_files=["res://.godot/imported/pastor_back.png-b925aa39520843eeb71ab68938ea8bfd.s3tc.ctex", "res://.godot/imported/pastor_back.png-b925aa39520843eeb71ab68938ea8bfd.etc2.ctex"]
 
 [params]
 
