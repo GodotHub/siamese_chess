@@ -3,3 +3,9 @@
 [ext_resource type="PackedScene" uid="uid://bv1nocfh3i556" path="res://scene/opening_editor.tscn" id="1_u3cmr"]
 
 [node name="sandbox" instance=ExtResource("1_u3cmr")]
+
+[node name="player" type="Node3D" parent="." index="5"]
+
+[node name="a" type="Node3D" parent="player" index="0"]
+
+[node name="b" type="Node3D" parent="player" index="1"]
