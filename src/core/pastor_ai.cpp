@@ -4,7 +4,8 @@
 #include <godot_cpp/core/error_macros.hpp>
 #include <godot_cpp/classes/file_access.hpp>
 
-PastorAI::PastorAI() {
+PastorAI::PastorAI()
+{
 	transposition_table.instantiate();
 	max_depth = 100;
 	piece_value = {
@@ -351,25 +352,33 @@ int PastorAI::quies(godot::Ref<State>_state, int _alpha, int _beta, int _group)
 	return _alpha;
 }
 
-int PastorAI::alphabeta(const godot::Ref<State> &_state, int _alpha, int _beta, int _depth, int _group, int _ply, bool _can_null, std::array<int, 65536> *_history_table, const godot::Callable &_is_timeup, const godot::Callable &_debug_output) {
-	if (!transposition_table.is_null()) {
+int PastorAI::alphabeta(const godot::Ref<State> &_state, int _alpha, int _beta, int _depth, int _group, int _ply, bool _can_null, std::array<int, 65536> *_history_table, const godot::Callable &_is_timeup, const godot::Callable &_debug_output)
+{
+	bool found_pv = false;
+	if (!transposition_table.is_null())
+	{
 		int score = transposition_table->probe_hash(_state->get_zobrist(), _depth, _alpha, _beta);
-		if (score != 65535) {
+		if (score != 65535)
+		{
 			return score;
 		}
 	}
-	if (_depth <= 0) {
+	if (_depth <= 0)
+	{
 		int score = quies(_state, _alpha, _beta, _group);
-		if (!transposition_table.is_null()) {
+		if (!transposition_table.is_null())
+		{
 			transposition_table->record_hash(_state->get_zobrist(), _depth, score, EXACT, 0);
 		}
 		return score;
 	}
-	if (_state->has_history(_state->get_zobrist())) {
+	if (_state->has_history(_state->get_zobrist()))
+	{
 		return 0; // 视作平局，如果局面不太好，也不会选择负分的下法
 	}
 
-	if (_is_timeup.is_valid() && _is_timeup.call()) {
+	if (_is_timeup.is_valid() && _is_timeup.call())
+	{
 		return quies(_state, _alpha, _beta, _group);
 	}
 
@@ -377,68 +386,98 @@ int PastorAI::alphabeta(const godot::Ref<State> &_state, int _alpha, int _beta, 
 	unsigned char flag = ALPHA;
 	int value = -WIN;
 	int best_move = 0;
-	if (!transposition_table.is_null()) {
+	if (!transposition_table.is_null())
+	{
 		best_move = transposition_table->best_move(_state->get_zobrist());
 	}
-	if (_can_null) {
+	if (_can_null)
+	{
 		int score = -alphabeta(_state, -_beta, -_beta + 1, _depth - 3, 1 - _group, false);
 		if (score >= _beta)
 			return _beta;
 	}
 	move_list = RuleStandard::get_singleton()->generate_valid_move(_state, _group);
-	if (move_list.size() == 0) {
-		if (RuleStandard::get_singleton()->is_check(_state, 1 - _group)) {
+	if (move_list.size() == 0)
+	{
+		if (RuleStandard::get_singleton()->is_check(_state, 1 - _group))
+		{
 			return -WIN + _ply;
 		} else {
 			return 0;
 		}
 	}
-	for (int i = 0; i < move_list.size(); i++) {
-		for (int j = move_list.size() - 2; j >= i; j--) {
-			if (!compare_move(move_list[j], move_list[j + 1], best_move, _history_table)) {
+	for (int i = 0; i < move_list.size(); i++)
+	{
+		for (int j = move_list.size() - 2; j >= i; j--)
+		{
+			if (!compare_move(move_list[j], move_list[j + 1], best_move, _history_table))
+			{
 				std::swap(move_list[j], move_list[j + 1]);
 			}
 		}
 		_debug_output.call(_state->get_zobrist(), _depth, i, move_list.size());
 		godot::Ref<State> test_state = _state->duplicate();
 		test_state->apply_move(move_list[i], evaluate(test_state, move_list[i]));
-		value = -alphabeta(test_state, -_beta, -_alpha, _depth - 1, 1 - _group, _ply + 1, false, _history_table, _is_timeup, _debug_output);
 
-		if (_beta <= value) {
-			if (!transposition_table.is_null()) {
+		if (found_pv)
+		{
+			value = -alphabeta(test_state, -_alpha - 1, -_alpha, _depth - 1, 1 - _group, _ply + 1, false, _history_table, _is_timeup, _debug_output);
+		}
+		if (!found_pv || value > _alpha && value < _beta)
+		{
+			value = -alphabeta(test_state, -_beta, -_alpha, _depth - 1, 1 - _group, _ply + 1, false, _history_table, _is_timeup, _debug_output);
+		}
+
+		if (_beta <= value)
+		{
+			if (!transposition_table.is_null())
+			{
 				transposition_table->record_hash(_state->get_zobrist(), _depth, _beta,
 						BETA, move_list[i]);
 			}
 			return _beta;
 		}
-		if (_alpha < value) {
+		if (_alpha < value)
+		{
+			found_pv = true;
 			best_move = move_list[i];
 			_alpha = value;
 			flag = EXACT;
-			if (_history_table) {
+			if (_history_table)
+			{
 				(*_history_table)[move_list[i] & 0xFFFF] += (1 << _depth);
 			}
 		}
 	}
-	if (!transposition_table.is_null()) {
+	if (!transposition_table.is_null())
+	{
 		transposition_table->record_hash(_state->get_zobrist(), _depth, _alpha, flag, best_move);
 	}
 	return _alpha;
 }
 
-int PastorAI::search(const godot::Ref<State> &_state, int _group, const godot::Callable &_is_timeup, const godot::Callable &_debug_output) {
+void PastorAI::search(const godot::Ref<State> &_state, int _group, const godot::Callable &_is_timeup, const godot::Callable &_debug_output)
+{
 	std::array<int, 65536> history_table;
-	for (int i = 1; i < max_depth; i++) {
+	for (int i = 1; i < max_depth; i++)
+	{
 		alphabeta(_state, -THRESHOLD, THRESHOLD, i, _group, 0, true, &history_table, _is_timeup, _debug_output);
-		if (_is_timeup.is_valid() && _is_timeup.call()) {
-			return transposition_table->best_move(_state->get_zobrist());
+		if (_is_timeup.is_valid() && _is_timeup.call())
+		{
+			break;
 		}
 	}
-	return transposition_table->best_move(_state->get_zobrist());
+	search_result = transposition_table->best_move(_state->get_zobrist());
+	call_deferred("emit_signal", "search_finished");
 }
-// FIXME: r4rk1/pQ3pbp/3p1np1/4p3/2P5/1PN5/2qB1PPP/n2K2NR w - - 0 1
 
-void PastorAI::set_max_depth(int max_depth) {
+int PastorAI::best_move()
+{
+	return search_result;
+}
+
+void PastorAI::set_max_depth(int max_depth)
+{
 	this->max_depth = max_depth;
 }
 
@@ -446,20 +485,24 @@ int PastorAI::get_max_depth() const {
 	return this->max_depth;
 }
 
-void PastorAI::set_transposition_table(const Ref<TranspositionTable> &transposition_table) {
+void PastorAI::set_transposition_table(const godot::Ref<TranspositionTable> &transposition_table)
+{
 	this->transposition_table = transposition_table;
 }
 
-Ref<TranspositionTable> PastorAI::get_transposition_table() const {
+godot::Ref<TranspositionTable> PastorAI::get_transposition_table() const {
 	return this->transposition_table;
 }
 
-void PastorAI::_bind_methods() {
-	ClassDB::bind_method(D_METHOD("search", "state", "group", "is_timeup", "debug_output"), &PastorAI::search);
-	ClassDB::bind_method(D_METHOD("set_max_depth", "max_depth"), &PastorAI::set_max_depth);
-	ClassDB::bind_method(D_METHOD("get_max_depth"), &PastorAI::get_max_depth);
-	// ClassDB::bind_method(D_METHOD("set_transposition_table", "transposition_table"), &PastorAI::set_transposition_table);
-	ClassDB::bind_method(D_METHOD("get_transposition_table"), &PastorAI::get_transposition_table);
-	ADD_PROPERTY(PropertyInfo(Variant::INT, "max_depth"), "set_max_depth", "get_max_depth");
+void PastorAI::_bind_methods()
+{
+	ADD_SIGNAL(godot::MethodInfo("search_finished"));
+	godot::ClassDB::bind_method(godot::D_METHOD("search", "state", "group", "is_timeup", "debug_output"), &PastorAI::search);
+	godot::ClassDB::bind_method(godot::D_METHOD("get_search_result"), &PastorAI::best_move);
+	godot::ClassDB::bind_method(godot::D_METHOD("set_max_depth", "max_depth"), &PastorAI::set_max_depth);
+	godot::ClassDB::bind_method(godot::D_METHOD("get_max_depth"), &PastorAI::get_max_depth);
+	// godot::ClassDB::bind_method(godot::D_METHOD("set_transposition_table", "transposition_table"), &PastorAI::set_transposition_table);
+	godot::ClassDB::bind_method(godot::D_METHOD("get_transposition_table"), &PastorAI::get_transposition_table);
+	// ADD_PROPERTY(PropertyInfo(Variant::INT, "max_depth"), "set_max_depth", "get_max_depth");
 	// ADD_PROPERTY(PropertyInfo(Variant::OBJECT, "transposition_table"), "set_transposition_table", "get_transposition_table");
 }

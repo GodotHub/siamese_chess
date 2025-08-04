@@ -12,36 +12,34 @@ signal lose()
 signal win()
 signal draw(type:int)
 
+var history:Array[State] = []
 var state:State = null
 var thread:Thread = null
 var score:int = 0
 var think_time:int = 10
 var start_thinking:float = 0
 var interrupted:bool = false
+var opening_book:OpeningBook = OpeningBook.new()
 var ai: PastorAI = PastorAI.new();
-
-func _ready() -> void:
-	if FileAccess.file_exists("user://standard_opening.fa"):
-		ai.get_transposition_table().load_file("user://standard_opening.fa")
-	else:
-		ai.get_transposition_table().reserve(1 << 20)
 
 func create_state(fen:String) -> bool:
 	state = RuleStandard.parse(fen)
+	history = [state.duplicate()]
 	if !is_instance_valid(state):
 		return false
 	send_initial_state.emit(state.duplicate())
 	return true
 
 func start_decision() -> void:
+	
 	interrupted = false
-	thread = Thread.new()
-	decision();
+	decision()
+	#thread = Thread.new()
 	#thread.start(decision, Thread.PRIORITY_HIGH)
 
 func receive_move(move:int) -> void:
 	RuleStandard.apply_move(state, move, state.add_piece, state.capture_piece, state.move_piece, state.set_extra, state.push_history)
-
+	history.push_back(state.duplicate())
 	var end_type:String = RuleStandard.get_end_type(state)
 	if end_type:
 		match end_type:
@@ -71,9 +69,22 @@ func decision() -> void:
 		return
 	send_opponent_valid_premove()
 	timer_start()
+	interrupted = false
 	var move: int = ai.search(state, 0, is_timeup.bind(think_time), Callable())
 	if !interrupted:
 		decided_move.emit.call_deferred(move)	# 取置换表记录内容
+
+func rollback() -> void:
+	if history.size() <= 2:	# 白方第一步棋无法撤回
+		return
+	if history.back().get_extra(0) == 1:
+		history.pop_back()
+	if history.back().get_extra(0) == 0:
+		history.pop_back()
+		interrupted = true
+	state = history.back().duplicate()
+	send_initial_state.emit(state.duplicate())
+	send_opponent_valid_move()
 
 func timer_start() -> void:
 	start_thinking = Time.get_unix_time_from_system()

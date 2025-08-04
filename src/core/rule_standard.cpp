@@ -530,7 +530,7 @@ godot::String RuleStandard::get_move_name(godot::Ref<State> _state, int move)
 	}
 	if (has_same_piece)
 	{
-		if (has_same_row)
+		if (has_same_row || !has_same_row && !has_same_col)
 		{
 			ans += (from & 0x0F) + 'a';
 		}
@@ -552,7 +552,7 @@ godot::String RuleStandard::get_move_name(godot::Ref<State> _state, int move)
 	if (extra)
 	{
 		ans += '=';
-		ans += extra;
+		ans += (extra & 95);
 	}
 	godot::Ref<State> next_state = _state->duplicate();
 	next_state->apply_move(move);
@@ -568,6 +568,20 @@ godot::String RuleStandard::get_move_name(godot::Ref<State> _state, int move)
 		}
 	}
 	return ans;
+}
+
+int RuleStandard::name_to_move(godot::Ref<State> _state, godot::String _name)
+{
+	godot::PackedInt32Array move_list = generate_move(_state, _state->get_extra(0));
+	for (int i = 0; i < move_list.size(); i++)
+	{
+		godot::String name = get_move_name(_state, move_list[i]);
+		if (name == _name)
+		{
+			return move_list[i];
+		}
+	}
+	return -1;
 }
 
 void RuleStandard::apply_move(godot::Ref<State>_state, int _move, godot::Callable _callback_add_piece, godot::Callable _callback_capture_piece, godot::Callable _callback_move_piece, godot::Callable _callback_set_extra, godot::Callable _callback_push_history)
@@ -701,12 +715,18 @@ void RuleStandard::apply_move(godot::Ref<State>_state, int _move, godot::Callabl
 		}
 	}
 	if (!dont_move)
+	{
 		_callback_move_piece.call(Chess::from(_move), Chess::to(_move));
+	}
 
 	if (!has_en_passant)
+	{
 		_callback_set_extra.call(2, -1);
+	}
 	if (!has_king_passant)
+	{
 		_callback_set_extra.call(5, -1);
+	}
 }
 
 RuleStandard *RuleStandard::get_singleton()
@@ -726,6 +746,7 @@ void RuleStandard::_bind_methods()
 	godot::ClassDB::bind_method(godot::D_METHOD("generate_move"), &RuleStandard::generate_move);
 	godot::ClassDB::bind_method(godot::D_METHOD("generate_valid_move"), &RuleStandard::generate_valid_move);
 	godot::ClassDB::bind_method(godot::D_METHOD("get_move_name"), &RuleStandard::get_move_name);
+	godot::ClassDB::bind_method(godot::D_METHOD("name_to_move"), &RuleStandard::name_to_move);
 	godot::ClassDB::bind_method(godot::D_METHOD("apply_move"), &RuleStandard::apply_move);
 	//godot::ClassDB::bind_method(godot::D_METHOD("compare_move"), &RuleStandard::compare_move);
 	//godot::ClassDB::bind_method(godot::D_METHOD("quies"), &RuleStandard::quies);
