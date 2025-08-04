@@ -74,7 +74,51 @@ void LinearLayer::sgd_update(float lr) {
 	}
 }
 
-void NNUE::train(const std::vector<std::vector<int>> &x, const std::vector<float> &y, float lr, int epoch) {
+void NNUE::train(const godot::Array &x, const godot::Array &y, float lr, int epoch) {
+	std::vector<std::vector<float>> input(x.size(), std::vector<float>());
+	for (int i = 0; i < x.size(); ++i) {
+		godot::Array arr1 = static_cast<godot::Array>(x.get(i));
+		for (int j = 0; j < arr1.size(); j++) {
+			if (arr1.get(j).operator bool()) {
+				input[i].push_back(j);
+			}
+		}
+	}
+
+	std::vector<std::vector<float>> targets(y.size(), std::vector<float>(1));
+	for (size_t i = 0; i < y.size(); ++i) {
+		targets[i][0] = y[i];
+	}
+
+	for (int e = 0; e < epoch; ++e) {
+		float total_loss = 0.0f;
+
+		std::vector<std::vector<float>> acc_out = acc.forward(input);
+		std::vector<std::vector<float>> l1_out = layer1.forward(acc_out);
+		std::vector<std::vector<float>> l1_relu = relu1.forward(l1_out);
+		std::vector<std::vector<float>> l2_out = layer2.forward(l1_relu);
+		std::vector<std::vector<float>> predictions = sigmoid.forward(l2_out);
+
+		MSELoss loss_fn;
+		float loss = loss_fn.forward(predictions, targets);
+		total_loss += loss;
+
+		std::vector<std::vector<float>> grad_loss = loss_fn.backward();
+		std::vector<std::vector<float>> grad_sigmoid = sigmoid.backward(grad_loss);
+		std::vector<std::vector<float>> grad_l2 = layer2.backward(grad_sigmoid);
+		std::vector<std::vector<float>> grad_relu = relu1.backward(grad_l2);
+		std::vector<std::vector<float>> grad_l1 = layer1.backward(grad_relu);
+		std::vector<std::vector<float>> grad_acc = acc.backward(grad_l1);
+
+		acc.sgd_update(lr);
+		layer1.sgd_update(lr);
+		layer2.sgd_update(lr);
+
+		// 打印训练进度
+		if (e % 10 == 0 || e == epoch - 1) {
+			std::cout << "Epoch " << e << "/" << epoch << " - Loss: " << (total_loss / x.size()) << std::endl;
+		}
+	}
 }
 
 std::vector<std::vector<float>> ReluLayer::forward(const std::vector<std::vector<float>> &input) {
@@ -168,20 +212,11 @@ std::vector<std::vector<float>> Accumulate::forward(const std::vector<std::vecto
 	input_cache = input;
 	int batch = input.size();
 	std::vector<std::vector<float>> output(batch, std::vector<float>(out_features, 0.0f));
-	std::vector<std::vector<int>> active_features(batch, std::vector<int>());
-
-	for (int b = 0; b < input.size(); b++) {
-		for (int i = 0; i < input[i].size(); i++) {
-			if ((bool)input[b][i]) {
-				active_features[b].push_back(i);
-			}
-		}
-	}
 
 	for (int b = 0; b < batch; b++) {
 		for (int i = 0; i < out_features; i++) {
 			float sum = bias[i];
-			for (int active : active_features[b]) {
+			for (int active : input[b]) {
 				sum += weight[active][i];
 			}
 			output[b][i] = sum;
@@ -219,4 +254,19 @@ std::vector<std::vector<float>> SigmoidLayer::backward(const std::vector<std::ve
 	}
 
 	return grad_input;
+}
+
+float NNUE::predict(const godot::Array &binary_input) {
+	std::vector<float> input;
+	for (int i = 0; i < binary_input.size(); ++i) {
+		input.push_back(binary_input[i]);
+	}
+	std::vector<std::vector<float>> input_vec = { input };
+	std::vector<std::vector<float>> acc_out = acc.forward(input_vec);
+	std::vector<std::vector<float>> l1_out = layer1.forward(acc_out);
+	std::vector<std::vector<float>> l1_relu = relu1.forward(l1_out);
+	std::vector<std::vector<float>> l2_out = layer2.forward(l1_relu);
+	std::vector<std::vector<float>> output = sigmoid.forward(l2_out);
+
+	return output[0][0];
 }

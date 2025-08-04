@@ -18,9 +18,10 @@ class Layer {
 public:
 	virtual std::vector<std::vector<float>> forward(const std::vector<std::vector<float>> &input) = 0;
 	virtual std::vector<std::vector<float>> backward(const std::vector<std::vector<float>> &grad_output) = 0;
+	virtual ~Layer() = default;
 };
 
-class LinearLayer : Layer {
+class LinearLayer : public Layer {
 public:
 	int in_features;
 	int out_features;
@@ -37,13 +38,13 @@ public:
 	void sgd_update(float lr);
 };
 
-class ActivationLayer : Layer {
+class ActivationLayer : public Layer {
 public:
 	virtual std::vector<std::vector<float>> forward(const std::vector<std::vector<float>> &input) = 0;
 	virtual std::vector<std::vector<float>> backward(const std::vector<std::vector<float>> &grad_output) = 0;
 };
 
-class ReluLayer : ActivationLayer {
+class ReluLayer : public ActivationLayer {
 private:
 	std::vector<std::vector<float>> input_cache;
 
@@ -75,7 +76,7 @@ public:
 	virtual std::vector<std::vector<float>> backward() = 0;
 };
 
-class MSELoss : Loss {
+class MSELoss : public Loss {
 public:
 	std::vector<std::vector<float>> y_pred, y_true;
 
@@ -84,7 +85,7 @@ public:
 	std::vector<std::vector<float>> backward() override;
 };
 
-class Accumulate : LinearLayer {
+class Accumulate : public LinearLayer {
 public:
 	float acc[INPUT_SIZE];
 
@@ -104,8 +105,9 @@ private:
 	LinearLayer layer2 = LinearLayer(8, 1);
 	SigmoidLayer sigmoid;
 
-	void train(const std::vector<std::vector<int>> &x, const std::vector<float> &y, float lr, int epoch);
+public:
+	void train(const godot::Array &x, const godot::Array &y, float lr, int epoch);
+	float predict(const godot::Array &input);
 };
-
 
 #endif // __SUPER_AI_H__

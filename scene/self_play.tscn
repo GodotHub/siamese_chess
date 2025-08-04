@@ -1,11 +1,24 @@
-[gd_scene load_steps=2 format=3 uid="uid://him4la0fcy5s"]
+[gd_scene load_steps=4 format=3 uid="uid://him4la0fcy5s"]
 
 [ext_resource type="PackedScene" uid="uid://bv1nocfh3i556" path="res://scene/opening_editor.tscn" id="1_u3cmr"]
+[ext_resource type="Script" uid="uid://ccqewlmyrjlcx" path="res://src/self_play.gd" id="2_fpof4"]
+[ext_resource type="Script" uid="uid://6jl0yr7tq8ie" path="res://src/violet_ai.gd" id="3_uawfv"]
 
 [node name="sandbox" instance=ExtResource("1_u3cmr")]
 
 [node name="player" type="Node3D" parent="." index="5"]
+script = ExtResource("2_fpof4")
+epoch = 5
 
 [node name="a" type="Node3D" parent="player" index="0"]
+script = ExtResource("3_uawfv")
 
 [node name="b" type="Node3D" parent="player" index="1"]
+script = ExtResource("3_uawfv")
+group = 1
+
+[node name="button_start" type="Button" parent="canvas_layer/panel/v_box_container/margin_container/h_box_container" index="3"]
+layout_mode = 2
+text = "开始自对弈"
+
+[connection signal="pressed" from="canvas_layer/panel/v_box_container/margin_container/h_box_container/button_start" to="player" method="on_button_start_pressed"]
