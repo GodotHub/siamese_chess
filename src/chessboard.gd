@@ -1,7 +1,7 @@
 extends InspectableItem
 class_name Chessboard
 
-signal move_played()
+signal move_played(move)
 
 var mouse_start_position_name:String = ""
 var mouse_moved:bool = false
@@ -140,7 +140,7 @@ func execute_move(move:int) -> void:
 	king_instance[0].set_warning(RuleStandard.is_check(state, 1))
 	king_instance[1].set_warning(RuleStandard.is_check(state, 0))
 	selected = -1
-	move_played.emit()
+	move_played.emit(confirm_move)
 
 func set_valid_move(move_list:PackedInt32Array) -> void:
 	valid_move.clear()

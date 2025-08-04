@@ -70,7 +70,8 @@ func decision() -> void:
 	send_opponent_valid_premove()
 	timer_start()
 	interrupted = false
-	var move: int = ai.search(state, 0, is_timeup.bind(think_time), Callable())
+	ai.search(state, 0, is_timeup.bind(think_time), Callable())
+	var move: int = ai.best_move()
 	if !interrupted:
 		decided_move.emit.call_deferred(move)	# 取置换表记录内容
 
