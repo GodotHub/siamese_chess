@@ -136,7 +136,5 @@ void State::_bind_methods()
 	godot::ClassDB::bind_method(godot::D_METHOD("get_zobrist"), &State::get_zobrist);
 	godot::ClassDB::bind_method(godot::D_METHOD("has_history"), &State::has_history);
 	godot::ClassDB::bind_method(godot::D_METHOD("push_history"), &State::push_history);
-	godot::ClassDB::add_signal(get_class_static(), godot::MethodInfo("piece_added", godot::PropertyInfo(godot::Variant::Type::INT, "by")));
-	godot::ClassDB::add_signal(get_class_static(), godot::MethodInfo("piece_captured", godot::PropertyInfo(godot::Variant::Type::INT, "by")));
-	godot::ClassDB::add_signal(get_class_static(), godot::MethodInfo("piece_moved", godot::PropertyInfo(godot::Variant::Type::INT, "from"), godot::PropertyInfo(godot::Variant::Type::INT, "to")));
+	godot::ClassDB::bind_method(godot::D_METHOD("apply_move"), &State::apply_move);
 }

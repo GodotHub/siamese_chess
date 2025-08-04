@@ -456,7 +456,7 @@ int PastorAI::alphabeta(const godot::Ref<State> &_state, int _alpha, int _beta, 
 	return _alpha;
 }
 
-int PastorAI::search(const godot::Ref<State> &_state, int _group, const godot::Callable &_is_timeup, const godot::Callable &_debug_output)
+void PastorAI::search(const godot::Ref<State> &_state, int _group, const godot::Callable &_is_timeup, const godot::Callable &_debug_output)
 {
 	std::array<int, 65536> history_table;
 	for (int i = 1; i < max_depth; i++)
@@ -464,12 +464,17 @@ int PastorAI::search(const godot::Ref<State> &_state, int _group, const godot::C
 		alphabeta(_state, -THRESHOLD, THRESHOLD, i, _group, 0, true, &history_table, _is_timeup, _debug_output);
 		if (_is_timeup.is_valid() && _is_timeup.call())
 		{
-			return transposition_table->best_move(_state->get_zobrist());
+			break;
 		}
 	}
-	return transposition_table->best_move(_state->get_zobrist());
+	best_move = transposition_table->best_move(_state->get_zobrist());
+	call_deferred("emit_signal", "search_finished");
 }
-// FIXME: r4rk1/pQ3pbp/3p1np1/4p3/2P5/1PN5/2qB1PPP/n2K2NR w - - 0 1
+
+int PastorAI::get_search_result()
+{
+	return best_move;
+}
 
 void PastorAI::set_max_depth(int max_depth)
 {
@@ -491,7 +496,9 @@ godot::Ref<TranspositionTable> PastorAI::get_transposition_table() const {
 
 void PastorAI::_bind_methods()
 {
+	ADD_SIGNAL(godot::MethodInfo("search_finished"));
 	godot::ClassDB::bind_method(godot::D_METHOD("search", "state", "group", "is_timeup", "debug_output"), &PastorAI::search);
+	godot::ClassDB::bind_method(godot::D_METHOD("get_search_result"), &PastorAI::get_search_result);
 	godot::ClassDB::bind_method(godot::D_METHOD("set_max_depth", "max_depth"), &PastorAI::set_max_depth);
 	godot::ClassDB::bind_method(godot::D_METHOD("get_max_depth"), &PastorAI::get_max_depth);
 	// godot::ClassDB::bind_method(godot::D_METHOD("set_transposition_table", "transposition_table"), &PastorAI::set_transposition_table);

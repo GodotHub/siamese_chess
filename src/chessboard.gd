@@ -1,8 +1,7 @@
 extends InspectableItem
 class_name Chessboard
 
-signal move_played(move:int)
-signal press_timer()
+signal move_played()
 
 var mouse_start_position_name:String = ""
 var mouse_moved:bool = false
@@ -13,6 +12,7 @@ var selected:int = -1
 var premove:int = -1
 var piece_instance:Dictionary[int, PieceInstance] = {}
 var king_instance:Array[PieceInstance] = [null, null]
+var confirm_move:int = 0
 
 func _ready() -> void:
 	super._ready()
@@ -36,7 +36,7 @@ func input(_from:Node3D, _to:Area3D, _event:InputEvent, _event_position:Vector3,
 func set_state(_state:State) -> void:
 	$canvas.clear_move_position()
 	$canvas.clear_select_position()
-	state = _state
+	state = _state.duplicate()
 	for key:int in piece_instance:
 		piece_instance[key].queue_free()
 	piece_instance.clear()
@@ -62,8 +62,8 @@ func tap_position(position_name:String) -> void:
 	if !is_instance_valid(state):
 		return
 	if selected != -1:
-		confirm_move(selected, by)
-		confirm_premove(selected, by)
+		check_move(selected, by)
+		check_premove(selected, by)
 		selected = -1
 		return
 	if !state.has_piece(by) || !valid_move.has(by) && !valid_premove.has(by):
@@ -85,7 +85,7 @@ func finger_on_position(position_name:String) -> void:
 func finger_up() -> void:
 	$canvas.clear_pointer_position()
 
-func confirm_premove(from:int, to:int) -> void:
+func check_premove(from:int, to:int) -> void:
 	if from & 0x88 || to & 0x88 || !valid_premove.has(from):
 		return
 	var move_list:PackedInt32Array = valid_premove[from].filter(func (move:int) -> bool: return to == Chess.to(move))
@@ -108,7 +108,7 @@ func confirm_premove(from:int, to:int) -> void:
 	$canvas.draw_premove_position($canvas.convert_name_to_position(Chess.to_position_name(from)))
 	$canvas.draw_premove_position($canvas.convert_name_to_position(Chess.to_position_name(to)))
 
-func confirm_move(from:int, to:int) -> void:
+func check_move(from:int, to:int) -> void:
 	if from & 0x88 || to & 0x88 || !valid_move.has(from):
 		return
 	var move_list:PackedInt32Array = valid_move[from].filter(func (move:int) -> bool: return to == Chess.to(move))
@@ -129,6 +129,7 @@ func confirm_move(from:int, to:int) -> void:
 	$canvas.clear_select_position()
 
 func execute_move(move:int) -> void:
+	confirm_move = move
 	RuleStandard.apply_move(state, move, add_piece_instance, remove_piece_instance, move_piece_instance, Callable(), Callable())
 	RuleStandard.apply_move(state, move, state.add_piece, state.capture_piece, state.move_piece, state.set_extra, state.push_history)
 	$canvas.clear_select_position()
@@ -138,9 +139,8 @@ func execute_move(move:int) -> void:
 	$canvas.draw_move_position($canvas.convert_name_to_position(Chess.to_position_name(Chess.to(move))))
 	king_instance[0].set_warning(RuleStandard.is_check(state, 1))
 	king_instance[1].set_warning(RuleStandard.is_check(state, 0))
-	press_timer.emit()
-	move_played.emit(move)
 	selected = -1
+	move_played.emit()
 
 func set_valid_move(move_list:PackedInt32Array) -> void:
 	valid_move.clear()

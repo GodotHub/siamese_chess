@@ -9,11 +9,11 @@
 
 class AI : public godot::RefCounted {
 	GDCLASS(AI, godot::RefCounted)
-
 protected:
 	static void _bind_methods();
-
 public:
-	virtual int search(const godot::Ref<State> &_state, int _group, const godot::Callable &_is_timeup, const godot::Callable &_debug_output) = 0;
+	void start_search(const godot::Ref<State> &_state, int _group, const godot::Callable &_is_timeup, const godot::Callable &_debug_output);
+	virtual void search(const godot::Ref<State> &_state, int _group, const godot::Callable &_is_timeup, const godot::Callable &_debug_output) = 0;
+	virtual int get_search_result() = 0;
 };
 #endif // __CHESS_AI_H__
