@@ -10,6 +10,11 @@ void OpeningBook::load_file(godot::String _path)
 	{
 		int64_t zobrist = file->get_64();
 		Opening opening = {file->get_pascal_string(), file->get_pascal_string()};
+		int move_size = file->get_32();
+		for (int i = 0; i < move_size; i++)
+		{
+			opening.move.push_back(file->get_32());
+		}
 		opening_book[zobrist] = opening;
 	}
 	file->close();
@@ -24,6 +29,11 @@ void OpeningBook::save_file(godot::String _path)
 		file->store_64(iter->first);
 		file->store_pascal_string(iter->second.name);
 		file->store_pascal_string(iter->second.description);
+		file->store_32(iter->second.move.size());
+		for (int i = 0; i < iter->second.move.size(); i++)
+		{
+			file->store_32(iter->second.move[i]);
+		}
 	}
 	file->close();
 }
@@ -53,12 +63,12 @@ godot::String OpeningBook::get_opening_description(godot::Ref<State> _state)
 
 godot::PackedInt32Array OpeningBook::get_suggest_move(godot::Ref<State> _state)
 {
-
+	return opening_book[_state->get_zobrist()].move;
 }
 
-void OpeningBook::set_opening(godot::Ref<State> _state, godot::String name, godot::String description)
+void OpeningBook::set_opening(godot::Ref<State> _state, const godot::String &name, const godot::String &description, const godot::PackedInt32Array &move)
 {
-	opening_book[_state->get_zobrist()] = {name, description};
+	opening_book[_state->get_zobrist()] = {name, description, move};
 }
 
 void OpeningBook::_bind_methods()

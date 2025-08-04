@@ -7,6 +7,7 @@ var opening_book:OpeningBook = OpeningBook.new()
 @onready var chessboard = $chessboard
 @onready var text_edit_name:TextEdit = $canvas_layer/panel/v_box_container/margin_container_1/text_edit_name
 @onready var text_edit_description:TextEdit = $canvas_layer/panel/v_box_container/margin_container_2/text_edit_description
+@onready var text_edit_move:TextEdit = $canvas_layer/panel/v_box_container/margin_container_3/text_edit_move
 
 func _ready() -> void:
 	if FileAccess.file_exists("user://standard_opening_document.fa"):
@@ -39,9 +40,21 @@ func update_move() -> void:
 func get_text() -> void:
 	text_edit_name.text = opening_book.get_opening_name(state)
 	text_edit_description.text = opening_book.get_opening_description(state)
+	var move_list:PackedInt32Array = opening_book.get_suggest_move(state)
+	var move_list_str:PackedStringArray = []
+	text_edit_move.text = ""
+	for iter:int in move_list:
+		move_list_str.push_back(RuleStandard.get_move_name(state, iter))
+	text_edit_move.text = ",".join(move_list_str)
 
 func set_text() -> void:
-	opening_book.set_opening(state, text_edit_name.text, text_edit_description.text)
+	var move_list_str:PackedStringArray = text_edit_move.text.split(",", false)
+	var move_list:PackedInt32Array = []
+	for iter:String in move_list_str:
+		var move:int = RuleStandard.name_to_move(state, iter)
+		if move != -1:
+			move_list.push_back(move)
+	opening_book.set_opening(state, text_edit_name.text, text_edit_description.text, move_list)
 	opening_book.save_file("user://standard_opening_document.fa")
 
 func prev() -> void:

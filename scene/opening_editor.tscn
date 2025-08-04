@@ -79,6 +79,16 @@ theme_override_constants/margin_bottom = 20
 [node name="text_edit_description" type="TextEdit" parent="canvas_layer/panel/v_box_container/margin_container_2"]
 layout_mode = 2
 
+[node name="margin_container_3" type="MarginContainer" parent="canvas_layer/panel/v_box_container"]
+layout_mode = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
+
+[node name="text_edit_move" type="TextEdit" parent="canvas_layer/panel/v_box_container/margin_container_3"]
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+
 [node name="margin_container" type="MarginContainer" parent="canvas_layer/panel/v_box_container"]
 layout_mode = 2
 theme_override_constants/margin_left = 20
