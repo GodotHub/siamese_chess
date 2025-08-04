@@ -19,13 +19,8 @@ var score:int = 0
 var think_time:int = 10
 var start_thinking:float = 0
 var interrupted:bool = false
+var opening_book:OpeningBook = OpeningBook.new()
 var ai: PastorAI = PastorAI.new();
-
-func _ready() -> void:
-	if FileAccess.file_exists("user://standard_opening.fa"):
-		ai.get_transposition_table().load_file("user://standard_opening.fa")
-	else:
-		ai.get_transposition_table().reserve(1 << 20)
 
 func create_state(fen:String) -> bool:
 	state = RuleStandard.parse(fen)
@@ -36,9 +31,11 @@ func create_state(fen:String) -> bool:
 	return true
 
 func start_decision() -> void:
+	
 	interrupted = false
-	thread = Thread.new()
-	thread.start(decision, Thread.PRIORITY_HIGH)
+	decision()
+	#thread = Thread.new()
+	#thread.start(decision, Thread.PRIORITY_HIGH)
 
 func receive_move(move:int) -> void:
 	RuleStandard.apply_move(state, move, state.add_piece, state.capture_piece, state.move_piece, state.set_extra, state.push_history)
