@@ -145,9 +145,8 @@ func in_game() -> void:
 		timer_start()
 		$chessboard.set_valid_move([])
 		$chessboard.set_valid_premove(RuleStandard.generate_premove(state, 1))
-		ai.start_search(state, 0, is_timeup.bind(think_time), Callable())
-		await ai.search_finished
-		var move:int = ai.get_search_result()
+		await search()
+		var move:int = ai.best_move()
 		state.apply_move(move, 0)
 		$chessboard.execute_move(move)
 		if RuleStandard.get_end_type(state) != "":
@@ -158,7 +157,10 @@ func in_game() -> void:
 		await $chessboard.move_played
 		state.apply_move($chessboard.confirm_move, 0)
 		$chess_timer.next()
-	
+
+func search() -> void:
+	ai.search(state, 0, is_timeup.bind(think_time), Callable())
+	await ai.search_finished
 
 func timeout(group:int) -> void:
 	if group == 0:	# 棋钟的阵营1才是Pastor的

@@ -32,10 +32,10 @@ private:
 	int quies(godot::Ref<State> _state, int alpha, int beta, int _group = 0);
 	godot::PackedInt32Array generate_good_capture_move(godot::Ref<State> _state, int _group);
 	int alphabeta(const godot::Ref<State> &_state, int _alpha, int _beta, int _depth, int _group = 0, int _ply = 0, bool _can_null = true, std::array<int, 65536> *_history_table = nullptr, const godot::Callable &_is_timeup = godot::Callable(), const godot::Callable &_debug_output = godot::Callable());
-	int best_move;
+	int search_result;
 public:
 	void search(const godot::Ref<State> &_state, int _group, const godot::Callable &_is_timeup, const godot::Callable &_debug_output) override;
-	int get_search_result() override;
+	int best_move() override;
 	void set_max_depth(int max_depth);
 	int get_max_depth() const;
 	void set_transposition_table(const godot::Ref<TranspositionTable> &transposition_table);

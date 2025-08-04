@@ -467,13 +467,13 @@ void PastorAI::search(const godot::Ref<State> &_state, int _group, const godot::
 			break;
 		}
 	}
-	best_move = transposition_table->best_move(_state->get_zobrist());
+	search_result = transposition_table->best_move(_state->get_zobrist());
 	call_deferred("emit_signal", "search_finished");
 }
 
-int PastorAI::get_search_result()
+int PastorAI::best_move()
 {
-	return best_move;
+	return search_result;
 }
 
 void PastorAI::set_max_depth(int max_depth)
@@ -498,7 +498,7 @@ void PastorAI::_bind_methods()
 {
 	ADD_SIGNAL(godot::MethodInfo("search_finished"));
 	godot::ClassDB::bind_method(godot::D_METHOD("search", "state", "group", "is_timeup", "debug_output"), &PastorAI::search);
-	godot::ClassDB::bind_method(godot::D_METHOD("get_search_result"), &PastorAI::get_search_result);
+	godot::ClassDB::bind_method(godot::D_METHOD("get_search_result"), &PastorAI::best_move);
 	godot::ClassDB::bind_method(godot::D_METHOD("set_max_depth", "max_depth"), &PastorAI::set_max_depth);
 	godot::ClassDB::bind_method(godot::D_METHOD("get_max_depth"), &PastorAI::get_max_depth);
 	// godot::ClassDB::bind_method(godot::D_METHOD("set_transposition_table", "transposition_table"), &PastorAI::set_transposition_table);
