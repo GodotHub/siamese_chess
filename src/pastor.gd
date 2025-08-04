@@ -36,7 +36,8 @@ func create_state(fen:String) -> bool:
 func start_decision() -> void:
 	interrupted = false
 	thread = Thread.new()
-	thread.start(decision, Thread.PRIORITY_HIGH)
+	decision();
+	#thread.start(decision, Thread.PRIORITY_HIGH)
 
 func receive_move(move:int) -> void:
 	RuleStandard.apply_move(state, move, state.add_piece, state.capture_piece, state.move_piece, state.set_extra, state.push_history)

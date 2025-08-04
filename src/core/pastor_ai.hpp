@@ -26,7 +26,7 @@ public:
 protected:
 	static void _bind_methods();
 
-private:
+protected:
 	int get_piece_score(int _by, int _piece);
 	int evaluate(godot::Ref<State> _state, int _move);
 	int compare_move(int a, int b, int best_move, std::array<int, 65536> *history_table = nullptr);

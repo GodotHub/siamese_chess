@@ -41,3 +41,13 @@ offset_right = 69.0
 offset_bottom = 46.0
 text = "迭代次数:"
 label_settings = ExtResource("3_uawfv")
+
+[node name="play" type="Button" parent="canvas_layer/root" index="1"]
+layout_mode = 0
+offset_left = 8.0
+offset_top = 64.0
+offset_right = 96.0
+offset_bottom = 95.0
+text = "开始自对弈"
+
+[connection signal="pressed" from="canvas_layer/root/play" to="self_play" method="on_play_pressed"]
