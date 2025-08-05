@@ -180,8 +180,8 @@ godot::PackedInt32Array PastorAI::generate_good_capture_move(godot::Ref<State>_s
 				bool on_start = (_from >> 4) == (from_piece == 'P' ? 6 : 1);
 				bool on_end = (_from >> 4) == (from_piece == 'P' ? 1 : 6);
 				if (_state->has_piece(_from + front + 1) && !Chess::is_same_group(from_piece, _state->get_piece(_from + front + 1))
-				|| ((_from >> 4) == 3 || (_from >> 4) == 4) && _state->get_extra(2) == _from + front + 1
-				|| !((_from + front + 1) & 0x88) && on_end && _state->get_extra(5) != -1 && abs(_state->get_extra(5) - (_from + front + 1)) <= 1)
+				|| ((_from >> 4) == 3 || (_from >> 4) == 4) && _state->get_en_passant() == _from + front + 1
+				|| !((_from + front + 1) & 0x88) && on_end && _state->get_king_passant() != -1 && abs(_state->get_king_passant() - (_from + front + 1)) <= 1)
 				{
 					if (on_end)
 					{
@@ -196,8 +196,8 @@ godot::PackedInt32Array PastorAI::generate_good_capture_move(godot::Ref<State>_s
 					}
 				}
 				if (_state->has_piece(_from + front - 1) && !Chess::is_same_group(from_piece, _state->get_piece(_from + front - 1))
-				|| ((_from >> 4) == 3 || (_from >> 4) == 4) && _state->get_extra(2) == _from + front - 1
-				|| !((_from + front - 1) & 0x88) && on_end && _state->get_extra(5) != -1 && abs(_state->get_extra(5) - (_from + front - 1)) <= 1)
+				|| ((_from >> 4) == 3 || (_from >> 4) == 4) && _state->get_en_passant() == _from + front - 1
+				|| !((_from + front - 1) & 0x88) && on_end && _state->get_king_passant() != -1 && abs(_state->get_king_passant() - (_from + front - 1)) <= 1)
 				{
 					if (on_end)
 					{
@@ -244,7 +244,7 @@ godot::PackedInt32Array PastorAI::generate_good_capture_move(godot::Ref<State>_s
 						}
 						break;
 					}
-					if (_state->get_extra(5) != -1 && abs(to - _state->get_extra(5)) <= 1)
+					if (_state->get_king_passant() != -1 && abs(to - _state->get_king_passant()) <= 1)
 					{
 						output.push_back(Chess::create(_from, to, 0));
 						break;
@@ -287,7 +287,7 @@ int PastorAI::evaluate(godot::Ref<State>_state, int _move)
 	{
 		score -= get_piece_score(to, to_piece);
 	}
-	if (_state->get_extra(5) != -1 && abs(_state->get_extra(5) - Chess::to(_move)) <= 1)
+	if (_state->get_king_passant() != -1 && abs(_state->get_king_passant() - Chess::to(_move)) <= 1)
 	{
 		score -= piece_value[group == 0 ? 'k' : 'K'];
 	}
@@ -309,7 +309,7 @@ int PastorAI::evaluate(godot::Ref<State>_state, int _move)
 			score += get_piece_score(to, extra);
 			score -= get_piece_score(from, from_piece);
 		}
-		if (to == _state->get_extra(2))
+		if (to == _state->get_en_passant())
 		{
 			score -= get_piece_score(to - front, group == 0 ? 'p' : 'P');
 		}
@@ -342,8 +342,9 @@ int PastorAI::quies(godot::Ref<State>_state, int _alpha, int _beta, int _group)
 	godot::PackedInt32Array move_list = generate_good_capture_move(_state, _group);
 	for (int i = 0; i < move_list.size(); i++)
 	{
-		godot::Ref<State>test_state = _state->duplicate();
-		test_state->apply_move(move_list[i], evaluate(test_state, move_list[i]));
+		godot::Ref<State> test_state = _state->duplicate();
+		RuleStandard::get_singleton()->apply_move(test_state, move_list[i]);
+		test_state->change_score(evaluate(_state, move_list[i]));
 		value = -quies(test_state, -_beta, -_alpha, 1 - _group);
 		if (value >= _beta)
 		{
@@ -422,7 +423,8 @@ int PastorAI::alphabeta(const godot::Ref<State> &_state, int _alpha, int _beta, 
 		}
 		_debug_output.call(_state->get_zobrist(), _depth, i, move_list.size());
 		godot::Ref<State> test_state = _state->duplicate();
-		test_state->apply_move(move_list[i], evaluate(test_state, move_list[i]));
+		RuleStandard::get_singleton()->apply_move(test_state, move_list[i]);
+		test_state->change_score(evaluate(_state, move_list[i]));
 
 		if (found_pv)
 		{
@@ -469,10 +471,12 @@ void PastorAI::search(const godot::Ref<State> &_state, int _group, const godot::
 		alphabeta(_state, -THRESHOLD, THRESHOLD, i, _group, 0, true, &history_table, _is_timeup, _debug_output);
 		if (_is_timeup.is_valid() && _is_timeup.call())
 		{
+			godot::print_line(i);
 			break;
 		}
 	}
-	search_result = transposition_table->best_move(_state->get_zobrist());
+	godot::print_line(transposition_table->probe_hash(_state->get_zobrist(), 1, -60000, 60000));
+	best_move = transposition_table->best_move(_state->get_zobrist());
 	call_deferred("emit_signal", "search_finished");
 }
 

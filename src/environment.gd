@@ -57,9 +57,9 @@ func dialog_in_game() -> void:
 	if $dialog.selected == 0:
 		if history.size() <= 2:	# 白方第一步棋无法撤回
 			return
-		if history.back().get_extra(0) == 1:
+		if history.back().get_turn() == 1:
 			history.pop_back()
-		if history.back().get_extra(0) == 0:
+		if history.back().get_turn() == 0:
 			history.pop_back()
 			interrupted = true
 		state = history.back().duplicate()
@@ -125,7 +125,7 @@ func dialog_start_game() -> void:
 				$dialog.push_dialog("现在棋盘已经准备好了。", true, true)
 				$cheshire.force_set_camera($camera/camera_chessboard)
 				await $dialog.on_next
-				$dialog.push_dialog("根据棋局信息，" + ("目前是白方先手。" if state.get_extra(0) == 0 else "目前是黑方先手。"), true, true)
+				$dialog.push_dialog("根据棋局信息，" + ("目前是白方先手。" if state.get_turn() == 0 else "目前是黑方先手。"), true, true)
 				$cheshire.force_set_camera($camera/camera_pastor_closeup)
 				await $dialog.on_next
 				pastor_state = "in_game"
@@ -141,9 +141,10 @@ func in_game() -> void:
 		timer_start()
 		$chessboard.set_valid_move([])
 		$chessboard.set_valid_premove(RuleStandard.generate_premove(state, 1))
-		await search()
-		var move:int = ai.best_move()
-		state.apply_move(move, 0)
+		ai.start_search(state, 0, is_timeup.bind(think_time), Callable())
+		await ai.search_finished
+		var move:int = ai.get_search_result()
+		RuleStandard.apply_move(state, move)
 		$chessboard.execute_move(move)
 		if RuleStandard.get_end_type(state) != "":
 			break
@@ -151,7 +152,7 @@ func in_game() -> void:
 		$chessboard.set_valid_premove([])
 		$chess_timer.next()
 		await $chessboard.move_played
-		state.apply_move($chessboard.confirm_move, 0)
+		RuleStandard.apply_move(state, $chessboard.confirm_move)
 		$chess_timer.next()
 
 func search() -> void:

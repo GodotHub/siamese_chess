@@ -14,12 +14,12 @@ func _ready() -> void:
 	chessboard.set_state(state.duplicate())
 	update_move()
 
-func receive_move(move:int) -> void:
-	RuleStandard.apply_move(state, move, state.add_piece, state.capture_piece, state.move_piece, state.set_extra, state.push_history)
+func receive_move() -> void:
+	RuleStandard.apply_move(state, chessboard.confirm_move)
 	update_move()
 
 func update_move() -> void:
-	var move_list:PackedInt32Array = RuleStandard.generate_valid_move(state, state.get_extra(0))
-	var premove_list:PackedInt32Array = RuleStandard.generate_premove(state, 1 - state.get_extra(0))
+	var move_list:PackedInt32Array = RuleStandard.generate_valid_move(state, state.get_turn())
+	var premove_list:PackedInt32Array = RuleStandard.generate_premove(state, 1 - state.get_turn())
 	chessboard.set_valid_move(move_list)
 	chessboard.set_valid_premove(premove_list)
