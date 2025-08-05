@@ -120,6 +120,23 @@ int State::get_relative_score(int _group)
 	return _group == 0 ? score : -score;
 }
 
+godot::Array State::get_all_pieces() {
+    godot::Array result;
+    for (int i = 0; i < 128; i++) {
+        if (!(i & 0x88)) { // 过滤无效区域
+            int piece = pieces[i];
+            if (piece != 0) { // 有棋子
+                godot::Dictionary piece_info;
+                piece_info["position"] = i;          // 位置（0x88坐标）
+                piece_info["group"] = piece >> 4;    // 阵营（高4位）
+                piece_info["type"] = piece & 0x0F;   // 类型（低4位）
+                result.append(piece_info);
+            }
+        }
+    }
+    return result;
+}
+
 void State::_bind_methods()
 {
 	godot::ClassDB::bind_method(godot::D_METHOD("duplicate"), &State::duplicate);
@@ -137,4 +154,5 @@ void State::_bind_methods()
 	godot::ClassDB::bind_method(godot::D_METHOD("has_history"), &State::has_history);
 	godot::ClassDB::bind_method(godot::D_METHOD("push_history"), &State::push_history);
 	godot::ClassDB::bind_method(godot::D_METHOD("apply_move"), &State::apply_move);
+	godot::ClassDB::bind_method(godot::D_METHOD("get_all_pieces"), &State::get_all_pieces);
 }

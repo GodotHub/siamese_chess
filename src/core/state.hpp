@@ -27,7 +27,9 @@ class State : public godot::RefCounted
 		void push_history(int64_t _zobrist);
 		void apply_move(int move, int score = 0);
 		int get_relative_score(int _group);
+		godot::Array get_all_pieces();
 		static void _bind_methods();
+
 	private:
 		int pieces[128];
 		godot::PackedInt32Array extra;
