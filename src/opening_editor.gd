@@ -24,8 +24,8 @@ func _ready() -> void:
 	get_text()
 	update_move()
 
-func receive_move(move:int) -> void:
-	RuleStandard.apply_move(state, move, state.add_piece, state.capture_piece, state.move_piece, state.set_extra, state.push_history)
+func receive_move() -> void:
+	RuleStandard.apply_move(state, chessboard.confirm_move, state.add_piece, state.capture_piece, state.move_piece, state.set_extra, state.push_history)
 	get_text()
 	history_prev.push_back(state.duplicate());
 	history_next.clear();

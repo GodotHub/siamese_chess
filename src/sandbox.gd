@@ -5,7 +5,7 @@ var state:State = null
 
 func _ready() -> void:
 	$cheshire.set_initial_interact($interact)
-	chessboard.connect("move_played", receive_move)
+	chessboard.connect("move_played")
 	while !is_instance_valid(state):
 		var text_input_instance:TextInput = TextInput.create_text_input_instance("输入FEN格式的布局：")
 		add_child(text_input_instance)
@@ -14,8 +14,8 @@ func _ready() -> void:
 	chessboard.set_state(state.duplicate())
 	update_move()
 
-func receive_move(move:int) -> void:
-	RuleStandard.apply_move(state, move, state.add_piece, state.capture_piece, state.move_piece, state.set_extra, state.push_history)
+func receive_move() -> void:
+	RuleStandard.apply_move(state, chessboard.confirm_move, state.add_piece, state.capture_piece, state.move_piece, state.set_extra, state.push_history)
 	update_move()
 
 func update_move() -> void:
