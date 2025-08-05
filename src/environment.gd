@@ -16,10 +16,6 @@ func _ready() -> void:
 	$chess_timer.connect("timeout", timeout)
 	$interact/area_pastor.connect("clicked", select_dialog)
 
-	if FileAccess.file_exists("user://standard_opening.fa"):
-		ai.get_transposition_table().load_file("user://standard_opening.fa")
-	else:
-		ai.get_transposition_table().reserve(1 << 20)
 	if FileAccess.file_exists("user://standard_opening_document.fa"):
 		opening_book.load_file("user://standard_opening_document.fa")
 

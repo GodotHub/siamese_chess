@@ -8,10 +8,6 @@ var chess_state:State = null
 var ai: PastorAI = PastorAI.new()
 
 func _ready() -> void:
-	if FileAccess.file_exists("user://standard_opening.fa"):
-		ai.get_transposition_table().load_file("user://standard_opening.fa")
-	else:
-		ai.get_transposition_table().reserve(1 << 20)
 	chess_state = RuleStandard.parse("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
 	var thread:Thread = Thread.new()
 	thread.start(make_database)
