@@ -2,7 +2,7 @@
 
 [ext_resource type="PackedScene" uid="uid://bv1nocfh3i556" path="res://scene/opening_editor.tscn" id="1_u3cmr"]
 [ext_resource type="Script" uid="uid://ccqewlmyrjlcx" path="res://src/self_play.gd" id="2_fpof4"]
-[ext_resource type="Script" uid="uid://drrkwtexaa2v2" path="res://src/violet_ai.gd" id="3_uawfv"]
+[ext_resource type="Script" uid="uid://drrkwtexaa2v2" path="res://src/violet.gd" id="3_uawfv"]
 
 [node name="sandbox" instance=ExtResource("1_u3cmr")]
 

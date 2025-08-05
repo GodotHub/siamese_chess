@@ -81,29 +81,39 @@ public:
 	// std::vector<std::vector<float>> backward(const std::vector<std::vector<float>> &grad_output) override;
 };
 
-class NNUE {
+class NNUE : public godot::RefCounted {
+	GDCLASS(NNUE, RefCounted);
 private:
-	Accumulate acc;
-	LinearLayer layer1 = LinearLayer(8, 8);
+	Accumulate layer1;
 	ReluLayer relu1;
-	LinearLayer layer2 = LinearLayer(8, 1);
+	LinearLayer layer2 = LinearLayer(8, 8);
+	ReluLayer relu2;
+	LinearLayer layer3 = LinearLayer(8, 1);
 	SigmoidLayer sigmoid;
+
+protected:
+	static void _bind_methods();
 
 public:
 	void train(const godot::Array &x, const godot::Array &y, float lr, int epoch);
 	float predict(const godot::Array &input);
+	int calculateIndex(int square, int pieceType, int side);
 };
 
 
 class VioletAI : public PastorAI {
+	GDCLASS(VioletAI, PastorAI);
 private:
-	NNUE nnue;
+	NNUE *nnue;
+
+protected:
+	static void _bind_methods();
 
 public:
 	VioletAI();
 
 public:
-	int calculateIndex(int square, int pieceType, int side);
+	godot::Ref<NNUE> get_nnue();
 	void quies(godot::Ref<State> _state, int _group = 0);
 };
 

@@ -4,10 +4,18 @@
 
 VioletAI::VioletAI() :
 		PastorAI() {
+			nnue = memnew(NNUE);
 }
 
-int VioletAI::calculateIndex(int square, int pieceType, int side) {
+// square -> 格子
+// pieceType -> 类型
+// side -> 颜色
+int NNUE::calculateIndex(int square, int pieceType, int side) {
 	return side * 64 * 6 + pieceType * 64 + square;
+}
+
+godot::Ref<NNUE> VioletAI::get_nnue() {
+	return nnue;
 }
 
 void VioletAI::quies(godot::Ref<State> _state, int _group) {
@@ -97,11 +105,12 @@ void NNUE::train(const godot::Array &x, const godot::Array &y, float lr, int epo
 	for (int e = 0; e < epoch; ++e) {
 		float total_loss = 0.0f;
 
-		std::vector<std::vector<float>> acc_out = acc.forward(input);
-		std::vector<std::vector<float>> l1_out = layer1.forward(acc_out);
+		std::vector<std::vector<float>> l1_out = layer1.forward(input);
 		std::vector<std::vector<float>> l1_relu = relu1.forward(l1_out);
 		std::vector<std::vector<float>> l2_out = layer2.forward(l1_relu);
-		std::vector<std::vector<float>> predictions = sigmoid.forward(l2_out);
+		std::vector<std::vector<float>> l2_relu = relu2.forward(l2_out);
+		std::vector<std::vector<float>> l3_out = layer3.forward(l2_relu);
+		std::vector<std::vector<float>> predictions = sigmoid.forward(l3_out);
 
 		MSELoss loss_fn;
 		float loss = loss_fn.forward(predictions, targets);
@@ -109,14 +118,15 @@ void NNUE::train(const godot::Array &x, const godot::Array &y, float lr, int epo
 
 		std::vector<std::vector<float>> grad_loss = loss_fn.backward();
 		std::vector<std::vector<float>> grad_sigmoid = sigmoid.backward(grad_loss);
-		std::vector<std::vector<float>> grad_l2 = layer2.backward(grad_sigmoid);
-		std::vector<std::vector<float>> grad_relu = relu1.backward(grad_l2);
-		std::vector<std::vector<float>> grad_l1 = layer1.backward(grad_relu);
-		std::vector<std::vector<float>> grad_acc = acc.backward(grad_l1);
+		std::vector<std::vector<float>> grad_l3 = layer3.backward(grad_sigmoid);
+		std::vector<std::vector<float>> grad_relu2 = relu2.backward(grad_l3);
+		std::vector<std::vector<float>> grad_l2 = layer2.backward(grad_relu2);
+		std::vector<std::vector<float>> grad_relu1 = relu1.backward(grad_l2);
+		std::vector<std::vector<float>> grad_l1 = layer1.backward(grad_relu1);
 
-		acc.sgd_update(lr);
 		layer1.sgd_update(lr);
 		layer2.sgd_update(lr);
+		layer3.sgd_update(lr);
 
 		// 打印训练进度
 		if (e % 10 == 0 || e == epoch - 1) {
@@ -228,11 +238,22 @@ float NNUE::predict(const godot::Array &binary_input) {
 		input.push_back(binary_input[i]);
 	}
 	std::vector<std::vector<float>> input_vec = { input };
-	std::vector<std::vector<float>> acc_out = acc.forward(input_vec);
-	std::vector<std::vector<float>> l1_out = layer1.forward(acc_out);
+	std::vector<std::vector<float>> l1_out = layer1.forward(input_vec);
 	std::vector<std::vector<float>> l1_relu = relu1.forward(l1_out);
 	std::vector<std::vector<float>> l2_out = layer2.forward(l1_relu);
-	std::vector<std::vector<float>> output = sigmoid.forward(l2_out);
+	std::vector<std::vector<float>> l2_relu = relu2.forward(l2_out);
+	std::vector<std::vector<float>> l3_out = layer3.forward(l2_relu);
+	std::vector<std::vector<float>> output = sigmoid.forward(l3_out);
 
 	return output[0][0];
+}
+
+void NNUE::_bind_methods() {
+	godot::ClassDB::bind_method(godot::D_METHOD("train", "x", "y", "lr", "epoch"), &NNUE::train);
+	godot::ClassDB::bind_method(godot::D_METHOD("predict", "x"), &NNUE::predict);
+	godot::ClassDB::bind_method(godot::D_METHOD("calculateIndex", "square", "pieceType", "side"), &NNUE::calculateIndex);
+}
+
+void VioletAI::_bind_methods() {
+	godot::ClassDB::bind_method(godot::D_METHOD("get_nnue"), &VioletAI::get_nnue);
 }
