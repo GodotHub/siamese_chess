@@ -13,7 +13,7 @@ private:
 	int max_depth;
 	int WIN = 50000;
 	int THRESHOLD = 60000;
-	int search_result;
+	int best_move;
 	std::unordered_map<int, int> piece_value;
 	godot::PackedInt32Array directions_diagonal;
 	godot::PackedInt32Array directions_straight;
@@ -36,7 +36,7 @@ protected:
 
 public:
 	void search(const godot::Ref<State> &_state, int _group, const godot::Callable &_is_timeup, const godot::Callable &_debug_output) override;
-	int best_move() override;
+	int get_search_result() override;
 	void set_max_depth(int max_depth);
 	int get_max_depth() const;
 	void set_transposition_table(const godot::Ref<TranspositionTable> &transposition_table);

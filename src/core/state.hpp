@@ -36,7 +36,6 @@ class State : public godot::RefCounted
 		int has_history(int64_t _zobrist);
 		void push_history(int64_t _zobrist);
 		int get_relative_score(int _group);
-		godot::Array get_all_pieces();
 		static void _bind_methods();
 
 	private:

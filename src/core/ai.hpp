@@ -13,6 +13,6 @@ protected:
 	static void _bind_methods();
 public:
 	virtual void search(const godot::Ref<State> &_state, int _group, const godot::Callable &_is_timeup, const godot::Callable &_debug_output) = 0;
-	virtual int best_move() = 0;
+	virtual int get_search_result() = 0;
 };
 #endif // __CHESS_AI_H__

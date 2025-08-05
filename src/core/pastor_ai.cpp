@@ -480,9 +480,9 @@ void PastorAI::search(const godot::Ref<State> &_state, int _group, const godot::
 	call_deferred("emit_signal", "search_finished");
 }
 
-int PastorAI::best_move()
+int PastorAI::get_search_result()
 {
-	return search_result;
+	return best_move;
 }
 
 void PastorAI::set_max_depth(int max_depth)
