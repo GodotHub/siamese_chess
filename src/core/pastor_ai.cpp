@@ -470,7 +470,6 @@ void PastorAI::search(const godot::Ref<State> &_state, int _group, const godot::
 			break;
 		}
 	}
-	godot::print_line(transposition_table->probe_hash(_state->get_zobrist(), 1, -60000, 60000));
 	best_move = transposition_table->best_move(_state->get_zobrist());
 	call_deferred("emit_signal", "search_finished");
 }

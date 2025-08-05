@@ -40,7 +40,7 @@ godot::String Rule::get_move_name(godot::Ref<State> _state, int move)
 	return "";
 }
 
-void Rule::apply_move(godot::Ref<State>_state, int _move, godot::Callable _callback_add_piece, godot::Callable _callback_capture_piece, godot::Callable _callback_move_piece, godot::Callable _callback_set_extra, godot::Callable _callback_push_history, godot::Callable _callback_change_score)
+void Rule::apply_move(godot::Ref<State>_state, int _move)
 {
 
 }
@@ -65,7 +65,7 @@ uint64_t Rule::perft(godot::Ref<State> _state, int _depth, int group)
 	for (int i = 0; i < move_list.size(); i++)
 	{
 		godot::Ref<State> test_state = _state->duplicate();
-		apply_move(test_state, move_list[i], godot::Callable(*test_state, "add_piece"), godot::Callable(*test_state, "capture_piece"), godot::Callable(*test_state, "move_piece"), godot::Callable(*test_state, "set_extra"), godot::Callable(*test_state, "push_history"), godot::Callable(*test_state, "change_score"));
+		apply_move(test_state, move_list[i]);
 		cnt += perft(test_state, _depth - 1, 1 - group);
 	}
 	return cnt;

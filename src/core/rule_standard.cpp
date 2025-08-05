@@ -544,7 +544,7 @@ godot::String RuleStandard::get_move_name(godot::Ref<State> _state, int move)
 	}
 	ans += (to & 0x0F) + 'a';
 	ans +=  7 - (to >> 4) + '1';
-	if (_state->get_piece(to) && ((from_piece & 95) == 'P') || to == _state->get_step_to_draw())
+	if (_state->get_piece(to) && ((from_piece & 95) == 'P') || to == _state->get_en_passant())
 	{
 		ans += 'x';
 	}
