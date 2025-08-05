@@ -18,6 +18,23 @@ godot::Ref<State>State::duplicate()
 	return new_state;
 }
 
+godot::PackedInt32Array State::get_all_pieces()
+{
+	godot::PackedInt32Array output;
+	for (int from_1 = 0; from_1 < 8; from_1++)
+	{
+		for (int from_2 = 0; from_2 < 8; from_2++)
+		{
+			int from = (from_1 << 4) + from_2;
+			if (get_piece(from))
+			{
+				output.push_back(from);
+			}
+		}
+	}
+	return output;
+}
+
 int State::get_piece(int _by)
 {
 	if (_by & 0x88)
@@ -123,6 +140,7 @@ int State::get_relative_score(int _group)
 void State::_bind_methods()
 {
 	godot::ClassDB::bind_method(godot::D_METHOD("duplicate"), &State::duplicate);
+	godot::ClassDB::bind_method(godot::D_METHOD("get_all_pieces"), &State::get_all_pieces);
 	godot::ClassDB::bind_method(godot::D_METHOD("get_piece"), &State::get_piece);
 	godot::ClassDB::bind_method(godot::D_METHOD("has_piece"), &State::has_piece);
 	godot::ClassDB::bind_method(godot::D_METHOD("add_piece"), &State::add_piece);
