@@ -10,6 +10,10 @@ int VioletAI::calculateIndex(int square, int pieceType, int side) {
 	return side * 64 * 6 + pieceType * 64 + square;
 }
 
+void VioletAI::quies(godot::Ref<State> _state, int _group) {
+	PastorAI::quies(_state->duplicate(), -60000, 60000, _group);
+}
+
 LinearLayer::LinearLayer(int in_f, int out_f) :
 		in_features(in_f), out_features(out_f) {
 	std::default_random_engine gen;

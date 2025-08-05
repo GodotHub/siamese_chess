@@ -5,19 +5,21 @@ var cur_epoch: int = 0
 
 @export var epoch: int = 0
 @onready var chessboard: Chessboard = $"../chessboard"
-@onready var a: VioletAI = $a
-@onready var b: VioletAI = $b
+@onready var white: VioletAI = $a
+@onready var black: VioletAI = $b
 
-func train():
-	go(a)
-	go(b)
-	pass
+func play():
+	go(white)
+	go(black)
+	
+func search(ai_node: VioletAI) -> int:
+	ai_node.ai.search(chessboard.state, ai_node.group, Callable(), Callable())
+	return ai_node.ai.best_move()
 	
 func go(ai_node: VioletAI):
-	ai_node.ai.search(chessboard.state, ai_node.group, Callable(), Callable())
-	var move = ai_node.ai.best_move()
+	var move = search(ai_node)
 	chessboard.execute_move(move)
 	
 func on_button_start_pressed() -> void:
-	train()
+	play()
 	pass # Replace with function body.

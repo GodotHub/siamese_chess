@@ -7,11 +7,15 @@
 #define HALF_INPUT_SIZE INPUT_SIZE / 2
 
 class VioletAI : public PastorAI {
+private:
+	NNUE nnue;
+
 public:
 	VioletAI();
 
 public:
 	int calculateIndex(int square, int pieceType, int side);
+	void quies(godot::Ref<State> _state, int _group = 0);
 };
 
 class Layer {
