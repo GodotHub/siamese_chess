@@ -130,8 +130,8 @@ func check_move(from:int, to:int) -> void:
 
 func execute_move(move:int) -> void:
 	confirm_move = move
-	RuleStandard.apply_move(state, move, add_piece_instance, remove_piece_instance, move_piece_instance, Callable(), Callable())
-	RuleStandard.apply_move(state, move, state.add_piece, state.capture_piece, state.move_piece, state.set_extra, state.push_history)
+	RuleStandard.apply_move_custom(state, move, add_piece_instance, remove_piece_instance, move_piece_instance)
+	RuleStandard.apply_move(state, move)
 	$canvas.clear_select_position()
 	$canvas.clear_premove_position()
 	$canvas.clear_move_position()

@@ -15,7 +15,7 @@ RuleStandard::RuleStandard()
 
 godot::String RuleStandard::get_end_type(godot::Ref<State>_state)
 {
-	int group = _state->get_extra(0);
+	int group = _state->get_turn();
 	godot::PackedInt32Array move_list = generate_valid_move(_state, group);
 	if (!move_list.size())
 	{
@@ -32,7 +32,7 @@ godot::String RuleStandard::get_end_type(godot::Ref<State>_state)
 	{
 		return "threefold_repetition";	// 三次重复局面
 	}
-	if (_state->get_extra(3) == 50)
+	if (_state->get_step_to_draw() == 50)
 	{
 		return "50_moves";
 	}
@@ -81,12 +81,11 @@ godot::Ref<State>RuleStandard::parse(godot::String _str)
 	{
 		return nullptr;
 	}
-	state->reserve_extra(6);
-	state->set_extra(0, fen_splited[1] == "w" ? 0 : 1);
-	state->set_extra(1, (int(fen_splited[2].contains("K")) << 3) + (int(fen_splited[2].contains("Q")) << 2) + (int(fen_splited[2].contains("k")) << 1) + int(fen_splited[2].contains("q")));
-	state->set_extra(2, Chess::to_position_int(fen_splited[3]));
-	state->set_extra(3, fen_splited[4].to_int());
-	state->set_extra(4, fen_splited[5].to_int());
+	state->set_turn(fen_splited[1] == "w" ? 0 : 1);
+	state->set_castle((int(fen_splited[2].contains("K")) << 3) + (int(fen_splited[2].contains("Q")) << 2) + (int(fen_splited[2].contains("k")) << 1) + int(fen_splited[2].contains("q")));
+	state->set_en_passant(Chess::to_position_int(fen_splited[3]));
+	state->set_step_to_draw(fen_splited[4].to_int());
+	state->set_round(fen_splited[5].to_int());
 	return state;
 }
 
@@ -121,19 +120,19 @@ godot::String RuleStandard::stringify(godot::Ref<State>_state)
 		chessboard.append(line);
 	}
 	godot::PackedStringArray output = {godot::String("/").join(chessboard)};
-	output.push_back(_state->get_extra(0) == 0 ? "w" : "b");
+	output.push_back(_state->get_turn() == 0 ? "w" : "b");
 	output.push_back("");
-	output[2] += (_state->get_extra(1) & 8) ? "K" : "";
-	output[2] += (_state->get_extra(1) & 4) ? "Q" : "";
-	output[2] += (_state->get_extra(1) & 2) ? "k" : "";
-	output[2] += (_state->get_extra(1) & 1) ? "q" : "";
+	output[2] += (_state->get_castle() & 8) ? "K" : "";
+	output[2] += (_state->get_castle() & 4) ? "Q" : "";
+	output[2] += (_state->get_castle() & 2) ? "k" : "";
+	output[2] += (_state->get_castle() & 1) ? "q" : "";
 	if (!output[2])
 	{
 		output[2] = "-";
 	}
-	output.push_back(_state->get_extra(2) ? Chess::to_position_name(_state->get_extra(2)) : "-");
-	output.push_back(godot::String::num(_state->get_extra(3), 0));
-	output.push_back(godot::String::num(_state->get_extra(4), 0));
+	output.push_back(_state->get_en_passant() ? Chess::to_position_name(_state->get_en_passant()) : "-");
+	output.push_back(godot::String::num(_state->get_step_to_draw(), 0));
+	output.push_back(godot::String::num(_state->get_round(), 0));
 	// king_passant是为了判定是否违规走子，临时记录的，这里不做转换
 	return godot::String(" ").join(output);
 }
@@ -147,7 +146,7 @@ bool RuleStandard::is_move_valid(godot::Ref<State>_state, int _group, int _move)
 		return false;
 	}
 	godot::Ref<State>test_state = _state->duplicate();
-	test_state->apply_move(_move);
+	apply_move(test_state, _move);
 	return !is_check(test_state, 1 - _group);
 }
 
@@ -174,12 +173,12 @@ bool RuleStandard::is_check(godot::Ref<State> _state, int _group)
 				bool on_start = (_from >> 4) == (from_piece == 'P' ? 6 : 1);
 				bool on_end = (_from >> 4) == (from_piece == 'P' ? 1 : 6);
 				if (_state->has_piece(_from + front + 1) && !Chess::is_same_group(from_piece, _state->get_piece(_from + front + 1)) && (_state->get_piece(_from + front + 1) & 95) == 'K'
-				|| !((_from + front + 1) & 0x88) && on_end && _state->get_extra(5) != -1 && abs(_state->get_extra(5) - (_from + front + 1)) <= 1)
+				|| !((_from + front + 1) & 0x88) && on_end && _state->get_king_passant() != -1 && abs(_state->get_king_passant() - (_from + front + 1)) <= 1)
 				{
 					return true;
 				}
 				if (_state->has_piece(_from + front - 1) && !Chess::is_same_group(from_piece, _state->get_piece(_from + front - 1)) && (_state->get_piece(_from + front - 1) & 95) == 'K'
-				|| !((_from + front - 1) & 0x88) && on_end && _state->get_extra(5) != -1 && abs(_state->get_extra(5) - (_from + front - 1)) <= 1)
+				|| !((_from + front - 1) & 0x88) && on_end && _state->get_king_passant() != -1 && abs(_state->get_king_passant() - (_from + front - 1)) <= 1)
 				{
 					return true;
 				}
@@ -208,7 +207,7 @@ bool RuleStandard::is_check(godot::Ref<State> _state, int _group)
 				int to_piece = _state->get_piece(to);
 				while (!(to & 0x88) && (!to_piece || !Chess::is_same_group(from_piece, to_piece)))
 				{
-					if (_state->get_extra(5) != -1 && abs(to - _state->get_extra(5)) <= 1 && (to >> 4) == _group * 7)
+					if (_state->get_king_passant() != -1 && abs(to - _state->get_king_passant()) <= 1 && (to >> 4) == _group * 7)
 					{
 						return true;
 					}
@@ -326,19 +325,19 @@ godot::PackedInt32Array RuleStandard::generate_premove(godot::Ref<State>_state, 
 			}
 		}
 	}
-	if (_group == 0 && (_state->get_extra(1) & 8) && !_state->has_piece(Chess::g1()) && !_state->has_piece(Chess::f1()))
+	if (_group == 0 && (_state->get_castle() & 8) && !_state->has_piece(Chess::g1()) && !_state->has_piece(Chess::f1()))
 	{
 		output.push_back(Chess::create(Chess::e1(), Chess::g1(), 'K'));
 	}
-	if (_group == 0 && (_state->get_extra(1) & 4) && !_state->has_piece(Chess::c1()) && !_state->has_piece(Chess::d1()))
+	if (_group == 0 && (_state->get_castle() & 4) && !_state->has_piece(Chess::c1()) && !_state->has_piece(Chess::d1()))
 	{
 		output.push_back(Chess::create(Chess::e1(), Chess::c1(), 'Q'));
 	}
-	if (_group == 1 && (_state->get_extra(1) & 2) && !_state->has_piece(Chess::g8()) && !_state->has_piece(Chess::f8()))
+	if (_group == 1 && (_state->get_castle() & 2) && !_state->has_piece(Chess::g8()) && !_state->has_piece(Chess::f8()))
 	{
 		output.push_back(Chess::create(Chess::e8(), Chess::g8(), 'k'));
 	}
-	if (_group == 1 && (_state->get_extra(1) & 1) && !_state->has_piece(Chess::c8()) && !_state->has_piece(Chess::d8()))
+	if (_group == 1 && (_state->get_castle() & 1) && !_state->has_piece(Chess::c8()) && !_state->has_piece(Chess::d8()))
 	{
 		output.push_back(Chess::create(Chess::e8(), Chess::c8(), 'q'));
 	}
@@ -386,7 +385,7 @@ godot::PackedInt32Array RuleStandard::generate_move(godot::Ref<State>_state, int
 						}
 					}
 				}
-				if (_state->has_piece(_from + front + 1) && !Chess::is_same_group(from_piece, _state->get_piece(_from + front + 1)) || ((_from >> 4) == 3 || (_from >> 4) == 4) && _state->get_extra(2) == _from + front + 1)
+				if (_state->has_piece(_from + front + 1) && !Chess::is_same_group(from_piece, _state->get_piece(_from + front + 1)) || ((_from >> 4) == 3 || (_from >> 4) == 4) && _state->get_en_passant() == _from + front + 1)
 				{
 					if (on_end)
 					{
@@ -400,7 +399,7 @@ godot::PackedInt32Array RuleStandard::generate_move(godot::Ref<State>_state, int
 						output.push_back(Chess::create(_from, _from + front + 1, 0));
 					}
 				}
-				if (_state->has_piece(_from + front - 1) && !Chess::is_same_group(from_piece, _state->get_piece(_from + front - 1)) || ((_from >> 4) == 3 || (_from >> 4) == 4) && _state->get_extra(2) == _from + front - 1)
+				if (_state->has_piece(_from + front - 1) && !Chess::is_same_group(from_piece, _state->get_piece(_from + front - 1)) || ((_from >> 4) == 3 || (_from >> 4) == 4) && _state->get_en_passant() == _from + front - 1)
 				{
 					if (on_end)
 					{
@@ -454,11 +453,11 @@ godot::PackedInt32Array RuleStandard::generate_move(godot::Ref<State>_state, int
 					{
 						continue;
 					}
-					if ((_from & 15) >= 4 && (from_piece == 'R' && (_state->get_extra(1) & 8) || from_piece == 'r' && (_state->get_extra(1) & 2)))
+					if ((_from & 15) >= 4 && (from_piece == 'R' && (_state->get_castle() & 8) || from_piece == 'r' && (_state->get_castle() & 2)))
 					{
 						output.push_back(Chess::create(to, from_piece == 'R' ? Chess::g1() : Chess::g8(), 'K'));
 					}
-					else if ((_from & 15) <= 3 && (from_piece == 'R' && (_state->get_extra(1) & 4) || from_piece == 'r' && (_state->get_extra(1) & 1)))
+					else if ((_from & 15) <= 3 && (from_piece == 'R' && (_state->get_castle() & 4) || from_piece == 'r' && (_state->get_castle() & 1)))
 					{
 						output.push_back(Chess::create(to,from_piece == 'R' ? Chess::c1() : Chess::c8(), 'Q'));
 					}
@@ -545,7 +544,7 @@ godot::String RuleStandard::get_move_name(godot::Ref<State> _state, int move)
 	}
 	ans += (to & 0x0F) + 'a';
 	ans +=  7 - (to >> 4) + '1';
-	if (_state->get_piece(to) && ((from_piece & 95) == 'P') || to == _state->get_extra(3))
+	if (_state->get_piece(to) && ((from_piece & 95) == 'P') || to == _state->get_step_to_draw())
 	{
 		ans += 'x';
 	}
@@ -555,7 +554,7 @@ godot::String RuleStandard::get_move_name(godot::Ref<State> _state, int move)
 		ans += (extra & 95);
 	}
 	godot::Ref<State> next_state = _state->duplicate();
-	next_state->apply_move(move);
+	apply_move(next_state, move);
 	if (is_check(next_state, group))
 	{
 		if (generate_valid_move(next_state, 1 - group).size() == 0)
@@ -572,7 +571,7 @@ godot::String RuleStandard::get_move_name(godot::Ref<State> _state, int move)
 
 int RuleStandard::name_to_move(godot::Ref<State> _state, godot::String _name)
 {
-	godot::PackedInt32Array move_list = generate_move(_state, _state->get_extra(0));
+	godot::PackedInt32Array move_list = generate_move(_state, _state->get_turn());
 	for (int i = 0; i < move_list.size(); i++)
 	{
 		godot::String name = get_move_name(_state, move_list[i]);
@@ -584,19 +583,154 @@ int RuleStandard::name_to_move(godot::Ref<State> _state, godot::String _name)
 	return -1;
 }
 
-void RuleStandard::apply_move(godot::Ref<State>_state, int _move, godot::Callable _callback_add_piece, godot::Callable _callback_capture_piece, godot::Callable _callback_move_piece, godot::Callable _callback_set_extra, godot::Callable _callback_push_history)
+void RuleStandard::apply_move(godot::Ref<State>_state, int _move)
 {
-	_callback_push_history.call(_state->get_zobrist());	// 上一步的局面
-	if (_state->get_extra(0) == 1)
+	_state->push_history(_state->get_zobrist());	// 上一步的局面
+	if (_state->get_turn() == 1)
 	{
-		_callback_set_extra.call(4, _state->get_extra(4) + 1);
-		_callback_set_extra.call(0, 0);
+		_state->set_round(_state->get_round() + 1);
+		_state->set_turn(0);
 	}
-	else if (_state->get_extra(0) == 0)
+	else if (_state->get_turn() == 0)
 	{
-		_callback_set_extra.call(0, 1);
+		_state->set_turn(1);
 	}
-	_callback_set_extra.call(3, _state->get_extra(3) + 1);
+	_state->set_step_to_draw(_state->get_step_to_draw() + 1);
+	int from_piece = _state->get_piece(Chess::from(_move));
+	int from_group = Chess::group(from_piece);
+	int to_piece = _state->get_piece(Chess::to(_move));
+	bool dont_move = false;
+	bool has_en_passant = false;
+	bool has_king_passant = false;
+	if (to_piece)
+	{
+		_state->capture_piece(Chess::to(_move));
+		_state->set_step_to_draw(0);	// 吃子时重置50步和棋
+	}
+	if (_state->get_king_passant() != -1 && abs(_state->get_king_passant() - Chess::to(_move)) <= 1)
+	{
+		if (from_group == 0)
+		{
+			if (_state->get_piece(Chess::c8()) == 'k')
+			{
+				_state->capture_piece(Chess::c8());
+			}
+			if (_state->get_piece(Chess::g8()) == 'k')
+			{
+				_state->capture_piece(Chess::g8());
+			}
+		}
+		else
+		{
+			if (_state->get_piece(Chess::c1()) == 'K')
+			{
+				_state->capture_piece(Chess::c1());
+			}
+			if (_state->get_piece(Chess::g1()) == 'K')
+			{
+				_state->capture_piece(Chess::g1());
+			}
+		}
+	}
+	if ((from_piece & 95) == 'R')	// 哪边的车动过，就不能往那个方向易位
+	{
+		if ((Chess::from(_move) & 15) >= 4)
+		{
+			if (from_group == 0)
+			{
+				_state->set_castle(_state->get_castle() & 7);
+			}
+			else
+			{
+				_state->set_castle(_state->get_castle() & 13);
+			}
+		}
+		else if ((Chess::from(_move) & 15) <= 3)
+		{
+			if (from_group == 0)
+			{
+				_state->set_castle(_state->get_castle() & 11);
+			}
+			else
+			{
+				_state->set_castle(_state->get_castle() & 14);
+			}
+		}
+	}
+	if ((from_piece & 95) == 'K')
+	{
+		if (from_group == 0)
+		{
+			_state->set_castle(_state->get_castle() & 3);
+		}
+		else
+		{
+			_state->set_castle(_state->get_castle() & 12);
+		}
+		if (Chess::extra(_move))
+		{
+			if (Chess::to(_move) == Chess::g1())
+			{
+				_state->move_piece(Chess::h1(), Chess::f1());
+				_state->set_king_passant(Chess::f1());
+			}
+			if (Chess::to(_move) == Chess::c1())
+			{
+				_state->move_piece(Chess::a1(), Chess::d1());
+				_state->set_king_passant(Chess::d1());
+			}
+			if (Chess::to(_move) == Chess::g8())
+			{
+				_state->move_piece(Chess::h8(), Chess::f8());
+				_state->set_king_passant(Chess::f8());
+			}
+			if (Chess::to(_move) == Chess::c8())
+			{
+				_state->move_piece(Chess::a8(), Chess::d8());
+				_state->set_king_passant(Chess::d8());
+			}
+			has_king_passant = true;
+		}
+	}
+	if ((from_piece & 95) == 'P')
+	{
+		int front = from_piece == 'P' ? -16 : 16;
+		_state->set_step_to_draw(0);	// 移动兵时重置50步和棋
+		if (Chess::to(_move) - Chess::from(_move) == front * 2)
+		{
+			has_en_passant = true;
+			_state->set_en_passant(Chess::from(_move) + front);
+		}
+		if (((Chess::from(_move) >> 4) == 3 || (Chess::from(_move) >> 4) == 4) && Chess::to(_move) == _state->get_en_passant())
+		{
+			int captured = Chess::to(_move) - front;
+			_state->capture_piece(captured);
+		}
+		if (Chess::extra(_move))
+		{
+			dont_move = true;
+			_state->capture_piece(Chess::from(_move));
+			_state->add_piece(Chess::to(_move), Chess::extra(_move));
+		}
+	}
+	if (!dont_move)
+	{
+		_state->move_piece(Chess::from(_move), Chess::to(_move));
+	}
+
+	if (!has_en_passant)
+	{
+		_state->set_en_passant(-1);
+	}
+	if (!has_king_passant)
+	{
+		_state->set_king_passant(-1);
+	}
+}
+
+
+void RuleStandard::apply_move_custom(godot::Ref<State> _state, int _move, godot::Callable _callback_add_piece, godot::Callable _callback_capture_piece, godot::Callable _callback_move_piece)
+{
 	int from_piece = _state->get_piece(Chess::from(_move));
 	int from_group = Chess::group(from_piece);
 	int to_piece = _state->get_piece(Chess::to(_move));
@@ -606,9 +740,8 @@ void RuleStandard::apply_move(godot::Ref<State>_state, int _move, godot::Callabl
 	if (to_piece)
 	{
 		_callback_capture_piece.call(Chess::to(_move));
-		_callback_set_extra.call(3, 0);	// 吃子时重置50步和棋
 	}
-	if (_state->get_extra(5) != -1 && abs(_state->get_extra(5) - Chess::to(_move)) <= 1)
+	if (_state->get_king_passant() != -1 && abs(_state->get_king_passant() - Chess::to(_move)) <= 1)
 	{
 		if (from_group == 0)
 		{
@@ -633,76 +766,32 @@ void RuleStandard::apply_move(godot::Ref<State>_state, int _move, godot::Callabl
 			}
 		}
 	}
-	if ((from_piece & 95) == 'R')	// 哪边的车动过，就不能往那个方向易位
-	{
-		if ((Chess::from(_move) & 15) >= 4)
-		{
-			if (from_group == 0)
-			{
-				_callback_set_extra.call(1, _state->get_extra(1) & 7);
-			}
-			else
-			{
-				_callback_set_extra.call(1, _state->get_extra(1) & 13);
-			}
-		}
-		else if ((Chess::from(_move) & 15) <= 3)
-		{
-			if (from_group == 0)
-			{
-				_callback_set_extra.call(1, _state->get_extra(1) & 11);
-			}
-			else
-			{
-				_callback_set_extra.call(1, _state->get_extra(1) & 14);
-			}
-		}
-	}
 	if ((from_piece & 95) == 'K')
 	{
-		if (from_group == 0)
-		{
-			_callback_set_extra.call(1, _state->get_extra(1) & 3);
-		}
-		else
-		{
-			_callback_set_extra.call(1, _state->get_extra(1) & 12);
-		}
 		if (Chess::extra(_move))
 		{
 			if (Chess::to(_move) == Chess::g1())
 			{
 				_callback_move_piece.call(Chess::h1(), Chess::f1());
-				_callback_set_extra.call(5, Chess::f1());
 			}
 			if (Chess::to(_move) == Chess::c1())
 			{
 				_callback_move_piece.call(Chess::a1(), Chess::d1());
-				_callback_set_extra.call(5, Chess::d1());
 			}
 			if (Chess::to(_move) == Chess::g8())
 			{
 				_callback_move_piece.call(Chess::h8(), Chess::f8());
-				_callback_set_extra.call(5, Chess::f8());
 			}
 			if (Chess::to(_move) == Chess::c8())
 			{
 				_callback_move_piece.call(Chess::a8(), Chess::d8());
-				_callback_set_extra.call(5, Chess::d8());
 			}
-			has_king_passant = true;
 		}
 	}
 	if ((from_piece & 95) == 'P')
 	{
 		int front = from_piece == 'P' ? -16 : 16;
-		_callback_set_extra.call(3, 0);	// 移动兵时重置50步和棋
-		if (Chess::to(_move) - Chess::from(_move) == front * 2)
-		{
-			has_en_passant = true;
-			_callback_set_extra.call(2, Chess::from(_move) + front);
-		}
-		if (((Chess::from(_move) >> 4) == 3 || (Chess::from(_move) >> 4) == 4) && Chess::to(_move) == _state->get_extra(2))
+		if (((Chess::from(_move) >> 4) == 3 || (Chess::from(_move) >> 4) == 4) && Chess::to(_move) == _state->get_en_passant())
 		{
 			int captured = Chess::to(_move) - front;
 			_callback_capture_piece.call(captured);
@@ -717,15 +806,6 @@ void RuleStandard::apply_move(godot::Ref<State>_state, int _move, godot::Callabl
 	if (!dont_move)
 	{
 		_callback_move_piece.call(Chess::from(_move), Chess::to(_move));
-	}
-
-	if (!has_en_passant)
-	{
-		_callback_set_extra.call(2, -1);
-	}
-	if (!has_king_passant)
-	{
-		_callback_set_extra.call(5, -1);
 	}
 }
 
@@ -748,7 +828,5 @@ void RuleStandard::_bind_methods()
 	godot::ClassDB::bind_method(godot::D_METHOD("get_move_name"), &RuleStandard::get_move_name);
 	godot::ClassDB::bind_method(godot::D_METHOD("name_to_move"), &RuleStandard::name_to_move);
 	godot::ClassDB::bind_method(godot::D_METHOD("apply_move"), &RuleStandard::apply_move);
-	//godot::ClassDB::bind_method(godot::D_METHOD("compare_move"), &RuleStandard::compare_move);
-	//godot::ClassDB::bind_method(godot::D_METHOD("quies"), &RuleStandard::quies);
-	//godot::ClassDB::bind_method(godot::D_METHOD("alphabeta"), &RuleStandard::alphabeta);
+	godot::ClassDB::bind_method(godot::D_METHOD("apply_move_custom"), &RuleStandard::apply_move_custom);
 }

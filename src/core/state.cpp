@@ -8,11 +8,16 @@ State::State()
 	memset(pieces, 0, sizeof(pieces));
 }
 
-godot::Ref<State>State::duplicate()
+godot::Ref<State> State::duplicate()
 {
-	godot::Ref<State>new_state = memnew(State);
+	godot::Ref<State> new_state = memnew(State);
 	memcpy(new_state->pieces, pieces, sizeof(pieces));
-	new_state->extra = extra.duplicate();
+	new_state->turn = turn;
+	new_state->castle = castle;
+	new_state->en_passant = en_passant;
+	new_state->step_to_draw = step_to_draw;
+	new_state->round = round;
+	new_state->king_passant = king_passant;
 	new_state->score = score;
 	new_state->zobrist = zobrist;
 	return new_state;
@@ -74,29 +79,64 @@ void State::move_piece(int _from, int _to)
 	pieces[_from] = 0;
 }
 
-int State::get_extra(int _index)
+int State::get_turn()
 {
-	if (_index < extra.size())
-	{
-		return extra[_index];
-	}
-	return -1;
+	return turn;
 }
 
-void State::set_extra(int _index, int _value)
+void State::set_turn(int _turn)
 {
-	if (_index < extra.size())
-	{
-		extra[_index] = _value;
-	}
+	turn = _turn;
 }
 
-void State::reserve_extra(int _size)
+int State::get_castle()
 {
-	while (extra.size() < _size)
-	{
-		extra.push_back(-1);
-	}
+	return castle;
+}
+
+void State::set_castle(int _castle)
+{
+	castle = _castle;
+}
+
+int State::get_en_passant()
+{
+	return en_passant;
+}
+
+void State::set_en_passant(int _en_passant)
+{
+	en_passant = _en_passant;
+}
+
+int State::get_step_to_draw()
+{
+	return step_to_draw;
+}
+
+void State::set_step_to_draw(int _step_to_draw)
+{
+	step_to_draw = _step_to_draw;
+}
+
+int State::get_round()
+{
+	return round;
+}
+
+void State::set_round(int _round)
+{
+	round = _round;
+}
+
+int State::get_king_passant()
+{
+	return king_passant;
+}
+
+void State::set_king_passant(int _king_passant)
+{
+	king_passant = _king_passant;
 }
 
 void State::change_score(int delta)
@@ -126,12 +166,6 @@ void State::push_history(int64_t _zobrist)
 	}
 }
 
-void State::apply_move(int _move, int _score)
-{
-	RuleStandard::get_singleton()->apply_move(this, _move, godot::Callable(this, "add_piece"), godot::Callable(this, "capture_piece"), godot::Callable(this, "move_piece"), godot::Callable(this, "set_extra"), godot::Callable(this, "push_history"));
-	change_score(_score);
-}
-
 int State::get_relative_score(int _group)
 {
 	return _group == 0 ? score : -score;
@@ -146,13 +180,21 @@ void State::_bind_methods()
 	godot::ClassDB::bind_method(godot::D_METHOD("add_piece"), &State::add_piece);
 	godot::ClassDB::bind_method(godot::D_METHOD("capture_piece"), &State::capture_piece);
 	godot::ClassDB::bind_method(godot::D_METHOD("move_piece"), &State::move_piece);
-	godot::ClassDB::bind_method(godot::D_METHOD("get_extra"), &State::get_extra);
-	godot::ClassDB::bind_method(godot::D_METHOD("set_extra"), &State::set_extra);
-	godot::ClassDB::bind_method(godot::D_METHOD("reserve_extra"), &State::reserve_extra);
+	godot::ClassDB::bind_method(godot::D_METHOD("get_turn"), &State::get_turn);
+	godot::ClassDB::bind_method(godot::D_METHOD("set_turn"), &State::set_turn);
+	godot::ClassDB::bind_method(godot::D_METHOD("get_castle"), &State::get_castle);
+	godot::ClassDB::bind_method(godot::D_METHOD("set_castle"), &State::set_castle);
+	godot::ClassDB::bind_method(godot::D_METHOD("get_en_passant"), &State::get_en_passant);
+	godot::ClassDB::bind_method(godot::D_METHOD("set_en_passant"), &State::set_en_passant);
+	godot::ClassDB::bind_method(godot::D_METHOD("get_step_to_draw"), &State::get_step_to_draw);
+	godot::ClassDB::bind_method(godot::D_METHOD("set_step_to_draw"), &State::set_step_to_draw);
+	godot::ClassDB::bind_method(godot::D_METHOD("get_round"), &State::get_round);
+	godot::ClassDB::bind_method(godot::D_METHOD("set_round"), &State::set_round);
+	godot::ClassDB::bind_method(godot::D_METHOD("get_king_passant"), &State::get_king_passant);
+	godot::ClassDB::bind_method(godot::D_METHOD("set_king_passant"), &State::set_king_passant);
 	godot::ClassDB::bind_method(godot::D_METHOD("change_score"), &State::change_score);
 	godot::ClassDB::bind_method(godot::D_METHOD("get_relative_score"), &State::get_relative_score);
 	godot::ClassDB::bind_method(godot::D_METHOD("get_zobrist"), &State::get_zobrist);
 	godot::ClassDB::bind_method(godot::D_METHOD("has_history"), &State::has_history);
 	godot::ClassDB::bind_method(godot::D_METHOD("push_history"), &State::push_history);
-	godot::ClassDB::bind_method(godot::D_METHOD("apply_move"), &State::apply_move);
 }
