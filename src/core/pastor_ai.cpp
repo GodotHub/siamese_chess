@@ -2,6 +2,7 @@
 #include "rule_standard.hpp"
 #include "chess.hpp"
 #include <godot_cpp/core/error_macros.hpp>
+#include <random>
 #include <godot_cpp/classes/file_access.hpp>
 
 PastorAI::PastorAI()
@@ -519,6 +520,16 @@ int PastorAI::alphabeta(const godot::Ref<State> &_state, int _alpha, int _beta, 
 
 void PastorAI::search(const godot::Ref<State> &_state, int _group, const godot::Callable &_is_timeup, const godot::Callable &_debug_output)
 {
+	if (opening_book->has_record(_state))
+	{
+		godot::PackedInt32Array suggest_move = opening_book->get_suggest_move(_state);
+		if (suggest_move.size())
+		{
+			best_move = suggest_move[rand() % suggest_move.size()];
+			call_deferred("emit_signal", "search_finished");
+			return;
+		}
+	}
 	std::array<int, 65536> history_table;
 	for (int i = 1; i < max_depth; i++)
 	{
