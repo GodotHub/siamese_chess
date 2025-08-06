@@ -1,6 +1,7 @@
 #include "violet_ai.hpp"
 #include <cmath>
 #include <random>
+#include <godot_cpp/classes/file_access.hpp>
 
 VioletAI::VioletAI() :
 		PastorAI() {
@@ -10,7 +11,11 @@ VioletAI::VioletAI() :
 // square -> 格子
 // pieceType -> 类型
 // side -> 颜色
-int NNUE::calculateIndex(int square, int pieceType, int side) {
+int NNUE::calculateIndex(int perspective, int square, int pieceType, int side) {
+	if (perspective == 1) {
+		side = 1 - side;
+		square = square ^ 0b111000;
+	}
 	return side * 64 * 6 + pieceType * 64 + square;
 }
 
@@ -246,6 +251,14 @@ float NNUE::predict(const godot::Array &binary_input) {
 	std::vector<std::vector<float>> output = sigmoid.forward(l3_out);
 
 	return output[0][0];
+}
+
+void NNUE::get_sample() {
+	if (godot::FileAccess::file_exists("user://sample.fen")) {
+		
+	} else {
+		ERR_FAIL_MSG("找不到训练样本");
+	}
 }
 
 void NNUE::_bind_methods() {

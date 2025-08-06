@@ -83,6 +83,7 @@ public:
 
 class NNUE : public godot::RefCounted {
 	GDCLASS(NNUE, RefCounted);
+
 private:
 	Accumulate layer1;
 	ReluLayer relu1;
@@ -91,18 +92,21 @@ private:
 	LinearLayer layer3 = LinearLayer(8, 1);
 	SigmoidLayer sigmoid;
 
+private:
+	void get_sample();
+
 protected:
 	static void _bind_methods();
 
 public:
 	void train(const godot::Array &x, const godot::Array &y, float lr, int epoch);
 	float predict(const godot::Array &input);
-	int calculateIndex(int square, int pieceType, int side);
+	int calculateIndex(int perspective, int square, int pieceType, int side);
 };
-
 
 class VioletAI : public PastorAI {
 	GDCLASS(VioletAI, PastorAI);
+
 private:
 	NNUE *nnue;
 
