@@ -12,20 +12,20 @@ var sample: Array[Dictionary] = []
 
 func play():
 	var is_end: bool = false
-	while true:
-		is_end = go(white)
-		add_sample_cache()
-		if is_end:
-			add_sample()
-			sample_save_json()
-			break
-		await get_tree().create_timer(0.5).timeout
-		is_end = go(black)
-		add_sample_cache()
-		if is_end:
-			add_sample()
-			sample_save_json()
-			break
+	for i in range(0, epoch):
+		while true:
+			is_end = go(white)
+			add_sample_cache()
+			if is_end:
+				add_sample()
+				break
+			await get_tree().create_timer(0.5).timeout
+			is_end = go(black)
+			add_sample_cache()
+			if is_end:
+				add_sample()
+				break
+	sample_save_json()
 	
 func search(ai_node: Violet) -> int:
 	ai_node.ai.search(chessboard.state, ai_node.group, Callable(), Callable())
@@ -51,7 +51,6 @@ func sample_save_json():
 	var json_str: String = JSON.stringify(sample)
 	var file = FileAccess.open("user://sample.json", FileAccess.WRITE)
 	file.store_string(json_str)
-	file.flush()
 	file.close()
 
 func on_button_start_pressed() -> void:

@@ -254,8 +254,8 @@ float NNUE::predict(const godot::Array &binary_input) {
 }
 
 void NNUE::get_sample() {
-	if (godot::FileAccess::file_exists("user://sample.fen")) {
-		
+	if (godot::FileAccess::file_exists("user://sample.json")) {
+
 	} else {
 		ERR_FAIL_MSG("找不到训练样本");
 	}

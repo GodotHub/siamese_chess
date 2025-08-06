@@ -8,7 +8,7 @@
 
 [node name="player" type="Node3D" parent="." index="5"]
 script = ExtResource("2_fpof4")
-epoch = 5
+epoch = 1
 
 [node name="a" type="Node3D" parent="player" index="0"]
 script = ExtResource("3_uawfv")
