@@ -145,6 +145,122 @@ bool RuleStandard::is_move_valid(godot::Ref<State>_state, int _group, int _move)
 	{
 		return false;
 	}
+	int to = Chess::to(_move);
+	int to_piece = _state->get_piece(to);
+	int flag = false;
+	godot::PackedInt32Array directions;
+	if ((from_piece & 95) == 'P')
+	{
+		int front = from_piece == 'P' ? -16 : 16;
+		bool on_start = (from >> 4) == (from_piece == 'P' ? 6 : 1);
+		bool on_end = (from >> 4) == (from_piece == 'P' ? 1 : 6);
+		if (!_state->has_piece(from + front))
+		{
+			if (on_end)
+			{
+				flag = flag || _move == Chess::create(from, from + front, _group == 0 ? 'Q' : 'q');
+				flag = flag || _move == Chess::create(from, from + front, _group == 0 ? 'R' : 'r');
+				flag = flag || _move == Chess::create(from, from + front, _group == 0 ? 'N' : 'n');
+				flag = flag || _move == Chess::create(from, from + front, _group == 0 ? 'B' : 'b');
+			}
+			else
+			{
+				flag = flag || _move == Chess::create(from, from + front, 0);
+				if (!_state->has_piece(from + front + front) && on_start)
+				{
+					flag = flag || _move == Chess::create(from, from + front + front, 0);
+				}
+			}
+		}
+		if (_state->has_piece(from + front + 1) && !Chess::is_same_group(from_piece, _state->get_piece(from + front + 1)) || ((from >> 4) == 3 || (from >> 4) == 4) && _state->get_en_passant() == from + front + 1)
+		{
+			if (on_end)
+			{
+				flag = flag || _move == Chess::create(from, from + front + 1, _group == 0 ? 'Q' : 'q');
+				flag = flag || _move == Chess::create(from, from + front + 1, _group == 0 ? 'R' : 'r');
+				flag = flag || _move == Chess::create(from, from + front + 1, _group == 0 ? 'N' : 'n');
+				flag = flag || _move == Chess::create(from, from + front + 1, _group == 0 ? 'B' : 'b');
+			}
+			else
+			{
+				flag = flag || _move == Chess::create(from, from + front + 1, 0);
+			}
+		}
+		if (_state->has_piece(from + front - 1) && !Chess::is_same_group(from_piece, _state->get_piece(from + front - 1)) || ((from >> 4) == 3 || (from >> 4) == 4) && _state->get_en_passant() == from + front - 1)
+		{
+			if (on_end)
+			{
+				flag = flag || _move == Chess::create(from, from + front - 1, _group == 0 ? 'Q' : 'q');
+				flag = flag || _move == Chess::create(from, from + front - 1, _group == 0 ? 'R' : 'r');
+				flag = flag || _move == Chess::create(from, from + front - 1, _group == 0 ? 'N' : 'n');
+				flag = flag || _move == Chess::create(from, from + front - 1, _group == 0 ? 'B' : 'b');
+			}
+			else
+			{
+				flag = flag || _move == Chess::create(from, from + front - 1, 0);
+			}
+		}
+		if (!flag)
+		{
+			return false;
+		}
+		godot::Ref<State>test_state = _state->duplicate();
+		apply_move(test_state, _move);
+		return !is_check(test_state, 1 - _group);
+	}
+	else if ((from_piece & 95) == 'K' || (from_piece & 95) == 'Q')
+	{
+		directions = directions_eight_way;
+	}
+	else if ((from_piece & 95) == 'R')
+	{
+		directions = directions_straight;
+	}
+	else if ((from_piece & 95) == 'N')
+	{
+		directions = directions_horse;
+	}
+	else if ((from_piece & 95) == 'B')
+	{
+		directions = directions_diagonal;
+	}
+
+	for (int i = 0; i < directions.size(); i++)
+	{
+		int to = from + directions[i];
+		int to_piece = _state->get_piece(to);
+		while (!(to & 0x88) && (!to_piece || !Chess::is_same_group(from_piece, to_piece)))
+		{
+			flag = flag || _move == Chess::create(from, to, 0);
+			if (!(to & 0x88) && to_piece && !Chess::is_same_group(from_piece, to_piece))
+			{
+				break;
+			}
+			if ((from_piece & 95) == 'K' || (from_piece & 95) == 'N')
+			{
+				break;
+			}
+			to += directions[i];
+			to_piece = _state->get_piece(to);
+			if (!(from_piece == 'R' && to_piece == 'K' || from_piece == 'r' && to_piece == 'k'))
+			{
+				continue;
+			}
+			if ((from & 15) >= 4 && (from_piece == 'R' && (_state->get_castle() & 8) || from_piece == 'r' && (_state->get_castle() & 2)))
+			{
+				flag = flag || _move == Chess::create(to, from_piece == 'R' ? Chess::g1() : Chess::g8(), 'K');
+			}
+			else if ((from & 15) <= 3 && (from_piece == 'R' && (_state->get_castle() & 4) || from_piece == 'r' && (_state->get_castle() & 1)))
+			{
+				flag = flag || _move == Chess::create(to,from_piece == 'R' ? Chess::c1() : Chess::c8(), 'Q');
+			}
+		}
+	}
+
+	if (!flag)
+	{
+		return false;
+	}
 	godot::Ref<State>test_state = _state->duplicate();
 	apply_move(test_state, _move);
 	return !is_check(test_state, 1 - _group);
@@ -474,7 +590,9 @@ godot::PackedInt32Array RuleStandard::generate_valid_move(godot::Ref<State>_stat
 	godot::PackedInt32Array output;
 	for (int i = 0; i < move_list.size(); i++)
 	{
-		if (is_move_valid(_state, _group, move_list[i]))
+		godot::Ref<State>test_state = _state->duplicate();
+		apply_move(test_state, move_list[i]);
+		if (!is_check(test_state, 1 - _group))
 		{
 			output.push_back(move_list[i]);
 		}
