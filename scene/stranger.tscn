@@ -1,0 +1,19 @@
+[gd_scene load_steps=2 format=3 uid="uid://bi6pvnsvmtkfx"]
+
+[ext_resource type="PackedScene" uid="uid://cyjn8gwybcvvb" path="res://assets/model/stranger.glb" id="1_atibo"]
+
+[node name="stranger" instance=ExtResource("1_atibo")]
+
+[node name="Skeleton3D" parent="骨架" index="0"]
+bones/6/rotation = Quaternion(0.880508, 1.97093e-09, 2.13099e-07, -0.474032)
+bones/12/rotation = Quaternion(-0.0324377, -0.053176, -0.57358, 0.816778)
+bones/34/rotation = Quaternion(-0.58565, 0.590345, 0.0319226, 0.554515)
+bones/40/rotation = Quaternion(-0.0518536, 0.992289, 0.0516985, -0.100004)
+bones/41/rotation = Quaternion(-0.00790639, 0.963204, -0.0082057, -0.268531)
+bones/55/rotation = Quaternion(0.609963, 0.341318, 0.607442, -0.377441)
+bones/61/rotation = Quaternion(0.990837, -0.00204812, 0.0151224, -0.134195)
+bones/62/rotation = Quaternion(-0.0736165, 0.0161115, -0.00343878, 0.997151)
+bones/63/rotation = Quaternion(0.112512, 2.92493e-09, 0.00707895, 0.993625)
+bones/64/rotation = Quaternion(0.158355, -1.74623e-10, 0.00996323, 0.987332)
+bones/65/rotation = Quaternion(0.153217, 2.65118e-09, 0.00963997, 0.988146)
+bones/66/rotation = Quaternion(0.0417023, 2.73121e-09, 0.00262379, 0.999127)

@@ -22,16 +22,16 @@ func performance_test() -> float:
 
 func perft_test() -> void:
 	var node_count:PackedInt32Array
-	chess_state = RuleStandard.parse("r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq - 0 1")
-	node_count = [1, 48, 2039, 97862, 4085603, 193690690]
-	for i:int in range(node_count.size()):
-		var result:int = RuleStandard.perft(chess_state, i, 0)
-		print("perft_test_2 depth:%d expect:%d actual:%d" % [i, node_count[i], result])
 	chess_state = RuleStandard.parse("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
 	node_count = [1, 20, 400, 8902, 197281, 4865609, 119060324]
 	for i:int in range(node_count.size()):
 		var result:int = RuleStandard.perft(chess_state, i, 0)
 		print("perft_test_1 depth:%d expect:%d actual:%d" % [i, node_count[i], result])
+	chess_state = RuleStandard.parse("r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq - 0 1")
+	node_count = [1, 48, 2039, 97862, 4085603, 193690690]
+	for i:int in range(node_count.size()):
+		var result:int = RuleStandard.perft(chess_state, i, 0)
+		print("perft_test_2 depth:%d expect:%d actual:%d" % [i, node_count[i], result])
 	chess_state = RuleStandard.parse("8/2p5/3p4/KP5r/1R3p1k/8/4P1P1/8 w - - 0 1")
 	node_count = [1, 14, 191, 2812, 43238, 674624, 11030083]
 	for i:int in range(node_count.size()):
@@ -66,7 +66,7 @@ func _physics_process(_delta:float):
 		$panel/margin_container/label.text = "%x" % ai.get_transposition_table().best_move(chess_state.get_zobrist())
 
 func make_database() -> void:
-	perft_test()
+	#perft_test()
 	print("before: %dms" % performance_test())
 	chess_state = RuleStandard.parse("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
 	# RuleStandard.search(chess_state, 0, transposition_table, Callable(), 10, debug_output)

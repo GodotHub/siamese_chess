@@ -122,6 +122,7 @@ func dialog_start_game() -> void:
 			state = RuleStandard.parse(text_input_instance.text)
 			if is_instance_valid(state):
 				think_time = 5
+				$chessboard.set_state(state)
 				$dialog.push_dialog("现在棋盘已经准备好了。", true, true)
 				$cheshire.force_set_camera($camera/camera_chessboard)
 				await $dialog.on_next
@@ -148,7 +149,7 @@ func in_game() -> void:
 		$chessboard.execute_move(move)
 		if RuleStandard.get_end_type(state) != "":
 			break
-		$chessboard.set_valid_move(RuleStandard.generate_move(state, 1))
+		$chessboard.set_valid_move(RuleStandard.generate_valid_move(state, 1))
 		$chessboard.set_valid_premove([])
 		$chess_timer.next()
 		await $chessboard.move_played

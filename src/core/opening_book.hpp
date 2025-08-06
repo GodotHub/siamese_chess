@@ -14,9 +14,9 @@ struct Opening
 	godot::PackedInt32Array move;
 };
 
-class OpeningBook : public godot::Object
+class OpeningBook : public godot::RefCounted
 {
-	GDCLASS(OpeningBook, Object)
+	GDCLASS(OpeningBook, RefCounted)
 	public:
 		void load_file(godot::String _path);
 		void save_file(godot::String _path);
