@@ -16,9 +16,6 @@ func _ready() -> void:
 	$chess_timer.connect("timeout", timeout)
 	$interact/area_pastor.connect("clicked", select_dialog)
 
-	if FileAccess.file_exists("user://standard_opening_document.fa"):
-		opening_book.load_file("user://standard_opening_document.fa")
-
 func select_dialog() -> void:
 	if has_method("dialog_" + pastor_state):
 		call("dialog_" + pastor_state)
@@ -155,10 +152,6 @@ func in_game() -> void:
 		await $chessboard.move_played
 		RuleStandard.apply_move(state, $chessboard.confirm_move)
 		$chess_timer.next()
-
-func search() -> void:
-	ai.search(state, 0, is_timeup.bind(think_time), Callable())
-	await ai.search_finished
 
 func timeout(group:int) -> void:
 	if group == 0:	# 棋钟的阵营1才是Pastor的

@@ -22,7 +22,6 @@ private:
 	godot::PackedInt32Array directions_eight_way;
 	godot::PackedInt32Array directions_horse;
 	std::unordered_map<int, godot::PackedInt32Array> position_value;
-	int best_move;
 public:
 	PastorAI();
 
@@ -33,6 +32,7 @@ protected:
 	int get_piece_score(int _by, int _piece);
 	int evaluate(godot::Ref<State> _state, int _move);
 	int compare_move(int a, int b, int best_move, std::array<int, 65536> *history_table = nullptr);
+	int quies(godot::Ref<State> _state, int alpha, int beta, int _group = 0);
 	godot::PackedInt32Array generate_good_capture_move(godot::Ref<State> _state, int _group);
 	int alphabeta(const godot::Ref<State> &_state, int _alpha, int _beta, int _depth, int _group = 0, int _ply = 0, bool _can_null = true, std::array<int, 65536> *_history_table = nullptr, int *killer_1 = nullptr, int *killer_2 = nullptr, const godot::Callable &_is_timeup = godot::Callable(), const godot::Callable &_debug_output = godot::Callable());
 public:
