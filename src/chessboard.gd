@@ -146,7 +146,7 @@ func set_valid_move(move_list:PackedInt32Array) -> void:
 	valid_move.clear()
 	for move:int in move_list:
 		if move == premove:
-			execute_move(premove)
+			execute_move.call_deferred(premove)
 			premove = -1
 			return
 		if !valid_move.has(Chess.from(move)):
