@@ -162,11 +162,6 @@ PastorAI::PastorAI()
 		0,   0,   0,   0,   0,   0,   0,   0,
 		}}
 	};
-	if (godot::FileAccess::file_exists("user://standard_opening.fa")){
-		transposition_table->load_file("user://standard_opening.fa");
-	} else {
-		transposition_table->reserve(1 << 20);
-	}
 }
 
 
