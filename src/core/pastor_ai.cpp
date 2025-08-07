@@ -2,8 +2,8 @@
 #include "rule_standard.hpp"
 #include "chess.hpp"
 #include <godot_cpp/core/error_macros.hpp>
-#include <random>
 #include <godot_cpp/classes/file_access.hpp>
+#include <random>
 
 PastorAI::PastorAI()
 {
@@ -525,7 +525,8 @@ void PastorAI::search(const godot::Ref<State> &_state, int _group, const godot::
 		godot::PackedInt32Array suggest_move = opening_book->get_suggest_move(_state);
 		if (suggest_move.size())
 		{
-			best_move = suggest_move[rand() % suggest_move.size()];
+			std::mt19937_64 rng(time(nullptr));
+			best_move = suggest_move[rng() % suggest_move.size()];
 			call_deferred("emit_signal", "search_finished");
 			return;
 		}
@@ -553,7 +554,8 @@ void PastorAI::set_max_depth(int max_depth)
 	this->max_depth = max_depth;
 }
 
-int PastorAI::get_max_depth() const {
+int PastorAI::get_max_depth() const
+{
 	return this->max_depth;
 }
 
@@ -562,7 +564,8 @@ void PastorAI::set_transposition_table(const godot::Ref<TranspositionTable> &tra
 	this->transposition_table = transposition_table;
 }
 
-godot::Ref<TranspositionTable> PastorAI::get_transposition_table() const {
+godot::Ref<TranspositionTable> PastorAI::get_transposition_table() const
+{
 	return this->transposition_table;
 }
 
