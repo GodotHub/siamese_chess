@@ -1,43 +1,24 @@
-[gd_scene load_steps=4 format=3 uid="uid://daysrodwn6l0m"]
+[gd_scene load_steps=4 format=3 uid="uid://him4la0fcy5s"]
 
-[ext_resource type="PackedScene" uid="uid://bx261kx0v8vew" path="res://scene/sandbox.tscn" id="1_fpof4"]
-[ext_resource type="Script" uid="uid://ccqewlmyrjlcx" path="res://src/self_play.gd" id="2_uawfv"]
-[ext_resource type="LabelSettings" uid="uid://nmf3touvskxy" path="res://font/black.tres" id="3_uawfv"]
+[ext_resource type="PackedScene" uid="uid://bv1nocfh3i556" path="res://scene/opening_editor.tscn" id="1_u3cmr"]
+[ext_resource type="Script" uid="uid://ccqewlmyrjlcx" path="res://src/self_play.gd" id="2_fpof4"]
+[ext_resource type="Script" uid="uid://drrkwtexaa2v2" path="res://src/violet.gd" id="3_uawfv"]
 
-[node name="sandbox" instance=ExtResource("1_fpof4")]
+[node name="sandbox" instance=ExtResource("1_u3cmr")]
 
-[node name="self_play" type="Node3D" parent="." index="5"]
-script = ExtResource("2_uawfv")
+[node name="player" type="Node3D" parent="." index="5"]
+script = ExtResource("2_fpof4")
+epoch = 1
 
-[node name="canvas_layer" type="CanvasLayer" parent="." index="6"]
+[node name="a" type="Node3D" parent="player" index="0"]
+script = ExtResource("3_uawfv")
 
-[node name="root" type="Control" parent="canvas_layer" index="0"]
-layout_mode = 3
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 1
+[node name="b" type="Node3D" parent="player" index="1"]
+script = ExtResource("3_uawfv")
+group = 1
 
-[node name="state" type="Control" parent="canvas_layer/root" index="0"]
-anchors_preset = 0
-offset_left = 8.0
-offset_top = 8.0
-offset_right = 77.0
-offset_bottom = 54.0
+[node name="button_start" type="Button" parent="canvas_layer/panel/v_box_container/margin_container/h_box_container" index="3"]
+layout_mode = 2
+text = "开始自对弈"
 
-[node name="player" type="Label" parent="canvas_layer/root/state" index="0"]
-layout_mode = 0
-offset_right = 43.0
-offset_bottom = 23.0
-text = "当前玩家:"
-label_settings = ExtResource("3_uawfv")
-
-[node name="epoch" type="Label" parent="canvas_layer/root/state" index="1"]
-layout_mode = 0
-offset_top = 23.0
-offset_right = 69.0
-offset_bottom = 46.0
-text = "迭代次数:"
-label_settings = ExtResource("3_uawfv")
+[connection signal="pressed" from="canvas_layer/panel/v_box_container/margin_container/h_box_container/button_start" to="player" method="on_button_start_pressed"]

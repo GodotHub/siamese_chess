@@ -152,7 +152,6 @@ func in_game() -> void:
 		await $chessboard.move_played
 		RuleStandard.apply_move(state, $chessboard.confirm_move)
 		$chess_timer.next()
-	
 
 func timeout(group:int) -> void:
 	if group == 0:	# 棋钟的阵营1才是Pastor的

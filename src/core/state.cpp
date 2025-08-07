@@ -40,6 +40,56 @@ godot::PackedInt32Array State::get_all_pieces()
 	return output;
 }
 
+godot::Array State::get_pieces_info() {
+	godot::Array output;
+	for (int from_1 = 0; from_1 < 8; from_1++)
+	{
+		for (int from_2 = 0; from_2 < 8; from_2++)
+		{
+			int from = (from_1 << 4) + from_2;
+			int piece_type = get_piece(from);
+			if (piece_type)
+			{
+				godot::Dictionary dict;
+				godot::Vector2i position(from & 0XF, from >> 4);
+				dict["square"] = position;
+				dict["side"] = get_turn();
+				switch (piece_type)
+				{
+					case 'k':
+					case 'K':{
+						dict["piece_type"] = 0;
+					} break;
+					case 'q':
+					case 'Q':{
+						dict["piece_type"] = 1;
+					} break;
+					case 'r':
+					case 'R':{
+						dict["piece_type"] = 2;
+					} break;
+					case 'n':
+					case 'N':{
+						dict["piece_type"] = 3;
+					} break;
+					case 'b':
+					case 'B':{
+						dict["piece_type"] = 4;
+					} break;
+					case 'p':
+					case 'P':{
+						dict["piece_type"] = 5;
+					} break;
+					default:
+						break;
+				}
+				output.append(dict);
+			}
+		}
+	}
+	return output;
+}
+
 int State::get_piece(int _by)
 {
 	if (_by & 0x88)
@@ -197,4 +247,5 @@ void State::_bind_methods()
 	godot::ClassDB::bind_method(godot::D_METHOD("get_zobrist"), &State::get_zobrist);
 	godot::ClassDB::bind_method(godot::D_METHOD("has_history"), &State::has_history);
 	godot::ClassDB::bind_method(godot::D_METHOD("push_history"), &State::push_history);
+	godot::ClassDB::bind_method(godot::D_METHOD("get_pieces_info"), &State::get_pieces_info);
 }

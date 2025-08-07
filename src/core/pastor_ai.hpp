@@ -5,7 +5,6 @@
 #include "transposition_table.hpp"
 #include "opening_book.hpp"
 #include <unordered_map>
-#include <thread>
 
 class PastorAI : public AI {
 	GDCLASS(PastorAI, AI)
@@ -16,20 +15,20 @@ private:
 	int max_depth;
 	int WIN = 50000;
 	int THRESHOLD = 60000;
+	int best_move;
 	std::unordered_map<int, int> piece_value;
 	godot::PackedInt32Array directions_diagonal;
 	godot::PackedInt32Array directions_straight;
 	godot::PackedInt32Array directions_eight_way;
 	godot::PackedInt32Array directions_horse;
 	std::unordered_map<int, godot::PackedInt32Array> position_value;
-	int best_move;
 public:
 	PastorAI();
 
 protected:
 	static void _bind_methods();
 
-private:
+protected:
 	int get_piece_score(int _by, int _piece);
 	int evaluate(godot::Ref<State> _state, int _move);
 	int compare_move(int a, int b, int best_move, std::array<int, 65536> *history_table = nullptr);

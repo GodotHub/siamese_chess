@@ -11,6 +11,7 @@ class AI : public godot::RefCounted {
 	GDCLASS(AI, godot::RefCounted)
 protected:
 	static void _bind_methods();
+
 public:
 	void start_search(const godot::Ref<State> &_state, int _group, const godot::Callable &_is_timeup, const godot::Callable &_debug_output);
 	virtual void search(const godot::Ref<State> &_state, int _group, const godot::Callable &_is_timeup, const godot::Callable &_debug_output) = 0;

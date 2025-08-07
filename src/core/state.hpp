@@ -14,6 +14,7 @@ class State : public godot::RefCounted
 		State();
 		godot::Ref<State> duplicate();
 		godot::PackedInt32Array get_all_pieces();
+		godot::Array get_pieces_info();
 		int get_piece(int _by);
 		int has_piece(int _by);
 		void add_piece(int _by, int _piece);
@@ -37,6 +38,7 @@ class State : public godot::RefCounted
 		void push_history(int64_t _zobrist);
 		int get_relative_score(int _group);
 		static void _bind_methods();
+
 	private:
 		int pieces[128];
 		int turn;
