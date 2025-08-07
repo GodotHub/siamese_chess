@@ -62,7 +62,7 @@ func next() -> void:
 	$texture_rect_bottom/label.text = ""
 	click_anywhere = false
 	force_selection = false
-	on_next.emit()
+	on_next.emit.call_deferred()
 
 func clicked_selection(_selected:String) -> void:
 	selected = _selected.to_int()
