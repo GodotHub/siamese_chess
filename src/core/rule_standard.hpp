@@ -12,6 +12,7 @@ class RuleStandard : public Rule
 		RuleStandard();
 		virtual godot::String get_end_type(godot::Ref<State> _state);
 		virtual godot::Ref<State> parse(godot::String _str);
+		virtual godot::Ref<State> create_initial_state();
 		virtual godot::String stringify(godot::Ref<State> _state);
 		virtual bool is_move_valid(godot::Ref<State> _state, int _group, int _move);
 		virtual bool is_check(godot::Ref<State> _state, int _group);

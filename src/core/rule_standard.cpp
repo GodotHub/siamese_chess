@@ -89,6 +89,11 @@ godot::Ref<State>RuleStandard::parse(godot::String _str)
 	return state;
 }
 
+godot::Ref<State> RuleStandard::create_initial_state()
+{
+	return parse("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
+}
+
 godot::String RuleStandard::stringify(godot::Ref<State>_state)
 {
 	int null_counter = 0;
@@ -937,6 +942,7 @@ void RuleStandard::_bind_methods()
 {
 	godot::ClassDB::bind_method(godot::D_METHOD("get_end_type"), &RuleStandard::get_end_type);
 	godot::ClassDB::bind_method(godot::D_METHOD("parse"), &RuleStandard::parse);
+	godot::ClassDB::bind_method(godot::D_METHOD("create_initial_state"), &RuleStandard::create_initial_state);
 	godot::ClassDB::bind_method(godot::D_METHOD("stringify"), &RuleStandard::stringify);
 	godot::ClassDB::bind_method(godot::D_METHOD("is_check"), &RuleStandard::is_check);
 	godot::ClassDB::bind_method(godot::D_METHOD("is_move_valid"), &RuleStandard::is_move_valid);
