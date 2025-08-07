@@ -1,6 +1,7 @@
 extends Node3D
 
 var state:State = null
+var initial_state:State = null
 @onready var chessboard = $chessboard
 
 func _ready() -> void:
@@ -11,8 +12,13 @@ func _ready() -> void:
 		add_child(text_input_instance)
 		await text_input_instance.confirmed
 		state = RuleStandard.parse(text_input_instance.text)
+	initial_state = state.duplicate()
 	chessboard.set_state(state.duplicate())
 	update_move()
+
+func _unhandled_input(event:InputEvent) -> void:
+	if event is InputEventKey && event.is_pressed() && event.keycode == KEY_R:
+		reset()
 
 func receive_move() -> void:
 	RuleStandard.apply_move(state, chessboard.confirm_move)
@@ -23,3 +29,8 @@ func update_move() -> void:
 	var premove_list:PackedInt32Array = RuleStandard.generate_premove(state, 1 - state.get_turn())
 	chessboard.set_valid_move(move_list)
 	chessboard.set_valid_premove(premove_list)
+
+func reset() -> void:
+	state = initial_state.duplicate()
+	chessboard.set_state(initial_state)
+	update_move()
