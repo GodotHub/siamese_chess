@@ -113,7 +113,7 @@ func dialog_start_game() -> void:
 			call_deferred("in_game")
 			break
 		elif $dialog.selected == 4:
-			var text_input_instance:TextInput = TextInput.create_text_input_instance("输入FEN格式的布局：")
+			var text_input_instance:TextInput = TextInput.create_text_input_instance("输入FEN格式的布局：", "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
 			add_child(text_input_instance)
 			await text_input_instance.confirmed
 			state = RuleStandard.parse(text_input_instance.text)

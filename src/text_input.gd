@@ -4,14 +4,16 @@ class_name TextInput
 signal confirmed()	# -1表示取消
 
 var hint:String = "请输入："
+var default:String = ""
 var text:String = ""
 var has_cancel:bool = true
 
 const packed_scene:PackedScene = preload("res://scene/text_input.tscn")
 
-static func create_text_input_instance(_hint:String) -> TextInput:
+static func create_text_input_instance(_hint:String, _default:String = "") -> TextInput:
 	var instance:TextInput = packed_scene.instantiate()
 	instance.hint = _hint
+	instance.default = _default
 	return instance
 
 func _ready() -> void:
@@ -19,6 +21,7 @@ func _ready() -> void:
 	$texture_rect/label.text = hint
 	$texture_rect/label.visible = false
 	$texture_rect/line_edit.visible = false
+	$texture_rect/line_edit.text = default
 	var tween:Tween = create_tween()
 	tween.tween_interval(0.3)
 	tween.tween_property($texture_rect/label, "visible", true, 0)
