@@ -14,13 +14,13 @@ func play():
 	var is_end: bool = false
 	for i in range(0, epoch):
 		while true:
-			is_end = go(white)
+			is_end = await go(white)
 			add_sample_cache()
 			if is_end:
 				add_sample()
 				break
 			await get_tree().create_timer(0.5).timeout
-			is_end = go(black)
+			is_end = await go(black)
 			add_sample_cache()
 			if is_end:
 				add_sample()
@@ -28,11 +28,12 @@ func play():
 	sample_save_json()
 	
 func search(ai_node: Violet) -> int:
-	ai_node.ai.search(chessboard.state, ai_node.group, Callable(), Callable())
+	ai_node.ai.start_search(chessboard.state, ai_node.group, Callable(), Callable())
+	await ai_node.ai.search_finished
 	return ai_node.ai.get_search_result()
 	
 func go(ai_node: Violet) -> bool:
-	var move = search(ai_node)
+	var move = await search(ai_node)
 	chessboard.execute_move(move)
 	return end() != -1
 
