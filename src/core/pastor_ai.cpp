@@ -247,7 +247,7 @@ godot::PackedInt32Array PastorAI::generate_good_capture_move(godot::Ref<State>_s
 				{
 					if (!(to & 0x88) && to_piece && !Chess::is_same_group(from_piece, to_piece))
 					{
-						if (abs(get_piece_score(_from, from_piece)) <= abs(get_piece_score(to, to_piece)))
+						if (abs(piece_value[_from]) <= abs(piece_value[to]))
 						{
 							output.push_back(Chess::create(_from, to, 0));
 						}
