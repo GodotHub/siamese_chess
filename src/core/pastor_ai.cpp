@@ -502,7 +502,6 @@ int PastorAI::alphabeta(const godot::Ref<State> &_state, int _alpha, int _beta, 
 			}
 			return _beta;
 		}
-
 		if (_alpha < value)
 		{
 			found_pv = true;
@@ -513,6 +512,10 @@ int PastorAI::alphabeta(const godot::Ref<State> &_state, int _alpha, int _beta, 
 			{
 				(*_history_table)[move_list[i] & 0xFFFF] += (1 << _depth);
 			}
+		}
+		if (time_passed() >= plan_time_cost(_state) || interrupted)
+		{
+			return _alpha;
 		}
 	}
 	if (!transposition_table.is_null())
