@@ -7,7 +7,6 @@ var think_time:int = 10
 var start_thinking:float = 0
 var opening_book:OpeningBook = OpeningBook.new()
 var ai: PastorAI = PastorAI.new();
-var interrupted:bool = false
 
 var pastor_state:String = "idle"
 
@@ -58,10 +57,10 @@ func dialog_in_game() -> void:
 			history.pop_back()
 		if history.back().get_turn() == 0:
 			history.pop_back()
-			interrupted = true
+			ai.stop_search()
 		state = history.back().duplicate()
 	elif $dialog.selected == 1:
-		interrupted = true
+		ai.stop_search()
 		$chess_timer.stop()
 		$chessboard.set_valid_move([])
 		$chessboard.set_valid_premove([])
@@ -136,11 +135,11 @@ func dialog_start_game() -> void:
 
 func in_game() -> void:
 	while RuleStandard.get_end_type(state) == "":
-		timer_start()
 		$chessboard.set_valid_move([])
 		$chessboard.set_valid_premove(RuleStandard.generate_premove(state, 1))
-		ai.start_search(state, 0, is_timeup.bind(think_time), Callable())
-		await ai.search_finished
+		ai.start_search(state, 0, $chess_timer.time_1, Callable())
+		if ai.is_searching():
+			await ai.search_finished
 		var move:int = ai.get_search_result()
 		RuleStandard.apply_move(state, move)
 		$chessboard.execute_move(move)
@@ -149,9 +148,13 @@ func in_game() -> void:
 		$chessboard.set_valid_move(RuleStandard.generate_valid_move(state, 1))
 		$chessboard.set_valid_premove([])
 		$chess_timer.next()
+		ai.start_search(state, 1, INF, Callable())
 		await $chessboard.move_played
 		RuleStandard.apply_move(state, $chessboard.confirm_move)
 		$chess_timer.next()
+		ai.stop_search()
+		if ai.is_searching():
+			await ai.search_finished
 
 func timeout(group:int) -> void:
 	if group == 0:	# 棋钟的阵营1才是Pastor的
@@ -188,9 +191,3 @@ func game_end(end_type:String) -> void:	# 0:长将和 1:白方逼和 2:黑方逼
 			$dialog.push_dialog("棋局结束，黑方将杀胜利", true, true)
 			await $dialog.on_next
 	pastor_state = "idle"
-
-func timer_start() -> void:
-	start_thinking = Time.get_unix_time_from_system()
-
-func is_timeup(duration:float) -> bool:
-	return Time.get_unix_time_from_system() - start_thinking >= duration || interrupted

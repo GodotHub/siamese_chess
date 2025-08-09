@@ -8,6 +8,16 @@ Chess::Chess()
 
 }
 
+uint64_t Chess::mask(int n)
+{
+	return 1 << n;
+}
+
+int Chess::x88_to_64(int n)
+{
+	return (n >> 4 << 3) | (n & 0xF);
+}
+
 int Chess::group(int piece)
 {
 	return piece >= 'a' && piece <= 'z';

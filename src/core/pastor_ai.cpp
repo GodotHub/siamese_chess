@@ -164,6 +164,10 @@ PastorAI::PastorAI()
 	};
 }
 
+double PastorAI::plan_time_cost(godot::Ref<State> _state)
+{
+	return time_left / (120 - _state->get_round());
+}
 
 godot::PackedInt32Array PastorAI::generate_good_capture_move(godot::Ref<State>_state, int _group)
 {
@@ -367,7 +371,7 @@ int PastorAI::quies(godot::Ref<State>_state, int _alpha, int _beta, int _group)
 	return _alpha;
 }
 
-int PastorAI::alphabeta(const godot::Ref<State> &_state, int _alpha, int _beta, int _depth, int _group, int _ply, bool _can_null, std::array<int, 65536> *_history_table, int *killer_1, int *killer_2, const godot::Callable &_is_timeup, const godot::Callable &_debug_output)
+int PastorAI::alphabeta(const godot::Ref<State> &_state, int _alpha, int _beta, int _depth, int _group, int _ply, bool _can_null, std::array<int, 65536> *_history_table, int *killer_1, int *killer_2, const godot::Callable &_debug_output)
 {
 	bool found_pv = false;
 	if (!transposition_table.is_null())
@@ -392,7 +396,7 @@ int PastorAI::alphabeta(const godot::Ref<State> &_state, int _alpha, int _beta, 
 		return 0; // 视作平局，如果局面不太好，也不会选择负分的下法
 	}
 
-	if (_is_timeup.is_valid() && _is_timeup.call())
+	if (time_passed() >= plan_time_cost(_state) || interrupted)
 	{
 		return quies(_state, _alpha, _beta, _group);
 	}
@@ -409,7 +413,7 @@ int PastorAI::alphabeta(const godot::Ref<State> &_state, int _alpha, int _beta, 
 			godot::Ref<State> test_state = _state->duplicate();
 			RuleStandard::get_singleton()->apply_move(test_state, best_move);
 			test_state->change_score(evaluate(_state, best_move));
-			value = -alphabeta(test_state, -_beta, -_alpha, _depth - 1, 1 - _group, _ply + 1, false, _history_table, nullptr, nullptr, _is_timeup, _debug_output);
+			value = -alphabeta(test_state, -_beta, -_alpha, _depth - 1, 1 - _group, _ply + 1, false, _history_table, nullptr, nullptr, _debug_output);
 			if (_beta <= value)
 			{
 				return _beta;
@@ -425,7 +429,7 @@ int PastorAI::alphabeta(const godot::Ref<State> &_state, int _alpha, int _beta, 
 		godot::Ref<State> test_state = _state->duplicate();
 		RuleStandard::get_singleton()->apply_move(test_state, *killer_1);
 		test_state->change_score(evaluate(_state, *killer_1));
-		value = -alphabeta(test_state, -_beta, -_alpha, _depth - 1, 1 - _group, _ply + 1, false, _history_table, nullptr, nullptr, _is_timeup, _debug_output);
+		value = -alphabeta(test_state, -_beta, -_alpha, _depth - 1, 1 - _group, _ply + 1, false, _history_table, nullptr, nullptr, _debug_output);
 		if (_beta <= value)
 		{
 			return _beta;
@@ -436,7 +440,7 @@ int PastorAI::alphabeta(const godot::Ref<State> &_state, int _alpha, int _beta, 
 		godot::Ref<State> test_state = _state->duplicate();
 		RuleStandard::get_singleton()->apply_move(test_state, *killer_2);
 		test_state->change_score(evaluate(_state, *killer_2));
-		value = -alphabeta(test_state, -_beta, -_alpha, _depth - 1, 1 - _group, _ply + 1, false, _history_table, nullptr, nullptr, _is_timeup, _debug_output);
+		value = -alphabeta(test_state, -_beta, -_alpha, _depth - 1, 1 - _group, _ply + 1, false, _history_table, nullptr, nullptr, _debug_output);
 		if (_beta <= value)
 		{
 			return _beta;
@@ -478,11 +482,11 @@ int PastorAI::alphabeta(const godot::Ref<State> &_state, int _alpha, int _beta, 
 
 		if (found_pv)
 		{
-			value = -alphabeta(test_state, -_alpha - 1, -_alpha, _depth - 1, 1 - _group, _ply + 1, false, _history_table, &next_killer_1, &next_killer_2, _is_timeup, _debug_output);
+			value = -alphabeta(test_state, -_alpha - 1, -_alpha, _depth - 1, 1 - _group, _ply + 1, false, _history_table, &next_killer_1, &next_killer_2, _debug_output);
 		}
 		if (!found_pv || value > _alpha && value < _beta)
 		{
-			value = -alphabeta(test_state, -_beta, -_alpha, _depth - 1, 1 - _group, _ply + 1, false, _history_table, &next_killer_1, &next_killer_2, _is_timeup, _debug_output);
+			value = -alphabeta(test_state, -_beta, -_alpha, _depth - 1, 1 - _group, _ply + 1, false, _history_table, &next_killer_1, &next_killer_2, _debug_output);
 		}
 
 		if (_beta <= value)
@@ -518,7 +522,7 @@ int PastorAI::alphabeta(const godot::Ref<State> &_state, int _alpha, int _beta, 
 	return _alpha;
 }
 
-void PastorAI::search(const godot::Ref<State> &_state, int _group, const godot::Callable &_is_timeup, const godot::Callable &_debug_output)
+void PastorAI::search(const godot::Ref<State> &_state, int _group, const godot::Callable &_debug_output)
 {
 	if (opening_book->has_record(_state))
 	{
@@ -527,21 +531,19 @@ void PastorAI::search(const godot::Ref<State> &_state, int _group, const godot::
 		{
 			std::mt19937_64 rng(time(nullptr));
 			best_move = suggest_move[rng() % suggest_move.size()];
-			call_deferred("emit_signal", "search_finished");
 			return;
 		}
 	}
 	std::array<int, 65536> history_table;
 	for (int i = 1; i < max_depth; i++)
 	{
-		alphabeta(_state, -THRESHOLD, THRESHOLD, i, _group, 0, true, &history_table, nullptr, nullptr, _is_timeup, _debug_output);
-		if (_is_timeup.is_valid() && _is_timeup.call())
+		alphabeta(_state, -THRESHOLD, THRESHOLD, i, _group, 0, true, &history_table, nullptr, nullptr, _debug_output);
+		if (time_passed() >= plan_time_cost(_state) || interrupted)
 		{
 			break;
 		}
 	}
 	best_move = transposition_table->best_move(_state->get_zobrist());
-	call_deferred("emit_signal", "search_finished");
 }
 
 int PastorAI::get_search_result()
@@ -572,7 +574,7 @@ godot::Ref<TranspositionTable> PastorAI::get_transposition_table() const
 void PastorAI::_bind_methods()
 {
 	ADD_SIGNAL(godot::MethodInfo("search_finished"));
-	godot::ClassDB::bind_method(godot::D_METHOD("search", "state", "group", "is_timeup", "debug_output"), &PastorAI::search);
+	godot::ClassDB::bind_method(godot::D_METHOD("search", "state", "group", "debug_output"), &PastorAI::search);
 	godot::ClassDB::bind_method(godot::D_METHOD("get_search_result"), &PastorAI::get_search_result);
 	godot::ClassDB::bind_method(godot::D_METHOD("set_max_depth", "max_depth"), &PastorAI::set_max_depth);
 	godot::ClassDB::bind_method(godot::D_METHOD("get_max_depth"), &PastorAI::get_max_depth);
