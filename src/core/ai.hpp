@@ -18,7 +18,7 @@ protected:
 	bool searching;
 public:
 	void start_search(const godot::Ref<State> &_state, int _group, double _time_left, const godot::Callable &_debug_output);
-	void search_thread(const godot::Ref<State> &_state, int _group, double _time_left, const godot::Callable &_debug_output);
+	void search_thread(const godot::Ref<State> &_state, int _group, const godot::Callable &_debug_output);
 	void stop_search();
 	bool is_searching();
 	double time_passed();

@@ -8,11 +8,11 @@ void AI::start_search(const godot::Ref<State> &_state, int _group, double _time_
 	interrupted = false;
 	start_thinking = godot::Time::get_singleton()->get_unix_time_from_system();
 	time_left = _time_left;
-	std::thread thread(&AI::search_thread, this, _state, _group, _debug_output);
+	std::thread thread(&AI::search_thread, this, _state->duplicate(), _group, _debug_output);
 	thread.detach();
 }
 
-void AI::search_thread(const godot::Ref<State> &_state, int _group, double _time_left, const godot::Callable &_debug_output)
+void AI::search_thread(const godot::Ref<State> &_state, int _group, const godot::Callable &_debug_output)
 {
 	search(_state, _group, _debug_output);
 	call_deferred("emit_signal", "search_finished");
