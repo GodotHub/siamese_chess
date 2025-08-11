@@ -413,7 +413,7 @@ int PastorAI::alphabeta(const godot::Ref<State> &_state, int _alpha, int _beta, 
 			godot::Ref<State> test_state = _state->duplicate();
 			RuleStandard::get_singleton()->apply_move(test_state, best_move);
 			test_state->change_score(evaluate(_state, best_move));
-			value = -alphabeta(test_state, -_beta, -_alpha, _depth - 1, 1 - _group, _ply + 1, false, _history_table, nullptr, nullptr, _debug_output);
+			value = -alphabeta(test_state, -_beta, -_alpha, _depth - 1, 1 - _group, _ply + 1, true, _history_table, nullptr, nullptr, _debug_output);
 			if (_beta <= value)
 			{
 				return _beta;
@@ -429,7 +429,7 @@ int PastorAI::alphabeta(const godot::Ref<State> &_state, int _alpha, int _beta, 
 		godot::Ref<State> test_state = _state->duplicate();
 		RuleStandard::get_singleton()->apply_move(test_state, *killer_1);
 		test_state->change_score(evaluate(_state, *killer_1));
-		value = -alphabeta(test_state, -_beta, -_alpha, _depth - 1, 1 - _group, _ply + 1, false, _history_table, nullptr, nullptr, _debug_output);
+		value = -alphabeta(test_state, -_beta, -_alpha, _depth - 1, 1 - _group, _ply + 1, true, _history_table, nullptr, nullptr, _debug_output);
 		if (_beta <= value)
 		{
 			return _beta;
@@ -440,7 +440,7 @@ int PastorAI::alphabeta(const godot::Ref<State> &_state, int _alpha, int _beta, 
 		godot::Ref<State> test_state = _state->duplicate();
 		RuleStandard::get_singleton()->apply_move(test_state, *killer_2);
 		test_state->change_score(evaluate(_state, *killer_2));
-		value = -alphabeta(test_state, -_beta, -_alpha, _depth - 1, 1 - _group, _ply + 1, false, _history_table, nullptr, nullptr, _debug_output);
+		value = -alphabeta(test_state, -_beta, -_alpha, _depth - 1, 1 - _group, _ply + 1, true, _history_table, nullptr, nullptr, _debug_output);
 		if (_beta <= value)
 		{
 			return _beta;
@@ -448,7 +448,7 @@ int PastorAI::alphabeta(const godot::Ref<State> &_state, int _alpha, int _beta, 
 	}
 	if (_can_null)
 	{
-		int score = -alphabeta(_state, -_beta, -_beta + 1, _depth - 3, 1 - _group, false);
+		int score = -alphabeta(_state, -_beta, -_beta + 1, _depth - 3, 1 - _group, _ply + 1, false);
 		if (score >= _beta)
 		{
 			return _beta;
@@ -482,11 +482,11 @@ int PastorAI::alphabeta(const godot::Ref<State> &_state, int _alpha, int _beta, 
 
 		if (found_pv)
 		{
-			value = -alphabeta(test_state, -_alpha - 1, -_alpha, _depth - 1, 1 - _group, _ply + 1, false, _history_table, &next_killer_1, &next_killer_2, _debug_output);
+			value = -alphabeta(test_state, -_alpha - 1, -_alpha, _depth - 1, 1 - _group, _ply + 1, true, _history_table, &next_killer_1, &next_killer_2, _debug_output);
 		}
 		if (!found_pv || value > _alpha && value < _beta)
 		{
-			value = -alphabeta(test_state, -_beta, -_alpha, _depth - 1, 1 - _group, _ply + 1, false, _history_table, &next_killer_1, &next_killer_2, _debug_output);
+			value = -alphabeta(test_state, -_beta, -_alpha, _depth - 1, 1 - _group, _ply + 1, true, _history_table, &next_killer_1, &next_killer_2, _debug_output);
 		}
 
 		if (_beta <= value)
