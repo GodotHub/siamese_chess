@@ -1,0 +1,32 @@
+[gd_scene load_steps=4 format=3 uid="uid://c8xu1l1ao7rp8"]
+
+[ext_resource type="PackedScene" uid="uid://dtfiqcyb2edwn" path="res://assets/model/phonograph.glb" id="1_ux6jj"]
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_ux6jj"]
+height = 0.00341797
+radius = 0.179688
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_ux6jj"]
+size = Vector3(0.0743561, 0.0632019, 0.31665)
+
+[node name="phonograph" instance=ExtResource("1_ux6jj")]
+
+[node name="area_vinyl" type="Area3D" parent="." index="9"]
+collision_layer = 2
+collision_mask = 0
+monitoring = false
+monitorable = false
+
+[node name="collision_shape_3d" type="CollisionShape3D" parent="area_vinyl" index="0"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0322797, 0.220947, 0.015853)
+shape = SubResource("CylinderShape3D_ux6jj")
+
+[node name="area_stylus" type="Area3D" parent="." index="10"]
+collision_layer = 2
+collision_mask = 0
+monitoring = false
+monitorable = false
+
+[node name="collision_shape_3d" type="CollisionShape3D" parent="area_stylus" index="0"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.160622, 0.244064, -0.0286865)
+shape = SubResource("BoxShape3D_ux6jj")
