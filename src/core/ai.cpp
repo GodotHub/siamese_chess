@@ -36,7 +36,7 @@ double AI::time_passed()
 
 void AI::_bind_methods()
 {
-	godot::ClassDB::bind_method(godot::D_METHOD("start_search", "state", "group", "debug_output"), &AI::start_search);
+	godot::ClassDB::bind_method(godot::D_METHOD("start_search", "state", "group", "time_left", "debug_output"), &AI::start_search);
 	godot::ClassDB::bind_method(godot::D_METHOD("stop_search"), &AI::stop_search);
 	godot::ClassDB::bind_method(godot::D_METHOD("is_searching"), &AI::is_searching);
 	godot::ClassDB::bind_method(godot::D_METHOD("search", "state", "group", "debug_output"), &AI::search);
