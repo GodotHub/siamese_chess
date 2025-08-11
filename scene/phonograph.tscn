@@ -1,6 +1,65 @@
-[gd_scene load_steps=4 format=3 uid="uid://c8xu1l1ao7rp8"]
+[gd_scene load_steps=13 format=3 uid="uid://c8xu1l1ao7rp8"]
 
 [ext_resource type="PackedScene" uid="uid://dtfiqcyb2edwn" path="res://assets/model/phonograph.glb" id="1_ux6jj"]
+[ext_resource type="Shader" uid="uid://dd7xsr1eeq6mo" path="res://src/unmoving_plaid.gdshader" id="2_cvdbm"]
+[ext_resource type="Texture2D" uid="uid://d15qcqdl3xuf3" path="res://assets/texture/Texturelabs_Fabric_186S.jpg" id="3_irgf4"]
+[ext_resource type="Texture2D" uid="uid://c41qgg7cur57o" path="res://assets/texture/Texturelabs_Stone_131S.jpg" id="4_jkwwu"]
+[ext_resource type="Texture2D" uid="uid://dc1bupw2qibgu" path="res://assets/texture/Texturelabs_Paper_374S.jpg" id="5_qow6u"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_jkwwu"]
+render_priority = 0
+shader = ExtResource("2_cvdbm")
+shader_parameter/texture_albedo = ExtResource("3_irgf4")
+shader_parameter/scale = 1.0
+shader_parameter/hue_shift = 0.0
+shader_parameter/saturation_mult = 0.76
+shader_parameter/value_mult = 0.77
+shader_parameter/brightness_add = 0.0
+shader_parameter/contrast_mult = 1.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_8wbsc"]
+render_priority = 0
+shader = ExtResource("2_cvdbm")
+shader_parameter/texture_albedo = ExtResource("4_jkwwu")
+shader_parameter/scale = 1.0
+shader_parameter/hue_shift = 0.0
+shader_parameter/saturation_mult = 0.421
+shader_parameter/value_mult = 0.932
+shader_parameter/brightness_add = 0.251
+shader_parameter/contrast_mult = 0.792
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_raspe"]
+render_priority = 0
+shader = ExtResource("2_cvdbm")
+shader_parameter/texture_albedo = ExtResource("5_qow6u")
+shader_parameter/scale = 1.0
+shader_parameter/hue_shift = 0.0
+shader_parameter/saturation_mult = 1.0
+shader_parameter/value_mult = 1.0
+shader_parameter/brightness_add = -0.055
+shader_parameter/contrast_mult = 1.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_cvdbm"]
+render_priority = 0
+shader = ExtResource("2_cvdbm")
+shader_parameter/texture_albedo = ExtResource("3_irgf4")
+shader_parameter/scale = 1.0
+shader_parameter/hue_shift = 0.0
+shader_parameter/saturation_mult = 0.76
+shader_parameter/value_mult = 0.77
+shader_parameter/brightness_add = 0.0
+shader_parameter/contrast_mult = 1.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_577lu"]
+render_priority = 0
+shader = ExtResource("2_cvdbm")
+shader_parameter/texture_albedo = ExtResource("4_jkwwu")
+shader_parameter/scale = 1.0
+shader_parameter/hue_shift = 0.0
+shader_parameter/saturation_mult = 0.421
+shader_parameter/value_mult = 0.932
+shader_parameter/brightness_add = 0.251
+shader_parameter/contrast_mult = 0.792
 
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_ux6jj"]
 height = 0.00341797
@@ -10,6 +69,31 @@ radius = 0.179688
 size = Vector3(0.0743561, 0.0632019, 0.31665)
 
 [node name="phonograph" instance=ExtResource("1_ux6jj")]
+
+[node name="body" parent="." index="0"]
+surface_material_override/0 = SubResource("ShaderMaterial_jkwwu")
+
+[node name="vinyl_base" parent="." index="1"]
+surface_material_override/0 = SubResource("ShaderMaterial_8wbsc")
+
+[node name="stylus" parent="." index="2"]
+surface_material_override/0 = SubResource("ShaderMaterial_raspe")
+
+[node name="stylus_base" parent="." index="3"]
+surface_material_override/0 = SubResource("ShaderMaterial_raspe")
+
+[node name="knob_1" parent="." index="4"]
+surface_material_override/0 = SubResource("ShaderMaterial_raspe")
+
+[node name="knob_2" parent="." index="5"]
+surface_material_override/0 = SubResource("ShaderMaterial_raspe")
+
+[node name="vinyl" parent="." index="6"]
+surface_material_override/0 = SubResource("ShaderMaterial_raspe")
+surface_material_override/1 = SubResource("ShaderMaterial_cvdbm")
+
+[node name="axis" parent="." index="7"]
+surface_material_override/0 = SubResource("ShaderMaterial_577lu")
 
 [node name="area_vinyl" type="Area3D" parent="." index="9"]
 collision_layer = 2
