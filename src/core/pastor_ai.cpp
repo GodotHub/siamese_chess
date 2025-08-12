@@ -166,7 +166,7 @@ PastorAI::PastorAI()
 
 double PastorAI::plan_time_cost(godot::Ref<State> _state)
 {
-	return time_left / (120 - _state->get_round());
+	return pow(time_left * (_state->get_round()), 0.2);
 }
 
 godot::PackedInt32Array PastorAI::generate_good_capture_move(godot::Ref<State>_state, int _group)
