@@ -1,4 +1,4 @@
-[gd_scene load_steps=85 format=3 uid="uid://bmyf2h17xaxlj"]
+[gd_scene load_steps=86 format=3 uid="uid://bmyf2h17xaxlj"]
 
 [ext_resource type="PackedScene" uid="uid://gdof8yy8yrjv" path="res://assets/model/environment.glb" id="1_b3374"]
 [ext_resource type="PackedScene" uid="uid://d1s6qj7aofldk" path="res://scene/chessboard.tscn" id="2_3p4nk"]
@@ -34,7 +34,8 @@
 [ext_resource type="AudioStream" uid="uid://www4mdghmloh" path="res://assets/audio/52645__kstein1__white-noise.wav" id="29_x2qnl"]
 [ext_resource type="PackedScene" uid="uid://kqoc0aycgs35" path="res://scene/dialog.tscn" id="30_b1ytd"]
 [ext_resource type="PackedScene" uid="uid://s1v4ec45m2i5" path="res://assets/model/cheshire.glb" id="34_e7hh8"]
-[ext_resource type="PackedScene" uid="uid://c8xu1l1ao7rp8" path="res://scene/phonograph.tscn" id="35_eosfh"]
+[ext_resource type="PackedScene" uid="uid://dkha0s03djtdq" path="res://scene/phonograph.tscn" id="35_eosfh"]
+[ext_resource type="AudioStream" uid="uid://dsqaodhmws5v8" path="res://assets/audio/debussy-images-1-1-anderson.mp3" id="36_gw0lo"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_e7hh8"]
 render_priority = 0
@@ -676,10 +677,11 @@ metadata/_custom_type_script = "uid://dg85frcnjlauy"
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.350677, -0.343262, -0.00830078)
 shape = SubResource("BoxShape3D_gw0lo")
 
-[node name="area_phonograph" type="Area3D" parent="interact" index="18" node_paths=PackedStringArray("camera")]
+[node name="area_phonograph" type="Area3D" parent="interact" index="18" node_paths=PackedStringArray("camera", "inspectable_item")]
 transform = Transform3D(1.78814e-07, 0, -1, 0, 1, 0, 1, 0, 1.78814e-07, 2.64681, 1.34134, 6.06362)
 script = ExtResource("7_hgmdq")
 camera = NodePath("../../camera/camera_phonograph")
+inspectable_item = [NodePath("../../phonograph")]
 metadata/_custom_type_script = "uid://dg85frcnjlauy"
 
 [node name="collision_shape_3d" type="CollisionShape3D" parent="interact/area_phonograph" index="0"]
@@ -1186,8 +1188,19 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.31515, 0.847289, -0.72478)
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -3.51224, 0, -0.068404)
 visible = false
 
+[node name="Skeleton3D" parent="cheshire_2/skeleton" index="0"]
+bones/17/rotation = Quaternion(0.00770688, 3.53888e-08, -0.00377375, 0.999963)
+bones/19/rotation = Quaternion(0.00526975, -0.0186809, -0.0951726, 0.995272)
+bones/20/rotation = Quaternion(-0.018848, 0.00882591, 0.0724005, 0.997159)
+bones/34/rotation = Quaternion(0.0676842, 0.69491, -0.0302556, 0.715265)
+bones/37/rotation = Quaternion(-0.035015, -0.485269, -0.0251599, 0.873301)
+bones/39/rotation = Quaternion(0.0124138, 0.0688495, 0.0332293, 0.996996)
+bones/57/rotation = Quaternion(-0.00410323, 0.00499203, 0.0548409, 0.998474)
+bones/61/rotation = Quaternion(0.88789, -0.00701762, 0.0135512, -0.459803)
+
 [node name="phonograph" parent="." index="50" instance=ExtResource("35_eosfh")]
 transform = Transform3D(1.31134e-07, 0, 1, 0, 1, 0, -1, 0, 1.31134e-07, 2.57562, 1.13928, 6.08806)
+audio_stream = ExtResource("36_gw0lo")
 
 [editable path="cup_pastor"]
 [editable path="cup_cheshire"]

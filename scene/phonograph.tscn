@@ -1,7 +1,8 @@
-[gd_scene load_steps=13 format=3 uid="uid://c8xu1l1ao7rp8"]
+[gd_scene load_steps=15 format=3 uid="uid://dkha0s03djtdq"]
 
 [ext_resource type="PackedScene" uid="uid://dtfiqcyb2edwn" path="res://assets/model/phonograph.glb" id="1_ux6jj"]
 [ext_resource type="Shader" uid="uid://dd7xsr1eeq6mo" path="res://src/unmoving_plaid.gdshader" id="2_cvdbm"]
+[ext_resource type="Script" uid="uid://bicx8r08bwy4a" path="res://src/phonograph.gd" id="2_qow6u"]
 [ext_resource type="Texture2D" uid="uid://d15qcqdl3xuf3" path="res://assets/texture/Texturelabs_Fabric_186S.jpg" id="3_irgf4"]
 [ext_resource type="Texture2D" uid="uid://c41qgg7cur57o" path="res://assets/texture/Texturelabs_Stone_131S.jpg" id="4_jkwwu"]
 [ext_resource type="Texture2D" uid="uid://dc1bupw2qibgu" path="res://assets/texture/Texturelabs_Paper_374S.jpg" id="5_qow6u"]
@@ -68,7 +69,11 @@ radius = 0.179688
 [sub_resource type="BoxShape3D" id="BoxShape3D_ux6jj"]
 size = Vector3(0.0743561, 0.0632019, 0.31665)
 
+[sub_resource type="AudioStreamGenerator" id="AudioStreamGenerator_qow6u"]
+buffer_length = 0.1
+
 [node name="phonograph" instance=ExtResource("1_ux6jj")]
+script = ExtResource("2_qow6u")
 
 [node name="body" parent="." index="0"]
 surface_material_override/0 = SubResource("ShaderMaterial_jkwwu")
@@ -114,3 +119,9 @@ monitorable = false
 [node name="collision_shape_3d" type="CollisionShape3D" parent="area_stylus" index="0"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.160622, 0.244064, -0.0286865)
 shape = SubResource("BoxShape3D_ux6jj")
+
+[node name="audio_stream_player_3d" type="AudioStreamPlayer3D" parent="." index="11"]
+stream = SubResource("AudioStreamGenerator_qow6u")
+autoplay = true
+bus = &"Music"
+playback_type = 1
