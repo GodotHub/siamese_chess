@@ -40,6 +40,9 @@ shader_parameter/value_mult = 1.0
 shader_parameter/brightness_add = -0.055
 shader_parameter/contrast_mult = 1.0
 
+[sub_resource type="BoxShape3D" id="BoxShape3D_ux6jj"]
+size = Vector3(0.0743561, 0.0632019, 0.31665)
+
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_cvdbm"]
 render_priority = 0
 shader = ExtResource("2_cvdbm")
@@ -66,9 +69,6 @@ shader_parameter/contrast_mult = 0.792
 height = 0.00341797
 radius = 0.179688
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_ux6jj"]
-size = Vector3(0.0743561, 0.0632019, 0.31665)
-
 [sub_resource type="AudioStreamGenerator" id="AudioStreamGenerator_qow6u"]
 buffer_length = 0.1
 
@@ -83,6 +83,17 @@ surface_material_override/0 = SubResource("ShaderMaterial_8wbsc")
 
 [node name="stylus" parent="." index="2"]
 surface_material_override/0 = SubResource("ShaderMaterial_raspe")
+
+[node name="area_stylus" type="Area3D" parent="stylus" index="0"]
+transform = Transform3D(4.37517, 0, 0, 0, 4.37517, 0, 0, 0, 4.37517, -0.708232, -0.99874, 0.495516)
+collision_layer = 2
+collision_mask = 0
+monitoring = false
+monitorable = false
+
+[node name="collision_shape_3d" type="CollisionShape3D" parent="stylus/area_stylus" index="0"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.160622, 0.244064, -0.0286865)
+shape = SubResource("BoxShape3D_ux6jj")
 
 [node name="stylus_base" parent="." index="3"]
 surface_material_override/0 = SubResource("ShaderMaterial_raspe")
@@ -113,17 +124,7 @@ monitorable = false
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0322797, 0.220947, 0.015853)
 shape = SubResource("CylinderShape3D_ux6jj")
 
-[node name="area_stylus" type="Area3D" parent="." index="10"]
-collision_layer = 2
-collision_mask = 0
-monitoring = false
-monitorable = false
-
-[node name="collision_shape_3d" type="CollisionShape3D" parent="area_stylus" index="0"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.160622, 0.244064, -0.0286865)
-shape = SubResource("BoxShape3D_ux6jj")
-
-[node name="audio_stream_player_3d" type="AudioStreamPlayer3D" parent="." index="11"]
+[node name="audio_stream_player_3d" type="AudioStreamPlayer3D" parent="." index="10"]
 stream = SubResource("AudioStreamGenerator_qow6u")
 autoplay = true
 bus = &"Music"
