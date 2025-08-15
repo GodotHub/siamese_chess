@@ -9,15 +9,15 @@ var generator_playback:AudioStreamGeneratorPlayback = null
 @onready var area_vinyl:Area3D = $area_vinyl	# 点击唱片切换？或者搓碟也不是不行？
 var polar_position:Vector2 = Vector2()
 var last_event_polar_position:Vector2 = Vector2()
+var velocity:float = 0
 var play_frame:int = 0	# 下标位置
 var frame_delta:int = 0	# 这一帧跳转到这里
 var playing:bool = false
+var is_pressed:bool = false
 
 func _ready() -> void:
 	super._ready()
-	var audio_stream_playback:AudioStreamPlayback = audio_stream.instantiate_playback()
-	
-	var pointer:float = 0
+	var audio_stream_playback:AudioStreamPlayback = audio_stream.instantiate_playback()	
 	audio_stream_playback.start(0)
 	var data:PackedVector2Array = audio_stream_playback.mix_audio(1, 44100)
 	while data.size():
@@ -28,10 +28,15 @@ func _ready() -> void:
 
 func _process(delta: float) -> void:
 	if playing:
-		frame_delta += source_frequency * delta
-	if last_event_polar_position != Vector2.ZERO:
-		var angle_velocity:float = angle_difference(last_event_polar_position.y, polar_position.y)
-		frame_delta = 44100 * angle_velocity / ((TAU * 100.0 / 3.0) / 60.0)
+		velocity = lerp(velocity, 1.0, 0.2)
+	else:
+		velocity = lerp(velocity, 0.0, 0.2)
+	if is_pressed:
+		var angle_delta:float = angle_difference(last_event_polar_position.y, polar_position.y)
+		var angle_velocity = (angle_delta / ((TAU * 100.0 / 3.0) / 60.0)) / delta
+		velocity = lerp(velocity, angle_velocity, 0.2)
+	$vinyl.rotation.y -= velocity * (TAU * 100.0 / 3.0 / 60.0) * delta
+	frame_delta += source_frequency * velocity * delta
 	last_event_polar_position = polar_position
 	fill_buffer(delta)
 
@@ -40,14 +45,19 @@ func input(_from:Node3D, _to:Area3D, _event:InputEvent, _event_position:Vector3,
 		if _event is InputEventMouseButton:
 			if _event.pressed && _event.button_index == MOUSE_BUTTON_LEFT:
 				playing = !playing
+				if playing:
+					$stylus.rotation_degrees.y = -16.6
+				else:
+					$stylus.rotation_degrees.y = 0
 	elif _to == area_vinyl:
-		if audio_stream_player.playing:
+		if _event is InputEventMouseMotion && (_event.button_mask & MOUSE_BUTTON_MASK_LEFT):
+			is_pressed = true
 			var collision_shape:CollisionShape3D = area_vinyl.get_node("collision_shape_3d")
 			var event_position_3d:Vector3 = collision_shape.global_transform.affine_inverse() * _event_position
 			var event_position_2d:Vector2 = Vector2(event_position_3d.x, event_position_3d.z)
 			polar_position = Vector2(event_position_2d.length(), event_position_2d.angle())
 		else:
-			pass
+			is_pressed = false
 
 func fill_buffer(delta:float) -> void:
 	var frame_count:int = 44100 * delta
