@@ -4,11 +4,10 @@ class_name InspectableItem
 var button_list:Array[Area3D] = []
 
 func _ready() -> void:
-	for iter:Node in get_children():
-		if iter is Area3D:
-			button_list.push_back(iter)
-			iter.add_user_signal("input")
-			iter.connect("input", input)
+	for iter:Area3D in find_children("*", "Area3D"):
+		button_list.push_back(iter)
+		iter.add_user_signal("input")
+		iter.connect("input", input)
 	set_enabled(false)
 
 func set_enabled(enabled:bool) -> void:
