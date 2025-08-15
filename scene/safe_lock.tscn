@@ -1,0 +1,7 @@
+[gd_scene load_steps=3 format=3 uid="uid://q25etby31xos"]
+
+[ext_resource type="PackedScene" uid="uid://c8n5jjfq744oc" path="res://assets/model/safe_lock.glb" id="1_10wmd"]
+[ext_resource type="Script" uid="uid://1r18nc4ioehj" path="res://src/safe_lock.gd" id="2_nf5fv"]
+
+[node name="safe_lock" instance=ExtResource("1_10wmd")]
+script = ExtResource("2_nf5fv")
