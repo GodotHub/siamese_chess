@@ -1,4 +1,4 @@
-[gd_scene load_steps=86 format=3 uid="uid://bmyf2h17xaxlj"]
+[gd_scene load_steps=88 format=3 uid="uid://bmyf2h17xaxlj"]
 
 [ext_resource type="PackedScene" uid="uid://gdof8yy8yrjv" path="res://assets/model/environment.glb" id="1_b3374"]
 [ext_resource type="PackedScene" uid="uid://d1s6qj7aofldk" path="res://scene/chessboard.tscn" id="2_3p4nk"]
@@ -29,13 +29,14 @@
 [ext_resource type="PackedScene" uid="uid://324uto1yslin" path="res://assets/model/painting_frame_rect.glb" id="22_cjf2n"]
 [ext_resource type="Texture2D" uid="uid://d15qcqdl3xuf3" path="res://assets/texture/Texturelabs_Fabric_186S.jpg" id="23_wlijh"]
 [ext_resource type="PackedScene" uid="uid://h3wcv7lnqe8x" path="res://assets/model/painting_frame_square.glb" id="26_x2qnl"]
-[ext_resource type="PackedScene" uid="uid://doi00wvde4ogg" path="res://assets/model/menu.glb" id="27_okolh"]
 [ext_resource type="PackedScene" uid="uid://dtrbfbjh5ccs0" path="res://assets/model/rose.glb" id="28_x2qnl"]
 [ext_resource type="AudioStream" uid="uid://www4mdghmloh" path="res://assets/audio/52645__kstein1__white-noise.wav" id="29_x2qnl"]
 [ext_resource type="PackedScene" uid="uid://kqoc0aycgs35" path="res://scene/dialog.tscn" id="30_b1ytd"]
+[ext_resource type="PackedScene" uid="uid://6q8y2inx61f3" path="res://scene/menu.tscn" id="33_gw0lo"]
 [ext_resource type="PackedScene" uid="uid://s1v4ec45m2i5" path="res://assets/model/cheshire.glb" id="34_e7hh8"]
 [ext_resource type="PackedScene" uid="uid://dkha0s03djtdq" path="res://scene/phonograph.tscn" id="35_eosfh"]
 [ext_resource type="AudioStream" uid="uid://dsqaodhmws5v8" path="res://assets/audio/debussy-images-1-1-anderson.mp3" id="36_gw0lo"]
+[ext_resource type="PackedScene" uid="uid://q25etby31xos" path="res://scene/safe_lock.tscn" id="37_ps37q"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_e7hh8"]
 render_priority = 0
@@ -156,6 +157,9 @@ size = Vector3(1.52936, 1.15137, 4.12207)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_ps37q"]
 size = Vector3(0.490723, 0.0690918, 0.400879)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_o3obr"]
+size = Vector3(0.507813, 0.706512, 0.433838)
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_vtg4w"]
 render_priority = 0
@@ -669,7 +673,7 @@ shape = SubResource("BoxShape3D_eosfh")
 [node name="area_bar_table_inside" type="Area3D" parent="interact" index="17" node_paths=PackedStringArray("next_interact", "camera")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.36619, 0.814663, 4.40239)
 script = ExtResource("7_hgmdq")
-next_interact = [NodePath("../area_phonograph")]
+next_interact = [NodePath("../area_phonograph"), NodePath("../area_safe_lock")]
 camera = NodePath("../../camera/camera_bar_table_inside")
 metadata/_custom_type_script = "uid://dg85frcnjlauy"
 
@@ -687,6 +691,17 @@ metadata/_custom_type_script = "uid://dg85frcnjlauy"
 [node name="collision_shape_3d" type="CollisionShape3D" parent="interact/area_phonograph" index="0"]
 transform = Transform3D(1, 0, -6.594e-12, 0, 1, 0, 6.594e-12, 0, 1, 0.0241694, -0.0272217, 0.0510247)
 shape = SubResource("BoxShape3D_ps37q")
+
+[node name="area_safe_lock" type="Area3D" parent="interact" index="19" node_paths=PackedStringArray("camera", "inspectable_item")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.26407, 0.229647, 3.42481)
+script = ExtResource("7_hgmdq")
+camera = NodePath("../../camera/camera_safe_lock")
+inspectable_item = [NodePath("../../safe_lock")]
+metadata/_custom_type_script = "uid://dg85frcnjlauy"
+
+[node name="collision_shape_3d" type="CollisionShape3D" parent="interact/area_safe_lock" index="0"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0664063, 0.1642, -0.00158691)
+shape = SubResource("BoxShape3D_o3obr")
 
 [node name="camera" type="Node3D" parent="." index="21"]
 
@@ -748,10 +763,13 @@ transform = Transform3D(0.820409, 0.346464, -0.454853, -0.132741, 0.889183, 0.43
 transform = Transform3D(0.934875, 0, 0.354976, 0, 1, 0, -0.354976, 0, 0.934875, -3.57952, 1.2138, 2.81943)
 
 [node name="camera_bar_table_inside" type="Camera3D" parent="camera" index="18"]
-transform = Transform3D(0.896683, -0.103898, 0.430308, 0.046067, 0.98869, 0.142724, -0.44027, -0.108156, 0.891328, 3.73393, 1.64845, 5.64143)
+transform = Transform3D(0.896683, -0.103898, 0.430308, 0.046067, 0.98869, 0.142725, -0.44027, -0.108156, 0.891328, 3.73393, 1.64845, 6.73728)
 
 [node name="camera_phonograph" type="Camera3D" parent="camera" index="19"]
-transform = Transform3D(-3.28916e-08, -0.658624, 0.752472, -2.87894e-08, 0.752472, 0.658624, -1, 1.77636e-15, -4.37114e-08, 3.0047, 1.65586, 6.09945)
+transform = Transform3D(-2.62415e-08, -0.799748, 0.600336, -3.49581e-08, 0.600336, 0.799748, -1, -3.37508e-14, -4.37114e-08, 2.85572, 1.59346, 6.09945)
+
+[node name="camera_safe_lock" type="Camera3D" parent="camera" index="20"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.19322, 0.408154, 4.15112)
 
 [node name="chess_timer" parent="." index="22" instance=ExtResource("3_po4na")]
 transform = Transform3D(1, 0, -1.06581e-14, 0, 1, 0, 1.06581e-14, 0, 1, -2.35362, 0.857578, -0.481859)
@@ -1181,7 +1199,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.43895, 0.842041, -0.718518
 [node name="flower_bottle" parent="rose" index="0"]
 surface_material_override/0 = SubResource("ShaderMaterial_m4o3h")
 
-[node name="menu" parent="." index="48" instance=ExtResource("27_okolh")]
+[node name="menu" parent="." index="48" instance=ExtResource("33_gw0lo")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.31515, 0.847289, -0.72478)
 
 [node name="cheshire_2" parent="." index="49" instance=ExtResource("34_e7hh8")]
@@ -1201,6 +1219,9 @@ bones/61/rotation = Quaternion(0.88789, -0.00701762, 0.0135512, -0.459803)
 [node name="phonograph" parent="." index="50" instance=ExtResource("35_eosfh")]
 transform = Transform3D(1.31134e-07, 0, 1, 0, 1, 0, -1, 0, 1.31134e-07, 2.57562, 1.13928, 6.08806)
 audio_stream = ExtResource("36_gw0lo")
+
+[node name="safe_lock" parent="." index="51" instance=ExtResource("37_ps37q")]
+transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 4.19876, 0.382278, 3.42142)
 
 [editable path="cup_pastor"]
 [editable path="cup_cheshire"]
