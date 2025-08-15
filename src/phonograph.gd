@@ -26,7 +26,7 @@ func _ready() -> void:
 	source_frequency = wav.size() / audio_stream.get_length()
 	generator_playback = audio_stream_player.get_stream_playback()
 
-func _process(delta: float) -> void:
+func _physics_process(delta: float) -> void:
 	if playing:
 		velocity = lerp(velocity, 1.0, 0.2)
 	else:
@@ -34,7 +34,7 @@ func _process(delta: float) -> void:
 	if is_pressed:
 		var angle_delta:float = angle_difference(last_event_polar_position.y, polar_position.y)
 		var angle_velocity = (angle_delta / ((TAU * 100.0 / 3.0) / 60.0)) / delta
-		velocity = lerp(velocity, angle_velocity, 0.2)
+		velocity = lerp(velocity, angle_velocity, 0.05)
 	$vinyl.rotation.y -= velocity * (TAU * 100.0 / 3.0 / 60.0) * delta
 	frame_delta += source_frequency * velocity * delta
 	last_event_polar_position = polar_position
@@ -46,9 +46,9 @@ func input(_from:Node3D, _to:Area3D, _event:InputEvent, _event_position:Vector3,
 			if _event.pressed && _event.button_index == MOUSE_BUTTON_LEFT:
 				playing = !playing
 				if playing:
-					$stylus.rotation_degrees.y = -16.6
+					create_tween().tween_property($stylus, "rotation_degrees:y", -16.6, 0.2).set_trans(Tween.TRANS_SINE)
 				else:
-					$stylus.rotation_degrees.y = 0
+					create_tween().tween_property($stylus, "rotation_degrees:y", 0, 0.2).set_trans(Tween.TRANS_SINE)
 	elif _to == area_vinyl:
 		if _event is InputEventMouseMotion && (_event.button_mask & MOUSE_BUTTON_MASK_LEFT):
 			is_pressed = true

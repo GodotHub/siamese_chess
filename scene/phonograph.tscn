@@ -100,6 +100,9 @@ surface_material_override/1 = SubResource("ShaderMaterial_cvdbm")
 [node name="axis" parent="." index="7"]
 surface_material_override/0 = SubResource("ShaderMaterial_577lu")
 
+[node name="cover" parent="." index="8"]
+transform = Transform3D(0.228563, 0, 0, 0, -0.0167396, 0.227949, 0, -0.227949, -0.0167396, 0.000909835, 0.204559, -0.183626)
+
 [node name="area_vinyl" type="Area3D" parent="." index="9"]
 collision_layer = 2
 collision_mask = 0
