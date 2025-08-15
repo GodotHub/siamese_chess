@@ -1,7 +1,46 @@
-[gd_scene load_steps=3 format=3 uid="uid://q25etby31xos"]
+[gd_scene load_steps=7 format=3 uid="uid://q25etby31xos"]
 
 [ext_resource type="PackedScene" uid="uid://c8n5jjfq744oc" path="res://assets/model/safe_lock.glb" id="1_10wmd"]
 [ext_resource type="Script" uid="uid://1r18nc4ioehj" path="res://src/safe_lock.gd" id="2_nf5fv"]
+[ext_resource type="FontFile" uid="uid://d0mkasnv22qwl" path="res://assets/fonts/LCDMN___.TTF" id="3_ttt6v"]
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_ttt6v"]
+viewport_path = NodePath("sub_viewport")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_klmvq"]
+resource_local_to_scene = true
+albedo_texture = SubResource("ViewportTexture_ttt6v")
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_nf5fv"]
+size = Vector3(0.041008, 0.186157, 0.0473633)
 
 [node name="safe_lock" instance=ExtResource("1_10wmd")]
 script = ExtResource("2_nf5fv")
+
+[node name="door" parent="." index="1"]
+surface_material_override/2 = SubResource("StandardMaterial3D_klmvq")
+
+[node name="area_handle" type="Area3D" parent="door/handle" index="0"]
+collision_layer = 2
+collision_mask = 0
+
+[node name="collision_shape_3d" type="CollisionShape3D" parent="door/handle/area_handle" index="0"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.000576019, -0.0014038, 0.00659178)
+shape = SubResource("BoxShape3D_nf5fv")
+
+[node name="sub_viewport" type="SubViewport" parent="." index="2"]
+transparent_bg = true
+size = Vector2i(256, 48)
+
+[node name="label" type="Label" parent="sub_viewport" index="0"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_fonts/font = ExtResource("3_ttt6v")
+theme_override_font_sizes/font_size = 30
+text = "ABCDEF"
+horizontal_alignment = 1
+vertical_alignment = 1
