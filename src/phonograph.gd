@@ -10,6 +10,7 @@ var generator_playback:AudioStreamGeneratorPlayback = null
 var polar_position:Vector2 = Vector2()
 var last_event_polar_position:Vector2 = Vector2()
 var velocity:float = 0
+var loss:float = 0.01
 var play_frame:int = 0	# 下标位置
 var frame_delta:int = 0	# 这一帧跳转到这里
 var playing:bool = false
@@ -28,14 +29,17 @@ func _ready() -> void:
 
 func _physics_process(delta: float) -> void:
 	if playing:
-		velocity = lerp(velocity, 1.0, 0.2)
-	else:
-		velocity = lerp(velocity, 0.0, 0.2)
+		if velocity < 1 + loss:
+			velocity = clamp(velocity + 0.1, -1000, 1 + loss)
 	if is_pressed:
 		var angle_delta:float = angle_difference(last_event_polar_position.y, polar_position.y)
 		var angle_velocity = (angle_delta / ((TAU * 100.0 / 3.0) / 60.0)) / delta
 		velocity = lerp(velocity, angle_velocity, 0.05)
 	$vinyl.rotation.y -= velocity * (TAU * 100.0 / 3.0 / 60.0) * delta
+	if velocity > 0:
+		velocity = velocity - loss if velocity > loss else 0.0
+	else:
+		velocity = velocity + loss if velocity < -loss else 0.0
 	frame_delta += source_frequency * velocity * delta
 	last_event_polar_position = polar_position
 	fill_buffer(delta)
