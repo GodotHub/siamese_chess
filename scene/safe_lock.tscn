@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://q25etby31xos"]
+[gd_scene load_steps=8 format=3 uid="uid://q25etby31xos"]
 
 [ext_resource type="PackedScene" uid="uid://c8n5jjfq744oc" path="res://assets/model/safe_lock.glb" id="1_10wmd"]
 [ext_resource type="Script" uid="uid://1r18nc4ioehj" path="res://src/safe_lock.gd" id="2_nf5fv"]
@@ -14,6 +14,9 @@ albedo_texture = SubResource("ViewportTexture_ttt6v")
 [sub_resource type="BoxShape3D" id="BoxShape3D_nf5fv"]
 size = Vector3(0.041008, 0.186157, 0.0473633)
 
+[sub_resource type="BoxShape3D" id="BoxShape3D_ttt6v"]
+size = Vector3(0.412598, 0.610291, 0.0458069)
+
 [node name="safe_lock" instance=ExtResource("1_10wmd")]
 script = ExtResource("2_nf5fv")
 
@@ -28,6 +31,15 @@ collision_mask = 0
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.000576019, -0.0014038, 0.00659178)
 shape = SubResource("BoxShape3D_nf5fv")
 
+[node name="area_close" type="Area3D" parent="door" index="17"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.208273, 0, 0)
+collision_layer = 2
+collision_mask = 0
+
+[node name="collision_shape_3d" type="CollisionShape3D" parent="door/area_close" index="0"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00512695, -0.0093689, 0.0437038)
+shape = SubResource("BoxShape3D_ttt6v")
+
 [node name="sub_viewport" type="SubViewport" parent="." index="2"]
 transparent_bg = true
 size = Vector2i(256, 48)
@@ -41,6 +53,5 @@ grow_vertical = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_fonts/font = ExtResource("3_ttt6v")
 theme_override_font_sizes/font_size = 30
-text = "ABCDEF"
-horizontal_alignment = 1
+text = "PASSWORD"
 vertical_alignment = 1
