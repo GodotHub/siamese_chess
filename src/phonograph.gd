@@ -34,6 +34,10 @@ func _physics_process(delta: float) -> void:
 	if is_pressed:
 		var angle_delta:float = angle_difference(last_event_polar_position.y, polar_position.y)
 		var angle_velocity = (angle_delta / ((TAU * 100.0 / 3.0) / 60.0)) / delta
+		if angle_velocity > 0:
+			velocity = clamp(velocity + 0.1, 0, angle_velocity)
+		else:
+			velocity = clamp(velocity - 0.1, angle_velocity, 0)
 		velocity = lerp(velocity, angle_velocity, 0.05)
 	$vinyl.rotation.y -= velocity * (TAU * 100.0 / 3.0 / 60.0) * delta
 	if velocity > 0:

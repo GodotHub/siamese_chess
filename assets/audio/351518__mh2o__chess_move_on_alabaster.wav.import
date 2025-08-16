@@ -13,8 +13,8 @@ dest_files=["res://.godot/imported/351518__mh2o__chess_move_on_alabaster.wav-b46
 [params]
 
 force/8_bit=false
-force/mono=false
-force/max_rate=false
+force/mono=true
+force/max_rate=true
 force/max_rate_hz=44100
 edit/trim=false
 edit/normalize=false

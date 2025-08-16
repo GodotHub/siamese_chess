@@ -14,7 +14,7 @@ dest_files=["res://.godot/imported/52645__kstein1__white-noise.wav-c507d3c09022d
 
 force/8_bit=false
 force/mono=true
-force/max_rate=false
+force/max_rate=true
 force/max_rate_hz=44100
 edit/trim=false
 edit/normalize=false

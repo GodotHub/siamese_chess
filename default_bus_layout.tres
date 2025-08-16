@@ -1,11 +1,12 @@
-[gd_resource type="AudioBusLayout" load_steps=2 format=3 uid="uid://bepgk6knwka35"]
+[gd_resource type="AudioBusLayout" load_steps=3 format=3 uid="uid://bepgk6knwka35"]
 
-[sub_resource type="AudioEffectEQ" id="AudioEffectEQ_j3pel"]
-resource_name = "EQ"
-band_db/320_hz = -15.9
-band_db/1000_hz = -26.8
-band_db/3200_hz = -41.4
-band_db/10000_hz = -53.5
+[sub_resource type="AudioEffectLowPassFilter" id="AudioEffectLowPassFilter_j3pel"]
+resource_name = "LowPassFilter"
+cutoff_hz = 292.0
+
+[sub_resource type="AudioEffectHighPassFilter" id="AudioEffectHighPassFilter_j3pel"]
+resource_name = "HighPassFilter"
+cutoff_hz = 1406.0
 
 [resource]
 bus/1/name = &"Wind"
@@ -14,7 +15,7 @@ bus/1/mute = false
 bus/1/bypass_fx = false
 bus/1/volume_db = 0.0
 bus/1/send = &"Master"
-bus/1/effect/0/effect = SubResource("AudioEffectEQ_j3pel")
+bus/1/effect/0/effect = SubResource("AudioEffectLowPassFilter_j3pel")
 bus/1/effect/0/enabled = true
 bus/2/name = &"Music"
 bus/2/solo = false
@@ -22,3 +23,5 @@ bus/2/mute = false
 bus/2/bypass_fx = false
 bus/2/volume_db = 0.0
 bus/2/send = &"Master"
+bus/2/effect/0/effect = SubResource("AudioEffectHighPassFilter_j3pel")
+bus/2/effect/0/enabled = true

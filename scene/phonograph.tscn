@@ -101,18 +101,18 @@ surface_material_override/0 = SubResource("ShaderMaterial_raspe")
 [node name="knob_1" parent="." index="4"]
 surface_material_override/0 = SubResource("ShaderMaterial_raspe")
 
-[node name="knob_2" parent="." index="5"]
-surface_material_override/0 = SubResource("ShaderMaterial_raspe")
-
-[node name="vinyl" parent="." index="6"]
+[node name="vinyl" parent="." index="5"]
 surface_material_override/0 = SubResource("ShaderMaterial_raspe")
 surface_material_override/1 = SubResource("ShaderMaterial_cvdbm")
 
-[node name="axis" parent="." index="7"]
+[node name="axis" parent="." index="6"]
 surface_material_override/0 = SubResource("ShaderMaterial_577lu")
 
-[node name="cover" parent="." index="8"]
+[node name="cover" parent="." index="7"]
 transform = Transform3D(0.228563, 0, 0, 0, -0.0167396, 0.227949, 0, -0.227949, -0.0167396, 0.000909835, 0.204559, -0.183626)
+
+[node name="knob_2" parent="." index="8"]
+surface_material_override/0 = SubResource("ShaderMaterial_raspe")
 
 [node name="area_vinyl" type="Area3D" parent="." index="9"]
 collision_layer = 2
@@ -126,6 +126,7 @@ shape = SubResource("CylinderShape3D_ux6jj")
 
 [node name="audio_stream_player_3d" type="AudioStreamPlayer3D" parent="." index="10"]
 stream = SubResource("AudioStreamGenerator_qow6u")
+max_db = 2.022
 autoplay = true
 bus = &"Music"
 playback_type = 1

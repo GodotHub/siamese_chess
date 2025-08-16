@@ -1,8 +1,35 @@
-[gd_scene load_steps=8 format=3 uid="uid://q25etby31xos"]
+[gd_scene load_steps=15 format=3 uid="uid://q25etby31xos"]
 
 [ext_resource type="PackedScene" uid="uid://c8n5jjfq744oc" path="res://assets/model/safe_lock.glb" id="1_10wmd"]
 [ext_resource type="Script" uid="uid://1r18nc4ioehj" path="res://src/safe_lock.gd" id="2_nf5fv"]
 [ext_resource type="FontFile" uid="uid://d0mkasnv22qwl" path="res://assets/fonts/LCDMN___.TTF" id="3_ttt6v"]
+[ext_resource type="Shader" uid="uid://dd7xsr1eeq6mo" path="res://src/unmoving_plaid.gdshader" id="3_xw6v5"]
+[ext_resource type="AudioStream" uid="uid://g6dhr5rl1b2s" path="res://assets/audio/477690__joao_janz__digital-radio-rack-unit-button-snap-3_4.wav" id="4_klmvq"]
+[ext_resource type="Texture2D" uid="uid://dc1bupw2qibgu" path="res://assets/texture/Texturelabs_Paper_374S.jpg" id="4_nnnbh"]
+[ext_resource type="AudioStream" uid="uid://bv4gfki3r3dqx" path="res://assets/audio/400329__n-razm__door_open.wav" id="5_tk2a2"]
+[ext_resource type="AudioStream" uid="uid://bqrkoms2e011i" path="res://assets/audio/137141__dwoboyle__creaking-wooden-door-0004.wav" id="8_nnnbh"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_uvudv"]
+render_priority = 0
+shader = ExtResource("3_xw6v5")
+shader_parameter/texture_albedo = ExtResource("4_nnnbh")
+shader_parameter/scale = 1.0
+shader_parameter/hue_shift = 0.0
+shader_parameter/saturation_mult = 1.0
+shader_parameter/value_mult = 1.0
+shader_parameter/brightness_add = -0.055
+shader_parameter/contrast_mult = 1.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_sywe0"]
+render_priority = 0
+shader = ExtResource("3_xw6v5")
+shader_parameter/texture_albedo = ExtResource("4_nnnbh")
+shader_parameter/scale = 1.0
+shader_parameter/hue_shift = 0.0
+shader_parameter/saturation_mult = 1.0
+shader_parameter/value_mult = 0.638
+shader_parameter/brightness_add = 0.15
+shader_parameter/contrast_mult = 1.0
 
 [sub_resource type="ViewportTexture" id="ViewportTexture_ttt6v"]
 viewport_path = NodePath("sub_viewport")
@@ -20,7 +47,11 @@ size = Vector3(0.412598, 0.610291, 0.0458069)
 [node name="safe_lock" instance=ExtResource("1_10wmd")]
 script = ExtResource("2_nf5fv")
 
+[node name="body" parent="." index="0"]
+surface_material_override/0 = SubResource("ShaderMaterial_uvudv")
+
 [node name="door" parent="." index="1"]
+surface_material_override/0 = SubResource("ShaderMaterial_sywe0")
 surface_material_override/2 = SubResource("StandardMaterial3D_klmvq")
 
 [node name="area_handle" type="Area3D" parent="door/handle" index="0"]
@@ -55,3 +86,12 @@ theme_override_fonts/font = ExtResource("3_ttt6v")
 theme_override_font_sizes/font_size = 30
 text = "PASSWORD"
 vertical_alignment = 1
+
+[node name="audio_stream_player_button" type="AudioStreamPlayer3D" parent="." index="3"]
+stream = ExtResource("4_klmvq")
+
+[node name="audio_stream_player_unlock" type="AudioStreamPlayer3D" parent="." index="4"]
+stream = ExtResource("5_tk2a2")
+
+[node name="audio_stream_player_opening" type="AudioStreamPlayer3D" parent="." index="5"]
+stream = ExtResource("8_nnnbh")

@@ -34,6 +34,8 @@ func update_text() -> void:
 
 func input(_from:Node3D, _to:Area3D, _event:InputEvent, _event_position:Vector3, _normal:Vector3) -> void:	# 按按钮，以及门把手
 	if _event is InputEventMouseButton && _event.pressed && _event.button_index == MOUSE_BUTTON_LEFT:
+		if _to in [area_0, area_1, area_2, area_3, area_4, area_5, area_6, area_7, area_8, area_9, area_a, area_b, area_c, area_d, area_e, area_f]:
+			$audio_stream_player_button.play()
 		if _to == area_0:
 			current += "#"
 		elif _to == area_1:
@@ -67,6 +69,7 @@ func input(_from:Node3D, _to:Area3D, _event:InputEvent, _event_position:Vector3,
 		elif _to == area_d:	# 提交
 			if current == password:
 				unlocked = true
+				$audio_stream_player_unlock.play()
 			else:
 				$sub_viewport/label.text = "ERROR"
 				current = ""
@@ -77,6 +80,8 @@ func input(_from:Node3D, _to:Area3D, _event:InputEvent, _event_position:Vector3,
 			current += "0"
 		elif _to == area_handle && unlocked:
 			create_tween().tween_property($door, "rotation_degrees:y", 90, 2).set_trans(Tween.TRANS_SINE)
+			$audio_stream_player_opening.play()
 		elif _to == area_close:
 			create_tween().tween_property($door, "rotation_degrees:y", 0, 2).set_trans(Tween.TRANS_SINE)
+			$audio_stream_player_opening.play()
 		update_text()

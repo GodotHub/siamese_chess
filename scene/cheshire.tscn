@@ -5,8 +5,8 @@
 [ext_resource type="AudioStream" uid="uid://bjkdx77erva8r" path="res://assets/audio/719560__dartekz_gamez__wind-whirl-small-air-blow.mp3" id="3_uowm0"]
 
 [sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_uowm0"]
-random_pitch = 2.0
-random_volume_offset_db = 1.18
+random_pitch = 1.23
+random_volume_offset_db = 0.89
 streams_count = 1
 stream_0/stream = ExtResource("3_uowm0")
 
