@@ -1,4 +1,4 @@
-[gd_scene load_steps=88 format=3 uid="uid://bmyf2h17xaxlj"]
+[gd_scene load_steps=89 format=3 uid="uid://bmyf2h17xaxlj"]
 
 [ext_resource type="PackedScene" uid="uid://gdof8yy8yrjv" path="res://assets/model/environment.glb" id="1_b3374"]
 [ext_resource type="PackedScene" uid="uid://d1s6qj7aofldk" path="res://scene/chessboard.tscn" id="2_3p4nk"]
@@ -29,6 +29,7 @@
 [ext_resource type="PackedScene" uid="uid://324uto1yslin" path="res://assets/model/painting_frame_rect.glb" id="22_cjf2n"]
 [ext_resource type="Texture2D" uid="uid://d15qcqdl3xuf3" path="res://assets/texture/Texturelabs_Fabric_186S.jpg" id="23_wlijh"]
 [ext_resource type="PackedScene" uid="uid://h3wcv7lnqe8x" path="res://assets/model/painting_frame_square.glb" id="26_x2qnl"]
+[ext_resource type="PackedScene" uid="uid://c53jom2sg0baa" path="res://assets/model/schefflera_octophylla.glb" id="27_o3obr"]
 [ext_resource type="PackedScene" uid="uid://dtrbfbjh5ccs0" path="res://assets/model/rose.glb" id="28_x2qnl"]
 [ext_resource type="AudioStream" uid="uid://www4mdghmloh" path="res://assets/audio/52645__kstein1__white-noise.wav" id="29_x2qnl"]
 [ext_resource type="PackedScene" uid="uid://kqoc0aycgs35" path="res://scene/dialog.tscn" id="30_b1ytd"]
@@ -1129,6 +1130,21 @@ transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -1.800
 
 [node name="chair" parent="seat/chair_high_29" index="0"]
 surface_material_override/0 = SubResource("ShaderMaterial_wlijh")
+
+[node name="schefflera_octophylla2" parent="seat" index="34" instance=ExtResource("27_o3obr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.18917, 1.28028, 2.43594)
+
+[node name="schefflera_octophylla2_2" parent="seat" index="35" instance=ExtResource("27_o3obr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.129093, 1.12156, 5.88243)
+
+[node name="schefflera_octophylla2_3" parent="seat" index="36" instance=ExtResource("27_o3obr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.24094, 1.12156, 5.88243)
+
+[node name="schefflera_octophylla2_4" parent="seat" index="37" instance=ExtResource("27_o3obr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.24094, 1.12156, 3.47724)
+
+[node name="schefflera_octophylla2_5" parent="seat" index="38" instance=ExtResource("27_o3obr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.15536, 1.12156, 3.47724)
 
 [node name="painting_frame" parent="." index="36" instance=ExtResource("22_cjf2n")]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -6.87407, 1.53993, 4.45094)
