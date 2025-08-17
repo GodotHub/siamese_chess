@@ -4,6 +4,7 @@ extends Node3D
 var mouse_moved:bool = false
 var mouse_start_position_name:String = ""
 var interact_stack:Array[Interact] = []
+var can_move:bool = true
 
 func _ready() -> void:
 	pass
@@ -19,6 +20,8 @@ func set_initial_interact(interact:Interact) -> void:
 	force_set_camera(interact.get_camera())
 
 func _unhandled_input(event:InputEvent) -> void:
+	if !can_move:
+		return
 	if event is InputEventMouseButton || event is InputEventMouseMotion:
 		var area:Area3D = click_area(event.position)
 		if is_instance_valid(area):
@@ -56,9 +59,12 @@ func move_camera(other:Camera3D) -> void:
 		return
 	var tween:Tween = create_tween()
 	tween.tween_callback($audio_stream_player.play)
+	tween.tween_property(self, "can_move", false, 0)
 	tween.tween_property($head, "global_transform", other.global_transform, 1).set_trans(Tween.TRANS_SINE)
-	tween.set_parallel()
+	tween.set_parallel(true)
 	tween.tween_property($head/camera, "fov", other.fov, 1).set_trans(Tween.TRANS_SINE)
+	tween.set_parallel(false)
+	tween.tween_property(self, "can_move", true, 0)
 
 func force_set_camera(other:Camera3D) -> void:
 	$head.global_transform = other.global_transform
