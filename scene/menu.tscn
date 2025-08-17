@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://6q8y2inx61f3"]
+[gd_scene load_steps=7 format=3 uid="uid://du7djoab5q014"]
 
 [ext_resource type="PackedScene" uid="uid://doi00wvde4ogg" path="res://assets/model/menu.glb" id="1_e5g8k"]
 [ext_resource type="FontFile" uid="uid://cmbwnmrpuigxx" path="res://assets/fonts/FangZhengShuSongJianTi-1.ttf" id="2_8hxod"]
@@ -27,13 +27,9 @@ surface_material_override/1 = SubResource("StandardMaterial3D_15se8")
 size = Vector2i(432, 831)
 
 [node name="label" type="RichTextLabel" parent="sub_viewport" index="0"]
-anchors_preset = -1
-anchor_right = 0.299
-anchor_bottom = 0.983
-offset_left = 9.0
-offset_top = 21.0
-offset_right = -12.448
-offset_bottom = -18.984
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_colors/default_color = Color(0, 0, 0, 1)
