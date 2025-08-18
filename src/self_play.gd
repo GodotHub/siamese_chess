@@ -28,7 +28,7 @@ func play():
 	sample_save_json()
 	
 func search(ai_node: Violet) -> int:
-	ai_node.ai.start_search(chessboard.state, ai_node.group, Callable(), Callable())
+	ai_node.ai.start_search(chessboard.state, ai_node.group, INF, Callable())
 	await ai_node.ai.search_finished
 	return ai_node.ai.get_search_result()
 	
