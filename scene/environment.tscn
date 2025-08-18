@@ -1,4 +1,4 @@
-[gd_scene load_steps=89 format=3 uid="uid://bmyf2h17xaxlj"]
+[gd_scene load_steps=92 format=3 uid="uid://bmyf2h17xaxlj"]
 
 [ext_resource type="PackedScene" uid="uid://gdof8yy8yrjv" path="res://assets/model/environment.glb" id="1_b3374"]
 [ext_resource type="PackedScene" uid="uid://d1s6qj7aofldk" path="res://scene/chessboard.tscn" id="2_3p4nk"]
@@ -7,6 +7,7 @@
 [ext_resource type="PackedScene" uid="uid://n5i2mcgyqj3k" path="res://scene/chess_timer.tscn" id="3_po4na"]
 [ext_resource type="Texture2D" uid="uid://c41qgg7cur57o" path="res://assets/texture/Texturelabs_Stone_131S.jpg" id="4_r5n28"]
 [ext_resource type="PackedScene" uid="uid://b0ots07uggqyg" path="res://scene/history.tscn" id="5_4qusu"]
+[ext_resource type="PackedScene" uid="uid://bujgvbqsjgnrk" path="res://assets/model/radio.glb" id="7_geasp"]
 [ext_resource type="Script" uid="uid://dg85frcnjlauy" path="res://src/interact.gd" id="7_hgmdq"]
 [ext_resource type="PackedScene" uid="uid://bw127d1iawnv3" path="res://assets/model/radermachera_sinica.glb" id="7_ps37q"]
 [ext_resource type="PackedScene" uid="uid://de73qrhtkiaka" path="res://scene/draft.tscn" id="8_tnamw"]
@@ -34,6 +35,7 @@
 [ext_resource type="AudioStream" uid="uid://www4mdghmloh" path="res://assets/audio/52645__kstein1__white-noise.wav" id="29_x2qnl"]
 [ext_resource type="PackedScene" uid="uid://kqoc0aycgs35" path="res://scene/dialog.tscn" id="30_b1ytd"]
 [ext_resource type="PackedScene" uid="uid://cwdmo0bp5hqag" path="res://assets/model/hang_light_1.glb" id="30_xqn0k"]
+[ext_resource type="PackedScene" uid="uid://bst0x07bms637" path="res://scene/telephone.tscn" id="31_vndhl"]
 [ext_resource type="PackedScene" uid="uid://du7djoab5q014" path="res://scene/menu.tscn" id="33_gw0lo"]
 [ext_resource type="PackedScene" uid="uid://dkha0s03djtdq" path="res://scene/phonograph.tscn" id="35_eosfh"]
 [ext_resource type="AudioStream" uid="uid://dsqaodhmws5v8" path="res://assets/audio/debussy-images-1-1-anderson.mp3" id="36_gw0lo"]
@@ -159,6 +161,9 @@ size = Vector3(0.480957, 0.0690918, 0.400879)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_o3obr"]
 size = Vector3(0.507813, 0.617416, 0.433838)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_vndhl"]
+size = Vector3(0.145386, 0.0811768, 0.230408)
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_vtg4w"]
 render_priority = 0
@@ -651,7 +656,7 @@ shape = SubResource("BoxShape3D_e7hh8")
 [node name="area_bar_table" type="Area3D" parent="interact" index="15" node_paths=PackedStringArray("next_interact", "camera")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.27896, 0, 3.5194)
 script = ExtResource("7_hgmdq")
-next_interact = [NodePath("../area_bar_table_inside"), NodePath("../area_phonograph")]
+next_interact = [NodePath("../area_bar_table_inside"), NodePath("../area_phonograph"), NodePath("../area_telephone")]
 camera = NodePath("../../camera/camera_bar_table")
 metadata/_custom_type_script = "uid://dg85frcnjlauy"
 
@@ -662,7 +667,7 @@ shape = SubResource("BoxShape3D_eosfh")
 [node name="area_bar_table_inside" type="Area3D" parent="interact" index="16" node_paths=PackedStringArray("next_interact", "camera")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.36619, 0.814663, 4.40239)
 script = ExtResource("7_hgmdq")
-next_interact = [NodePath("../area_phonograph"), NodePath("../area_safe_lock")]
+next_interact = [NodePath("../area_phonograph"), NodePath("../area_safe_lock"), NodePath("../area_telephone")]
 camera = NodePath("../../camera/camera_bar_table_inside")
 metadata/_custom_type_script = "uid://dg85frcnjlauy"
 
@@ -691,6 +696,20 @@ metadata/_custom_type_script = "uid://dg85frcnjlauy"
 [node name="collision_shape_3d" type="CollisionShape3D" parent="interact/area_safe_lock" index="0"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.213146, 0.0573851, -0.824994)
 shape = SubResource("BoxShape3D_o3obr")
+
+[node name="area_telephone" type="Area3D" parent="interact" index="19" node_paths=PackedStringArray("camera", "inspectable_item")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.62659, 1.31056, 4.93091)
+script = ExtResource("7_hgmdq")
+camera = NodePath("../../camera/camera_telephone")
+inspectable_item = [NodePath("../../telephone")]
+metadata/_custom_type_script = "uid://dg85frcnjlauy"
+
+[node name="collision_shape_3d" type="CollisionShape3D" parent="interact/area_telephone" index="0"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00408936, 0.00872803, 0.00332642)
+shape = SubResource("BoxShape3D_vndhl")
+
+[node name="radio" parent="interact" index="20" instance=ExtResource("7_geasp")]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 2.57244, 1.28184, 5.44932)
 
 [node name="camera" type="Node3D" parent="." index="21"]
 
@@ -756,6 +775,9 @@ transform = Transform3D(0.392787, -0.735472, 0.552087, -3.49581e-08, 0.600336, 0
 
 [node name="camera_safe_lock" type="Camera3D" parent="camera" index="19"]
 transform = Transform3D(0.987582, 3.67903e-09, -0.157107, 0.0221012, 0.990056, 0.13893, 0.155544, -0.140677, 0.977761, 4.10711, 0.36112, 3.18805)
+
+[node name="camera_telephone" type="Camera3D" parent="camera" index="20"]
+transform = Transform3D(0.453923, -0.441772, 0.773816, -0.105822, 0.835567, 0.539101, -0.884735, -0.326597, 0.332533, 2.751, 1.41813, 5.03588)
 
 [node name="chess_timer" parent="." index="22" instance=ExtResource("3_po4na")]
 transform = Transform3D(1, 0, -1.06581e-14, 0, 1, 0, 1.06581e-14, 0, 1, -2.35362, 0.857578, -0.481859)
@@ -1243,16 +1265,19 @@ audio_stream = ExtResource("36_gw0lo")
 [node name="safe_lock" parent="." index="48" instance=ExtResource("37_ps37q")]
 transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 4.06172, 0.285388, 2.59597)
 
-[node name="piece_queen" parent="." index="49" instance=ExtResource("39_xqn0k")]
+[node name="telephone" parent="." index="49" instance=ExtResource("31_vndhl")]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 2.64696, 1.27398, 4.92819)
+
+[node name="piece_queen" parent="." index="50" instance=ExtResource("39_xqn0k")]
 transform = Transform3D(0.505, 0, 0, 0, 0.505, 0, 0, 0, 0.505, 3.99457, 0.247538, 2.55837)
 
-[node name="radermachera_sinica" parent="." index="50" instance=ExtResource("7_ps37q")]
+[node name="radermachera_sinica" parent="." index="51" instance=ExtResource("7_ps37q")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.4796, 0, 7.96234)
 
-[node name="radermachera_sinica_2" parent="." index="51" instance=ExtResource("7_ps37q")]
+[node name="radermachera_sinica_2" parent="." index="52" instance=ExtResource("7_ps37q")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.07932, 0, 7.96234)
 
-[node name="radermachera_sinica_3" parent="." index="52" instance=ExtResource("7_ps37q")]
+[node name="radermachera_sinica_3" parent="." index="53" instance=ExtResource("7_ps37q")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.4796, 0, 1.66837)
 
 [editable path="cup_pastor"]
