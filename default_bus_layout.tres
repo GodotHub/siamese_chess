@@ -6,7 +6,7 @@ cutoff_hz = 292.0
 
 [sub_resource type="AudioEffectHighPassFilter" id="AudioEffectHighPassFilter_j3pel"]
 resource_name = "HighPassFilter"
-cutoff_hz = 1406.0
+cutoff_hz = 1736.0
 
 [resource]
 bus/1/name = &"Wind"

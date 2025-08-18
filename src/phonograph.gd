@@ -7,6 +7,12 @@ var generator_playback:AudioStreamGeneratorPlayback = null
 @onready var audio_stream_player:AudioStreamPlayer3D = $audio_stream_player_3d
 @onready var area_stylus:Area3D = $stylus/area_stylus	# 点击唱针播放
 @onready var area_vinyl:Area3D = $area_vinyl	# 点击唱片切换？或者搓碟也不是不行？
+@onready var area_volume:Area3D = $area_volume
+@onready var area_pitch:Area3D = $area_pitch
+
+var volume:float = 1
+var pitch:float = 1
+
 var polar_position:Vector2 = Vector2()
 var last_event_polar_position:Vector2 = Vector2()
 var velocity:float = 0
@@ -26,19 +32,22 @@ func _ready() -> void:
 		data = audio_stream_playback.mix_audio(1, 44100)
 	source_frequency = wav.size() / audio_stream.get_length()
 	generator_playback = audio_stream_player.get_stream_playback()
+	$knob_1.rotation.y = -PI * ((pitch + 2) / 4.0)
+	$knob_2.rotation.y = -PI * volume
 
 func _physics_process(delta: float) -> void:
 	if playing:
-		if velocity < 1 + loss:
-			velocity = clamp(velocity + 0.1, -1000, 1 + loss)
+		if velocity < pitch + loss:
+			velocity = clamp(velocity + 0.1, -1000, pitch + loss)
+		elif velocity > pitch - loss:
+			velocity = clamp(velocity - 0.1, pitch - loss, 1000)
 	if is_pressed:
 		var angle_delta:float = angle_difference(last_event_polar_position.y, polar_position.y)
-		var angle_velocity = (angle_delta / ((TAU * 100.0 / 3.0) / 60.0)) / delta
+		var angle_velocity = (angle_delta / (TAU * 100.0 / 3.0 / 60.0)) / delta
 		if angle_velocity > 0:
-			velocity = clamp(velocity + 0.1, 0, angle_velocity)
+			velocity = clamp(velocity + 0.5, 0, angle_velocity)
 		else:
-			velocity = clamp(velocity - 0.1, angle_velocity, 0)
-		velocity = lerp(velocity, angle_velocity, 0.05)
+			velocity = clamp(velocity - 0.5, angle_velocity, 0)
 	$vinyl.rotation.y -= velocity * (TAU * 100.0 / 3.0 / 60.0) * delta
 	if velocity > 0:
 		velocity = velocity - loss if velocity > loss else 0.0
@@ -66,14 +75,22 @@ func input(_from:Node3D, _to:Area3D, _event:InputEvent, _event_position:Vector3,
 			polar_position = Vector2(event_position_2d.length(), event_position_2d.angle())
 		else:
 			is_pressed = false
+	elif _to == area_volume:
+		if _event is InputEventMouseButton && _event.pressed && _event.button_index == MOUSE_BUTTON_LEFT:
+			volume = fmod(volume + 0.2, 1.2)
+			create_tween().tween_property($knob_2, "rotation:y", -PI * volume, 0.2).set_trans(Tween.TRANS_SINE)
+	elif _to == area_pitch:
+		if _event is InputEventMouseButton && _event.pressed && _event.button_index == MOUSE_BUTTON_LEFT:
+			pitch = fmod(pitch + 2 + 0.5, 4.5) - 2
+			create_tween().tween_property($knob_1, "rotation:y", -PI * ((pitch + 2) / 4.0), 0.2).set_trans(Tween.TRANS_SINE)
 
 func fill_buffer(delta:float) -> void:
 	var frame_count:int = 44100 * delta
 	for i:int in frame_count:
 		var frame:int = play_frame + float(frame_delta) * float(i) / float(frame_count)
 		frame = clamp(frame, 0, wav.size() - 1)
-		if frame >= 0 && frame < wav.size():
-			generator_playback.push_frame(wav[frame])
+		if playing && frame >= 0 && frame < wav.size():
+			generator_playback.push_frame(wav[frame] * volume)
 		else:
 			generator_playback.push_frame(Vector2(0, 0))
 	play_frame = clamp(play_frame + frame_delta, 0, wav.size() - 1)

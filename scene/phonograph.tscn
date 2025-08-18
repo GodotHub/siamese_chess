@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=3 uid="uid://dkha0s03djtdq"]
+[gd_scene load_steps=17 format=3 uid="uid://dkha0s03djtdq"]
 
 [ext_resource type="PackedScene" uid="uid://dtfiqcyb2edwn" path="res://assets/model/phonograph.glb" id="1_ux6jj"]
 [ext_resource type="Shader" uid="uid://dd7xsr1eeq6mo" path="res://src/unmoving_plaid.gdshader" id="2_cvdbm"]
@@ -69,6 +69,14 @@ shader_parameter/contrast_mult = 0.792
 height = 0.00341797
 radius = 0.179688
 
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_qow6u"]
+height = 0.0166016
+radius = 0.0166016
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_8wbsc"]
+height = 0.0166016
+radius = 0.0166016
+
 [sub_resource type="AudioStreamGenerator" id="AudioStreamGenerator_qow6u"]
 buffer_length = 0.1
 
@@ -124,9 +132,23 @@ monitorable = false
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0322797, 0.220947, 0.015853)
 shape = SubResource("CylinderShape3D_ux6jj")
 
-[node name="audio_stream_player_3d" type="AudioStreamPlayer3D" parent="." index="10"]
+[node name="area_volume" type="Area3D" parent="." index="10"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.13889, 0.215103, 0.169916)
+
+[node name="collision_shape_3d" type="CollisionShape3D" parent="area_volume" index="0"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00190341, 0.00195313, -0.00195244)
+shape = SubResource("CylinderShape3D_qow6u")
+
+[node name="area_pitch" type="Area3D" parent="." index="11"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.187138, 0.215103, 0.169916)
+
+[node name="collision_shape_3d" type="CollisionShape3D" parent="area_pitch" index="0"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00190341, 0.00195313, -0.00195244)
+shape = SubResource("CylinderShape3D_8wbsc")
+
+[node name="audio_stream_player_3d" type="AudioStreamPlayer3D" parent="." index="12"]
 stream = SubResource("AudioStreamGenerator_qow6u")
-max_db = 2.022
+volume_db = 0.75
 autoplay = true
 bus = &"Music"
 playback_type = 1
