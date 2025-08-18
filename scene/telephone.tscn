@@ -1,0 +1,110 @@
+[gd_scene load_steps=5 format=3 uid="uid://bst0x07bms637"]
+
+[ext_resource type="PackedScene" uid="uid://cwa4q7nd31h3k" path="res://assets/model/telephone.glb" id="1_doli6"]
+[ext_resource type="Script" uid="uid://cgjalk6ns1btj" path="res://src/telephone.gd" id="2_xqtbd"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_xqtbd"]
+size = Vector3(0.240482, 0.0483856, 0.0671349)
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_xqtbd"]
+radius = 0.005
+
+[node name="telephone" instance=ExtResource("1_doli6")]
+script = ExtResource("2_xqtbd")
+
+[node name="area_3d" type="Area3D" parent="microphone" index="0"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.108036, -0.0522975)
+
+[node name="collision_shape_3d" type="CollisionShape3D" parent="microphone/area_3d" index="0"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00242037, -0.0238877, 0.0221767)
+shape = SubResource("BoxShape3D_xqtbd")
+
+[node name="area_1" type="Area3D" parent="." index="3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0136629, 0.0619239, 0.00580481)
+collision_layer = 2
+collision_mask = 0
+
+[node name="collision_shape_3d" type="CollisionShape3D" parent="area_1" index="0"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.000670195, 0, -0.00085118)
+shape = SubResource("SphereShape3D_xqtbd")
+
+[node name="area_2" type="Area3D" parent="." index="4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00275162, 0.0651992, 0.00244183)
+collision_layer = 2
+collision_mask = 0
+
+[node name="collision_shape_3d" type="CollisionShape3D" parent="area_2" index="0"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.00085118)
+shape = SubResource("SphereShape3D_xqtbd")
+
+[node name="area_3" type="Area3D" parent="." index="5"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0090953, 0.0640354, 0.0028486)
+collision_layer = 2
+collision_mask = 0
+
+[node name="collision_shape_3d" type="CollisionShape3D" parent="area_3" index="0"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.00085118)
+shape = SubResource("SphereShape3D_xqtbd")
+
+[node name="area_4" type="Area3D" parent="." index="6"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0180937, 0.0600629, 0.00753065)
+collision_layer = 2
+collision_mask = 0
+
+[node name="collision_shape_3d" type="CollisionShape3D" parent="area_4" index="0"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.00085118)
+shape = SubResource("SphereShape3D_xqtbd")
+
+[node name="area_5" type="Area3D" parent="." index="7"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0239628, 0.052921, 0.0145091)
+collision_layer = 2
+collision_mask = 0
+
+[node name="collision_shape_3d" type="CollisionShape3D" parent="area_5" index="0"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.00085118)
+shape = SubResource("SphereShape3D_xqtbd")
+
+[node name="area_6" type="Area3D" parent="." index="8"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0250723, 0.0438518, 0.023556)
+collision_layer = 2
+collision_mask = 0
+
+[node name="collision_shape_3d" type="CollisionShape3D" parent="area_6" index="0"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.00085118)
+shape = SubResource("SphereShape3D_xqtbd")
+
+[node name="area_7" type="Area3D" parent="." index="9"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.019103, 0.0371307, 0.0304843)
+collision_layer = 2
+collision_mask = 0
+
+[node name="collision_shape_3d" type="CollisionShape3D" parent="area_7" index="0"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.00085118)
+shape = SubResource("SphereShape3D_xqtbd")
+
+[node name="area_8" type="Area3D" parent="." index="10"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00938326, 0.0334307, 0.0350077)
+collision_layer = 2
+collision_mask = 0
+
+[node name="collision_shape_3d" type="CollisionShape3D" parent="area_8" index="0"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.00085118)
+shape = SubResource("SphereShape3D_xqtbd")
+
+[node name="area_9" type="Area3D" parent="." index="11"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00245496, 0.0310786, 0.0370762)
+collision_layer = 2
+collision_mask = 0
+
+[node name="collision_shape_3d" type="CollisionShape3D" parent="area_9" index="0"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.00085118)
+shape = SubResource("SphereShape3D_xqtbd")
+
+[node name="area_0" type="Area3D" parent="." index="12"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0144675, 0.0336285, 0.0338506)
+collision_layer = 2
+collision_mask = 0
+
+[node name="collision_shape_3d" type="CollisionShape3D" parent="area_0" index="0"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.00085118)
+shape = SubResource("SphereShape3D_xqtbd")
