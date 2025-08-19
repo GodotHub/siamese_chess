@@ -3,6 +3,7 @@ extends InspectableItem
 @export var password:String = "0123456789"
 var current:String = ""
 var unlocked:bool = false
+var opened:bool = false
 @onready var area_0:Area3D = $"door/0"
 @onready var area_1:Area3D = $"door/1"
 @onready var area_2:Area3D = $"door/2"
@@ -79,9 +80,12 @@ func input(_from:Node3D, _to:Area3D, _event:InputEvent, _event_position:Vector3,
 		elif _to == area_f:
 			current += "0"
 		elif _to == area_handle && unlocked:
-			create_tween().tween_property($door, "rotation_degrees:y", 90, 2).set_trans(Tween.TRANS_SINE)
-			$audio_stream_player_opening.play()
+			if !opened:
+				opened = true
+				create_tween().tween_property($door, "rotation_degrees:y", 90, 2).set_trans(Tween.TRANS_SINE)
+				$audio_stream_player_opening.play()
 		elif _to == area_close:
-			create_tween().tween_property($door, "rotation_degrees:y", 0, 2).set_trans(Tween.TRANS_SINE)
-			$audio_stream_player_opening.play()
+			if opened:
+				create_tween().tween_property($door, "rotation_degrees:y", 0, 2).set_trans(Tween.TRANS_SINE)
+				$audio_stream_player_closing.play()
 		update_text()
