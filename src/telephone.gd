@@ -137,3 +137,13 @@ func input(_from:Node3D, _to:Area3D, _event:InputEvent, _event_position:Vector3,
 				tween.tween_property($microphone, "transform", Transform3D(Vector3(1, 0, 0), Vector3(0, 1, 0), Vector3(0, 0, 1), Vector3(0, 0.001, -0.027)), 0.5).set_trans(Tween.TRANS_SINE)
 				tween.tween_callback($microphone/audio_stream_player_phone.stop)
 				tween.tween_callback($audio_stream_player_hung_up.play)
+
+func set_enabled(enabled:bool) -> void:
+	super.set_enabled(enabled)
+	if !enabled && hanging:
+		hanging = false
+		var tween:Tween = create_tween()
+		tween.tween_property($microphone, "transform", Transform3D(Vector3(1, 0, 0), Vector3(0, 1, 0), Vector3(0, 0, 1), Vector3(0, 0.001, -0.027)), 0.5).set_trans(Tween.TRANS_SINE)
+		tween.tween_callback($microphone/audio_stream_player_phone.stop)
+		tween.tween_callback($audio_stream_player_hung_up.play)
+		
