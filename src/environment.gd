@@ -10,6 +10,8 @@ var ai: PastorAI = PastorAI.new();
 
 var pastor_state:String = "idle"
 
+var telephone_2025_first_time:bool = false
+
 func _ready() -> void:
 	$cheshire.set_initial_interact($interact/area_passthrough)
 	$chess_timer.connect("timeout", timeout)
@@ -25,14 +27,52 @@ func dialog_telephone(number:String) -> void:
 		call("dialog_telephone_" + number)
 
 func dialog_telephone_2025() -> void:
-	$dialog.push_dialog("您好！", true, true)
-	await $dialog.on_next
-	$dialog.push_dialog("刚刚您试着打通了电话。", true, true)
-	await $dialog.on_next
-	$dialog.push_dialog("如果您在下棋时遇到困难，您可以通过电话询问一些建议。", true, true)
-	await $dialog.on_next
-	$dialog.push_dialog("只需要告诉我局面，我会提示您我认为最佳的着法。", true, true)
-	await $dialog.on_next
+	if !telephone_2025_first_time:
+		telephone_2025_first_time = true
+		$dialog.push_dialog("您好！", true, true)
+		await $dialog.on_next
+		$dialog.push_dialog("刚刚您试着打通了电话。", true, true)
+		await $dialog.on_next
+		$dialog.push_dialog("如果您在下棋时遇到困难，您可以通过电话询问一些建议。", true, true)
+		await $dialog.on_next
+		$dialog.push_dialog("只需要告诉我局面，我会提示您我认为最佳的着法。", true, true)
+		await $dialog.on_next
+	else:
+		$dialog.push_dialog("您好！", true, true)
+		await $dialog.on_next
+		if state:
+			var test_state:State = state.duplicate()
+			$dialog.push_dialog("您是在和谁下棋吗？可以告诉我现在什么情况？", true, true)
+			await $dialog.on_next
+			$dialog.push_dialog("……", true, true)
+			await $dialog.on_next
+			if state.get_turn() == 0:
+				$dialog.push_dialog("现在是对手在下棋，您可以先看一下他的应对方式。", true, true)
+				await $dialog.on_next
+				var telephone_ai:PastorAI = PastorAI.new()
+				telephone_ai.set_max_depth(6)
+				telephone_ai.start_search(test_state, 0, INF, Callable())
+				if telephone_ai.is_searching():
+					await telephone_ai.search_finished
+				var best_move:int = telephone_ai.get_search_result()
+				$dialog.push_dialog("我认为他会下" + RuleStandard.get_move_name(test_state, best_move), true, true)
+				await $dialog.on_next
+				return
+			$dialog.push_dialog("这样啊……", true, true)
+			await $dialog.on_next
+			$dialog.push_dialog("容我稍作思考。", true, true)
+			await $dialog.on_next
+			var telephone_ai:PastorAI = PastorAI.new()
+			telephone_ai.set_max_depth(6)
+			telephone_ai.start_search(test_state, 1, INF, Callable())
+			if telephone_ai.is_searching():
+				await telephone_ai.search_finished
+			var best_move:int = telephone_ai.get_search_result()
+			$dialog.push_dialog("我认为您应当下" + RuleStandard.get_move_name(test_state, best_move), true, true)
+			await $dialog.on_next
+		else:
+			$dialog.push_dialog("现在您还没在下棋，我暂时帮不上。", true, true)
+			await $dialog.on_next
 
 func dialog_idle() -> void:
 	$cheshire.force_set_camera($camera/camera_pastor_closeup)
