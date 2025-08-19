@@ -196,3 +196,11 @@ func remove_piece_instance(by:int) -> void:
 	var instance:PieceInstance = piece_instance[by]
 	piece_instance.erase(by)
 	instance.queue_free()
+
+func set_enabled(enabled:bool) -> void:
+	super.set_enabled(enabled)
+	if !enabled:
+		$canvas.clear_select_position()
+		$canvas.clear_premove_position()
+		$canvas.clear_pointer_position()
+		selected = -1
