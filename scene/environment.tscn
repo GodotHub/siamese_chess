@@ -5,8 +5,8 @@
 [ext_resource type="Script" uid="uid://b5tdvskepo5dh" path="res://src/environment.gd" id="2_7r8ay"]
 [ext_resource type="PackedScene" uid="uid://b3ml34bssywkr" path="res://scene/cheshire.tscn" id="3_1vcsq"]
 [ext_resource type="PackedScene" uid="uid://n5i2mcgyqj3k" path="res://scene/chess_timer.tscn" id="3_po4na"]
-[ext_resource type="Texture2D" uid="uid://c41qgg7cur57o" path="res://assets/texture/Texturelabs_Stone_131S.jpg" id="4_r5n28"]
 [ext_resource type="PackedScene" uid="uid://b0ots07uggqyg" path="res://scene/history.tscn" id="5_4qusu"]
+[ext_resource type="Texture2D" uid="uid://bhyrjuctg4vsr" path="res://assets/texture/Texturelabs_Paper_312S.jpg" id="6_r58fw"]
 [ext_resource type="PackedScene" uid="uid://bujgvbqsjgnrk" path="res://assets/model/radio.glb" id="7_geasp"]
 [ext_resource type="Script" uid="uid://dg85frcnjlauy" path="res://src/interact.gd" id="7_hgmdq"]
 [ext_resource type="PackedScene" uid="uid://bw127d1iawnv3" path="res://assets/model/radermachera_sinica.glb" id="7_ps37q"]
@@ -41,17 +41,7 @@
 [ext_resource type="AudioStream" uid="uid://dsqaodhmws5v8" path="res://assets/audio/debussy-images-1-1-anderson.mp3" id="36_gw0lo"]
 [ext_resource type="PackedScene" uid="uid://q25etby31xos" path="res://scene/safe_lock.tscn" id="37_ps37q"]
 [ext_resource type="PackedScene" uid="uid://3uniw2jsey4r" path="res://assets/model/piece_queen.glb" id="39_xqn0k"]
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_e7hh8"]
-render_priority = 0
-shader = ExtResource("19_b1ytd")
-shader_parameter/texture_albedo = ExtResource("4_r5n28")
-shader_parameter/scale = 1.0
-shader_parameter/hue_shift = 0.0
-shader_parameter/saturation_mult = 1.0
-shader_parameter/value_mult = 0.813
-shader_parameter/brightness_add = 0.817
-shader_parameter/contrast_mult = 0.11
+[ext_resource type="PackedScene" uid="uid://wcdgbubct3po" path="res://scene/coffee_machine.tscn" id="42_r58fw"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_neu4h"]
 render_priority = 0
@@ -78,7 +68,7 @@ shader_parameter/contrast_mult = 1.0
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_eosfh"]
 render_priority = 0
 shader = ExtResource("19_b1ytd")
-shader_parameter/texture_albedo = ExtResource("4_r5n28")
+shader_parameter/texture_albedo = ExtResource("6_r58fw")
 shader_parameter/scale = 1.0
 shader_parameter/hue_shift = 0.0
 shader_parameter/saturation_mult = 0.85
@@ -373,9 +363,6 @@ shader_parameter/contrast_mult = 1.0
 
 [node name="environment" instance=ExtResource("1_b3374")]
 script = ExtResource("2_7r8ay")
-
-[node name="wall" parent="." index="1"]
-surface_material_override/0 = SubResource("ShaderMaterial_e7hh8")
 
 [node name="ceil" parent="." index="2"]
 surface_material_override/0 = SubResource("ShaderMaterial_neu4h")
@@ -1279,6 +1266,9 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.07932, 0, 7.96234)
 
 [node name="radermachera_sinica_3" parent="." index="53" instance=ExtResource("7_ps37q")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.4796, 0, 1.66837)
+
+[node name="coffee_machine" parent="." index="54" instance=ExtResource("42_r58fw")]
+transform = Transform3D(1.31134e-07, 0, 1, 0, 1, 0, -1, 0, 1.31134e-07, 2.59183, 1.28231, 3.95914)
 
 [editable path="cup_pastor"]
 [editable path="cup_cheshire"]
