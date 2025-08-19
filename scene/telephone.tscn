@@ -12,6 +12,9 @@ radius = 0.005
 [node name="telephone" instance=ExtResource("1_doli6")]
 script = ExtResource("2_xqtbd")
 
+[node name="microphone" parent="." index="1"]
+rotation_edit_mode = 2
+
 [node name="area_3d" type="Area3D" parent="microphone" index="0"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.108036, -0.0522975)
 

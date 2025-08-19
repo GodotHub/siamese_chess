@@ -13,11 +13,26 @@ var pastor_state:String = "idle"
 func _ready() -> void:
 	$cheshire.set_initial_interact($interact/area_passthrough)
 	$chess_timer.connect("timeout", timeout)
+	$telephone.connect("call_number", dialog_telephone)
 	$interact/area_pastor.connect("clicked", select_dialog)
 
 func select_dialog() -> void:
 	if has_method("dialog_" + pastor_state):
 		call("dialog_" + pastor_state)
+
+func dialog_telephone(number:String) -> void:
+	if has_method("dialog_telephone_" + number):
+		call("dialog_telephone_" + number)
+
+func dialog_telephone_2025() -> void:
+	$dialog.push_dialog("您好！", true, true)
+	await $dialog.on_next
+	$dialog.push_dialog("刚刚您试着打通了电话。", true, true)
+	await $dialog.on_next
+	$dialog.push_dialog("如果您在下棋时遇到困难，您可以通过电话询问一些建议。", true, true)
+	await $dialog.on_next
+	$dialog.push_dialog("只需要告诉我局面，我会提示您我认为最佳的着法。", true, true)
+	await $dialog.on_next
 
 func dialog_idle() -> void:
 	$cheshire.force_set_camera($camera/camera_pastor_closeup)
