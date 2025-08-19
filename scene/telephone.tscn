@@ -17,6 +17,8 @@ rotation_edit_mode = 2
 
 [node name="area_3d" type="Area3D" parent="microphone" index="0"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.108036, -0.0522975)
+collision_layer = 2
+collision_mask = 0
 
 [node name="collision_shape_3d" type="CollisionShape3D" parent="microphone/area_3d" index="0"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00242037, -0.0238877, 0.0221767)
