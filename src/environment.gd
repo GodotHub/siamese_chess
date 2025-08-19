@@ -61,10 +61,10 @@ func dialog_telephone_2025() -> void:
 			$dialog.push_dialog("这样啊……", true, true)
 			await $dialog.on_next
 			$dialog.push_dialog("容我稍作思考。", true, true)
-			await $dialog.on_next
 			var telephone_ai:PastorAI = PastorAI.new()
 			telephone_ai.set_max_depth(6)
 			telephone_ai.start_search(test_state, 1, INF, Callable())
+			await $dialog.on_next
 			if telephone_ai.is_searching():
 				await telephone_ai.search_finished
 			var best_move:int = telephone_ai.get_search_result()

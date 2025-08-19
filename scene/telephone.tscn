@@ -1,10 +1,17 @@
-[gd_scene load_steps=5 format=3 uid="uid://bst0x07bms637"]
+[gd_scene load_steps=10 format=3 uid="uid://bst0x07bms637"]
 
 [ext_resource type="PackedScene" uid="uid://cwa4q7nd31h3k" path="res://assets/model/telephone.glb" id="1_doli6"]
 [ext_resource type="Script" uid="uid://cgjalk6ns1btj" path="res://src/telephone.gd" id="2_xqtbd"]
+[ext_resource type="AudioStream" uid="uid://bd3nww2lf3m8u" path="res://assets/audio/788790__tormy__telephone-hang-off.wav" id="3_geet0"]
+[ext_resource type="AudioStream" uid="uid://c5rd25i1dfjah" path="res://assets/audio/788790__tormy__telephone-hung-up.wav" id="4_0rpnm"]
+[ext_resource type="AudioStream" uid="uid://bfjqlhuituxmi" path="res://assets/audio/190474__trip_sound__analogic_dial_telephone_dial_up.wav" id="4_ap1kh"]
+[ext_resource type="AudioStream" uid="uid://bfx1ldeth63bq" path="res://assets/audio/190474__trip_sound__analogic_dial_telephone_dial_down.wav" id="5_geet0"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_xqtbd"]
 size = Vector3(0.240482, 0.0483856, 0.0671349)
+
+[sub_resource type="AudioStreamGenerator" id="AudioStreamGenerator_0rpnm"]
+mix_rate = 22050.0
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_xqtbd"]
 radius = 0.005
@@ -23,6 +30,12 @@ collision_mask = 0
 [node name="collision_shape_3d" type="CollisionShape3D" parent="microphone/area_3d" index="0"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00242037, -0.0238877, 0.0221767)
 shape = SubResource("BoxShape3D_xqtbd")
+
+[node name="audio_stream_player_phone" type="AudioStreamPlayer3D" parent="microphone" index="1"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0870356, 0.061742, -0.0299011)
+stream = SubResource("AudioStreamGenerator_0rpnm")
+autoplay = true
+playback_type = 1
 
 [node name="area_1" type="Area3D" parent="." index="3"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0136629, 0.0619239, 0.00580481)
@@ -113,3 +126,15 @@ collision_mask = 0
 [node name="collision_shape_3d" type="CollisionShape3D" parent="area_0" index="0"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.00085118)
 shape = SubResource("SphereShape3D_xqtbd")
+
+[node name="audio_stream_player_hang_off" type="AudioStreamPlayer3D" parent="." index="13"]
+stream = ExtResource("3_geet0")
+
+[node name="audio_stream_player_hung_up" type="AudioStreamPlayer3D" parent="." index="14"]
+stream = ExtResource("4_0rpnm")
+
+[node name="audio_stream_player_dial_up" type="AudioStreamPlayer3D" parent="." index="15"]
+stream = ExtResource("4_ap1kh")
+
+[node name="audio_stream_player_dial_down" type="AudioStreamPlayer3D" parent="." index="16"]
+stream = ExtResource("5_geet0")
