@@ -29,7 +29,18 @@ func _ready() -> void:
 func check_number() -> void:
 	if address.has(number):
 		# 播放完音效后交给环境场景进行演出
-		call_number.emit(number)
+		var tween:Tween = create_tween()
+		tween.tween_callback($microphone/audio_stream_player_phone.stop)
+		tween.tween_interval(2)
+		tween.tween_callback($microphone/audio_stream_player_phone.play)
+		tween.tween_interval(1)
+		tween.tween_callback($microphone/audio_stream_player_phone.stop)
+		tween.tween_interval(2)
+		tween.tween_callback($microphone/audio_stream_player_phone.play)
+		tween.tween_interval(1)
+		tween.tween_callback($microphone/audio_stream_player_phone.stop)
+		tween.tween_interval(2)
+		tween.tween_callback(call_number.emit.bind(number))
 
 func input(_from:Node3D, _to:Area3D, _event:InputEvent, _event_position:Vector3, _normal:Vector3) -> void:
 	if _event is InputEventMouseButton && _event.pressed && _event.button_index == MOUSE_BUTTON_LEFT:
@@ -120,7 +131,9 @@ func input(_from:Node3D, _to:Area3D, _event:InputEvent, _event_position:Vector3,
 				$audio_stream_player_hang_off.play()
 				var tween:Tween = create_tween()
 				tween.tween_property($microphone, "transform", Transform3D(Vector3(0.924, -0.382, 0), Vector3(0.382, 0.924, 0), Vector3(0, 0, 1), Vector3(0, 0.128, -0.027)), 0.5).set_trans(Tween.TRANS_SINE)
+				tween.tween_callback($microphone/audio_stream_player_phone.play)
 			else:
 				var tween:Tween = create_tween()
 				tween.tween_property($microphone, "transform", Transform3D(Vector3(1, 0, 0), Vector3(0, 1, 0), Vector3(0, 0, 1), Vector3(0, 0.001, -0.027)), 0.5).set_trans(Tween.TRANS_SINE)
+				tween.tween_callback($microphone/audio_stream_player_phone.stop)
 				tween.tween_callback($audio_stream_player_hung_up.play)
