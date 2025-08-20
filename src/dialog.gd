@@ -5,6 +5,7 @@ signal on_next()
 
 const packed_scene:PackedScene = preload("res://scene/dialog.tscn")
 var selected:int = 0
+var waiting:bool = false
 var click_anywhere:bool = false
 var force_selection:bool = false
 
@@ -28,15 +29,16 @@ func test() -> void:
 
 
 func _unhandled_input(event:InputEvent) -> void:
-	if click_anywhere:
+	if click_anywhere && !waiting:
 		if event is InputEventMouseButton && event.button_index == MOUSE_BUTTON_LEFT && event.pressed:
 			next()
 	if click_anywhere || force_selection:
 		get_viewport().set_input_as_handled()
 
-func push_dialog(text:String, blackscreen:bool = false, _click_anywhere:bool = false) -> void:
+func push_dialog(text:String, blackscreen:bool = false, _click_anywhere:bool = false, _waiting:bool = false) -> void:
 	var tween:Tween = create_tween()
 	force_selection = false
+	waiting = _waiting
 	click_anywhere = _click_anywhere
 	$texture_rect_bottom/label.text = ""
 	if blackscreen:
@@ -61,6 +63,7 @@ func push_selection(selection:PackedStringArray, _force_selection:bool = true, b
 func next() -> void:
 	$texture_rect_bottom/label.text = ""
 	click_anywhere = false
+	waiting = false
 	force_selection = false
 	on_next.emit.call_deferred()
 
