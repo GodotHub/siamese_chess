@@ -130,6 +130,7 @@ func dialog_start_game() -> void:
 		if $dialog.selected in [0, 1, 2]:
 			state = RuleStandard.parse("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
 			$chessboard.set_state(state)
+			$history.set_state(state)
 			if $dialog.selected == 0:
 				$chess_timer.set_time(1800, 1, 0)
 				think_time = 5
@@ -153,6 +154,7 @@ func dialog_start_game() -> void:
 		elif $dialog.selected == 3:
 			state = RuleStandard.parse("8/8/2rbqk2/2pppn2/2NPPP2/2KQBR2/8/8 w - - 0 1")
 			$chessboard.set_state(state)
+			$history.set_state(state)
 			$chess_timer.set_time(30, 1, 0)
 			think_time = 1
 			$dialog.push_dialog("现在棋盘已经准备好了。", true, true)
@@ -174,6 +176,7 @@ func dialog_start_game() -> void:
 			if is_instance_valid(state):
 				think_time = 5
 				$chessboard.set_state(state)
+				$history.set_state(state)
 				$dialog.push_dialog("现在棋盘已经准备好了。", true, true)
 				$cheshire.force_set_camera($camera/camera_chessboard)
 				await $dialog.on_next
@@ -198,6 +201,7 @@ func in_game() -> void:
 		var move:int = ai.get_search_result()
 		RuleStandard.apply_move(state, move)
 		$chessboard.execute_move(move)
+		$history.push_move(move)
 		if RuleStandard.get_end_type(state) != "":
 			break
 		$chessboard.set_valid_move(RuleStandard.generate_valid_move(state, 1))
@@ -206,6 +210,7 @@ func in_game() -> void:
 		ai.start_search(state, 1, INF, Callable())
 		await $chessboard.move_played
 		RuleStandard.apply_move(state, $chessboard.confirm_move)
+		$history.push_move($chessboard.confirm_move)
 		$chess_timer.next()
 		ai.stop_search()
 		if ai.is_searching():

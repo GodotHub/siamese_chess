@@ -1,9 +1,10 @@
-[gd_scene load_steps=8 format=3 uid="uid://b0ots07uggqyg"]
+[gd_scene load_steps=9 format=3 uid="uid://b0ots07uggqyg"]
 
 [ext_resource type="Script" uid="uid://dovrsks1cn8gl" path="res://src/history.gd" id="1_1i63t"]
 [ext_resource type="Texture2D" uid="uid://bhyrjuctg4vsr" path="res://assets/texture/Texturelabs_Paper_312S.jpg" id="2_0su6n"]
 [ext_resource type="Theme" uid="uid://d32bwe36vwxip" path="res://assets/theme.tres" id="2_ysvxy"]
 [ext_resource type="Texture2D" uid="uid://b4743axykk2uc" path="res://assets/texture/history.svg" id="3_o7yno"]
+[ext_resource type="PackedScene" uid="uid://bnxosopniliec" path="res://scene/chessboard_flat.tscn" id="4_cer4d"]
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_6vnsk"]
 size = Vector2(0.3, 0.4)
@@ -34,6 +35,10 @@ texture = ExtResource("2_0su6n")
 position = Vector2(292, 379)
 scale = Vector2(0.695, 0.695)
 texture = ExtResource("3_o7yno")
+
+[node name="chessboard_flat" parent="sub_viewport" instance=ExtResource("4_cer4d")]
+position = Vector2(309, 4)
+scale = Vector2(0.215, 0.215)
 
 [node name="label_title" type="Label" parent="sub_viewport"]
 offset_left = 121.0

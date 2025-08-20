@@ -20,11 +20,10 @@ var state:State = null
 var upper_left:Vector2 = Vector2(52, 52)
 var pieces:Array[Sprite2D] = []
 
-func _ready() -> void:
-	state = RuleStandard.create_initial_state()
-	draw()
-
 func draw() -> void:
+	for iter:Sprite2D in pieces:
+		iter.queue_free()
+	pieces.clear()
 	var piece_position:PackedInt32Array = state.get_all_pieces()
 	for by:int in piece_position:
 		var by_piece:int = state.get_piece(by)
@@ -33,7 +32,9 @@ func draw() -> void:
 		piece_instance.position = upper_left + Vector2(by % 16, by / 16) * 128
 		piece_instance.texture = piece_texture
 		piece_instance.centered = false
+		pieces.push_back(piece_instance)
 		add_child(piece_instance)
 
 func set_state(_state:State) -> void:
 	state = _state.duplicate()
+	draw()

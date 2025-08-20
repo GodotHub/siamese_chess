@@ -16,6 +16,7 @@ func push_move(move:int) -> void:
 	update_table()
 
 func update_table() -> void:
+	$sub_viewport/chessboard_flat.set_state(state)
 	for i:int in range(history.size()):
 		if i % 2 == 0:
 			get_node("sub_viewport/white/label_%d" % (i / 2 + 1)).text = history[i]
