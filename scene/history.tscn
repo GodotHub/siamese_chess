@@ -1,1677 +1,1666 @@
-[gd_scene load_steps=9 format=3 uid="uid://b0ots07uggqyg"]
+[gd_scene load_steps=5 format=3 uid="uid://b0ots07uggqyg"]
 
 [ext_resource type="Script" uid="uid://dovrsks1cn8gl" path="res://src/history.gd" id="1_1i63t"]
-[ext_resource type="Texture2D" uid="uid://bhyrjuctg4vsr" path="res://assets/texture/Texturelabs_Paper_312S.jpg" id="2_0su6n"]
 [ext_resource type="Theme" uid="uid://d32bwe36vwxip" path="res://assets/theme.tres" id="2_ysvxy"]
 [ext_resource type="Texture2D" uid="uid://b4743axykk2uc" path="res://assets/texture/history.svg" id="3_o7yno"]
 [ext_resource type="PackedScene" uid="uid://bnxosopniliec" path="res://scene/chessboard_flat.tscn" id="4_cer4d"]
 
-[sub_resource type="PlaneMesh" id="PlaneMesh_6vnsk"]
-size = Vector2(0.3, 0.4)
-
-[sub_resource type="ViewportTexture" id="ViewportTexture_ysvxy"]
-viewport_path = NodePath("sub_viewport")
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_o7yno"]
-resource_local_to_scene = true
-albedo_texture = SubResource("ViewportTexture_ysvxy")
-
-[node name="history" type="Node3D"]
+[node name="history" type="Node2D"]
 script = ExtResource("1_1i63t")
+metadata/_edit_horizontal_guides_ = [780.0]
+metadata/_edit_vertical_guides_ = [-699.0, 552.0]
 
-[node name="mesh_instance_3d" type="MeshInstance3D" parent="."]
-mesh = SubResource("PlaneMesh_6vnsk")
-surface_material_override/0 = SubResource("StandardMaterial3D_o7yno")
-
-[node name="sub_viewport" type="SubViewport" parent="."]
-size = Vector2i(576, 768)
-
-[node name="material" type="Sprite2D" parent="sub_viewport"]
-position = Vector2(231.61, 350)
-scale = Vector2(1.3, 1.3)
-texture = ExtResource("2_0su6n")
-
-[node name="history" type="Sprite2D" parent="sub_viewport"]
-position = Vector2(292, 379)
+[node name="history" type="Sprite2D" parent="."]
 scale = Vector2(0.695, 0.695)
 texture = ExtResource("3_o7yno")
+centered = false
 
-[node name="chessboard_flat" parent="sub_viewport" instance=ExtResource("4_cer4d")]
+[node name="chessboard_flat" parent="." instance=ExtResource("4_cer4d")]
 position = Vector2(309, 4)
 scale = Vector2(0.215, 0.215)
 
-[node name="label_title" type="Label" parent="sub_viewport"]
-offset_left = 121.0
-offset_top = 12.0
-offset_right = 190.0
-offset_bottom = 35.0
+[node name="label_title" type="Label" parent="."]
+offset_left = 122.0
+offset_top = 23.0
+offset_right = 191.0
+offset_bottom = 46.0
 theme = ExtResource("2_ysvxy")
 text = "Notation"
+metadata/_edit_use_anchors_ = true
 
-[node name="label_date" type="Label" parent="sub_viewport"]
-offset_left = 73.0
-offset_top = 59.0
-offset_right = 114.0
-offset_bottom = 82.0
+[node name="label_date" type="Label" parent="."]
+offset_left = 59.0
+offset_top = 68.0
+offset_right = 100.0
+offset_bottom = 91.0
 theme = ExtResource("2_ysvxy")
 text = "Date:"
+metadata/_edit_use_anchors_ = true
 
-[node name="label_event" type="Label" parent="sub_viewport"]
-offset_left = 67.0
-offset_top = 95.0
-offset_right = 115.0
-offset_bottom = 118.0
+[node name="label_event" type="Label" parent="."]
+offset_left = 53.0
+offset_top = 104.0
+offset_right = 101.0
+offset_bottom = 127.0
 theme = ExtResource("2_ysvxy")
 text = "Event:"
+metadata/_edit_use_anchors_ = true
 
-[node name="label_white" type="Label" parent="sub_viewport"]
-offset_left = 66.0
-offset_top = 134.0
-offset_right = 116.0
-offset_bottom = 157.0
+[node name="label_white" type="Label" parent="."]
+offset_left = 52.0
+offset_top = 143.0
+offset_right = 102.0
+offset_bottom = 166.0
 theme = ExtResource("2_ysvxy")
 text = "White:"
+metadata/_edit_use_anchors_ = true
 
-[node name="label_black" type="Label" parent="sub_viewport"]
-offset_left = 68.0
-offset_top = 168.0
-offset_right = 114.0
-offset_bottom = 191.0
+[node name="label_black" type="Label" parent="."]
+offset_left = 54.0
+offset_top = 177.0
+offset_right = 100.0
+offset_bottom = 200.0
 theme = ExtResource("2_ysvxy")
 text = "Black:"
+metadata/_edit_use_anchors_ = true
 
-[node name="label_recorder" type="Label" parent="sub_viewport"]
-offset_left = 41.0
-offset_top = 202.0
-offset_right = 116.0
-offset_bottom = 225.0
+[node name="label_recorder" type="Label" parent="."]
+offset_left = 27.0
+offset_top = 211.0
+offset_right = 102.0
+offset_bottom = 234.0
 theme = ExtResource("2_ysvxy")
 text = "Recorder:"
+metadata/_edit_use_anchors_ = true
 
-[node name="header" type="Control" parent="sub_viewport"]
+[node name="header" type="Control" parent="."]
 layout_mode = 3
 anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
 theme = ExtResource("2_ysvxy")
+metadata/_edit_use_anchors_ = true
 
-[node name="label_1" type="Label" parent="sub_viewport/header"]
+[node name="label_1" type="Label" parent="header"]
 layout_mode = 0
-offset_left = 93.0
-offset_top = 252.0
-offset_right = 139.0
-offset_bottom = 275.0
+offset_left = 80.0
+offset_top = 263.0
+offset_right = 126.0
+offset_bottom = 286.0
 text = "White"
 horizontal_alignment = 2
 
-[node name="label_2" type="Label" parent="sub_viewport/header"]
+[node name="label_2" type="Label" parent="header"]
 layout_mode = 0
-offset_left = 156.0
-offset_top = 252.0
-offset_right = 202.0
-offset_bottom = 275.0
+offset_left = 143.0
+offset_top = 263.0
+offset_right = 189.0
+offset_bottom = 286.0
 text = "Black"
 horizontal_alignment = 2
 
-[node name="label_3" type="Label" parent="sub_viewport/header"]
+[node name="label_3" type="Label" parent="header"]
 layout_mode = 0
-offset_left = 268.0
-offset_top = 252.0
-offset_right = 314.0
-offset_bottom = 275.0
+offset_left = 255.0
+offset_top = 263.0
+offset_right = 301.0
+offset_bottom = 286.0
 text = "White"
 horizontal_alignment = 2
 
-[node name="label_4" type="Label" parent="sub_viewport/header"]
+[node name="label_4" type="Label" parent="header"]
 layout_mode = 0
-offset_left = 331.0
-offset_top = 252.0
-offset_right = 377.0
-offset_bottom = 275.0
+offset_left = 318.0
+offset_top = 263.0
+offset_right = 364.0
+offset_bottom = 286.0
 text = "Black"
 horizontal_alignment = 2
 
-[node name="label_5" type="Label" parent="sub_viewport/header"]
+[node name="label_5" type="Label" parent="header"]
 layout_mode = 0
-offset_left = 443.0
-offset_top = 252.0
-offset_right = 489.0
-offset_bottom = 275.0
+offset_left = 430.0
+offset_top = 263.0
+offset_right = 476.0
+offset_bottom = 286.0
 text = "White"
 horizontal_alignment = 2
 
-[node name="label_6" type="Label" parent="sub_viewport/header"]
+[node name="label_6" type="Label" parent="header"]
 layout_mode = 0
-offset_left = 505.0
-offset_top = 252.0
-offset_right = 551.0
-offset_bottom = 275.0
+offset_left = 492.0
+offset_top = 263.0
+offset_right = 538.0
+offset_bottom = 286.0
 text = "Black"
 horizontal_alignment = 2
 
-[node name="sequence" type="Control" parent="sub_viewport"]
+[node name="sequence" type="Control" parent="."]
 layout_mode = 3
 anchors_preset = 0
 offset_left = 121.0
-offset_top = 12.0
+offset_top = 13.0
 offset_right = 161.0
-offset_bottom = 52.0
+offset_bottom = 53.0
 theme = ExtResource("2_ysvxy")
+metadata/_edit_use_anchors_ = true
 
-[node name="label_1" type="Label" parent="sub_viewport/sequence"]
+[node name="label_1" type="Label" parent="sequence"]
 layout_mode = 0
-offset_left = -86.0
-offset_top = 264.0
-offset_right = -46.0
-offset_bottom = 287.0
+offset_left = -99.0
+offset_top = 275.0
+offset_right = -59.0
+offset_bottom = 298.0
 text = "1"
 horizontal_alignment = 2
 
-[node name="label_2" type="Label" parent="sub_viewport/sequence"]
+[node name="label_2" type="Label" parent="sequence"]
 layout_mode = 0
-offset_left = -86.0
-offset_top = 288.0
-offset_right = -46.0
-offset_bottom = 311.0
+offset_left = -99.0
+offset_top = 299.0
+offset_right = -59.0
+offset_bottom = 322.0
 text = "2"
 horizontal_alignment = 2
 
-[node name="label_3" type="Label" parent="sub_viewport/sequence"]
+[node name="label_3" type="Label" parent="sequence"]
 layout_mode = 0
-offset_left = -86.0
-offset_top = 311.0
-offset_right = -46.0
-offset_bottom = 334.0
+offset_left = -99.0
+offset_top = 322.0
+offset_right = -59.0
+offset_bottom = 345.0
 text = "3"
 horizontal_alignment = 2
 
-[node name="label_4" type="Label" parent="sub_viewport/sequence"]
+[node name="label_4" type="Label" parent="sequence"]
 layout_mode = 0
-offset_left = -86.0
-offset_top = 335.0
-offset_right = -46.0
-offset_bottom = 358.0
+offset_left = -99.0
+offset_top = 346.0
+offset_right = -59.0
+offset_bottom = 369.0
 text = "4"
 horizontal_alignment = 2
 
-[node name="label_5" type="Label" parent="sub_viewport/sequence"]
+[node name="label_5" type="Label" parent="sequence"]
 layout_mode = 0
-offset_left = -86.0
-offset_top = 359.0
-offset_right = -46.0
-offset_bottom = 382.0
+offset_left = -99.0
+offset_top = 370.0
+offset_right = -59.0
+offset_bottom = 393.0
 text = "5"
 horizontal_alignment = 2
 
-[node name="label_6" type="Label" parent="sub_viewport/sequence"]
+[node name="label_6" type="Label" parent="sequence"]
 layout_mode = 0
-offset_left = -86.0
-offset_top = 382.0
-offset_right = -46.0
-offset_bottom = 405.0
+offset_left = -99.0
+offset_top = 393.0
+offset_right = -59.0
+offset_bottom = 416.0
 text = "6"
 horizontal_alignment = 2
 
-[node name="label_7" type="Label" parent="sub_viewport/sequence"]
+[node name="label_7" type="Label" parent="sequence"]
 layout_mode = 0
-offset_left = -86.0
-offset_top = 407.0
-offset_right = -46.0
-offset_bottom = 430.0
+offset_left = -99.0
+offset_top = 418.0
+offset_right = -59.0
+offset_bottom = 441.0
 text = "7"
 horizontal_alignment = 2
 
-[node name="label_8" type="Label" parent="sub_viewport/sequence"]
+[node name="label_8" type="Label" parent="sequence"]
 layout_mode = 0
-offset_left = -86.0
-offset_top = 431.0
-offset_right = -46.0
-offset_bottom = 454.0
+offset_left = -99.0
+offset_top = 442.0
+offset_right = -59.0
+offset_bottom = 465.0
 text = "8"
 horizontal_alignment = 2
 
-[node name="label_9" type="Label" parent="sub_viewport/sequence"]
+[node name="label_9" type="Label" parent="sequence"]
 layout_mode = 0
-offset_left = -86.0
-offset_top = 454.0
-offset_right = -46.0
-offset_bottom = 477.0
+offset_left = -99.0
+offset_top = 465.0
+offset_right = -59.0
+offset_bottom = 488.0
 text = "9"
 horizontal_alignment = 2
 
-[node name="label_10" type="Label" parent="sub_viewport/sequence"]
+[node name="label_10" type="Label" parent="sequence"]
 layout_mode = 0
-offset_left = -86.0
-offset_top = 478.0
-offset_right = -46.0
-offset_bottom = 501.0
+offset_left = -99.0
+offset_top = 489.0
+offset_right = -59.0
+offset_bottom = 512.0
 text = "10"
 horizontal_alignment = 2
 
-[node name="label_11" type="Label" parent="sub_viewport/sequence"]
+[node name="label_11" type="Label" parent="sequence"]
 layout_mode = 0
-offset_left = -86.0
-offset_top = 502.0
-offset_right = -46.0
-offset_bottom = 525.0
+offset_left = -99.0
+offset_top = 513.0
+offset_right = -59.0
+offset_bottom = 536.0
 text = "11"
 horizontal_alignment = 2
 
-[node name="label_12" type="Label" parent="sub_viewport/sequence"]
+[node name="label_12" type="Label" parent="sequence"]
 layout_mode = 0
-offset_left = -86.0
-offset_top = 525.0
-offset_right = -46.0
-offset_bottom = 548.0
+offset_left = -99.0
+offset_top = 536.0
+offset_right = -59.0
+offset_bottom = 559.0
 text = "12"
 horizontal_alignment = 2
 
-[node name="label_13" type="Label" parent="sub_viewport/sequence"]
+[node name="label_13" type="Label" parent="sequence"]
 layout_mode = 0
-offset_left = -86.0
-offset_top = 549.0
-offset_right = -46.0
-offset_bottom = 572.0
+offset_left = -99.0
+offset_top = 560.0
+offset_right = -59.0
+offset_bottom = 583.0
 text = "13"
 horizontal_alignment = 2
 
-[node name="label_14" type="Label" parent="sub_viewport/sequence"]
+[node name="label_14" type="Label" parent="sequence"]
 layout_mode = 0
-offset_left = -86.0
-offset_top = 573.0
-offset_right = -46.0
-offset_bottom = 596.0
+offset_left = -99.0
+offset_top = 584.0
+offset_right = -59.0
+offset_bottom = 607.0
 text = "14"
 horizontal_alignment = 2
 
-[node name="label_15" type="Label" parent="sub_viewport/sequence"]
+[node name="label_15" type="Label" parent="sequence"]
 layout_mode = 0
-offset_left = -86.0
-offset_top = 596.0
-offset_right = -46.0
-offset_bottom = 619.0
+offset_left = -99.0
+offset_top = 607.0
+offset_right = -59.0
+offset_bottom = 630.0
 text = "15"
 horizontal_alignment = 2
 
-[node name="label_16" type="Label" parent="sub_viewport/sequence"]
+[node name="label_16" type="Label" parent="sequence"]
 layout_mode = 0
-offset_left = -86.0
-offset_top = 620.0
-offset_right = -46.0
-offset_bottom = 643.0
+offset_left = -99.0
+offset_top = 631.0
+offset_right = -59.0
+offset_bottom = 654.0
 text = "16"
 horizontal_alignment = 2
 
-[node name="label_17" type="Label" parent="sub_viewport/sequence"]
+[node name="label_17" type="Label" parent="sequence"]
 layout_mode = 0
-offset_left = -86.0
-offset_top = 644.0
-offset_right = -46.0
-offset_bottom = 667.0
+offset_left = -99.0
+offset_top = 655.0
+offset_right = -59.0
+offset_bottom = 678.0
 text = "17"
 horizontal_alignment = 2
 
-[node name="label_18" type="Label" parent="sub_viewport/sequence"]
+[node name="label_18" type="Label" parent="sequence"]
 layout_mode = 0
-offset_left = -86.0
-offset_top = 667.0
-offset_right = -46.0
-offset_bottom = 690.0
+offset_left = -99.0
+offset_top = 678.0
+offset_right = -59.0
+offset_bottom = 701.0
 text = "18"
 horizontal_alignment = 2
 
-[node name="label_19" type="Label" parent="sub_viewport/sequence"]
+[node name="label_19" type="Label" parent="sequence"]
 layout_mode = 0
-offset_left = -86.0
-offset_top = 692.0
-offset_right = -46.0
-offset_bottom = 715.0
+offset_left = -99.0
+offset_top = 703.0
+offset_right = -59.0
+offset_bottom = 726.0
 text = "19"
 horizontal_alignment = 2
 
-[node name="label_20" type="Label" parent="sub_viewport/sequence"]
+[node name="label_20" type="Label" parent="sequence"]
 layout_mode = 0
-offset_left = -86.0
-offset_top = 716.0
-offset_right = -46.0
-offset_bottom = 739.0
+offset_left = -99.0
+offset_top = 727.0
+offset_right = -59.0
+offset_bottom = 750.0
 text = "20"
 horizontal_alignment = 2
 
-[node name="label_21" type="Label" parent="sub_viewport/sequence"]
+[node name="label_21" type="Label" parent="sequence"]
 layout_mode = 0
-offset_left = 90.0
-offset_top = 264.0
-offset_right = 130.0
-offset_bottom = 287.0
+offset_left = 77.0
+offset_top = 275.0
+offset_right = 117.0
+offset_bottom = 298.0
 text = "21"
 horizontal_alignment = 2
 
-[node name="label_22" type="Label" parent="sub_viewport/sequence"]
+[node name="label_22" type="Label" parent="sequence"]
 layout_mode = 0
-offset_left = 90.0
-offset_top = 288.0
-offset_right = 130.0
-offset_bottom = 311.0
+offset_left = 77.0
+offset_top = 299.0
+offset_right = 117.0
+offset_bottom = 322.0
 text = "22"
 horizontal_alignment = 2
 
-[node name="label_23" type="Label" parent="sub_viewport/sequence"]
+[node name="label_23" type="Label" parent="sequence"]
 layout_mode = 0
-offset_left = 90.0
-offset_top = 311.0
-offset_right = 130.0
-offset_bottom = 334.0
+offset_left = 77.0
+offset_top = 322.0
+offset_right = 117.0
+offset_bottom = 345.0
 text = "23"
 horizontal_alignment = 2
 
-[node name="label_24" type="Label" parent="sub_viewport/sequence"]
+[node name="label_24" type="Label" parent="sequence"]
 layout_mode = 0
-offset_left = 90.0
-offset_top = 335.0
-offset_right = 130.0
-offset_bottom = 358.0
+offset_left = 77.0
+offset_top = 346.0
+offset_right = 117.0
+offset_bottom = 369.0
 text = "24"
 horizontal_alignment = 2
 
-[node name="label_25" type="Label" parent="sub_viewport/sequence"]
+[node name="label_25" type="Label" parent="sequence"]
 layout_mode = 0
-offset_left = 90.0
-offset_top = 359.0
-offset_right = 130.0
-offset_bottom = 382.0
+offset_left = 77.0
+offset_top = 370.0
+offset_right = 117.0
+offset_bottom = 393.0
 text = "25"
 horizontal_alignment = 2
 
-[node name="label_26" type="Label" parent="sub_viewport/sequence"]
+[node name="label_26" type="Label" parent="sequence"]
 layout_mode = 0
-offset_left = 90.0
-offset_top = 382.0
-offset_right = 130.0
-offset_bottom = 405.0
+offset_left = 77.0
+offset_top = 393.0
+offset_right = 117.0
+offset_bottom = 416.0
 text = "26"
 horizontal_alignment = 2
 
-[node name="label_27" type="Label" parent="sub_viewport/sequence"]
+[node name="label_27" type="Label" parent="sequence"]
 layout_mode = 0
-offset_left = 90.0
-offset_top = 407.0
-offset_right = 130.0
-offset_bottom = 430.0
+offset_left = 77.0
+offset_top = 418.0
+offset_right = 117.0
+offset_bottom = 441.0
 text = "27"
 horizontal_alignment = 2
 
-[node name="label_28" type="Label" parent="sub_viewport/sequence"]
+[node name="label_28" type="Label" parent="sequence"]
 layout_mode = 0
-offset_left = 90.0
-offset_top = 431.0
-offset_right = 130.0
-offset_bottom = 454.0
+offset_left = 77.0
+offset_top = 442.0
+offset_right = 117.0
+offset_bottom = 465.0
 text = "28"
 horizontal_alignment = 2
 
-[node name="label_29" type="Label" parent="sub_viewport/sequence"]
+[node name="label_29" type="Label" parent="sequence"]
 layout_mode = 0
-offset_left = 90.0
-offset_top = 454.0
-offset_right = 130.0
-offset_bottom = 477.0
+offset_left = 77.0
+offset_top = 465.0
+offset_right = 117.0
+offset_bottom = 488.0
 text = "29"
 horizontal_alignment = 2
 
-[node name="label_30" type="Label" parent="sub_viewport/sequence"]
+[node name="label_30" type="Label" parent="sequence"]
 layout_mode = 0
-offset_left = 90.0
-offset_top = 478.0
-offset_right = 130.0
-offset_bottom = 501.0
+offset_left = 77.0
+offset_top = 489.0
+offset_right = 117.0
+offset_bottom = 512.0
 text = "30"
 horizontal_alignment = 2
 
-[node name="label_31" type="Label" parent="sub_viewport/sequence"]
+[node name="label_31" type="Label" parent="sequence"]
 layout_mode = 0
-offset_left = 90.0
-offset_top = 502.0
-offset_right = 130.0
-offset_bottom = 525.0
+offset_left = 77.0
+offset_top = 513.0
+offset_right = 117.0
+offset_bottom = 536.0
 text = "31"
 horizontal_alignment = 2
 
-[node name="label_32" type="Label" parent="sub_viewport/sequence"]
+[node name="label_32" type="Label" parent="sequence"]
 layout_mode = 0
-offset_left = 90.0
-offset_top = 525.0
-offset_right = 130.0
-offset_bottom = 548.0
+offset_left = 77.0
+offset_top = 536.0
+offset_right = 117.0
+offset_bottom = 559.0
 text = "32"
 horizontal_alignment = 2
 
-[node name="label_33" type="Label" parent="sub_viewport/sequence"]
+[node name="label_33" type="Label" parent="sequence"]
 layout_mode = 0
-offset_left = 90.0
-offset_top = 549.0
-offset_right = 130.0
-offset_bottom = 572.0
+offset_left = 77.0
+offset_top = 560.0
+offset_right = 117.0
+offset_bottom = 583.0
 text = "33"
 horizontal_alignment = 2
 
-[node name="label_34" type="Label" parent="sub_viewport/sequence"]
+[node name="label_34" type="Label" parent="sequence"]
 layout_mode = 0
-offset_left = 90.0
-offset_top = 573.0
-offset_right = 130.0
-offset_bottom = 596.0
+offset_left = 77.0
+offset_top = 584.0
+offset_right = 117.0
+offset_bottom = 607.0
 text = "34"
 horizontal_alignment = 2
 
-[node name="label_35" type="Label" parent="sub_viewport/sequence"]
+[node name="label_35" type="Label" parent="sequence"]
 layout_mode = 0
-offset_left = 90.0
-offset_top = 596.0
-offset_right = 130.0
-offset_bottom = 619.0
+offset_left = 77.0
+offset_top = 607.0
+offset_right = 117.0
+offset_bottom = 630.0
 text = "35"
 horizontal_alignment = 2
 
-[node name="label_36" type="Label" parent="sub_viewport/sequence"]
+[node name="label_36" type="Label" parent="sequence"]
 layout_mode = 0
-offset_left = 90.0
-offset_top = 620.0
-offset_right = 130.0
-offset_bottom = 643.0
+offset_left = 77.0
+offset_top = 631.0
+offset_right = 117.0
+offset_bottom = 654.0
 text = "36"
 horizontal_alignment = 2
 
-[node name="label_37" type="Label" parent="sub_viewport/sequence"]
+[node name="label_37" type="Label" parent="sequence"]
 layout_mode = 0
-offset_left = 90.0
-offset_top = 644.0
-offset_right = 130.0
-offset_bottom = 667.0
+offset_left = 77.0
+offset_top = 655.0
+offset_right = 117.0
+offset_bottom = 678.0
 text = "37"
 horizontal_alignment = 2
 
-[node name="label_38" type="Label" parent="sub_viewport/sequence"]
+[node name="label_38" type="Label" parent="sequence"]
 layout_mode = 0
-offset_left = 90.0
-offset_top = 667.0
-offset_right = 130.0
-offset_bottom = 690.0
+offset_left = 77.0
+offset_top = 678.0
+offset_right = 117.0
+offset_bottom = 701.0
 text = "38"
 horizontal_alignment = 2
 
-[node name="label_39" type="Label" parent="sub_viewport/sequence"]
+[node name="label_39" type="Label" parent="sequence"]
 layout_mode = 0
-offset_left = 90.0
-offset_top = 692.0
-offset_right = 130.0
-offset_bottom = 715.0
+offset_left = 77.0
+offset_top = 703.0
+offset_right = 117.0
+offset_bottom = 726.0
 text = "39"
 horizontal_alignment = 2
 
-[node name="label_40" type="Label" parent="sub_viewport/sequence"]
+[node name="label_40" type="Label" parent="sequence"]
 layout_mode = 0
-offset_left = 90.0
-offset_top = 716.0
-offset_right = 130.0
-offset_bottom = 739.0
+offset_left = 77.0
+offset_top = 727.0
+offset_right = 117.0
+offset_bottom = 750.0
 text = "40"
 horizontal_alignment = 2
 
-[node name="label_41" type="Label" parent="sub_viewport/sequence"]
+[node name="label_41" type="Label" parent="sequence"]
 layout_mode = 0
-offset_left = 265.0
-offset_top = 264.0
-offset_right = 305.0
-offset_bottom = 287.0
+offset_left = 252.0
+offset_top = 275.0
+offset_right = 292.0
+offset_bottom = 298.0
 text = "41"
 horizontal_alignment = 2
 
-[node name="label_42" type="Label" parent="sub_viewport/sequence"]
+[node name="label_42" type="Label" parent="sequence"]
 layout_mode = 0
-offset_left = 265.0
-offset_top = 288.0
-offset_right = 305.0
-offset_bottom = 311.0
+offset_left = 252.0
+offset_top = 299.0
+offset_right = 292.0
+offset_bottom = 322.0
 text = "42"
 horizontal_alignment = 2
 
-[node name="label_43" type="Label" parent="sub_viewport/sequence"]
+[node name="label_43" type="Label" parent="sequence"]
 layout_mode = 0
-offset_left = 265.0
-offset_top = 311.0
-offset_right = 305.0
-offset_bottom = 334.0
+offset_left = 252.0
+offset_top = 322.0
+offset_right = 292.0
+offset_bottom = 345.0
 text = "43"
 horizontal_alignment = 2
 
-[node name="label_44" type="Label" parent="sub_viewport/sequence"]
+[node name="label_44" type="Label" parent="sequence"]
 layout_mode = 0
-offset_left = 265.0
-offset_top = 335.0
-offset_right = 305.0
-offset_bottom = 358.0
+offset_left = 252.0
+offset_top = 346.0
+offset_right = 292.0
+offset_bottom = 369.0
 text = "44"
 horizontal_alignment = 2
 
-[node name="label_45" type="Label" parent="sub_viewport/sequence"]
+[node name="label_45" type="Label" parent="sequence"]
 layout_mode = 0
-offset_left = 265.0
-offset_top = 359.0
-offset_right = 305.0
-offset_bottom = 382.0
+offset_left = 252.0
+offset_top = 370.0
+offset_right = 292.0
+offset_bottom = 393.0
 text = "45"
 horizontal_alignment = 2
 
-[node name="label_46" type="Label" parent="sub_viewport/sequence"]
+[node name="label_46" type="Label" parent="sequence"]
 layout_mode = 0
-offset_left = 265.0
-offset_top = 382.0
-offset_right = 305.0
-offset_bottom = 405.0
+offset_left = 252.0
+offset_top = 393.0
+offset_right = 292.0
+offset_bottom = 416.0
 text = "46"
 horizontal_alignment = 2
 
-[node name="label_47" type="Label" parent="sub_viewport/sequence"]
+[node name="label_47" type="Label" parent="sequence"]
 layout_mode = 0
-offset_left = 265.0
-offset_top = 407.0
-offset_right = 305.0
-offset_bottom = 430.0
+offset_left = 252.0
+offset_top = 418.0
+offset_right = 292.0
+offset_bottom = 441.0
 text = "47"
 horizontal_alignment = 2
 
-[node name="label_48" type="Label" parent="sub_viewport/sequence"]
+[node name="label_48" type="Label" parent="sequence"]
 layout_mode = 0
-offset_left = 265.0
-offset_top = 431.0
-offset_right = 305.0
-offset_bottom = 454.0
+offset_left = 252.0
+offset_top = 442.0
+offset_right = 292.0
+offset_bottom = 465.0
 text = "48"
 horizontal_alignment = 2
 
-[node name="label_49" type="Label" parent="sub_viewport/sequence"]
+[node name="label_49" type="Label" parent="sequence"]
 layout_mode = 0
-offset_left = 265.0
-offset_top = 454.0
-offset_right = 305.0
-offset_bottom = 477.0
+offset_left = 252.0
+offset_top = 465.0
+offset_right = 292.0
+offset_bottom = 488.0
 text = "49"
 horizontal_alignment = 2
 
-[node name="label_50" type="Label" parent="sub_viewport/sequence"]
+[node name="label_50" type="Label" parent="sequence"]
 layout_mode = 0
-offset_left = 265.0
-offset_top = 478.0
-offset_right = 305.0
-offset_bottom = 501.0
+offset_left = 252.0
+offset_top = 489.0
+offset_right = 292.0
+offset_bottom = 512.0
 text = "50"
 horizontal_alignment = 2
 
-[node name="label_51" type="Label" parent="sub_viewport/sequence"]
+[node name="label_51" type="Label" parent="sequence"]
 layout_mode = 0
-offset_left = 265.0
-offset_top = 502.0
-offset_right = 305.0
-offset_bottom = 525.0
+offset_left = 252.0
+offset_top = 513.0
+offset_right = 292.0
+offset_bottom = 536.0
 text = "51"
 horizontal_alignment = 2
 
-[node name="label_52" type="Label" parent="sub_viewport/sequence"]
+[node name="label_52" type="Label" parent="sequence"]
 layout_mode = 0
-offset_left = 265.0
-offset_top = 525.0
-offset_right = 305.0
-offset_bottom = 548.0
+offset_left = 252.0
+offset_top = 536.0
+offset_right = 292.0
+offset_bottom = 559.0
 text = "52"
 horizontal_alignment = 2
 
-[node name="label_53" type="Label" parent="sub_viewport/sequence"]
+[node name="label_53" type="Label" parent="sequence"]
 layout_mode = 0
-offset_left = 265.0
-offset_top = 549.0
-offset_right = 305.0
-offset_bottom = 572.0
+offset_left = 252.0
+offset_top = 560.0
+offset_right = 292.0
+offset_bottom = 583.0
 text = "53"
 horizontal_alignment = 2
 
-[node name="label_54" type="Label" parent="sub_viewport/sequence"]
+[node name="label_54" type="Label" parent="sequence"]
 layout_mode = 0
-offset_left = 265.0
-offset_top = 573.0
-offset_right = 305.0
-offset_bottom = 596.0
+offset_left = 252.0
+offset_top = 584.0
+offset_right = 292.0
+offset_bottom = 607.0
 text = "54"
 horizontal_alignment = 2
 
-[node name="label_55" type="Label" parent="sub_viewport/sequence"]
+[node name="label_55" type="Label" parent="sequence"]
 layout_mode = 0
-offset_left = 265.0
-offset_top = 596.0
-offset_right = 305.0
-offset_bottom = 619.0
+offset_left = 252.0
+offset_top = 607.0
+offset_right = 292.0
+offset_bottom = 630.0
 text = "55"
 horizontal_alignment = 2
 
-[node name="label_56" type="Label" parent="sub_viewport/sequence"]
+[node name="label_56" type="Label" parent="sequence"]
 layout_mode = 0
-offset_left = 265.0
-offset_top = 620.0
-offset_right = 305.0
-offset_bottom = 643.0
+offset_left = 252.0
+offset_top = 631.0
+offset_right = 292.0
+offset_bottom = 654.0
 text = "56"
 horizontal_alignment = 2
 
-[node name="label_57" type="Label" parent="sub_viewport/sequence"]
+[node name="label_57" type="Label" parent="sequence"]
 layout_mode = 0
-offset_left = 265.0
-offset_top = 644.0
-offset_right = 305.0
-offset_bottom = 667.0
+offset_left = 252.0
+offset_top = 655.0
+offset_right = 292.0
+offset_bottom = 678.0
 text = "57"
 horizontal_alignment = 2
 
-[node name="label_58" type="Label" parent="sub_viewport/sequence"]
+[node name="label_58" type="Label" parent="sequence"]
 layout_mode = 0
-offset_left = 265.0
-offset_top = 667.0
-offset_right = 305.0
-offset_bottom = 690.0
+offset_left = 252.0
+offset_top = 678.0
+offset_right = 292.0
+offset_bottom = 701.0
 text = "58"
 horizontal_alignment = 2
 
-[node name="label_59" type="Label" parent="sub_viewport/sequence"]
+[node name="label_59" type="Label" parent="sequence"]
 layout_mode = 0
-offset_left = 265.0
-offset_top = 692.0
-offset_right = 305.0
-offset_bottom = 715.0
+offset_left = 252.0
+offset_top = 703.0
+offset_right = 292.0
+offset_bottom = 726.0
 text = "59"
 horizontal_alignment = 2
 
-[node name="label_60" type="Label" parent="sub_viewport/sequence"]
+[node name="label_60" type="Label" parent="sequence"]
 layout_mode = 0
-offset_left = 265.0
-offset_top = 716.0
-offset_right = 305.0
-offset_bottom = 739.0
+offset_left = 252.0
+offset_top = 727.0
+offset_right = 292.0
+offset_bottom = 750.0
 text = "60"
 horizontal_alignment = 2
 
-[node name="white" type="Control" parent="sub_viewport"]
+[node name="white" type="Control" parent="."]
 layout_mode = 3
 anchors_preset = 0
 offset_left = 185.0
-offset_top = 12.0
+offset_top = 13.0
 offset_right = 225.0
-offset_bottom = 52.0
+offset_bottom = 53.0
 theme = ExtResource("2_ysvxy")
+metadata/_edit_use_anchors_ = true
 
-[node name="label_1" type="Label" parent="sub_viewport/white"]
+[node name="label_1" type="Label" parent="white"]
 layout_mode = 0
-offset_left = -106.0
-offset_top = 264.0
-offset_right = -48.0
-offset_bottom = 287.0
+offset_left = -119.0
+offset_top = 275.0
+offset_right = -61.0
+offset_bottom = 298.0
 horizontal_alignment = 2
 
-[node name="label_2" type="Label" parent="sub_viewport/white"]
+[node name="label_2" type="Label" parent="white"]
 layout_mode = 0
-offset_left = -106.0
-offset_top = 288.0
-offset_right = -48.0
-offset_bottom = 311.0
+offset_left = -119.0
+offset_top = 299.0
+offset_right = -61.0
+offset_bottom = 322.0
 horizontal_alignment = 2
 
-[node name="label_3" type="Label" parent="sub_viewport/white"]
+[node name="label_3" type="Label" parent="white"]
 layout_mode = 0
-offset_left = -106.0
-offset_top = 311.0
-offset_right = -48.0
-offset_bottom = 334.0
+offset_left = -119.0
+offset_top = 322.0
+offset_right = -61.0
+offset_bottom = 345.0
 horizontal_alignment = 2
 
-[node name="label_4" type="Label" parent="sub_viewport/white"]
+[node name="label_4" type="Label" parent="white"]
 layout_mode = 0
-offset_left = -106.0
-offset_top = 335.0
-offset_right = -48.0
-offset_bottom = 358.0
+offset_left = -119.0
+offset_top = 346.0
+offset_right = -61.0
+offset_bottom = 369.0
 horizontal_alignment = 2
 
-[node name="label_5" type="Label" parent="sub_viewport/white"]
+[node name="label_5" type="Label" parent="white"]
 layout_mode = 0
-offset_left = -106.0
-offset_top = 359.0
-offset_right = -48.0
-offset_bottom = 382.0
+offset_left = -119.0
+offset_top = 370.0
+offset_right = -61.0
+offset_bottom = 393.0
 horizontal_alignment = 2
 
-[node name="label_6" type="Label" parent="sub_viewport/white"]
+[node name="label_6" type="Label" parent="white"]
 layout_mode = 0
-offset_left = -106.0
-offset_top = 382.0
-offset_right = -48.0
-offset_bottom = 405.0
+offset_left = -119.0
+offset_top = 393.0
+offset_right = -61.0
+offset_bottom = 416.0
 horizontal_alignment = 2
 
-[node name="label_7" type="Label" parent="sub_viewport/white"]
+[node name="label_7" type="Label" parent="white"]
 layout_mode = 0
-offset_left = -106.0
-offset_top = 407.0
-offset_right = -48.0
-offset_bottom = 430.0
+offset_left = -119.0
+offset_top = 418.0
+offset_right = -61.0
+offset_bottom = 441.0
 horizontal_alignment = 2
 
-[node name="label_8" type="Label" parent="sub_viewport/white"]
+[node name="label_8" type="Label" parent="white"]
 layout_mode = 0
-offset_left = -106.0
-offset_top = 431.0
-offset_right = -48.0
-offset_bottom = 454.0
+offset_left = -119.0
+offset_top = 442.0
+offset_right = -61.0
+offset_bottom = 465.0
 horizontal_alignment = 2
 
-[node name="label_9" type="Label" parent="sub_viewport/white"]
+[node name="label_9" type="Label" parent="white"]
 layout_mode = 0
-offset_left = -106.0
-offset_top = 454.0
-offset_right = -48.0
-offset_bottom = 477.0
+offset_left = -119.0
+offset_top = 465.0
+offset_right = -61.0
+offset_bottom = 488.0
 horizontal_alignment = 2
 
-[node name="label_10" type="Label" parent="sub_viewport/white"]
+[node name="label_10" type="Label" parent="white"]
 layout_mode = 0
-offset_left = -106.0
-offset_top = 478.0
-offset_right = -48.0
-offset_bottom = 501.0
+offset_left = -119.0
+offset_top = 489.0
+offset_right = -61.0
+offset_bottom = 512.0
 horizontal_alignment = 2
 
-[node name="label_11" type="Label" parent="sub_viewport/white"]
+[node name="label_11" type="Label" parent="white"]
 layout_mode = 0
-offset_left = -106.0
-offset_top = 502.0
-offset_right = -48.0
-offset_bottom = 525.0
+offset_left = -119.0
+offset_top = 513.0
+offset_right = -61.0
+offset_bottom = 536.0
 horizontal_alignment = 2
 
-[node name="label_12" type="Label" parent="sub_viewport/white"]
+[node name="label_12" type="Label" parent="white"]
 layout_mode = 0
-offset_left = -106.0
-offset_top = 525.0
-offset_right = -48.0
-offset_bottom = 548.0
+offset_left = -119.0
+offset_top = 536.0
+offset_right = -61.0
+offset_bottom = 559.0
 horizontal_alignment = 2
 
-[node name="label_13" type="Label" parent="sub_viewport/white"]
+[node name="label_13" type="Label" parent="white"]
 layout_mode = 0
-offset_left = -106.0
-offset_top = 549.0
-offset_right = -48.0
-offset_bottom = 572.0
+offset_left = -119.0
+offset_top = 560.0
+offset_right = -61.0
+offset_bottom = 583.0
 horizontal_alignment = 2
 
-[node name="label_14" type="Label" parent="sub_viewport/white"]
+[node name="label_14" type="Label" parent="white"]
 layout_mode = 0
-offset_left = -106.0
-offset_top = 573.0
-offset_right = -48.0
-offset_bottom = 596.0
+offset_left = -119.0
+offset_top = 584.0
+offset_right = -61.0
+offset_bottom = 607.0
 horizontal_alignment = 2
 
-[node name="label_15" type="Label" parent="sub_viewport/white"]
+[node name="label_15" type="Label" parent="white"]
 layout_mode = 0
-offset_left = -106.0
-offset_top = 596.0
-offset_right = -48.0
-offset_bottom = 619.0
+offset_left = -119.0
+offset_top = 607.0
+offset_right = -61.0
+offset_bottom = 630.0
 horizontal_alignment = 2
 
-[node name="label_16" type="Label" parent="sub_viewport/white"]
+[node name="label_16" type="Label" parent="white"]
 layout_mode = 0
-offset_left = -106.0
-offset_top = 620.0
-offset_right = -48.0
-offset_bottom = 643.0
+offset_left = -119.0
+offset_top = 631.0
+offset_right = -61.0
+offset_bottom = 654.0
 horizontal_alignment = 2
 
-[node name="label_17" type="Label" parent="sub_viewport/white"]
+[node name="label_17" type="Label" parent="white"]
 layout_mode = 0
-offset_left = -106.0
-offset_top = 644.0
-offset_right = -48.0
-offset_bottom = 667.0
+offset_left = -119.0
+offset_top = 655.0
+offset_right = -61.0
+offset_bottom = 678.0
 horizontal_alignment = 2
 
-[node name="label_18" type="Label" parent="sub_viewport/white"]
+[node name="label_18" type="Label" parent="white"]
 layout_mode = 0
-offset_left = -106.0
-offset_top = 667.0
-offset_right = -48.0
-offset_bottom = 690.0
+offset_left = -119.0
+offset_top = 678.0
+offset_right = -61.0
+offset_bottom = 701.0
 horizontal_alignment = 2
 
-[node name="label_19" type="Label" parent="sub_viewport/white"]
+[node name="label_19" type="Label" parent="white"]
 layout_mode = 0
-offset_left = -106.0
-offset_top = 692.0
-offset_right = -48.0
-offset_bottom = 715.0
+offset_left = -119.0
+offset_top = 703.0
+offset_right = -61.0
+offset_bottom = 726.0
 horizontal_alignment = 2
 
-[node name="label_20" type="Label" parent="sub_viewport/white"]
+[node name="label_20" type="Label" parent="white"]
 layout_mode = 0
-offset_left = -106.0
-offset_top = 716.0
-offset_right = -48.0
-offset_bottom = 739.0
+offset_left = -119.0
+offset_top = 727.0
+offset_right = -61.0
+offset_bottom = 750.0
 horizontal_alignment = 2
 
-[node name="label_21" type="Label" parent="sub_viewport/white"]
+[node name="label_21" type="Label" parent="white"]
 layout_mode = 0
-offset_left = 70.0
-offset_top = 264.0
-offset_right = 128.0
-offset_bottom = 287.0
+offset_left = 57.0
+offset_top = 275.0
+offset_right = 115.0
+offset_bottom = 298.0
 horizontal_alignment = 2
 
-[node name="label_22" type="Label" parent="sub_viewport/white"]
+[node name="label_22" type="Label" parent="white"]
 layout_mode = 0
-offset_left = 70.0
-offset_top = 288.0
-offset_right = 128.0
-offset_bottom = 311.0
+offset_left = 57.0
+offset_top = 299.0
+offset_right = 115.0
+offset_bottom = 322.0
 horizontal_alignment = 2
 
-[node name="label_23" type="Label" parent="sub_viewport/white"]
+[node name="label_23" type="Label" parent="white"]
 layout_mode = 0
-offset_left = 70.0
-offset_top = 311.0
-offset_right = 128.0
-offset_bottom = 334.0
+offset_left = 57.0
+offset_top = 322.0
+offset_right = 115.0
+offset_bottom = 345.0
 horizontal_alignment = 2
 
-[node name="label_24" type="Label" parent="sub_viewport/white"]
+[node name="label_24" type="Label" parent="white"]
 layout_mode = 0
-offset_left = 70.0
-offset_top = 335.0
-offset_right = 128.0
-offset_bottom = 358.0
+offset_left = 57.0
+offset_top = 346.0
+offset_right = 115.0
+offset_bottom = 369.0
 horizontal_alignment = 2
 
-[node name="label_25" type="Label" parent="sub_viewport/white"]
+[node name="label_25" type="Label" parent="white"]
 layout_mode = 0
-offset_left = 70.0
-offset_top = 359.0
-offset_right = 128.0
-offset_bottom = 382.0
+offset_left = 57.0
+offset_top = 370.0
+offset_right = 115.0
+offset_bottom = 393.0
 horizontal_alignment = 2
 
-[node name="label_26" type="Label" parent="sub_viewport/white"]
+[node name="label_26" type="Label" parent="white"]
 layout_mode = 0
-offset_left = 70.0
-offset_top = 382.0
-offset_right = 128.0
-offset_bottom = 405.0
+offset_left = 57.0
+offset_top = 393.0
+offset_right = 115.0
+offset_bottom = 416.0
 horizontal_alignment = 2
 
-[node name="label_27" type="Label" parent="sub_viewport/white"]
+[node name="label_27" type="Label" parent="white"]
 layout_mode = 0
-offset_left = 70.0
-offset_top = 407.0
-offset_right = 128.0
-offset_bottom = 430.0
+offset_left = 57.0
+offset_top = 418.0
+offset_right = 115.0
+offset_bottom = 441.0
 horizontal_alignment = 2
 
-[node name="label_28" type="Label" parent="sub_viewport/white"]
+[node name="label_28" type="Label" parent="white"]
 layout_mode = 0
-offset_left = 70.0
-offset_top = 431.0
-offset_right = 128.0
-offset_bottom = 454.0
+offset_left = 57.0
+offset_top = 442.0
+offset_right = 115.0
+offset_bottom = 465.0
 horizontal_alignment = 2
 
-[node name="label_29" type="Label" parent="sub_viewport/white"]
+[node name="label_29" type="Label" parent="white"]
 layout_mode = 0
-offset_left = 70.0
-offset_top = 454.0
-offset_right = 128.0
-offset_bottom = 477.0
+offset_left = 57.0
+offset_top = 465.0
+offset_right = 115.0
+offset_bottom = 488.0
 horizontal_alignment = 2
 
-[node name="label_30" type="Label" parent="sub_viewport/white"]
+[node name="label_30" type="Label" parent="white"]
 layout_mode = 0
-offset_left = 70.0
-offset_top = 478.0
-offset_right = 128.0
-offset_bottom = 501.0
+offset_left = 57.0
+offset_top = 489.0
+offset_right = 115.0
+offset_bottom = 512.0
 horizontal_alignment = 2
 
-[node name="label_31" type="Label" parent="sub_viewport/white"]
+[node name="label_31" type="Label" parent="white"]
 layout_mode = 0
-offset_left = 70.0
-offset_top = 502.0
-offset_right = 128.0
-offset_bottom = 525.0
+offset_left = 57.0
+offset_top = 513.0
+offset_right = 115.0
+offset_bottom = 536.0
 horizontal_alignment = 2
 
-[node name="label_32" type="Label" parent="sub_viewport/white"]
+[node name="label_32" type="Label" parent="white"]
 layout_mode = 0
-offset_left = 70.0
-offset_top = 525.0
-offset_right = 128.0
-offset_bottom = 548.0
+offset_left = 57.0
+offset_top = 536.0
+offset_right = 115.0
+offset_bottom = 559.0
 horizontal_alignment = 2
 
-[node name="label_33" type="Label" parent="sub_viewport/white"]
+[node name="label_33" type="Label" parent="white"]
 layout_mode = 0
-offset_left = 70.0
-offset_top = 549.0
-offset_right = 128.0
-offset_bottom = 572.0
+offset_left = 57.0
+offset_top = 560.0
+offset_right = 115.0
+offset_bottom = 583.0
 horizontal_alignment = 2
 
-[node name="label_34" type="Label" parent="sub_viewport/white"]
+[node name="label_34" type="Label" parent="white"]
 layout_mode = 0
-offset_left = 70.0
-offset_top = 573.0
-offset_right = 128.0
-offset_bottom = 596.0
+offset_left = 57.0
+offset_top = 584.0
+offset_right = 115.0
+offset_bottom = 607.0
 horizontal_alignment = 2
 
-[node name="label_35" type="Label" parent="sub_viewport/white"]
+[node name="label_35" type="Label" parent="white"]
 layout_mode = 0
-offset_left = 70.0
-offset_top = 596.0
-offset_right = 128.0
-offset_bottom = 619.0
+offset_left = 57.0
+offset_top = 607.0
+offset_right = 115.0
+offset_bottom = 630.0
 horizontal_alignment = 2
 
-[node name="label_36" type="Label" parent="sub_viewport/white"]
+[node name="label_36" type="Label" parent="white"]
 layout_mode = 0
-offset_left = 70.0
-offset_top = 620.0
-offset_right = 128.0
-offset_bottom = 643.0
+offset_left = 57.0
+offset_top = 631.0
+offset_right = 115.0
+offset_bottom = 654.0
 horizontal_alignment = 2
 
-[node name="label_37" type="Label" parent="sub_viewport/white"]
+[node name="label_37" type="Label" parent="white"]
 layout_mode = 0
-offset_left = 70.0
-offset_top = 644.0
-offset_right = 128.0
-offset_bottom = 667.0
+offset_left = 57.0
+offset_top = 655.0
+offset_right = 115.0
+offset_bottom = 678.0
 horizontal_alignment = 2
 
-[node name="label_38" type="Label" parent="sub_viewport/white"]
+[node name="label_38" type="Label" parent="white"]
 layout_mode = 0
-offset_left = 70.0
-offset_top = 667.0
-offset_right = 128.0
-offset_bottom = 690.0
+offset_left = 57.0
+offset_top = 678.0
+offset_right = 115.0
+offset_bottom = 701.0
 horizontal_alignment = 2
 
-[node name="label_39" type="Label" parent="sub_viewport/white"]
+[node name="label_39" type="Label" parent="white"]
 layout_mode = 0
-offset_left = 70.0
-offset_top = 692.0
-offset_right = 128.0
-offset_bottom = 715.0
+offset_left = 57.0
+offset_top = 703.0
+offset_right = 115.0
+offset_bottom = 726.0
 horizontal_alignment = 2
 
-[node name="label_40" type="Label" parent="sub_viewport/white"]
+[node name="label_40" type="Label" parent="white"]
 layout_mode = 0
-offset_left = 70.0
-offset_top = 716.0
-offset_right = 128.0
-offset_bottom = 739.0
+offset_left = 57.0
+offset_top = 727.0
+offset_right = 115.0
+offset_bottom = 750.0
 horizontal_alignment = 2
 
-[node name="label_41" type="Label" parent="sub_viewport/white"]
+[node name="label_41" type="Label" parent="white"]
 layout_mode = 0
-offset_left = 245.0
-offset_top = 264.0
-offset_right = 303.0
-offset_bottom = 287.0
+offset_left = 232.0
+offset_top = 275.0
+offset_right = 290.0
+offset_bottom = 298.0
 horizontal_alignment = 2
 
-[node name="label_42" type="Label" parent="sub_viewport/white"]
+[node name="label_42" type="Label" parent="white"]
 layout_mode = 0
-offset_left = 245.0
-offset_top = 288.0
-offset_right = 303.0
-offset_bottom = 311.0
+offset_left = 232.0
+offset_top = 299.0
+offset_right = 290.0
+offset_bottom = 322.0
 horizontal_alignment = 2
 
-[node name="label_43" type="Label" parent="sub_viewport/white"]
+[node name="label_43" type="Label" parent="white"]
 layout_mode = 0
-offset_left = 245.0
-offset_top = 311.0
-offset_right = 303.0
-offset_bottom = 334.0
+offset_left = 232.0
+offset_top = 322.0
+offset_right = 290.0
+offset_bottom = 345.0
 horizontal_alignment = 2
 
-[node name="label_44" type="Label" parent="sub_viewport/white"]
+[node name="label_44" type="Label" parent="white"]
 layout_mode = 0
-offset_left = 245.0
-offset_top = 335.0
-offset_right = 303.0
-offset_bottom = 358.0
+offset_left = 232.0
+offset_top = 346.0
+offset_right = 290.0
+offset_bottom = 369.0
 horizontal_alignment = 2
 
-[node name="label_45" type="Label" parent="sub_viewport/white"]
+[node name="label_45" type="Label" parent="white"]
 layout_mode = 0
-offset_left = 245.0
-offset_top = 359.0
-offset_right = 303.0
-offset_bottom = 382.0
+offset_left = 232.0
+offset_top = 370.0
+offset_right = 290.0
+offset_bottom = 393.0
 horizontal_alignment = 2
 
-[node name="label_46" type="Label" parent="sub_viewport/white"]
+[node name="label_46" type="Label" parent="white"]
 layout_mode = 0
-offset_left = 245.0
-offset_top = 382.0
-offset_right = 303.0
-offset_bottom = 405.0
+offset_left = 232.0
+offset_top = 393.0
+offset_right = 290.0
+offset_bottom = 416.0
 horizontal_alignment = 2
 
-[node name="label_47" type="Label" parent="sub_viewport/white"]
+[node name="label_47" type="Label" parent="white"]
 layout_mode = 0
-offset_left = 245.0
-offset_top = 407.0
-offset_right = 303.0
-offset_bottom = 430.0
+offset_left = 232.0
+offset_top = 418.0
+offset_right = 290.0
+offset_bottom = 441.0
 horizontal_alignment = 2
 
-[node name="label_48" type="Label" parent="sub_viewport/white"]
+[node name="label_48" type="Label" parent="white"]
 layout_mode = 0
-offset_left = 245.0
-offset_top = 431.0
-offset_right = 303.0
-offset_bottom = 454.0
+offset_left = 232.0
+offset_top = 442.0
+offset_right = 290.0
+offset_bottom = 465.0
 horizontal_alignment = 2
 
-[node name="label_49" type="Label" parent="sub_viewport/white"]
+[node name="label_49" type="Label" parent="white"]
 layout_mode = 0
-offset_left = 245.0
-offset_top = 454.0
-offset_right = 303.0
-offset_bottom = 477.0
+offset_left = 232.0
+offset_top = 465.0
+offset_right = 290.0
+offset_bottom = 488.0
 horizontal_alignment = 2
 
-[node name="label_50" type="Label" parent="sub_viewport/white"]
+[node name="label_50" type="Label" parent="white"]
 layout_mode = 0
-offset_left = 245.0
-offset_top = 478.0
-offset_right = 303.0
-offset_bottom = 501.0
+offset_left = 232.0
+offset_top = 489.0
+offset_right = 290.0
+offset_bottom = 512.0
 horizontal_alignment = 2
 
-[node name="label_51" type="Label" parent="sub_viewport/white"]
+[node name="label_51" type="Label" parent="white"]
 layout_mode = 0
-offset_left = 245.0
-offset_top = 502.0
-offset_right = 303.0
-offset_bottom = 525.0
+offset_left = 232.0
+offset_top = 513.0
+offset_right = 290.0
+offset_bottom = 536.0
 horizontal_alignment = 2
 
-[node name="label_52" type="Label" parent="sub_viewport/white"]
+[node name="label_52" type="Label" parent="white"]
 layout_mode = 0
-offset_left = 245.0
-offset_top = 525.0
-offset_right = 303.0
-offset_bottom = 548.0
+offset_left = 232.0
+offset_top = 536.0
+offset_right = 290.0
+offset_bottom = 559.0
 horizontal_alignment = 2
 
-[node name="label_53" type="Label" parent="sub_viewport/white"]
+[node name="label_53" type="Label" parent="white"]
 layout_mode = 0
-offset_left = 245.0
-offset_top = 549.0
-offset_right = 303.0
-offset_bottom = 572.0
+offset_left = 232.0
+offset_top = 560.0
+offset_right = 290.0
+offset_bottom = 583.0
 horizontal_alignment = 2
 
-[node name="label_54" type="Label" parent="sub_viewport/white"]
+[node name="label_54" type="Label" parent="white"]
 layout_mode = 0
-offset_left = 245.0
-offset_top = 573.0
-offset_right = 303.0
-offset_bottom = 596.0
+offset_left = 232.0
+offset_top = 584.0
+offset_right = 290.0
+offset_bottom = 607.0
 horizontal_alignment = 2
 
-[node name="label_55" type="Label" parent="sub_viewport/white"]
+[node name="label_55" type="Label" parent="white"]
 layout_mode = 0
-offset_left = 245.0
-offset_top = 596.0
-offset_right = 303.0
-offset_bottom = 619.0
+offset_left = 232.0
+offset_top = 607.0
+offset_right = 290.0
+offset_bottom = 630.0
 horizontal_alignment = 2
 
-[node name="label_56" type="Label" parent="sub_viewport/white"]
+[node name="label_56" type="Label" parent="white"]
 layout_mode = 0
-offset_left = 245.0
-offset_top = 620.0
-offset_right = 303.0
-offset_bottom = 643.0
+offset_left = 232.0
+offset_top = 631.0
+offset_right = 290.0
+offset_bottom = 654.0
 horizontal_alignment = 2
 
-[node name="label_57" type="Label" parent="sub_viewport/white"]
+[node name="label_57" type="Label" parent="white"]
 layout_mode = 0
-offset_left = 245.0
-offset_top = 644.0
-offset_right = 303.0
-offset_bottom = 667.0
+offset_left = 232.0
+offset_top = 655.0
+offset_right = 290.0
+offset_bottom = 678.0
 horizontal_alignment = 2
 
-[node name="label_58" type="Label" parent="sub_viewport/white"]
+[node name="label_58" type="Label" parent="white"]
 layout_mode = 0
-offset_left = 245.0
-offset_top = 667.0
-offset_right = 303.0
-offset_bottom = 690.0
+offset_left = 232.0
+offset_top = 678.0
+offset_right = 290.0
+offset_bottom = 701.0
 horizontal_alignment = 2
 
-[node name="label_59" type="Label" parent="sub_viewport/white"]
+[node name="label_59" type="Label" parent="white"]
 layout_mode = 0
-offset_left = 245.0
-offset_top = 692.0
-offset_right = 303.0
-offset_bottom = 715.0
+offset_left = 232.0
+offset_top = 703.0
+offset_right = 290.0
+offset_bottom = 726.0
 horizontal_alignment = 2
 
-[node name="label_60" type="Label" parent="sub_viewport/white"]
+[node name="label_60" type="Label" parent="white"]
 layout_mode = 0
-offset_left = 245.0
-offset_top = 716.0
-offset_right = 303.0
-offset_bottom = 739.0
+offset_left = 232.0
+offset_top = 727.0
+offset_right = 290.0
+offset_bottom = 750.0
 horizontal_alignment = 2
 
-[node name="black" type="Control" parent="sub_viewport"]
+[node name="black" type="Control" parent="."]
 layout_mode = 3
 anchors_preset = 0
 offset_left = 185.0
-offset_top = 12.0
+offset_top = 13.0
 offset_right = 225.0
-offset_bottom = 52.0
+offset_bottom = 53.0
 theme = ExtResource("2_ysvxy")
+metadata/_edit_use_anchors_ = true
 
-[node name="label_1" type="Label" parent="sub_viewport/black"]
+[node name="label_1" type="Label" parent="black"]
 layout_mode = 0
-offset_left = -44.0
-offset_top = 264.0
-offset_right = 14.0
-offset_bottom = 287.0
+offset_left = -57.0
+offset_top = 275.0
+offset_right = 1.0
+offset_bottom = 298.0
 horizontal_alignment = 2
 
-[node name="label_2" type="Label" parent="sub_viewport/black"]
+[node name="label_2" type="Label" parent="black"]
 layout_mode = 0
-offset_left = -44.0
-offset_top = 288.0
-offset_right = 14.0
-offset_bottom = 311.0
+offset_left = -57.0
+offset_top = 299.0
+offset_right = 1.0
+offset_bottom = 322.0
 horizontal_alignment = 2
 
-[node name="label_3" type="Label" parent="sub_viewport/black"]
+[node name="label_3" type="Label" parent="black"]
 layout_mode = 0
-offset_left = -44.0
-offset_top = 311.0
-offset_right = 14.0
-offset_bottom = 334.0
+offset_left = -57.0
+offset_top = 322.0
+offset_right = 1.0
+offset_bottom = 345.0
 horizontal_alignment = 2
 
-[node name="label_4" type="Label" parent="sub_viewport/black"]
+[node name="label_4" type="Label" parent="black"]
 layout_mode = 0
-offset_left = -44.0
-offset_top = 335.0
-offset_right = 14.0
-offset_bottom = 358.0
+offset_left = -57.0
+offset_top = 346.0
+offset_right = 1.0
+offset_bottom = 369.0
 horizontal_alignment = 2
 
-[node name="label_5" type="Label" parent="sub_viewport/black"]
+[node name="label_5" type="Label" parent="black"]
 layout_mode = 0
-offset_left = -44.0
-offset_top = 359.0
-offset_right = 14.0
-offset_bottom = 382.0
+offset_left = -57.0
+offset_top = 370.0
+offset_right = 1.0
+offset_bottom = 393.0
 horizontal_alignment = 2
 
-[node name="label_6" type="Label" parent="sub_viewport/black"]
+[node name="label_6" type="Label" parent="black"]
 layout_mode = 0
-offset_left = -44.0
-offset_top = 382.0
-offset_right = 14.0
-offset_bottom = 405.0
+offset_left = -57.0
+offset_top = 393.0
+offset_right = 1.0
+offset_bottom = 416.0
 horizontal_alignment = 2
 
-[node name="label_7" type="Label" parent="sub_viewport/black"]
+[node name="label_7" type="Label" parent="black"]
 layout_mode = 0
-offset_left = -44.0
-offset_top = 407.0
-offset_right = 14.0
-offset_bottom = 430.0
+offset_left = -57.0
+offset_top = 418.0
+offset_right = 1.0
+offset_bottom = 441.0
 horizontal_alignment = 2
 
-[node name="label_8" type="Label" parent="sub_viewport/black"]
+[node name="label_8" type="Label" parent="black"]
 layout_mode = 0
-offset_left = -44.0
-offset_top = 431.0
-offset_right = 14.0
-offset_bottom = 454.0
+offset_left = -57.0
+offset_top = 442.0
+offset_right = 1.0
+offset_bottom = 465.0
 horizontal_alignment = 2
 
-[node name="label_9" type="Label" parent="sub_viewport/black"]
+[node name="label_9" type="Label" parent="black"]
 layout_mode = 0
-offset_left = -44.0
-offset_top = 454.0
-offset_right = 14.0
-offset_bottom = 477.0
+offset_left = -57.0
+offset_top = 465.0
+offset_right = 1.0
+offset_bottom = 488.0
 horizontal_alignment = 2
 
-[node name="label_10" type="Label" parent="sub_viewport/black"]
+[node name="label_10" type="Label" parent="black"]
 layout_mode = 0
-offset_left = -44.0
-offset_top = 478.0
-offset_right = 14.0
-offset_bottom = 501.0
+offset_left = -57.0
+offset_top = 489.0
+offset_right = 1.0
+offset_bottom = 512.0
 horizontal_alignment = 2
 
-[node name="label_11" type="Label" parent="sub_viewport/black"]
+[node name="label_11" type="Label" parent="black"]
 layout_mode = 0
-offset_left = -44.0
-offset_top = 502.0
-offset_right = 14.0
-offset_bottom = 525.0
+offset_left = -57.0
+offset_top = 513.0
+offset_right = 1.0
+offset_bottom = 536.0
 horizontal_alignment = 2
 
-[node name="label_12" type="Label" parent="sub_viewport/black"]
+[node name="label_12" type="Label" parent="black"]
 layout_mode = 0
-offset_left = -44.0
-offset_top = 525.0
-offset_right = 14.0
-offset_bottom = 548.0
+offset_left = -57.0
+offset_top = 536.0
+offset_right = 1.0
+offset_bottom = 559.0
 horizontal_alignment = 2
 
-[node name="label_13" type="Label" parent="sub_viewport/black"]
+[node name="label_13" type="Label" parent="black"]
 layout_mode = 0
-offset_left = -44.0
-offset_top = 549.0
-offset_right = 14.0
-offset_bottom = 572.0
+offset_left = -57.0
+offset_top = 560.0
+offset_right = 1.0
+offset_bottom = 583.0
 horizontal_alignment = 2
 
-[node name="label_14" type="Label" parent="sub_viewport/black"]
+[node name="label_14" type="Label" parent="black"]
 layout_mode = 0
-offset_left = -44.0
-offset_top = 573.0
-offset_right = 14.0
-offset_bottom = 596.0
+offset_left = -57.0
+offset_top = 584.0
+offset_right = 1.0
+offset_bottom = 607.0
 horizontal_alignment = 2
 
-[node name="label_15" type="Label" parent="sub_viewport/black"]
+[node name="label_15" type="Label" parent="black"]
 layout_mode = 0
-offset_left = -44.0
-offset_top = 596.0
-offset_right = 14.0
-offset_bottom = 619.0
+offset_left = -57.0
+offset_top = 607.0
+offset_right = 1.0
+offset_bottom = 630.0
 horizontal_alignment = 2
 
-[node name="label_16" type="Label" parent="sub_viewport/black"]
+[node name="label_16" type="Label" parent="black"]
 layout_mode = 0
-offset_left = -44.0
-offset_top = 620.0
-offset_right = 14.0
-offset_bottom = 643.0
+offset_left = -57.0
+offset_top = 631.0
+offset_right = 1.0
+offset_bottom = 654.0
 horizontal_alignment = 2
 
-[node name="label_17" type="Label" parent="sub_viewport/black"]
+[node name="label_17" type="Label" parent="black"]
 layout_mode = 0
-offset_left = -44.0
-offset_top = 644.0
-offset_right = 14.0
-offset_bottom = 667.0
+offset_left = -57.0
+offset_top = 655.0
+offset_right = 1.0
+offset_bottom = 678.0
 horizontal_alignment = 2
 
-[node name="label_18" type="Label" parent="sub_viewport/black"]
+[node name="label_18" type="Label" parent="black"]
 layout_mode = 0
-offset_left = -44.0
-offset_top = 667.0
-offset_right = 14.0
-offset_bottom = 690.0
+offset_left = -57.0
+offset_top = 678.0
+offset_right = 1.0
+offset_bottom = 701.0
 horizontal_alignment = 2
 
-[node name="label_19" type="Label" parent="sub_viewport/black"]
+[node name="label_19" type="Label" parent="black"]
 layout_mode = 0
-offset_left = -44.0
-offset_top = 692.0
-offset_right = 14.0
-offset_bottom = 715.0
+offset_left = -57.0
+offset_top = 703.0
+offset_right = 1.0
+offset_bottom = 726.0
 horizontal_alignment = 2
 
-[node name="label_20" type="Label" parent="sub_viewport/black"]
+[node name="label_20" type="Label" parent="black"]
 layout_mode = 0
-offset_left = -44.0
-offset_top = 716.0
-offset_right = 14.0
-offset_bottom = 739.0
+offset_left = -57.0
+offset_top = 727.0
+offset_right = 1.0
+offset_bottom = 750.0
 horizontal_alignment = 2
 
-[node name="label_21" type="Label" parent="sub_viewport/black"]
+[node name="label_21" type="Label" parent="black"]
 layout_mode = 0
-offset_left = 132.0
-offset_top = 264.0
-offset_right = 190.0
-offset_bottom = 287.0
+offset_left = 119.0
+offset_top = 275.0
+offset_right = 177.0
+offset_bottom = 298.0
 horizontal_alignment = 2
 
-[node name="label_22" type="Label" parent="sub_viewport/black"]
+[node name="label_22" type="Label" parent="black"]
 layout_mode = 0
-offset_left = 132.0
-offset_top = 288.0
-offset_right = 190.0
-offset_bottom = 311.0
+offset_left = 119.0
+offset_top = 299.0
+offset_right = 177.0
+offset_bottom = 322.0
 horizontal_alignment = 2
 
-[node name="label_23" type="Label" parent="sub_viewport/black"]
+[node name="label_23" type="Label" parent="black"]
 layout_mode = 0
-offset_left = 132.0
-offset_top = 311.0
-offset_right = 190.0
-offset_bottom = 334.0
+offset_left = 119.0
+offset_top = 322.0
+offset_right = 177.0
+offset_bottom = 345.0
 horizontal_alignment = 2
 
-[node name="label_24" type="Label" parent="sub_viewport/black"]
+[node name="label_24" type="Label" parent="black"]
 layout_mode = 0
-offset_left = 132.0
-offset_top = 335.0
-offset_right = 190.0
-offset_bottom = 358.0
+offset_left = 119.0
+offset_top = 346.0
+offset_right = 177.0
+offset_bottom = 369.0
 horizontal_alignment = 2
 
-[node name="label_25" type="Label" parent="sub_viewport/black"]
+[node name="label_25" type="Label" parent="black"]
 layout_mode = 0
-offset_left = 132.0
-offset_top = 359.0
-offset_right = 190.0
-offset_bottom = 382.0
+offset_left = 119.0
+offset_top = 370.0
+offset_right = 177.0
+offset_bottom = 393.0
 horizontal_alignment = 2
 
-[node name="label_26" type="Label" parent="sub_viewport/black"]
+[node name="label_26" type="Label" parent="black"]
 layout_mode = 0
-offset_left = 132.0
-offset_top = 382.0
-offset_right = 190.0
-offset_bottom = 405.0
+offset_left = 119.0
+offset_top = 393.0
+offset_right = 177.0
+offset_bottom = 416.0
 horizontal_alignment = 2
 
-[node name="label_27" type="Label" parent="sub_viewport/black"]
+[node name="label_27" type="Label" parent="black"]
 layout_mode = 0
-offset_left = 132.0
-offset_top = 407.0
-offset_right = 190.0
-offset_bottom = 430.0
+offset_left = 119.0
+offset_top = 418.0
+offset_right = 177.0
+offset_bottom = 441.0
 horizontal_alignment = 2
 
-[node name="label_28" type="Label" parent="sub_viewport/black"]
+[node name="label_28" type="Label" parent="black"]
 layout_mode = 0
-offset_left = 132.0
-offset_top = 431.0
-offset_right = 190.0
-offset_bottom = 454.0
+offset_left = 119.0
+offset_top = 442.0
+offset_right = 177.0
+offset_bottom = 465.0
 horizontal_alignment = 2
 
-[node name="label_29" type="Label" parent="sub_viewport/black"]
+[node name="label_29" type="Label" parent="black"]
 layout_mode = 0
-offset_left = 132.0
-offset_top = 454.0
-offset_right = 190.0
-offset_bottom = 477.0
+offset_left = 119.0
+offset_top = 465.0
+offset_right = 177.0
+offset_bottom = 488.0
 horizontal_alignment = 2
 
-[node name="label_30" type="Label" parent="sub_viewport/black"]
+[node name="label_30" type="Label" parent="black"]
 layout_mode = 0
-offset_left = 132.0
-offset_top = 478.0
-offset_right = 190.0
-offset_bottom = 501.0
+offset_left = 119.0
+offset_top = 489.0
+offset_right = 177.0
+offset_bottom = 512.0
 horizontal_alignment = 2
 
-[node name="label_31" type="Label" parent="sub_viewport/black"]
+[node name="label_31" type="Label" parent="black"]
 layout_mode = 0
-offset_left = 132.0
-offset_top = 502.0
-offset_right = 190.0
-offset_bottom = 525.0
+offset_left = 119.0
+offset_top = 513.0
+offset_right = 177.0
+offset_bottom = 536.0
 horizontal_alignment = 2
 
-[node name="label_32" type="Label" parent="sub_viewport/black"]
+[node name="label_32" type="Label" parent="black"]
 layout_mode = 0
-offset_left = 132.0
-offset_top = 525.0
-offset_right = 190.0
-offset_bottom = 548.0
+offset_left = 119.0
+offset_top = 536.0
+offset_right = 177.0
+offset_bottom = 559.0
 horizontal_alignment = 2
 
-[node name="label_33" type="Label" parent="sub_viewport/black"]
+[node name="label_33" type="Label" parent="black"]
 layout_mode = 0
-offset_left = 132.0
-offset_top = 549.0
-offset_right = 190.0
-offset_bottom = 572.0
+offset_left = 119.0
+offset_top = 560.0
+offset_right = 177.0
+offset_bottom = 583.0
 horizontal_alignment = 2
 
-[node name="label_34" type="Label" parent="sub_viewport/black"]
+[node name="label_34" type="Label" parent="black"]
 layout_mode = 0
-offset_left = 132.0
-offset_top = 573.0
-offset_right = 190.0
-offset_bottom = 596.0
+offset_left = 119.0
+offset_top = 584.0
+offset_right = 177.0
+offset_bottom = 607.0
 horizontal_alignment = 2
 
-[node name="label_35" type="Label" parent="sub_viewport/black"]
+[node name="label_35" type="Label" parent="black"]
 layout_mode = 0
-offset_left = 132.0
-offset_top = 596.0
-offset_right = 190.0
-offset_bottom = 619.0
+offset_left = 119.0
+offset_top = 607.0
+offset_right = 177.0
+offset_bottom = 630.0
 horizontal_alignment = 2
 
-[node name="label_36" type="Label" parent="sub_viewport/black"]
+[node name="label_36" type="Label" parent="black"]
 layout_mode = 0
-offset_left = 132.0
-offset_top = 620.0
-offset_right = 190.0
-offset_bottom = 643.0
+offset_left = 119.0
+offset_top = 631.0
+offset_right = 177.0
+offset_bottom = 654.0
 horizontal_alignment = 2
 
-[node name="label_37" type="Label" parent="sub_viewport/black"]
+[node name="label_37" type="Label" parent="black"]
 layout_mode = 0
-offset_left = 132.0
-offset_top = 644.0
-offset_right = 190.0
-offset_bottom = 667.0
+offset_left = 119.0
+offset_top = 655.0
+offset_right = 177.0
+offset_bottom = 678.0
 horizontal_alignment = 2
 
-[node name="label_38" type="Label" parent="sub_viewport/black"]
+[node name="label_38" type="Label" parent="black"]
 layout_mode = 0
-offset_left = 132.0
-offset_top = 667.0
-offset_right = 190.0
-offset_bottom = 690.0
+offset_left = 119.0
+offset_top = 678.0
+offset_right = 177.0
+offset_bottom = 701.0
 horizontal_alignment = 2
 
-[node name="label_39" type="Label" parent="sub_viewport/black"]
+[node name="label_39" type="Label" parent="black"]
 layout_mode = 0
-offset_left = 132.0
-offset_top = 692.0
-offset_right = 190.0
-offset_bottom = 715.0
+offset_left = 119.0
+offset_top = 703.0
+offset_right = 177.0
+offset_bottom = 726.0
 horizontal_alignment = 2
 
-[node name="label_40" type="Label" parent="sub_viewport/black"]
+[node name="label_40" type="Label" parent="black"]
 layout_mode = 0
-offset_left = 132.0
-offset_top = 716.0
-offset_right = 190.0
-offset_bottom = 739.0
+offset_left = 119.0
+offset_top = 727.0
+offset_right = 177.0
+offset_bottom = 750.0
 horizontal_alignment = 2
 
-[node name="label_41" type="Label" parent="sub_viewport/black"]
+[node name="label_41" type="Label" parent="black"]
 layout_mode = 0
-offset_left = 307.0
-offset_top = 264.0
-offset_right = 365.0
-offset_bottom = 287.0
+offset_left = 294.0
+offset_top = 275.0
+offset_right = 352.0
+offset_bottom = 298.0
 horizontal_alignment = 2
 
-[node name="label_42" type="Label" parent="sub_viewport/black"]
+[node name="label_42" type="Label" parent="black"]
 layout_mode = 0
-offset_left = 307.0
-offset_top = 288.0
-offset_right = 365.0
-offset_bottom = 311.0
+offset_left = 294.0
+offset_top = 299.0
+offset_right = 352.0
+offset_bottom = 322.0
 horizontal_alignment = 2
 
-[node name="label_43" type="Label" parent="sub_viewport/black"]
+[node name="label_43" type="Label" parent="black"]
 layout_mode = 0
-offset_left = 307.0
-offset_top = 311.0
-offset_right = 365.0
-offset_bottom = 334.0
+offset_left = 294.0
+offset_top = 322.0
+offset_right = 352.0
+offset_bottom = 345.0
 horizontal_alignment = 2
 
-[node name="label_44" type="Label" parent="sub_viewport/black"]
+[node name="label_44" type="Label" parent="black"]
 layout_mode = 0
-offset_left = 307.0
-offset_top = 335.0
-offset_right = 365.0
-offset_bottom = 358.0
+offset_left = 294.0
+offset_top = 346.0
+offset_right = 352.0
+offset_bottom = 369.0
 horizontal_alignment = 2
 
-[node name="label_45" type="Label" parent="sub_viewport/black"]
+[node name="label_45" type="Label" parent="black"]
 layout_mode = 0
-offset_left = 307.0
-offset_top = 359.0
-offset_right = 365.0
-offset_bottom = 382.0
+offset_left = 294.0
+offset_top = 370.0
+offset_right = 352.0
+offset_bottom = 393.0
 horizontal_alignment = 2
 
-[node name="label_46" type="Label" parent="sub_viewport/black"]
+[node name="label_46" type="Label" parent="black"]
 layout_mode = 0
-offset_left = 307.0
-offset_top = 382.0
-offset_right = 365.0
-offset_bottom = 405.0
+offset_left = 294.0
+offset_top = 393.0
+offset_right = 352.0
+offset_bottom = 416.0
 horizontal_alignment = 2
 
-[node name="label_47" type="Label" parent="sub_viewport/black"]
+[node name="label_47" type="Label" parent="black"]
 layout_mode = 0
-offset_left = 307.0
-offset_top = 407.0
-offset_right = 365.0
-offset_bottom = 430.0
+offset_left = 294.0
+offset_top = 418.0
+offset_right = 352.0
+offset_bottom = 441.0
 horizontal_alignment = 2
 
-[node name="label_48" type="Label" parent="sub_viewport/black"]
+[node name="label_48" type="Label" parent="black"]
 layout_mode = 0
-offset_left = 307.0
-offset_top = 431.0
-offset_right = 365.0
-offset_bottom = 454.0
+offset_left = 294.0
+offset_top = 442.0
+offset_right = 352.0
+offset_bottom = 465.0
 horizontal_alignment = 2
 
-[node name="label_49" type="Label" parent="sub_viewport/black"]
+[node name="label_49" type="Label" parent="black"]
 layout_mode = 0
-offset_left = 307.0
-offset_top = 454.0
-offset_right = 365.0
-offset_bottom = 477.0
+offset_left = 294.0
+offset_top = 465.0
+offset_right = 352.0
+offset_bottom = 488.0
 horizontal_alignment = 2
 
-[node name="label_50" type="Label" parent="sub_viewport/black"]
+[node name="label_50" type="Label" parent="black"]
 layout_mode = 0
-offset_left = 307.0
-offset_top = 478.0
-offset_right = 365.0
-offset_bottom = 501.0
+offset_left = 294.0
+offset_top = 489.0
+offset_right = 352.0
+offset_bottom = 512.0
 horizontal_alignment = 2
 
-[node name="label_51" type="Label" parent="sub_viewport/black"]
+[node name="label_51" type="Label" parent="black"]
 layout_mode = 0
-offset_left = 307.0
-offset_top = 502.0
-offset_right = 365.0
-offset_bottom = 525.0
+offset_left = 294.0
+offset_top = 513.0
+offset_right = 352.0
+offset_bottom = 536.0
 horizontal_alignment = 2
 
-[node name="label_52" type="Label" parent="sub_viewport/black"]
+[node name="label_52" type="Label" parent="black"]
 layout_mode = 0
-offset_left = 307.0
-offset_top = 525.0
-offset_right = 365.0
-offset_bottom = 548.0
+offset_left = 294.0
+offset_top = 536.0
+offset_right = 352.0
+offset_bottom = 559.0
 horizontal_alignment = 2
 
-[node name="label_53" type="Label" parent="sub_viewport/black"]
+[node name="label_53" type="Label" parent="black"]
 layout_mode = 0
-offset_left = 307.0
-offset_top = 549.0
-offset_right = 365.0
-offset_bottom = 572.0
+offset_left = 294.0
+offset_top = 560.0
+offset_right = 352.0
+offset_bottom = 583.0
 horizontal_alignment = 2
 
-[node name="label_54" type="Label" parent="sub_viewport/black"]
+[node name="label_54" type="Label" parent="black"]
 layout_mode = 0
-offset_left = 307.0
-offset_top = 573.0
-offset_right = 365.0
-offset_bottom = 596.0
+offset_left = 294.0
+offset_top = 584.0
+offset_right = 352.0
+offset_bottom = 607.0
 horizontal_alignment = 2
 
-[node name="label_55" type="Label" parent="sub_viewport/black"]
+[node name="label_55" type="Label" parent="black"]
 layout_mode = 0
-offset_left = 307.0
-offset_top = 596.0
-offset_right = 365.0
-offset_bottom = 619.0
+offset_left = 294.0
+offset_top = 607.0
+offset_right = 352.0
+offset_bottom = 630.0
 horizontal_alignment = 2
 
-[node name="label_56" type="Label" parent="sub_viewport/black"]
+[node name="label_56" type="Label" parent="black"]
 layout_mode = 0
-offset_left = 307.0
-offset_top = 620.0
-offset_right = 365.0
-offset_bottom = 643.0
+offset_left = 294.0
+offset_top = 631.0
+offset_right = 352.0
+offset_bottom = 654.0
 horizontal_alignment = 2
 
-[node name="label_57" type="Label" parent="sub_viewport/black"]
+[node name="label_57" type="Label" parent="black"]
 layout_mode = 0
-offset_left = 307.0
-offset_top = 644.0
-offset_right = 365.0
-offset_bottom = 667.0
+offset_left = 294.0
+offset_top = 655.0
+offset_right = 352.0
+offset_bottom = 678.0
 horizontal_alignment = 2
 
-[node name="label_58" type="Label" parent="sub_viewport/black"]
+[node name="label_58" type="Label" parent="black"]
 layout_mode = 0
-offset_left = 307.0
-offset_top = 667.0
-offset_right = 365.0
-offset_bottom = 690.0
+offset_left = 294.0
+offset_top = 678.0
+offset_right = 352.0
+offset_bottom = 701.0
 horizontal_alignment = 2
 
-[node name="label_59" type="Label" parent="sub_viewport/black"]
+[node name="label_59" type="Label" parent="black"]
 layout_mode = 0
-offset_left = 307.0
-offset_top = 692.0
-offset_right = 365.0
-offset_bottom = 715.0
+offset_left = 294.0
+offset_top = 703.0
+offset_right = 352.0
+offset_bottom = 726.0
 horizontal_alignment = 2
 
-[node name="label_60" type="Label" parent="sub_viewport/black"]
+[node name="label_60" type="Label" parent="black"]
 layout_mode = 0
-offset_left = 307.0
-offset_top = 716.0
-offset_right = 365.0
-offset_bottom = 739.0
+offset_left = 294.0
+offset_top = 727.0
+offset_right = 352.0
+offset_bottom = 750.0
 horizontal_alignment = 2

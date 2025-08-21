@@ -1,0 +1,23 @@
+[gd_scene load_steps=5 format=3 uid="uid://8niy1q4npun7"]
+
+[ext_resource type="Script" uid="uid://burk5l10a1ndc" path="res://src/a4paper.gd" id="1_aw2hb"]
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_6vnsk"]
+size = Vector2(0.3, 0.4)
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_ysvxy"]
+viewport_path = NodePath("sub_viewport")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_o7yno"]
+resource_local_to_scene = true
+albedo_texture = SubResource("ViewportTexture_ysvxy")
+
+[node name="a4paper" type="Node3D"]
+script = ExtResource("1_aw2hb")
+
+[node name="mesh_instance_3d" type="MeshInstance3D" parent="."]
+mesh = SubResource("PlaneMesh_6vnsk")
+surface_material_override/0 = SubResource("StandardMaterial3D_o7yno")
+
+[node name="sub_viewport" type="SubViewport" parent="."]
+size = Vector2i(552, 780)

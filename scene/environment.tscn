@@ -5,7 +5,6 @@
 [ext_resource type="Script" uid="uid://b5tdvskepo5dh" path="res://src/environment.gd" id="2_7r8ay"]
 [ext_resource type="PackedScene" uid="uid://b3ml34bssywkr" path="res://scene/cheshire.tscn" id="3_1vcsq"]
 [ext_resource type="PackedScene" uid="uid://n5i2mcgyqj3k" path="res://scene/clock.tscn" id="3_po4na"]
-[ext_resource type="PackedScene" uid="uid://b0ots07uggqyg" path="res://scene/history.tscn" id="5_4qusu"]
 [ext_resource type="Texture2D" uid="uid://bhyrjuctg4vsr" path="res://assets/texture/Texturelabs_Paper_312S.jpg" id="6_r58fw"]
 [ext_resource type="PackedScene" uid="uid://bujgvbqsjgnrk" path="res://assets/model/radio.glb" id="7_geasp"]
 [ext_resource type="Script" uid="uid://dg85frcnjlauy" path="res://src/interact.gd" id="7_hgmdq"]
@@ -13,6 +12,7 @@
 [ext_resource type="PackedScene" uid="uid://de73qrhtkiaka" path="res://scene/draft.tscn" id="8_tnamw"]
 [ext_resource type="PackedScene" uid="uid://crucchfeabm" path="res://scene/pastor.tscn" id="9_560hc"]
 [ext_resource type="PackedScene" uid="uid://y13y4nucxo2v" path="res://scene/bible.tscn" id="9_u78ad"]
+[ext_resource type="PackedScene" uid="uid://8niy1q4npun7" path="res://scene/a4paper.tscn" id="10_r58fw"]
 [ext_resource type="PackedScene" uid="uid://n6i5vwajcqn4" path="res://assets/model/cup.glb" id="10_u78ad"]
 [ext_resource type="PackedScene" uid="uid://biv8ghyjqw63y" path="res://assets/model/shrub.glb" id="11_j14fg"]
 [ext_resource type="PackedScene" uid="uid://d13fcqueggvup" path="res://assets/model/fence.glb" id="12_cqi1n"]
@@ -483,7 +483,7 @@ next_interact = [NodePath("../area_chessboard")]
 camera = NodePath("../../camera/camera_history")
 metadata/_custom_type_script = "uid://dg85frcnjlauy"
 metadata/camera = NodePath("../../camera/camera_history")
-metadata/inspectable_item = NodePath("../../history")
+metadata/inspectable_item = NodePath("")
 
 [node name="collision_shape_3d" type="CollisionShape3D" parent="interact/area_history" index="0"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0701367, 0.00320435, 0.0138262)
@@ -772,7 +772,7 @@ transform = Transform3D(1, 0, -1.06581e-14, 0, 1, 0, 1.06581e-14, 0, 1, -2.35362
 [node name="chessboard" parent="." index="23" instance=ExtResource("2_3p4nk")]
 transform = Transform3D(5.5732e-08, 0, 0.425, 0, 0.425, 0, -0.425, 0, 5.5732e-08, -2.35606, 0.866345, -0.0600458)
 
-[node name="history" parent="." index="24" instance=ExtResource("5_4qusu")]
+[node name="history" parent="." index="24" instance=ExtResource("10_r58fw")]
 transform = Transform3D(0.07162, 0, -0.997431, 0, 1, 0, 0.997431, 0, 0.07162, -2.73957, 0.850589, -0.463588)
 
 [node name="cheshire" parent="." index="25" instance=ExtResource("3_1vcsq")]

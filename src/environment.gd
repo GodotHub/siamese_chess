@@ -6,13 +6,15 @@ var score:int = 0
 var think_time:int = 10
 var start_thinking:float = 0
 var opening_book:OpeningBook = OpeningBook.new()
-var ai: PastorAI = PastorAI.new();
+var ai: PastorAI = PastorAI.new()
+@onready var history_chart:Document = load("res://scene/history.tscn").instantiate()
 
 var pastor_state:String = "idle"
 
 var telephone_2025_first_time:bool = false
 
 func _ready() -> void:
+	$history.set_document(history_chart)
 	$cheshire.set_initial_interact($interact/area_passthrough)
 	$clock.connect("timeout", timeout)
 	$telephone.connect("call_number", dialog_telephone)
@@ -48,14 +50,6 @@ func dialog_telephone_2025() -> void:
 			await $dialog.on_next
 			if state.get_turn() == 0:
 				$dialog.push_dialog("现在是对手在下棋，您可以先看一下他的应对方式。", true, true)
-				await $dialog.on_next
-				var telephone_ai:PastorAI = PastorAI.new()
-				telephone_ai.set_max_depth(6)
-				telephone_ai.start_search(test_state, 0, INF, Callable())
-				if telephone_ai.is_searching():
-					await telephone_ai.search_finished
-				var best_move:int = telephone_ai.get_search_result()
-				$dialog.push_dialog("我认为他会下" + RuleStandard.get_move_name(test_state, best_move), true, true)
 				await $dialog.on_next
 				return
 			$dialog.push_dialog("这样啊……", true, true)
@@ -130,7 +124,7 @@ func dialog_start_game() -> void:
 		if $dialog.selected in [0, 1, 2]:
 			state = RuleStandard.parse("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
 			$chessboard.set_state(state)
-			$history.set_state(state)
+			history_chart.set_state(state)
 			if $dialog.selected == 0:
 				$clock.set_time(1800, 1, 0)
 				think_time = 5
@@ -154,7 +148,7 @@ func dialog_start_game() -> void:
 		elif $dialog.selected == 3:
 			state = RuleStandard.parse("8/8/2rbqk2/2pppn2/2NPPP2/2KQBR2/8/8 w - - 0 1")
 			$chessboard.set_state(state)
-			$history.set_state(state)
+			history_chart.set_state(state)
 			$clock.set_time(30, 1, 0)
 			think_time = 1
 			$dialog.push_dialog("现在棋盘已经准备好了。", true, true)
@@ -176,7 +170,7 @@ func dialog_start_game() -> void:
 			if is_instance_valid(state):
 				think_time = 5
 				$chessboard.set_state(state)
-				$history.set_state(state)
+				history_chart.set_state(state)
 				$dialog.push_dialog("现在棋盘已经准备好了。", true, true)
 				$cheshire.force_set_camera($camera/camera_chessboard)
 				await $dialog.on_next
@@ -201,7 +195,7 @@ func in_game() -> void:
 		var move:int = ai.get_search_result()
 		RuleStandard.apply_move(state, move)
 		$chessboard.execute_move(move)
-		$history.push_move(move)
+		history_chart.push_move(move)
 		if RuleStandard.get_end_type(state) != "":
 			break
 		$chessboard.set_valid_move(RuleStandard.generate_valid_move(state, 1))
@@ -210,7 +204,7 @@ func in_game() -> void:
 		ai.start_search(state, 1, INF, Callable())
 		await $chessboard.move_played
 		RuleStandard.apply_move(state, $chessboard.confirm_move)
-		$history.push_move($chessboard.confirm_move)
+		history_chart.push_move($chessboard.confirm_move)
 		$clock.next()
 		ai.stop_search()
 		if ai.is_searching():

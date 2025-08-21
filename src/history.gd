@@ -1,4 +1,4 @@
-extends InspectableItem
+extends Document
 
 var state:State = null
 var history:PackedStringArray = []
@@ -16,12 +16,12 @@ func push_move(move:int) -> void:
 	update_table()
 
 func update_table() -> void:
-	$sub_viewport/chessboard_flat.set_state(state)
+	$chessboard_flat.set_state(state)
 	for i:int in range(history.size()):
 		if i % 2 == 0:
-			get_node("sub_viewport/white/label_%d" % (i / 2 + 1)).text = history[i]
+			get_node("white/label_%d" % (i / 2 + 1)).text = history[i]
 		else:
-			get_node("sub_viewport/black/label_%d" % (i / 2 + 1)).text = history[i]
+			get_node("black/label_%d" % (i / 2 + 1)).text = history[i]
 
 func add_blank_line() -> void:
 	history.push_back("")
