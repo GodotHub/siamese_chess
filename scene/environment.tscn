@@ -473,7 +473,7 @@ metadata/_custom_type_script = "uid://dg85frcnjlauy"
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.103416, -0.296387, -0.20851)
 shape = SubResource("BoxShape3D_hgmdq")
 
-[node name="area_history" type="Area3D" parent="interact" index="1" node_paths=PackedStringArray("next_interact", "camera")]
+[node name="area_history" type="Area3D" parent="interact" index="1" node_paths=PackedStringArray("next_interact", "camera", "inspectable_item")]
 transform = Transform3D(-0.998109, 0, -0.0614669, 0, 1, 0, 0.0614669, 0, -0.998109, -2.6738, 0.857563, -0.460116)
 collision_mask = 0
 monitoring = false
@@ -481,6 +481,7 @@ monitorable = false
 script = ExtResource("7_hgmdq")
 next_interact = [NodePath("../area_chessboard")]
 camera = NodePath("../../camera/camera_history")
+inspectable_item = [NodePath("../../history")]
 metadata/_custom_type_script = "uid://dg85frcnjlauy"
 metadata/camera = NodePath("../../camera/camera_history")
 metadata/inspectable_item = NodePath("")
