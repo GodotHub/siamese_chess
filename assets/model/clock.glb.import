@@ -4,12 +4,12 @@ importer="scene"
 importer_version=1
 type="PackedScene"
 uid="uid://dmo5204uinktq"
-path="res://.godot/imported/chess_timer.glb-c4f3bd66cbf9cc7d5fe863ac3d8e6211.scn"
+path="res://.godot/imported/clock.glb-6cd93f1962b7687286fe10cda4355f39.scn"
 
 [deps]
 
-source_file="res://assets/model/chess_timer.glb"
-dest_files=["res://.godot/imported/chess_timer.glb-c4f3bd66cbf9cc7d5fe863ac3d8e6211.scn"]
+source_file="res://assets/model/clock.glb"
+dest_files=["res://.godot/imported/clock.glb-6cd93f1962b7687286fe10cda4355f39.scn"]
 
 [params]
 

@@ -4,7 +4,7 @@
 [ext_resource type="PackedScene" uid="uid://d1s6qj7aofldk" path="res://scene/chessboard.tscn" id="2_3p4nk"]
 [ext_resource type="Script" uid="uid://b5tdvskepo5dh" path="res://src/environment.gd" id="2_7r8ay"]
 [ext_resource type="PackedScene" uid="uid://b3ml34bssywkr" path="res://scene/cheshire.tscn" id="3_1vcsq"]
-[ext_resource type="PackedScene" uid="uid://n5i2mcgyqj3k" path="res://scene/chess_timer.tscn" id="3_po4na"]
+[ext_resource type="PackedScene" uid="uid://n5i2mcgyqj3k" path="res://scene/clock.tscn" id="3_po4na"]
 [ext_resource type="PackedScene" uid="uid://b0ots07uggqyg" path="res://scene/history.tscn" id="5_4qusu"]
 [ext_resource type="Texture2D" uid="uid://bhyrjuctg4vsr" path="res://assets/texture/Texturelabs_Paper_312S.jpg" id="6_r58fw"]
 [ext_resource type="PackedScene" uid="uid://bujgvbqsjgnrk" path="res://assets/model/radio.glb" id="7_geasp"]
@@ -516,7 +516,7 @@ next_interact = [NodePath("../area_chessboard"), NodePath("../area_menu")]
 camera = NodePath("../../camera/camera_timer")
 metadata/_custom_type_script = "uid://dg85frcnjlauy"
 metadata/camera = NodePath("../../camera/camera_timer")
-metadata/inspectable_item = NodePath("../../chess_timer")
+metadata/inspectable_item = NodePath("../../clock")
 
 [node name="collision_shape_3d" type="CollisionShape3D" parent="interact/area_timer" index="0"]
 transform = Transform3D(0.999994, 0, -1.93715e-07, 0, 1, 0, 1.93715e-07, 0, 0.999994, -0.00310197, 0.0377367, 0.0123141)
@@ -766,7 +766,7 @@ transform = Transform3D(0.987582, 3.67903e-09, -0.157107, 0.0221012, 0.990056, 0
 [node name="camera_telephone" type="Camera3D" parent="camera" index="20"]
 transform = Transform3D(0.453923, -0.441772, 0.773816, -0.105822, 0.835567, 0.539101, -0.884735, -0.326597, 0.332534, 2.80226, 1.47872, 5.03588)
 
-[node name="chess_timer" parent="." index="22" instance=ExtResource("3_po4na")]
+[node name="clock" parent="." index="22" instance=ExtResource("3_po4na")]
 transform = Transform3D(1, 0, -1.06581e-14, 0, 1, 0, 1.06581e-14, 0, 1, -2.35362, 0.857578, -0.481859)
 
 [node name="chessboard" parent="." index="23" instance=ExtResource("2_3p4nk")]
