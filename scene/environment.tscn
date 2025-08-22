@@ -36,7 +36,7 @@
 [ext_resource type="PackedScene" uid="uid://kqoc0aycgs35" path="res://scene/dialog.tscn" id="30_b1ytd"]
 [ext_resource type="PackedScene" uid="uid://cwdmo0bp5hqag" path="res://assets/model/hang_light_1.glb" id="30_xqn0k"]
 [ext_resource type="PackedScene" uid="uid://bst0x07bms637" path="res://scene/telephone.tscn" id="31_vndhl"]
-[ext_resource type="PackedScene" uid="uid://du7djoab5q014" path="res://scene/menu.tscn" id="33_gw0lo"]
+[ext_resource type="PackedScene" uid="uid://du7djoab5q014" path="res://scene/menu_board.tscn" id="33_gw0lo"]
 [ext_resource type="PackedScene" uid="uid://dkha0s03djtdq" path="res://scene/phonograph.tscn" id="35_eosfh"]
 [ext_resource type="AudioStream" uid="uid://dsqaodhmws5v8" path="res://assets/audio/debussy-images-1-1-anderson.mp3" id="36_gw0lo"]
 [ext_resource type="PackedScene" uid="uid://q25etby31xos" path="res://scene/safe_lock.tscn" id="37_ps37q"]
