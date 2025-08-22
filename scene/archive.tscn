@@ -1,0 +1,41 @@
+[gd_scene load_steps=5 format=3 uid="uid://dcxfcmifrtqxa"]
+
+[ext_resource type="Script" uid="uid://64c61l6gwxim" path="res://src/archive.gd" id="1_550ee"]
+[ext_resource type="PackedScene" uid="uid://bsobwdwnm840s" path="res://scene/document_browser.tscn" id="1_jqjfb"]
+
+[sub_resource type="Gradient" id="Gradient_j3y3i"]
+offsets = PackedFloat32Array(0)
+colors = PackedColorArray(0, 0, 0, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_550ee"]
+gradient = SubResource("Gradient_j3y3i")
+
+[node name="archive" type="CanvasLayer"]
+script = ExtResource("1_550ee")
+
+[node name="texture_rect" type="TextureRect" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 0
+texture = SubResource("GradientTexture1D_550ee")
+expand_mode = 1
+stretch_mode = 1
+
+[node name="v_box_container" type="VBoxContainer" parent="texture_rect"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.03
+anchor_right = 0.312
+anchor_bottom = 1.0
+offset_left = -0.560001
+offset_right = -0.424011
+grow_horizontal = 2
+grow_vertical = 2
+alignment = 1
+
+[node name="document_browser" parent="texture_rect" instance=ExtResource("1_jqjfb")]
+layout_mode = 1
+offset_left = 359.0

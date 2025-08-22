@@ -7,14 +7,22 @@ var pivot:Vector2 = Vector2()
 var offset:Vector2 = Vector2()
 
 func _ready() -> void:
-	document = load("res://scene/history.tscn").instantiate()
-	$sub_viewport_container/sub_viewport.add_child(document)
+	pass
 
 func _input(event:InputEvent) -> void:
 	if event is InputEventMultiScreenDrag:
 		change_offset(event.relative)
 	if event is InputEventScreenPinch:
 		change_zoom(event.relative / 100)
+
+func set_document(_document) -> void:
+	if is_instance_valid(document):
+		$sub_viewport_container/sub_viewport.remove_child(document)
+	document = _document
+	zoom = 1
+	pivot = Vector2(0, 0)
+	offset = Vector2(0, 0)
+	$sub_viewport_container/sub_viewport.add_child(document)
 
 func update_transform() -> void:
 	pivot = get_global_transform().basis_xform_inv(size * 0.5)
