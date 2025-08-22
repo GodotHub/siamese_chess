@@ -114,6 +114,11 @@ func dialog_in_game() -> void:
 		$chessboard.set_valid_move([])
 		$chessboard.set_valid_premove([])
 		pastor_state = "idle"
+		var data:String = history_chart.stringify()
+		var path:String = "user://archive/history." + String.num_int64(Time.get_unix_time_from_system()) + ".json"
+		var file:FileAccess = FileAccess.open(path, FileAccess.WRITE)
+		file.store_string(data)
+		file.close()
 	elif $dialog.selected == 2:
 		return
 
@@ -217,6 +222,11 @@ func timeout(group:int) -> void:
 	else:
 		$dialog.push_dialog("棋局结束，白方超时", true, true)
 		await $dialog.on_next
+	var data:String = history_chart.stringify()
+	var path:String = "user://archive/history." + String.num_int64(Time.get_unix_time_from_system()) + ".json"
+	var file:FileAccess = FileAccess.open(path, FileAccess.WRITE)
+	file.store_string(data)
+	file.close()
 	pastor_state = "idle"
 
 
@@ -244,4 +254,9 @@ func game_end(end_type:String) -> void:	# 0:长将和 1:白方逼和 2:黑方逼
 		"checkmate_black":
 			$dialog.push_dialog("棋局结束，黑方将杀胜利", true, true)
 			await $dialog.on_next
+	var data:String = history_chart.stringify()
+	var path:String = "user://archive/history." + String.num_int64(Time.get_unix_time_from_system()) + ".json"
+	var file:FileAccess = FileAccess.open(path, FileAccess.WRITE)
+	file.store_string(data)
+	file.close()
 	pastor_state = "idle"
