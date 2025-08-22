@@ -3,6 +3,20 @@ extends Document
 var state:State = null
 var history:PackedStringArray = []
 
+func parse(str:String) -> void:
+	var data_dict:Dictionary = JSON.parse_string(str)
+	var fen:String = data_dict["state"]
+	state = RuleStandard.parse(fen)
+	history = data_dict["history"]
+	update_table()
+
+func stringify() -> String:
+	var data_dict:Dictionary = {}
+	var fen:String = RuleStandard.stringify(state)
+	data_dict["state"] = fen
+	data_dict["history"] = history
+	return JSON.stringify(data_dict)
+
 func set_state(_state:State) -> void:
 	state = _state.duplicate()
 	history.clear()
