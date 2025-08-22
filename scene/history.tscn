@@ -83,54 +83,54 @@ metadata/_edit_use_anchors_ = true
 
 [node name="label_1" type="Label" parent="header"]
 layout_mode = 0
-offset_left = 80.0
+offset_left = 79.0
 offset_top = 263.0
-offset_right = 126.0
+offset_right = 125.0
 offset_bottom = 286.0
 text = "White"
 horizontal_alignment = 2
 
 [node name="label_2" type="Label" parent="header"]
 layout_mode = 0
-offset_left = 143.0
+offset_left = 142.0
 offset_top = 263.0
-offset_right = 189.0
+offset_right = 188.0
 offset_bottom = 286.0
 text = "Black"
 horizontal_alignment = 2
 
 [node name="label_3" type="Label" parent="header"]
 layout_mode = 0
-offset_left = 255.0
+offset_left = 254.0
 offset_top = 263.0
-offset_right = 301.0
+offset_right = 300.0
 offset_bottom = 286.0
 text = "White"
 horizontal_alignment = 2
 
 [node name="label_4" type="Label" parent="header"]
 layout_mode = 0
-offset_left = 318.0
+offset_left = 317.0
 offset_top = 263.0
-offset_right = 364.0
+offset_right = 363.0
 offset_bottom = 286.0
 text = "Black"
 horizontal_alignment = 2
 
 [node name="label_5" type="Label" parent="header"]
 layout_mode = 0
-offset_left = 430.0
+offset_left = 429.0
 offset_top = 263.0
-offset_right = 476.0
+offset_right = 475.0
 offset_bottom = 286.0
 text = "White"
 horizontal_alignment = 2
 
 [node name="label_6" type="Label" parent="header"]
 layout_mode = 0
-offset_left = 492.0
+offset_left = 491.0
 offset_top = 263.0
-offset_right = 538.0
+offset_right = 537.0
 offset_bottom = 286.0
 text = "Black"
 horizontal_alignment = 2
