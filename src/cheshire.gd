@@ -26,10 +26,12 @@ func _unhandled_input(event:InputEvent) -> void:
 		var area:Area3D = click_area(event.position)
 		if is_instance_valid(area):
 			area.emit_signal("input", self, area, event, $ray_cast.get_collision_point(), $ray_cast.get_collision_normal())
+		get_viewport().set_input_as_handled()
 	if event is InputEventScreenPinch:
 		#cancel_drawing_move.emit()
 		if event.relative < 1 && interact_stack.size() >= 2:
 			pop_stack()
+		get_viewport().set_input_as_handled()
 
 func add_stack(interact:Interact) -> void:
 	interact_stack[-1].leave()
