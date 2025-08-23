@@ -19,8 +19,22 @@ func parse(_data:String) -> void:
 func stringify() -> String:
 	return ""
 
+func save_file() -> void:
+	var data:String = stringify()
+	var path:String = "user://archive/" + filename
+	var file:FileAccess = FileAccess.open(path, FileAccess.WRITE)
+	file.store_string(data)
+	file.close()
+
+func load_file() -> void:
+	var data:String = FileAccess.get_file_as_string("user://archive/" + filename)
+	parse(data)
+
 func set_filename(_filename:String) -> void:
 	filename = _filename
+
+func get_filename() -> String:
+	return filename
 
 func start_drawing(start_position:Vector2) -> void:
 	var new_line:Line2D = Line2D.new()

@@ -5,7 +5,8 @@ var template_list:Dictionary = {
 	"history": "res://scene/history.tscn",
 }
 
-var document_list:Dictionary = {}
+var document:Document = null
+var document_list:Array = []
 var button_list:Array[Button] = []
 
 func open() -> void:
@@ -24,9 +25,8 @@ func open() -> void:
 	var file_name:String = dir.get_next()
 	while file_name != "":
 		if !dir.current_is_dir():
-			document_list[file_name] = "user://archive/" + file_name
+			document_list.push_back(file_name)
 		file_name = dir.get_next()
-	
 
 	for iter:String in document_list:
 		var button = Button.new()
@@ -47,12 +47,15 @@ func open() -> void:
 		button_list.push_back(button)
 	$texture_rect/button_close.connect("button_up", close)
 
-func button_pressed(key:String) -> void:
-	var filename_splited = key.split(".")	# 模板.名称.json
-	var new_document:Document = load(template_list[filename_splited[0]]).instantiate()
-	var data:String = FileAccess.get_file_as_string(document_list[key])
-	new_document.parse(data)
-	$texture_rect/document_browser.set_document(new_document)
+func button_pressed(filename:String) -> void:
+	if is_instance_valid(document):
+		document.save_file()
+	
+	var filename_splited = filename.split(".")	# 模板.名称.json
+	document = load(template_list[filename_splited[0]]).instantiate()
+	document.set_filename(filename)
+	document.load_file()
+	$texture_rect/document_browser.set_document(document)
 	$texture_rect/document_browser.visible = true
 
 func close() -> void:

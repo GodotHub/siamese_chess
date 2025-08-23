@@ -20,6 +20,7 @@ func _ready() -> void:
 	$telephone.connect("call_number", dialog_telephone)
 	$interact/area_pastor.connect("clicked", select_dialog)
 	$interact/area_archive.connect("clicked", $archive.open)
+	$interact/area_menu.connect("clicked", check_menu)
 
 func select_dialog() -> void:
 	if has_method("dialog_" + pastor_state):
@@ -115,11 +116,7 @@ func dialog_in_game() -> void:
 		$chessboard.set_valid_move([])
 		$chessboard.set_valid_premove([])
 		pastor_state = "idle"
-		var data:String = history_chart.stringify()
-		var path:String = "user://archive/history." + String.num_int64(Time.get_unix_time_from_system()) + ".json"
-		var file:FileAccess = FileAccess.open(path, FileAccess.WRITE)
-		file.store_string(data)
-		file.close()
+		history_chart.save_file()
 	elif $dialog.selected == 2:
 		return
 
@@ -131,6 +128,7 @@ func dialog_start_game() -> void:
 			state = RuleStandard.parse("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
 			$chessboard.set_state(state)
 			history_chart.set_state(state)
+			history_chart.set_filename("history." + String.num_int64(Time.get_unix_time_from_system()) + ".json")
 			if $dialog.selected == 0:
 				$clock.set_time(1800, 1, 0)
 				think_time = 5
@@ -155,6 +153,7 @@ func dialog_start_game() -> void:
 			state = RuleStandard.parse("8/8/2rbqk2/2pppn2/2NPPP2/2KQBR2/8/8 w - - 0 1")
 			$chessboard.set_state(state)
 			history_chart.set_state(state)
+			history_chart.set_filename("history." + String.num_int64(Time.get_unix_time_from_system()) + ".json")
 			$clock.set_time(30, 1, 0)
 			think_time = 1
 			$dialog.push_dialog("现在棋盘已经准备好了。", true, true)
@@ -177,6 +176,7 @@ func dialog_start_game() -> void:
 				think_time = 5
 				$chessboard.set_state(state)
 				history_chart.set_state(state)
+				history_chart.set_filename("history." + String.num_int64(Time.get_unix_time_from_system()) + ".json")
 				$dialog.push_dialog("现在棋盘已经准备好了。", true, true)
 				$cheshire.force_set_camera($camera/camera_chessboard)
 				await $dialog.on_next
@@ -223,11 +223,7 @@ func timeout(group:int) -> void:
 	else:
 		$dialog.push_dialog("棋局结束，白方超时", true, true)
 		await $dialog.on_next
-	var data:String = history_chart.stringify()
-	var path:String = "user://archive/history." + String.num_int64(Time.get_unix_time_from_system()) + ".json"
-	var file:FileAccess = FileAccess.open(path, FileAccess.WRITE)
-	file.store_string(data)
-	file.close()
+	history_chart.save_file()
 	pastor_state = "idle"
 
 
@@ -255,9 +251,12 @@ func game_end(end_type:String) -> void:	# 0:长将和 1:白方逼和 2:黑方逼
 		"checkmate_black":
 			$dialog.push_dialog("棋局结束，黑方将杀胜利", true, true)
 			await $dialog.on_next
-	var data:String = history_chart.stringify()
-	var path:String = "user://archive/history." + String.num_int64(Time.get_unix_time_from_system()) + ".json"
-	var file:FileAccess = FileAccess.open(path, FileAccess.WRITE)
-	file.store_string(data)
-	file.close()
+	history_chart.save_file()
 	pastor_state = "idle"
+
+func check_menu() -> void:	# 玩家初次遇到时归档
+	if !FileAccess.file_exists("user://archive/menu.cafe.json"):
+		var path:String = "user://archive/menu.cafe.json"
+		var file:FileAccess = FileAccess.open(path, FileAccess.WRITE)
+		file.store_string("{}")
+		file.close()
