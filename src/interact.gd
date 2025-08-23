@@ -42,5 +42,6 @@ func set_enabled(enabled:bool) -> void:
 func move_camera(_from:Node3D, _to:Area3D, _event:InputEvent, _event_position:Vector3, _normal:Vector3) -> void:
 	if _event is InputEventMouseButton && _event.pressed && _event.button_index == MOUSE_BUTTON_LEFT:
 		clicked.emit()
-		_from.add_stack(_to)
-		_from.move_camera(_to.get_camera())
+		if is_instance_valid(_to.camera):
+			_from.add_stack(_to)
+			_from.move_camera(_to.get_camera())
