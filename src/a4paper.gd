@@ -1,13 +1,10 @@
 extends InspectableItem
 
 var region:Rect2 = Rect2(0, 0, 552, 780)
-var color:Color = Color(0.1, 0.1, 0.1, 1)
 var lines:Array[Line2D] = []	# 直接暴力搜解决问题
-var drawing_line:Line2D = null
 var uv_mapping:UVMapping = null
 var last_event_position_2d:Vector2 = Vector2(-1, -1)
 var use_eraser:bool = false
-var width:float = 2
 
 var document:Document = null
 
