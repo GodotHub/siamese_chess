@@ -43,75 +43,16 @@ func input(_from:Node3D, _to:Area3D, _event:InputEvent, _event_position:Vector3,
 	if _event is InputEventMouseButton:
 		if !use_eraser:
 			if _event.pressed && _event.button_index == MOUSE_BUTTON_LEFT:
-				start_drawing(event_position_2d)
+				document.start_drawing(event_position_2d)
 			else:
-				end_drawing()
+				document.end_drawing()
 	elif _event is InputEventMouseMotion:
 		if _event.button_mask & MOUSE_BUTTON_MASK_LEFT:
 			if use_eraser || _event.pen_inverted:
-				cancel_drawing()
-				erase_line(event_position_2d)
+				document.cancel_drawing()
+				document.erase_line(event_position_2d)
 			else:
-				drawing_curve(event_position_2d)
+				document.drawing_curve(event_position_2d)
 		elif _event.button_mask & MOUSE_BUTTON_MASK_RIGHT:
-			cancel_drawing()
-			erase_line(event_position_2d)
-
-func start_drawing(start_position:Vector2) -> void:
-	var new_line:Line2D = Line2D.new()
-	new_line.joint_mode = Line2D.LINE_JOINT_ROUND
-	new_line.begin_cap_mode = Line2D.LINE_CAP_ROUND
-	new_line.end_cap_mode = Line2D.LINE_CAP_ROUND
-	new_line.default_color = color
-	new_line.width = width
-	new_line.add_point(start_position)
-	drawing_line = new_line
-	$sub_viewport.add_child(new_line)
-	lines.push_back(new_line)
-
-func drawing_curve(drawing_position:Vector2) -> void:
-	if !is_instance_valid(drawing_line):
-#		start_draw(finger_index, drawing_position)
-		return
-	if drawing_line.get_point_count() > 0 && drawing_line.get_point_position(drawing_line.get_point_count() - 1).distance_squared_to(drawing_position) < 3 * 3:
-		return
-	drawing_line.add_point(drawing_position)
-
-func drawing_straight(drawing_position) -> void:
-	if !is_instance_valid(drawing_line):
-		return
-	#if drawing_line.get_point_count() > 0 && drawing_line.get_point_position(drawing_line.get_point_count() - 1).distance_squared_to(drawing_position) < 3 * 3:
-	#	return
-	# 有可能会做折现，不做清理
-	if drawing_line.get_point_count() < 2:
-		drawing_line.add_point(drawing_position)
-	drawing_line.set_point_position(drawing_line.get_point_count() - 1, drawing_position)
-
-func end_drawing() -> void:
-	if !is_instance_valid(drawing_line):
-		return
-	drawing_line = null
-
-func cancel_drawing() -> void:
-	if is_instance_valid(drawing_line):
-		if lines.has(drawing_line):
-			lines.erase(drawing_line)
-		drawing_line.queue_free()
-
-func erase_line(drawing_position:Vector2) -> void:
-	cancel_drawing()
-	var point_list:Array = lines.duplicate(false)
-	for iter:Line2D in point_list:
-		if iter.get_point_count() < 2:
-			lines.erase(iter)
-			iter.queue_free()
-		for i:int in iter.get_point_count():
-			if iter.get_point_position(i).distance_squared_to(drawing_position) < 10 * 10:
-				lines.erase(iter)
-				iter.queue_free()
-				break
-
-func clear_lines() -> void:
-	for iter:Line2D in lines:
-		iter.queue_free()
-	lines.clear()
+			document.cancel_drawing()
+			document.erase_line(event_position_2d)

@@ -8,6 +8,7 @@ func parse(str:String) -> void:
 	var fen:String = data_dict["state"]
 	state = RuleStandard.parse(fen)
 	history = data_dict["history"]
+	draw_lines(data_dict["lines"])
 	update_table()
 
 func stringify() -> String:
@@ -15,6 +16,7 @@ func stringify() -> String:
 	var fen:String = RuleStandard.stringify(state)
 	data_dict["state"] = fen
 	data_dict["history"] = history
+	data_dict["lines"] = get_lines()
 	return JSON.stringify(data_dict)
 
 func set_state(_state:State) -> void:
