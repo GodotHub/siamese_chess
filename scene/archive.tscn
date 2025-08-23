@@ -1,7 +1,8 @@
-[gd_scene load_steps=5 format=3 uid="uid://dcxfcmifrtqxa"]
+[gd_scene load_steps=10 format=3 uid="uid://dcxfcmifrtqxa"]
 
 [ext_resource type="Script" uid="uid://64c61l6gwxim" path="res://src/archive.gd" id="1_550ee"]
 [ext_resource type="PackedScene" uid="uid://bsobwdwnm840s" path="res://scene/document_browser.tscn" id="1_jqjfb"]
+[ext_resource type="FontFile" uid="uid://cmbwnmrpuigxx" path="res://assets/fonts/FangZhengShuSongJianTi-1.ttf" id="3_w5kv4"]
 
 [sub_resource type="Gradient" id="Gradient_j3y3i"]
 offsets = PackedFloat32Array(0)
@@ -9,6 +10,14 @@ colors = PackedColorArray(0, 0, 0, 1)
 
 [sub_resource type="GradientTexture1D" id="GradientTexture1D_550ee"]
 gradient = SubResource("Gradient_j3y3i")
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_w5kv4"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_x4nah"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_buvmo"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_uibjj"]
 
 [node name="archive" type="CanvasLayer"]
 script = ExtResource("1_550ee")
@@ -28,9 +37,11 @@ stretch_mode = 1
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.03
+anchor_top = 0.205
 anchor_right = 0.312
 anchor_bottom = 1.0
 offset_left = -0.560001
+offset_top = 0.159988
 offset_right = -0.424011
 grow_horizontal = 2
 grow_vertical = 2
@@ -39,3 +50,26 @@ alignment = 1
 [node name="document_browser" parent="texture_rect" instance=ExtResource("1_jqjfb")]
 layout_mode = 1
 offset_left = 359.0
+
+[node name="button_close" type="Button" parent="texture_rect"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.03
+anchor_top = 0.065
+anchor_right = 0.312
+anchor_bottom = 0.176
+offset_left = -0.560001
+offset_top = -0.120003
+offset_right = -0.424011
+offset_bottom = -0.0480118
+theme_override_colors/icon_hover_color = Color(1, 1, 1, 1)
+theme_override_colors/icon_pressed_color = Color(0.6, 0.6, 0.6, 1)
+theme_override_colors/font_color = Color(0.901961, 0.901961, 0.901961, 1)
+theme_override_colors/font_focus_color = Color(1, 1, 1, 1)
+theme_override_fonts/font = ExtResource("3_w5kv4")
+theme_override_font_sizes/font_size = 30
+theme_override_styles/focus = SubResource("StyleBoxEmpty_w5kv4")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_x4nah")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_buvmo")
+theme_override_styles/normal = SubResource("StyleBoxEmpty_uibjj")
+text = "关闭"

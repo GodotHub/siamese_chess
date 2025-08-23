@@ -8,6 +8,7 @@ var template_list:Dictionary = {
 var document_list:Dictionary = {}
 
 func _ready() -> void:
+	$texture_rect/document_browser.visible = false
 	var dir:DirAccess = DirAccess.open("user://archive/")
 	if !dir:
 		DirAccess.make_dir_absolute("user://archive/")
@@ -18,7 +19,6 @@ func _ready() -> void:
 		if !dir.current_is_dir():
 			document_list[file_name] = "user://archive/" + file_name
 		file_name = dir.get_next()
-	
 
 	for iter:String in document_list:
 		var button = Button.new()
@@ -36,10 +36,16 @@ func _ready() -> void:
 		button.add_theme_font_override("font", preload("res://assets/fonts/FangZhengShuSongJianTi-1.ttf"))
 		button.connect("button_up", button_pressed.bind(iter))
 		$texture_rect/v_box_container.add_child(button)
-	
+	$texture_rect/button_close.connect("button_up", close)
+
 func button_pressed(key:String) -> void:
 	var filename_splited = key.split(".")	# 模板.名称.json
 	var new_document:Document = load(template_list[filename_splited[0]]).instantiate()
 	var data:String = FileAccess.get_file_as_string(document_list[key])
 	new_document.parse(data)
 	$texture_rect/document_browser.set_document(new_document)
+	$texture_rect/document_browser.visible = true
+
+func close() -> void:
+	$texture_rect/document_browser.visible = false
+	hide()
