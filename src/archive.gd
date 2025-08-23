@@ -6,8 +6,15 @@ var template_list:Dictionary = {
 }
 
 var document_list:Dictionary = {}
+var button_list:Array[Button] = []
 
-func _ready() -> void:
+func open() -> void:
+	for iter:Button in button_list:
+		iter.queue_free()
+	button_list.clear()
+	document_list.clear()
+
+	visible = true
 	$texture_rect/document_browser.visible = false
 	var dir:DirAccess = DirAccess.open("user://archive/")
 	if !dir:
@@ -19,6 +26,7 @@ func _ready() -> void:
 		if !dir.current_is_dir():
 			document_list[file_name] = "user://archive/" + file_name
 		file_name = dir.get_next()
+	
 
 	for iter:String in document_list:
 		var button = Button.new()
@@ -36,6 +44,7 @@ func _ready() -> void:
 		button.add_theme_font_override("font", preload("res://assets/fonts/FangZhengShuSongJianTi-1.ttf"))
 		button.connect("button_up", button_pressed.bind(iter))
 		$texture_rect/v_box_container.add_child(button)
+		button_list.push_back(button)
 	$texture_rect/button_close.connect("button_up", close)
 
 func button_pressed(key:String) -> void:
@@ -48,4 +57,4 @@ func button_pressed(key:String) -> void:
 
 func close() -> void:
 	$texture_rect/document_browser.visible = false
-	hide()
+	visible = false

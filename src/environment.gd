@@ -19,7 +19,7 @@ func _ready() -> void:
 	$clock.connect("timeout", timeout)
 	$telephone.connect("call_number", dialog_telephone)
 	$interact/area_pastor.connect("clicked", select_dialog)
-	$interact/area_archive.connect("clicked", $archive.show)
+	$interact/area_archive.connect("clicked", $archive.open)
 
 func select_dialog() -> void:
 	if has_method("dialog_" + pastor_state):
