@@ -9,4 +9,3 @@ metadata/_custom_type_script = "uid://yldiqj24uchh"
 
 [node name="sprite_2d" type="Sprite2D" parent="."]
 texture = ExtResource("2_8hxod")
-centered = false

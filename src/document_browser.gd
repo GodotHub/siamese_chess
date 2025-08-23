@@ -17,7 +17,7 @@ func _unhandled_input(event:InputEvent) -> void:
 		change_offset(event.relative)
 		get_viewport().set_input_as_handled()
 	if event is InputEventScreenPinch:
-		change_zoom(event.relative / 100)
+		change_zoom(event.relative / 500)
 		get_viewport().set_input_as_handled()
 	var actual_position:Vector2
 	if event is InputEventMouseButton || event is InputEventMouseMotion || event is InputEventSingleScreenTouch || event is InputEventSingleScreenDrag || event is InputEventMultiScreenDrag || event is InputEventScreenPinch:
@@ -49,8 +49,9 @@ func set_document(_document) -> void:
 	document = _document
 	zoom = 1
 	pivot = Vector2(0, 0)
-	offset = Vector2(0, 0)
+	offset = $sub_viewport_container/sub_viewport.size / 2
 	$sub_viewport_container/sub_viewport.add_child(document)
+	document.position = $sub_viewport_container/sub_viewport.size / 2
 
 func update_transform() -> void:
 	if !is_instance_valid(document):
