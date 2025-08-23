@@ -5,6 +5,7 @@ var document:Document = null
 var zoom:float = 1
 var pivot:Vector2 = Vector2()
 var offset:Vector2 = Vector2()
+var use_eraser:bool = false
 
 func _ready() -> void:
 	pass
@@ -18,6 +19,29 @@ func _unhandled_input(event:InputEvent) -> void:
 	if event is InputEventScreenPinch:
 		change_zoom(event.relative / 100)
 		get_viewport().set_input_as_handled()
+	var actual_position:Vector2
+	if event is InputEventMouseButton || event is InputEventMouseMotion || event is InputEventSingleScreenTouch || event is InputEventSingleScreenDrag || event is InputEventMultiScreenDrag || event is InputEventScreenPinch:
+		actual_position = event.position - $sub_viewport_container.global_position - document.get_global_position()
+		actual_position /= zoom
+	if event is InputEventMouseButton:
+		if !use_eraser:
+			if event.pressed && event.button_index == MOUSE_BUTTON_LEFT:
+				document.start_drawing(actual_position)
+			else:
+				document.end_drawing()
+		get_viewport().set_input_as_handled()
+	elif event is InputEventMouseMotion:
+		if event.button_mask & MOUSE_BUTTON_MASK_LEFT:
+			if use_eraser || event.pen_inverted:
+				document.cancel_drawing()
+				document.erase_line(actual_position)
+			else:
+				document.drawing_curve(actual_position)
+		elif event.button_mask & MOUSE_BUTTON_MASK_RIGHT:
+			document.cancel_drawing()
+			document.erase_line(actual_position)
+		get_viewport().set_input_as_handled()
+
 
 func set_document(_document) -> void:
 	if is_instance_valid(document):
