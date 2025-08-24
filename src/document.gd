@@ -14,10 +14,13 @@ func _ready() -> void:
 	pass
 
 func parse(_data:String) -> void:
-	pass
+	var data_dict:Dictionary = JSON.parse_string(_data)
+	draw_lines(data_dict["lines"])
 
 func stringify() -> String:
-	return ""
+	var data_dict:Dictionary = {}
+	data_dict["lines"] = get_lines()
+	return JSON.stringify(data_dict)
 
 func save_file() -> void:
 	var data:String = stringify()

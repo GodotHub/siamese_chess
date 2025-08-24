@@ -258,5 +258,5 @@ func check_menu() -> void:	# 玩家初次遇到时归档
 	if !FileAccess.file_exists("user://archive/menu.cafe.json"):
 		var path:String = "user://archive/menu.cafe.json"
 		var file:FileAccess = FileAccess.open(path, FileAccess.WRITE)
-		file.store_string("{}")
+		file.store_string("{\"lines\": []}")
 		file.close()
