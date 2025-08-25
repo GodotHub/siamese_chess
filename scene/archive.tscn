@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://64c61l6gwxim" path="res://src/archive.gd" id="1_550ee"]
 [ext_resource type="PackedScene" uid="uid://bsobwdwnm840s" path="res://scene/document_browser.tscn" id="1_jqjfb"]
-[ext_resource type="FontFile" uid="uid://cmbwnmrpuigxx" path="res://assets/fonts/FangZhengShuSongJianTi-1.ttf" id="3_w5kv4"]
+[ext_resource type="FontFile" uid="uid://bq5ty1txvcybm" path="res://assets/fonts/Font Awesome 7 Free-Regular-400.otf" id="3_w5kv4"]
 
 [sub_resource type="Gradient" id="Gradient_j3y3i"]
 offsets = PackedFloat32Array(0)
@@ -32,19 +32,22 @@ texture = SubResource("GradientTexture1D_550ee")
 expand_mode = 1
 stretch_mode = 1
 
-[node name="v_box_container" type="VBoxContainer" parent="texture_rect"]
+[node name="scroll_container" type="ScrollContainer" parent="texture_rect"]
 layout_mode = 1
 anchors_preset = -1
-anchor_left = 0.03
-anchor_top = 0.205
-anchor_right = 0.312
-anchor_bottom = 1.0
-offset_left = -0.560001
-offset_top = 0.159988
-offset_right = -0.424011
-grow_horizontal = 2
-grow_vertical = 2
-alignment = 1
+anchor_left = 0.012
+anchor_top = 0.145
+anchor_right = 0.359
+anchor_bottom = 0.833
+offset_left = 0.176
+offset_top = 0.0399933
+offset_right = -0.568024
+offset_bottom = 0.215942
+
+[node name="v_box_container" type="VBoxContainer" parent="texture_rect/scroll_container"]
+layout_mode = 2
+size_flags_horizontal = 2
+size_flags_vertical = 6
 
 [node name="document_browser" parent="texture_rect" instance=ExtResource("1_jqjfb")]
 layout_mode = 1
@@ -54,14 +57,14 @@ mouse_filter = 1
 [node name="button_close" type="Button" parent="texture_rect"]
 layout_mode = 1
 anchors_preset = -1
-anchor_left = 0.03
-anchor_top = 0.065
-anchor_right = 0.312
-anchor_bottom = 0.176
-offset_left = -0.560001
-offset_top = -0.120003
-offset_right = -0.424011
-offset_bottom = -0.0480118
+anchor_left = 0.013
+anchor_top = 0.029
+anchor_right = 0.076
+anchor_bottom = 0.14
+offset_left = 0.0240002
+offset_top = 0.208
+offset_right = 0.447998
+offset_bottom = 0.279999
 theme_override_colors/icon_hover_color = Color(1, 1, 1, 1)
 theme_override_colors/icon_pressed_color = Color(0.6, 0.6, 0.6, 1)
 theme_override_colors/font_color = Color(0.901961, 0.901961, 0.901961, 1)
@@ -72,4 +75,50 @@ theme_override_styles/focus = SubResource("StyleBoxEmpty_w5kv4")
 theme_override_styles/hover = SubResource("StyleBoxEmpty_x4nah")
 theme_override_styles/pressed = SubResource("StyleBoxEmpty_buvmo")
 theme_override_styles/normal = SubResource("StyleBoxEmpty_uibjj")
-text = "关闭"
+text = ""
+
+[node name="button_delete" type="Button" parent="texture_rect"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.223
+anchor_top = 0.029
+anchor_right = 0.286
+anchor_bottom = 0.14
+offset_left = 0.104004
+offset_top = 0.208
+offset_right = 0.527985
+offset_bottom = 0.279999
+theme_override_colors/icon_hover_color = Color(1, 1, 1, 1)
+theme_override_colors/icon_pressed_color = Color(0.6, 0.6, 0.6, 1)
+theme_override_colors/font_color = Color(0.901961, 0.901961, 0.901961, 1)
+theme_override_colors/font_focus_color = Color(1, 1, 1, 1)
+theme_override_fonts/font = ExtResource("3_w5kv4")
+theme_override_font_sizes/font_size = 30
+theme_override_styles/focus = SubResource("StyleBoxEmpty_w5kv4")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_x4nah")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_buvmo")
+theme_override_styles/normal = SubResource("StyleBoxEmpty_uibjj")
+text = ""
+
+[node name="button_add" type="Button" parent="texture_rect"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.293
+anchor_top = 0.029
+anchor_right = 0.356
+anchor_bottom = 0.14
+offset_left = -0.536011
+offset_top = 0.208
+offset_right = -0.112
+offset_bottom = 0.279999
+theme_override_colors/icon_hover_color = Color(1, 1, 1, 1)
+theme_override_colors/icon_pressed_color = Color(0.6, 0.6, 0.6, 1)
+theme_override_colors/font_color = Color(0.901961, 0.901961, 0.901961, 1)
+theme_override_colors/font_focus_color = Color(1, 1, 1, 1)
+theme_override_fonts/font = ExtResource("3_w5kv4")
+theme_override_font_sizes/font_size = 30
+theme_override_styles/focus = SubResource("StyleBoxEmpty_w5kv4")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_x4nah")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_buvmo")
+theme_override_styles/normal = SubResource("StyleBoxEmpty_uibjj")
+text = ""

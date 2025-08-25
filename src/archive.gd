@@ -32,6 +32,7 @@ func open() -> void:
 		var button = Button.new()
 		button.text = iter
 		button.flat = true
+		button.alignment = HORIZONTAL_ALIGNMENT_LEFT
 		button.add_theme_color_override("font_color", Color(0.9, 0.9, 0.9, 1))
 		button.add_theme_color_override("font_focus_color", Color(1, 1, 1, 1))
 		button.add_theme_color_override("font_hover_color", Color(1, 1, 1, 1))
@@ -43,7 +44,7 @@ func open() -> void:
 		button.add_theme_stylebox_override("pressed", StyleBoxEmpty.new())
 		button.add_theme_font_override("font", preload("res://assets/fonts/FangZhengShuSongJianTi-1.ttf"))
 		button.connect("button_up", button_pressed.bind(iter))
-		$texture_rect/v_box_container.add_child(button)
+		$texture_rect/scroll_container/v_box_container.add_child(button)
 		button_list.push_back(button)
 	$texture_rect/button_close.connect("button_up", close)
 
