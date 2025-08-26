@@ -215,6 +215,7 @@ func game_with_pastor() -> void:
 		ai.stop_search()
 		if ai.is_searching():
 			await ai.search_finished
+	game_end(RuleStandard.get_end_type(state))
 
 func game_with_friend() -> void:
 	while RuleStandard.get_end_type(state) == "":
