@@ -16,7 +16,7 @@ var telephone_2025_first_time:bool = false
 func _ready() -> void:
 	$history.set_document(history_chart)
 	$cheshire.set_initial_interact($interact/area_passthrough)
-	$clock.connect("timeout", timeout)
+	$clock_pastor.connect("timeout", timeout)
 	$telephone.connect("call_number", dialog_telephone)
 	$interact/area_pastor.connect("clicked", select_dialog)
 	$interact/area_archive.connect("clicked", $archive.open)
@@ -112,9 +112,9 @@ func dialog_in_game() -> void:
 		state = history.back().duplicate()
 	elif $dialog.selected == 1:
 		ai.stop_search()
-		$clock.stop()
-		$chessboard.set_valid_move([])
-		$chessboard.set_valid_premove([])
+		$clock_pastor.stop()
+		$chessboard_pastor.set_valid_move([])
+		$chessboard_pastor.set_valid_premove([])
 		pastor_state = "idle"
 		history_chart.save_file()
 	elif $dialog.selected == 2:
@@ -126,17 +126,17 @@ func dialog_start_game() -> void:
 		await $dialog.on_next
 		if $dialog.selected in [0, 1, 2]:
 			state = RuleStandard.parse("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
-			$chessboard.set_state(state)
+			$chessboard_pastor.set_state(state)
 			history_chart.set_state(state)
 			history_chart.set_filename("history." + String.num_int64(Time.get_unix_time_from_system()) + ".json")
 			if $dialog.selected == 0:
-				$clock.set_time(1800, 1, 0)
+				$clock_pastor.set_time(1800, 1, 0)
 				think_time = 5
 			elif $dialog.selected == 1:
-				$clock.set_time(600, 1, 5)
+				$clock_pastor.set_time(600, 1, 5)
 				think_time = 3
 			elif $dialog.selected == 2:
-				$clock.set_time(300, 1, 3)
+				$clock_pastor.set_time(300, 1, 3)
 				think_time = 2
 			$dialog.push_dialog("现在棋盘已经准备好了。", true, true)
 			$cheshire.force_set_camera($camera/camera_chessboard)
@@ -144,17 +144,17 @@ func dialog_start_game() -> void:
 			$dialog.push_dialog("您是黑方后手开局，时间有限，请注意合理分配。", true, true)
 			$cheshire.force_set_camera($camera/camera_pastor_closeup)
 			await $dialog.on_next
-			$clock.start()
+			$clock_pastor.start()
 			$cheshire.add_stack($interact/area_chessboard)
-			pastor_state = "in_game"
-			call_deferred("in_game")
+			pastor_state = "game_with_pastor"
+			call_deferred("game_with_pastor")
 			break
 		elif $dialog.selected == 3:
 			state = RuleStandard.parse("8/8/2rbqk2/2pppn2/2NPPP2/2KQBR2/8/8 w - - 0 1")
-			$chessboard.set_state(state)
+			$chessboard_pastor.set_state(state)
 			history_chart.set_state(state)
 			history_chart.set_filename("history." + String.num_int64(Time.get_unix_time_from_system()) + ".json")
-			$clock.set_time(30, 1, 0)
+			$clock_pastor.set_time(30, 1, 0)
 			think_time = 1
 			$dialog.push_dialog("现在棋盘已经准备好了。", true, true)
 			$cheshire.force_set_camera($camera/camera_chessboard)
@@ -162,10 +162,10 @@ func dialog_start_game() -> void:
 			$dialog.push_dialog("该对局为特殊布局，时间上较为紧张，注意速战速决。", true, true)
 			$cheshire.force_set_camera($camera/camera_pastor_closeup)
 			await $dialog.on_next
-			$clock.start()
+			$clock_pastor.start()
 			$cheshire.add_stack($interact/area_chessboard)
-			pastor_state = "in_game"
-			call_deferred("in_game")
+			pastor_state = "game_with_pastor"
+			call_deferred("game_with_pastor")
 			break
 		elif $dialog.selected == 4:
 			var text_input_instance:TextInput = TextInput.create_text_input_instance("输入FEN格式的布局：", "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
@@ -174,7 +174,7 @@ func dialog_start_game() -> void:
 			state = RuleStandard.parse(text_input_instance.text)
 			if is_instance_valid(state):
 				think_time = 5
-				$chessboard.set_state(state)
+				$chessboard_pastor.set_state(state)
 				history_chart.set_state(state)
 				history_chart.set_filename("history." + String.num_int64(Time.get_unix_time_from_system()) + ".json")
 				$dialog.push_dialog("现在棋盘已经准备好了。", true, true)
@@ -183,35 +183,60 @@ func dialog_start_game() -> void:
 				$dialog.push_dialog("根据棋局信息，" + ("目前是白方先手。" if state.get_turn() == 0 else "目前是黑方先手。"), true, true)
 				$cheshire.force_set_camera($camera/camera_pastor_closeup)
 				await $dialog.on_next
-				pastor_state = "in_game"
+				pastor_state = "game_with_pastor"
 				$cheshire.add_stack($interact/area_chessboard)
-				call_deferred("in_game")
+				call_deferred("game_with_pastor")
 				break
 		$dialog.push_dialog("您输入的格式有误，请重新检查。", true, true)
 		$cheshire.force_set_camera($camera/camera_chessboard)
 		await $dialog.on_next
 
-func in_game() -> void:
+func game_with_pastor() -> void:
 	while RuleStandard.get_end_type(state) == "":
-		$chessboard.set_valid_move([])
-		$chessboard.set_valid_premove(RuleStandard.generate_premove(state, 1))
-		ai.start_search(state, 0, $clock.time_1, Callable())
+		$chessboard_pastor.set_valid_move([])
+		$chessboard_pastor.set_valid_premove(RuleStandard.generate_premove(state, 1))
+		ai.start_search(state, 0, $clock_pastor.time_1, Callable())
 		if ai.is_searching():
 			await ai.search_finished
 		var move:int = ai.get_search_result()
 		RuleStandard.apply_move(state, move)
-		$chessboard.execute_move(move)
+		$chessboard_pastor.execute_move(move)
 		history_chart.push_move(move)
 		if RuleStandard.get_end_type(state) != "":
 			break
-		$chessboard.set_valid_move(RuleStandard.generate_valid_move(state, 1))
-		$chessboard.set_valid_premove([])
-		$clock.next()
+		$chessboard_pastor.set_valid_move(RuleStandard.generate_valid_move(state, 1))
+		$chessboard_pastor.set_valid_premove([])
+		$clock_pastor.next()
 		ai.start_search(state, 1, INF, Callable())
-		await $chessboard.move_played
-		RuleStandard.apply_move(state, $chessboard.confirm_move)
-		history_chart.push_move($chessboard.confirm_move)
-		$clock.next()
+		await $chessboard_pastor.move_played
+		RuleStandard.apply_move(state, $chessboard_pastor.confirm_move)
+		history_chart.push_move($chessboard_pastor.confirm_move)
+		$clock_pastor.next()
+		ai.stop_search()
+		if ai.is_searching():
+			await ai.search_finished
+
+func game_with_friend() -> void:
+	while RuleStandard.get_end_type(state) == "":
+		$chessboard_pastor.set_valid_move([])
+		$chessboard_pastor.set_valid_premove(RuleStandard.generate_premove(state, 1))
+		ai.start_search(state, 0, $clock_pastor.time_1, Callable())
+		if ai.is_searching():
+			await ai.search_finished
+		var move:int = ai.get_search_result()
+		RuleStandard.apply_move(state, move)
+		$chessboard_pastor.execute_move(move)
+		history_chart.push_move(move)
+		if RuleStandard.get_end_type(state) != "":
+			break
+		$chessboard_pastor.set_valid_move(RuleStandard.generate_valid_move(state, 1))
+		$chessboard_pastor.set_valid_premove([])
+		$clock_pastor.next()
+		ai.start_search(state, 1, INF, Callable())
+		await $chessboard_pastor.move_played
+		RuleStandard.apply_move(state, $chessboard_pastor.confirm_move)
+		history_chart.push_move($chessboard_pastor.confirm_move)
+		$clock_pastor.next()
 		ai.stop_search()
 		if ai.is_searching():
 			await ai.search_finished
@@ -228,7 +253,7 @@ func timeout(group:int) -> void:
 
 
 func game_end(end_type:String) -> void:	# 0:长将和 1:白方逼和 2:黑方逼和 3:50步和 4:子力不足
-	$clock.stop()
+	$clock_pastor.stop()
 	match end_type:
 		"treefold_repetition":
 			$dialog.push_dialog("长将和棋", true, true)

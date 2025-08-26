@@ -469,7 +469,7 @@ environment = SubResource("Environment_7r8ay")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.83693, 1.14653, 0.146468)
 collision_mask = 0
 script = ExtResource("7_hgmdq")
-next_interact = [NodePath("../area_history"), NodePath("../area_chessboard"), NodePath("../area_timer"), NodePath("../area_outside_windows"), NodePath("../area_passthrough"), NodePath("../area_pastor"), NodePath("../area_menu")]
+next_interact = [NodePath("../area_history"), NodePath("../area_pastor_chessboard"), NodePath("../area_pastor_clock"), NodePath("../area_outside_windows"), NodePath("../area_passthrough"), NodePath("../area_pastor"), NodePath("../area_menu")]
 camera = NodePath("../../camera/camera_on_seat")
 metadata/_custom_type_script = "uid://dg85frcnjlauy"
 
@@ -483,7 +483,7 @@ collision_mask = 0
 monitoring = false
 monitorable = false
 script = ExtResource("7_hgmdq")
-next_interact = [NodePath("../area_chessboard")]
+next_interact = [NodePath("../area_pastor_chessboard")]
 camera = NodePath("../../camera/camera_history")
 inspectable_item = [NodePath("../../history")]
 metadata/_custom_type_script = "uid://dg85frcnjlauy"
@@ -494,36 +494,36 @@ metadata/inspectable_item = NodePath("")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0701367, 0.00320435, 0.0138262)
 shape = SubResource("BoxShape3D_po4na")
 
-[node name="area_chessboard" type="Area3D" parent="interact" index="2" node_paths=PackedStringArray("next_interact", "camera", "inspectable_item")]
+[node name="area_pastor_chessboard" type="Area3D" parent="interact" index="2" node_paths=PackedStringArray("next_interact", "camera", "inspectable_item")]
 transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, -2.35606, 0.879749, -0.0578692)
 collision_mask = 0
 monitoring = false
 monitorable = false
 script = ExtResource("7_hgmdq")
-next_interact = [NodePath("../area_draft"), NodePath("../area_timer"), NodePath("../area_history"), NodePath("../area_pastor")]
-camera = NodePath("../../camera/camera_chessboard")
-inspectable_item = [NodePath("../../chessboard")]
+next_interact = [NodePath("../area_draft"), NodePath("../area_pastor_clock"), NodePath("../area_history"), NodePath("../area_pastor")]
+camera = NodePath("../../camera/camera_pastor_chessboard")
+inspectable_item = [NodePath("../../chessboard_pastor")]
 metadata/_custom_type_script = "uid://dg85frcnjlauy"
-metadata/camera = NodePath("../../camera/camera_chessboard")
-metadata/inspectable_item = NodePath("../../chessboard")
+metadata/camera = NodePath("../../camera/camera_pastor_chessboard")
+metadata/inspectable_item = NodePath("../../chessboard_pastor")
 
-[node name="collision_shape_3d" type="CollisionShape3D" parent="interact/area_chessboard" index="0"]
+[node name="collision_shape_3d" type="CollisionShape3D" parent="interact/area_pastor_chessboard" index="0"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.0129776, 0)
 shape = SubResource("BoxShape3D_uwfkk")
 
-[node name="area_timer" type="Area3D" parent="interact" index="3" node_paths=PackedStringArray("next_interact", "camera")]
+[node name="area_pastor_clock" type="Area3D" parent="interact" index="3" node_paths=PackedStringArray("next_interact", "camera")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.34534, 0.857563, -0.472184)
 collision_mask = 0
 monitoring = false
 monitorable = false
 script = ExtResource("7_hgmdq")
-next_interact = [NodePath("../area_chessboard"), NodePath("../area_menu")]
-camera = NodePath("../../camera/camera_timer")
+next_interact = [NodePath("../area_pastor_chessboard"), NodePath("../area_menu")]
+camera = NodePath("../../camera/camera_pastor_clock")
 metadata/_custom_type_script = "uid://dg85frcnjlauy"
-metadata/camera = NodePath("../../camera/camera_timer")
-metadata/inspectable_item = NodePath("../../clock")
+metadata/camera = NodePath("../../camera/camera_pastor_clock")
+metadata/inspectable_item = NodePath("../../clock_pastor")
 
-[node name="collision_shape_3d" type="CollisionShape3D" parent="interact/area_timer" index="0"]
+[node name="collision_shape_3d" type="CollisionShape3D" parent="interact/area_pastor_clock" index="0"]
 transform = Transform3D(0.999994, 0, -1.93715e-07, 0, 1, 0, 1.93715e-07, 0, 0.999994, -0.00310197, 0.0377367, 0.0123141)
 shape = SubResource("BoxShape3D_tnamw")
 
@@ -715,10 +715,10 @@ shape = SubResource("BoxShape3D_oo81l")
 [node name="camera_history" type="Camera3D" parent="camera" index="0"]
 transform = Transform3D(0.0614669, 0.964099, -0.25833, -4.2222e-08, 0.258819, 0.965926, 0.998109, -0.0593725, 0.0159089, -2.848, 1.161, -0.455)
 
-[node name="camera_chessboard" type="Camera3D" parent="camera" index="1"]
+[node name="camera_pastor_chessboard" type="Camera3D" parent="camera" index="1"]
 transform = Transform3D(-4.37114e-08, 0.766044, -0.642788, 0, 0.642788, 0.766044, 1, 3.34849e-08, -2.80971e-08, -2.739, 1.289, -0.058)
 
-[node name="camera_timer" type="Camera3D" parent="camera" index="2"]
+[node name="camera_pastor_clock" type="Camera3D" parent="camera" index="2"]
 transform = Transform3D(0.772206, 0.26647, -0.576794, 0.165508, 0.792103, 0.58752, 0.613437, -0.549151, 0.567564, -2.57324, 1.13715, -0.226354)
 fov = 55.9
 
@@ -781,10 +781,10 @@ transform = Transform3D(0.453923, -0.441772, 0.773816, -0.105822, 0.835567, 0.53
 [node name="radio" parent="." index="22" instance=ExtResource("7_geasp")]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 2.57244, 1.28184, 5.44932)
 
-[node name="clock" parent="." index="23" instance=ExtResource("3_po4na")]
+[node name="clock_pastor" parent="." index="23" instance=ExtResource("3_po4na")]
 transform = Transform3D(1, 0, -1.06581e-14, 0, 1, 0, 1.06581e-14, 0, 1, -2.35362, 0.857578, -0.481859)
 
-[node name="chessboard" parent="." index="24" instance=ExtResource("2_3p4nk")]
+[node name="chessboard_pastor" parent="." index="24" instance=ExtResource("2_3p4nk")]
 transform = Transform3D(5.5732e-08, 0, 0.425, 0, 0.425, 0, -0.425, 0, 5.5732e-08, -2.35606, 0.866345, -0.0600458)
 
 [node name="history" parent="." index="25" instance=ExtResource("10_r58fw")]
@@ -1287,6 +1287,12 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.4796, 0, 1.66837)
 
 [node name="coffee_machine" parent="." index="56" instance=ExtResource("42_r58fw")]
 transform = Transform3D(1.31134e-07, 0, 1, 0, 1, 0, -1, 0, 1.31134e-07, 2.59183, 1.28231, 3.95914)
+
+[node name="chessboard_friend" parent="." index="57" instance=ExtResource("2_3p4nk")]
+transform = Transform3D(5.5732e-08, 0, 0.425, 0, 0.425, 0, -0.425, 0, 5.5732e-08, -5.27578, 0.862027, 0.253498)
+
+[node name="clock_friend" parent="." index="58" instance=ExtResource("3_po4na")]
+transform = Transform3D(1, 0, -1.06581e-14, 0, 1, 0, 1.06581e-14, 0, 1, -5.24966, 0.849788, -0.0957035)
 
 [editable path="cup_pastor"]
 [editable path="cup_cheshire"]
