@@ -3,20 +3,31 @@ extends CanvasLayer
 var template_list:Dictionary = {
 	"menu": "res://scene/menu.tscn",
 	"history": "res://scene/history.tscn",
+	"draft": "res://scene/draft.tscn"
 }
 
 var document:Document = null
-var document_list:Array = []
+var document_list:PackedStringArray = []
 var button_list:Array[Button] = []
 
+func _ready() -> void:
+	$texture_rect/button_close.connect("button_up", close)
+	$texture_rect/h_box_container/button_rename.connect("button_up", rename_pressed)
+	$texture_rect/h_box_container/button_add_empty.connect("button_up", add_empty_pressed)
+	$texture_rect/h_box_container/button_duplicate.connect("button_up", duplicate_pressed)
+	$texture_rect/h_box_container/button_delete.connect("button_up", delete_pressed)
+
 func open() -> void:
+	visible = true
+	update_list()
+
+func update_list() -> void:
 	for iter:Button in button_list:
 		iter.queue_free()
 	button_list.clear()
 	document_list.clear()
-
-	visible = true
-	$texture_rect/document_browser.visible = false
+	if !is_instance_valid(document):
+		$texture_rect/document_browser.visible = false
 	var dir:DirAccess = DirAccess.open("user://archive/")
 	if !dir:
 		DirAccess.make_dir_absolute("user://archive/")
@@ -46,13 +57,12 @@ func open() -> void:
 		button.connect("button_up", button_pressed.bind(iter))
 		$texture_rect/scroll_container/v_box_container.add_child(button)
 		button_list.push_back(button)
-	$texture_rect/button_close.connect("button_up", close)
-
+	
 func button_pressed(filename:String) -> void:
 	if is_instance_valid(document):
 		document.save_file()
 	
-	var filename_splited = filename.split(".")	# 模板.名称.json
+	var filename_splited:PackedStringArray = filename.split(".")	# 模板.名称.json
 	document = load(template_list[filename_splited[0]]).instantiate()
 	document.set_filename(filename)
 	document.load_file()
@@ -62,3 +72,38 @@ func button_pressed(filename:String) -> void:
 func close() -> void:
 	$texture_rect/document_browser.visible = false
 	visible = false
+
+func rename_pressed() -> void:
+	if !is_instance_valid(document):
+		return
+	var filename_splited:PackedStringArray = document.get_filename().split(".")
+	var text_input_instance:TextInput = TextInput.create_text_input_instance("重命名：", filename_splited[1])
+	add_child(text_input_instance)
+	await text_input_instance.confirmed
+	filename_splited[1] = text_input_instance.text
+	document.clear_file()
+	document.set_filename(".".join(filename_splited))
+	document.save_file()
+	update_list()
+
+func duplicate_pressed() -> void:
+	if !is_instance_valid(document):
+		return
+	var filename_splited:PackedStringArray = document.get_filename().split(".")
+	filename_splited[1] += "-dup"
+	document.set_filename(".".join(filename_splited))
+	document.save_file()
+	update_list()
+
+func delete_pressed() -> void:
+	if !is_instance_valid(document):
+		return
+	document.clear_file()
+	document.queue_free()
+	update_list()
+
+func add_empty_pressed() -> void:
+	document = Document.new()
+	document.set_filename("draft.%d.json" % Time.get_unix_time_from_system())
+	document.save_file()
+	update_list()

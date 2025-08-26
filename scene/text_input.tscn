@@ -18,6 +18,7 @@ gradient = SubResource("Gradient_j3y3i")
 font_size = 26
 
 [node name="text_input" type="CanvasLayer"]
+layer = 2
 script = ExtResource("1_nu684")
 
 [node name="texture_rect" type="TextureRect" parent="."]
