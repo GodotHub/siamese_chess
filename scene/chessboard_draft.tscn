@@ -1,6 +1,6 @@
 [gd_scene load_steps=6 format=3 uid="uid://de73qrhtkiaka"]
 
-[ext_resource type="Script" uid="uid://chan7t6vhukc6" path="res://src/draft.gd" id="1_8dpj7"]
+[ext_resource type="Script" uid="uid://chan7t6vhukc6" path="res://src/chessboard_draft.gd" id="1_8dpj7"]
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_8dpj7"]
 size = Vector2(0.5, 0.5)
