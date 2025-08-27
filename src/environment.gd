@@ -2,17 +2,18 @@ extends Node3D
 
 var pastor_game_state:State = null
 var friend_game_state:State = null
-var history:Array[State] = []
+var pastor_history:Array[State] = []
 var opening_book:OpeningBook = OpeningBook.new()
 var ai: PastorAI = PastorAI.new()
-@onready var history_chart:Document = load("res://scene/history.tscn").instantiate()
+@onready var pastor_history_chart:Document = load("res://scene/history.tscn").instantiate()
 
 var pastor_state:String = "idle"
+var friend_state:String = "idle"
 
 var telephone_2025_first_time:bool = false
 
 func _ready() -> void:
-	$history.set_document(history_chart)
+	$history.set_document(pastor_history_chart)
 	$cheshire.set_initial_interact($interact/area_passthrough)
 	$clock_pastor.connect("timeout", pastor_game_timeout)
 	$telephone.connect("call_number", dialog_telephone)
@@ -101,33 +102,33 @@ func dialog_pastor_in_game() -> void:
 	await $dialog.on_next
 	$cheshire.add_stack($interact/area_pastor_chessboard)
 	if $dialog.selected == 0:
-		if history.size() <= 2:	# 白方第一步棋无法撤回
+		if pastor_history.size() <= 2:	# 白方第一步棋无法撤回
 			return
-		if history.back().get_turn() == 1:
-			history.pop_back()
-		if history.back().get_turn() == 0:
-			history.pop_back()
+		if pastor_history.back().get_turn() == 1:
+			pastor_history.pop_back()
+		if pastor_history.back().get_turn() == 0:
+			pastor_history.pop_back()
 			ai.stop_search()
-		pastor_game_state = history.back().duplicate()
+		pastor_game_state = pastor_history.back().duplicate()
 	elif $dialog.selected == 1:
 		ai.stop_search()
 		$clock_pastor.stop()
 		$chessboard_friend.set_valid_move([])
 		$chessboard_friend.set_valid_premove([])
 		pastor_state = "idle"
-		history_chart.save_file()
+		pastor_history_chart.save_file()
 	elif $dialog.selected == 2:
 		return
 
 func dialog_pastor_game_start() -> void:
 	while true:
-		$dialog.push_selection(["标准棋局（30+0）", "快棋（10+5）", "超快棋（5+3）", "子弹棋（小规模布局，1/2+0）", "导入棋局"])
+		$dialog.push_selection(["标准棋局（30+0）", "快棋（10+5）", "超快棋（5+3）", "子弹棋（小规模布局，1/2+0）", "导入棋局", "取消"])
 		await $dialog.on_next
 		if $dialog.selected in [0, 1, 2]:
 			pastor_game_state = RuleStandard.parse("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
 			$chessboard_pastor.set_state(pastor_game_state)
-			history_chart.set_state(pastor_game_state)
-			history_chart.set_filename("history." + String.num_int64(Time.get_unix_time_from_system()) + ".json")
+			pastor_history_chart.set_state(pastor_game_state)
+			pastor_history_chart.set_filename("history." + String.num_int64(Time.get_unix_time_from_system()) + ".json")
 			if $dialog.selected == 0:
 				$clock_pastor.set_time(1800, 1, 0)
 			elif $dialog.selected == 1:
@@ -148,8 +149,8 @@ func dialog_pastor_game_start() -> void:
 		elif $dialog.selected == 3:
 			pastor_game_state = RuleStandard.parse("8/8/2rbqk2/2pppn2/2NPPP2/2KQBR2/8/8 w - - 0 1")
 			$chessboard_pastor.set_state(pastor_game_state)
-			history_chart.set_state(pastor_game_state)
-			history_chart.set_filename("history." + String.num_int64(Time.get_unix_time_from_system()) + ".json")
+			pastor_history_chart.set_state(pastor_game_state)
+			pastor_history_chart.set_filename("history." + String.num_int64(Time.get_unix_time_from_system()) + ".json")
 			$clock_pastor.set_time(30, 1, 0)
 			$dialog.push_dialog("现在棋盘已经准备好了。", true, true)
 			$cheshire.force_set_camera($camera/camera_pastor_chessboard)
@@ -169,8 +170,8 @@ func dialog_pastor_game_start() -> void:
 			pastor_game_state = RuleStandard.parse(text_input_instance.text)
 			if is_instance_valid(pastor_game_state):
 				$chessboard_pastor.set_state(pastor_game_state)
-				history_chart.set_state(pastor_game_state)
-				history_chart.set_filename("history." + String.num_int64(Time.get_unix_time_from_system()) + ".json")
+				pastor_history_chart.set_state(pastor_game_state)
+				pastor_history_chart.set_filename("history." + String.num_int64(Time.get_unix_time_from_system()) + ".json")
 				$dialog.push_dialog("现在棋盘已经准备好了。", true, true)
 				$cheshire.force_set_camera($camera/camera_pastor_chessboard)
 				await $dialog.on_next
@@ -181,6 +182,8 @@ func dialog_pastor_game_start() -> void:
 				$cheshire.add_stack($interact/area_pastor_chessboard)
 				call_deferred("game_with_pastor")
 				break
+		elif $dialog.selected == 5:
+			return
 		$dialog.push_dialog("您输入的格式有误，请重新检查。", true, true)
 		$cheshire.force_set_camera($camera/camera_pastor_chessboard)
 		await $dialog.on_next
@@ -195,7 +198,7 @@ func game_with_pastor() -> void:
 		var move:int = ai.get_search_result()
 		RuleStandard.apply_move(pastor_game_state, move)
 		$chessboard_pastor.execute_move(move)
-		history_chart.push_move(move)
+		pastor_history_chart.push_move(move)
 		if RuleStandard.get_end_type(pastor_game_state) != "":
 			break
 		$chessboard_pastor.set_valid_move(RuleStandard.generate_valid_move(pastor_game_state, 1))
@@ -204,7 +207,7 @@ func game_with_pastor() -> void:
 		ai.start_search(pastor_game_state, 1, INF, Callable())
 		await $chessboard_pastor.move_played
 		RuleStandard.apply_move(pastor_game_state, $chessboard_pastor.confirm_move)
-		history_chart.push_move($chessboard_pastor.confirm_move)
+		pastor_history_chart.push_move($chessboard_pastor.confirm_move)
 		$clock_pastor.next()
 		ai.stop_search()
 		if ai.is_searching():
@@ -218,7 +221,7 @@ func pastor_game_timeout(group:int) -> void:
 	else:
 		$dialog.push_dialog("棋局结束，白方超时", true, true)
 		await $dialog.on_next
-	history_chart.save_file()
+	pastor_history_chart.save_file()
 	pastor_state = "idle"
 
 func pastor_game_end(end_type:String) -> void:	# 0:长将和 1:白方逼和 2:黑方逼和 3:50步和 4:子力不足
@@ -245,7 +248,7 @@ func pastor_game_end(end_type:String) -> void:	# 0:长将和 1:白方逼和 2:�
 		"checkmate_black":
 			$dialog.push_dialog("棋局结束，黑方将杀胜利", true, true)
 			await $dialog.on_next
-	history_chart.save_file()
+	pastor_history_chart.save_file()
 	pastor_state = "idle"
 
 func check_menu() -> void:	# 玩家初次遇到时归档
@@ -256,8 +259,14 @@ func check_menu() -> void:	# 玩家初次遇到时归档
 		file.close()
 
 func dialog_friend_start_game() -> void:
+	if friend_state == "in_game":
+		if friend_game_state.get_turn() == 0:
+			$cheshire.move_camera.call_deferred($camera/camera_friend_chessboard_white)
+		else:
+			$cheshire.move_camera.call_deferred($camera/camera_friend_chessboard_black)
+		return
 	while true:
-		$dialog.push_selection(["标准棋局（30+0）", "快棋（10+5）", "超快棋（5+3）", "导入棋局"])
+		$dialog.push_selection(["标准棋局（30+0）", "快棋（10+5）", "超快棋（5+3）", "导入棋局", "取消"])
 		await $dialog.on_next
 		if $dialog.selected in [0, 1, 2]:
 			friend_game_state = RuleStandard.parse("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
@@ -269,6 +278,7 @@ func dialog_friend_start_game() -> void:
 			elif $dialog.selected == 2:
 				$clock_friend.set_time(300, 1, 3)
 			$clock_friend.start()
+			friend_state = "in_game"
 			call_deferred("game_with_friend")
 			break
 		elif $dialog.selected == 3:
@@ -279,7 +289,10 @@ func dialog_friend_start_game() -> void:
 			if is_instance_valid(friend_game_state):
 				$chessboard_friend.set_state(friend_game_state)
 				call_deferred("game_with_friend")
+				friend_state = "in_game"
 				break
+		elif $dialog.selected == 4:
+			return
 		$dialog.push_dialog("输入的格式有误。", true, true)
 		await $dialog.on_next
 
