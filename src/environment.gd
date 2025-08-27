@@ -3,7 +3,6 @@ extends Node3D
 var pastor_game_state:State = null
 var friend_game_state:State = null
 var history:Array[State] = []
-var pastor_think_time:int = 10
 var opening_book:OpeningBook = OpeningBook.new()
 var ai: PastorAI = PastorAI.new()
 @onready var history_chart:Document = load("res://scene/history.tscn").instantiate()
@@ -131,13 +130,10 @@ func dialog_pastor_game_start() -> void:
 			history_chart.set_filename("history." + String.num_int64(Time.get_unix_time_from_system()) + ".json")
 			if $dialog.selected == 0:
 				$clock_pastor.set_time(1800, 1, 0)
-				pastor_think_time = 5
 			elif $dialog.selected == 1:
 				$clock_pastor.set_time(600, 1, 5)
-				pastor_think_time = 3
 			elif $dialog.selected == 2:
 				$clock_pastor.set_time(300, 1, 3)
-				pastor_think_time = 2
 			$dialog.push_dialog("现在棋盘已经准备好了。", true, true)
 			$cheshire.force_set_camera($camera/camera_pastor_chessboard)
 			await $dialog.on_next
@@ -155,7 +151,6 @@ func dialog_pastor_game_start() -> void:
 			history_chart.set_state(pastor_game_state)
 			history_chart.set_filename("history." + String.num_int64(Time.get_unix_time_from_system()) + ".json")
 			$clock_pastor.set_time(30, 1, 0)
-			pastor_think_time = 1
 			$dialog.push_dialog("现在棋盘已经准备好了。", true, true)
 			$cheshire.force_set_camera($camera/camera_pastor_chessboard)
 			await $dialog.on_next
@@ -173,7 +168,6 @@ func dialog_pastor_game_start() -> void:
 			await text_input_instance.confirmed
 			pastor_game_state = RuleStandard.parse(text_input_instance.text)
 			if is_instance_valid(pastor_game_state):
-				pastor_think_time = 5
 				$chessboard_pastor.set_state(pastor_game_state)
 				history_chart.set_state(pastor_game_state)
 				history_chart.set_filename("history." + String.num_int64(Time.get_unix_time_from_system()) + ".json")
@@ -293,6 +287,7 @@ func game_with_friend() -> void:
 	while RuleStandard.get_end_type(friend_game_state) == "":
 		$chessboard_friend.set_valid_move(RuleStandard.generate_valid_move(friend_game_state, 0))
 		$chessboard_friend.set_valid_premove([])
+		$cheshire.move_camera($camera/camera_friend_chessboard_white)
 		await $chessboard_friend.move_played
 		RuleStandard.apply_move(friend_game_state, $chessboard_friend.confirm_move)
 		$clock_friend.next()
@@ -300,6 +295,7 @@ func game_with_friend() -> void:
 			break
 		$chessboard_friend.set_valid_move(RuleStandard.generate_valid_move(friend_game_state, 1))
 		$chessboard_friend.set_valid_premove([])
+		$cheshire.move_camera($camera/camera_friend_chessboard_black)
 		await $chessboard_friend.move_played
 		RuleStandard.apply_move(friend_game_state, $chessboard_friend.confirm_move)
 		$clock_friend.next()

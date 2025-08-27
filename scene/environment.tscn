@@ -795,6 +795,12 @@ transform = Transform3D(0.453923, -0.441772, 0.773816, -0.105822, 0.835567, 0.53
 [node name="camera_friend_chessboard" type="Camera3D" parent="camera" index="21"]
 transform = Transform3D(1, 0, 0, 0, 0.370006, 0.929029, 0, -0.929029, 0.370006, -5.30046, 1.3661, 0.49747)
 
+[node name="camera_friend_chessboard_white" type="Camera3D" parent="camera" index="22"]
+transform = Transform3D(0.866025, -2.18557e-08, 0.5, -0.5, -3.78552e-08, 0.866025, 0, -1, -4.37114e-08, -4.99111, 1.27877, 0.234195)
+
+[node name="camera_friend_chessboard_black" type="Camera3D" parent="camera" index="23"]
+transform = Transform3D(0.866025, 2.18557e-08, -0.5, 0.5, -3.78552e-08, 0.866025, 0, -1, -4.37114e-08, -5.55713, 1.28452, 0.234195)
+
 [node name="radio" parent="." index="22" instance=ExtResource("7_geasp")]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 2.57244, 1.28184, 5.44932)
 
