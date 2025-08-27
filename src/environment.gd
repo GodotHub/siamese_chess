@@ -1,6 +1,7 @@
 extends Node3D
 
 var pastor_game_state:State = null
+var friend_game_state:State = null
 var history:Array[State] = []
 var pastor_think_time:int = 10
 var opening_book:OpeningBook = OpeningBook.new()
@@ -19,6 +20,7 @@ func _ready() -> void:
 	$interact/area_pastor.connect("clicked", pastor_select_dialog)
 	$interact/area_archive.connect("clicked", $archive.open)
 	$interact/area_menu.connect("clicked", check_menu)
+	$interact/area_friend_chessboard.connect("clicked", dialog_friend_start_game)
 	
 func pastor_select_dialog() -> void:
 	if has_method("dialog_pastor_" + pastor_state):
@@ -111,8 +113,8 @@ func dialog_pastor_in_game() -> void:
 	elif $dialog.selected == 1:
 		ai.stop_search()
 		$clock_pastor.stop()
-		$chessboard_pastor.set_valid_move([])
-		$chessboard_pastor.set_valid_premove([])
+		$chessboard_friend.set_valid_move([])
+		$chessboard_friend.set_valid_premove([])
 		pastor_state = "idle"
 		history_chart.save_file()
 	elif $dialog.selected == 2:
@@ -215,31 +217,6 @@ func game_with_pastor() -> void:
 			await ai.search_finished
 	pastor_game_end(RuleStandard.get_end_type(pastor_game_state))
 
-func game_with_friend() -> void:
-	while RuleStandard.get_end_type(pastor_game_state) == "":
-		$chessboard_pastor.set_valid_move([])
-		$chessboard_pastor.set_valid_premove(RuleStandard.generate_premove(pastor_game_state, 1))
-		ai.start_search(pastor_game_state, 0, $clock_pastor.time_1, Callable())
-		if ai.is_searching():
-			await ai.search_finished
-		var move:int = ai.get_search_result()
-		RuleStandard.apply_move(pastor_game_state, move)
-		$chessboard_pastor.execute_move(move)
-		history_chart.push_move(move)
-		if RuleStandard.get_end_type(pastor_game_state) != "":
-			break
-		$chessboard_pastor.set_valid_move(RuleStandard.generate_valid_move(pastor_game_state, 1))
-		$chessboard_pastor.set_valid_premove([])
-		$clock_pastor.next()
-		ai.start_search(pastor_game_state, 1, INF, Callable())
-		await $chessboard_pastor.move_played
-		RuleStandard.apply_move(pastor_game_state, $chessboard_pastor.confirm_move)
-		history_chart.push_move($chessboard_pastor.confirm_move)
-		$clock_pastor.next()
-		ai.stop_search()
-		if ai.is_searching():
-			await ai.search_finished
-
 func pastor_game_timeout(group:int) -> void:
 	if group == 0:	# 棋钟的阵营1才是Pastor的
 		$dialog.push_dialog("棋局结束，黑方超时", true, true)
@@ -249,7 +226,6 @@ func pastor_game_timeout(group:int) -> void:
 		await $dialog.on_next
 	history_chart.save_file()
 	pastor_state = "idle"
-
 
 func pastor_game_end(end_type:String) -> void:	# 0:长将和 1:白方逼和 2:黑方逼和 3:50步和 4:子力不足
 	$clock_pastor.stop()
@@ -284,3 +260,46 @@ func check_menu() -> void:	# 玩家初次遇到时归档
 		var file:FileAccess = FileAccess.open(path, FileAccess.WRITE)
 		file.store_string("{\"lines\": []}")
 		file.close()
+
+func dialog_friend_start_game() -> void:
+	while true:
+		$dialog.push_selection(["标准棋局（30+0）", "快棋（10+5）", "超快棋（5+3）", "导入棋局"])
+		await $dialog.on_next
+		if $dialog.selected in [0, 1, 2]:
+			friend_game_state = RuleStandard.parse("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
+			$chessboard_friend.set_state(friend_game_state)
+			if $dialog.selected == 0:
+				$clock_friend.set_time(1800, 1, 0)
+			elif $dialog.selected == 1:
+				$clock_friend.set_time(600, 1, 5)
+			elif $dialog.selected == 2:
+				$clock_friend.set_time(300, 1, 3)
+			$clock_friend.start()
+			call_deferred("game_with_friend")
+			break
+		elif $dialog.selected == 3:
+			var text_input_instance:TextInput = TextInput.create_text_input_instance("输入FEN格式的布局：", "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
+			add_child(text_input_instance)
+			await text_input_instance.confirmed
+			friend_game_state = RuleStandard.parse(text_input_instance.text)
+			if is_instance_valid(friend_game_state):
+				$chessboard_friend.set_state(friend_game_state)
+				call_deferred("game_with_friend")
+				break
+		$dialog.push_dialog("输入的格式有误。", true, true)
+		await $dialog.on_next
+
+func game_with_friend() -> void:
+	while RuleStandard.get_end_type(friend_game_state) == "":
+		$chessboard_friend.set_valid_move(RuleStandard.generate_valid_move(friend_game_state, 0))
+		$chessboard_friend.set_valid_premove([])
+		await $chessboard_friend.move_played
+		RuleStandard.apply_move(friend_game_state, $chessboard_friend.confirm_move)
+		$clock_friend.next()
+		if RuleStandard.get_end_type(friend_game_state) != "":
+			break
+		$chessboard_friend.set_valid_move(RuleStandard.generate_valid_move(friend_game_state, 1))
+		$chessboard_friend.set_valid_premove([])
+		await $chessboard_friend.move_played
+		RuleStandard.apply_move(friend_game_state, $chessboard_friend.confirm_move)
+		$clock_friend.next()

@@ -1,4 +1,4 @@
-[gd_scene load_steps=94 format=3 uid="uid://bmyf2h17xaxlj"]
+[gd_scene load_steps=95 format=3 uid="uid://bmyf2h17xaxlj"]
 
 [ext_resource type="PackedScene" uid="uid://gdof8yy8yrjv" path="res://assets/model/environment.glb" id="1_b3374"]
 [ext_resource type="PackedScene" uid="uid://d1s6qj7aofldk" path="res://scene/chessboard.tscn" id="2_3p4nk"]
@@ -158,6 +158,9 @@ size = Vector3(0.145386, 0.0811768, 0.230408)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_oo81l"]
 size = Vector3(0.731567, 2.30028, 1.67641)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_m4o3h"]
+size = Vector3(0.593994, 0.0645447, 0.660217)
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_vtg4w"]
 render_priority = 0
@@ -557,7 +560,7 @@ shape = SubResource("BoxShape3D_71yyv")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.44741, 1.15338, 1.65279)
 collision_mask = 0
 script = ExtResource("7_hgmdq")
-next_interact = [NodePath("../area_on_seat"), NodePath("../area_outside_windows"), NodePath("../area_door"), NodePath("../area_high_table"), NodePath("../area_back"), NodePath("../area_bar_table")]
+next_interact = [NodePath("../area_on_seat"), NodePath("../area_outside_windows"), NodePath("../area_door"), NodePath("../area_high_table"), NodePath("../area_back"), NodePath("../area_bar_table"), NodePath("../area_back")]
 camera = NodePath("../../camera/camera_table_side")
 metadata/_custom_type_script = "uid://dg85frcnjlauy"
 
@@ -638,7 +641,7 @@ shape = SubResource("BoxShape3D_wlijh")
 [node name="area_back" type="Area3D" parent="interact" index="14" node_paths=PackedStringArray("next_interact", "camera")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.57952, 1.2138, 2.81943)
 script = ExtResource("7_hgmdq")
-next_interact = [NodePath("../area_passthrough"), NodePath("../area_wall")]
+next_interact = [NodePath("../area_passthrough"), NodePath("../area_wall"), NodePath("../area_friend_chessboard")]
 camera = NodePath("../../camera/camera_back")
 metadata/_custom_type_script = "uid://dg85frcnjlauy"
 
@@ -710,6 +713,17 @@ metadata/_custom_type_script = "uid://dg85frcnjlauy"
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.134216, -0.10508, -0.0215683)
 shape = SubResource("BoxShape3D_oo81l")
 
+[node name="area_friend_chessboard" type="Area3D" parent="interact" index="21" node_paths=PackedStringArray("camera", "inspectable_item")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.25295, 0.788504, 0)
+script = ExtResource("7_hgmdq")
+camera = NodePath("../../camera/camera_friend_chessboard")
+inspectable_item = [NodePath("../../chessboard_friend")]
+metadata/_custom_type_script = "uid://dg85frcnjlauy"
+
+[node name="collision_shape_3d" type="CollisionShape3D" parent="interact/area_friend_chessboard" index="0"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0452881, 0.0995941, 0.169891)
+shape = SubResource("BoxShape3D_m4o3h")
+
 [node name="camera" type="Node3D" parent="." index="21"]
 
 [node name="camera_history" type="Camera3D" parent="camera" index="0"]
@@ -737,7 +751,7 @@ transform = Transform3D(-4.25417e-08, 0.229777, -0.973243, 1.00439e-08, 0.973243
 fov = 38.1
 
 [node name="camera_table_side" type="Camera3D" parent="camera" index="7"]
-transform = Transform3D(0.514207, 0.267398, -0.814918, -0.00311952, 0.950733, 0.309994, 0.85766, -0.156859, 0.489707, -3.41382, 1.77469, 1.84027)
+transform = Transform3D(0.69712, 0.22432, -0.680959, -0.00311953, 0.950733, 0.309995, 0.716948, -0.213979, 0.663475, -3.84698, 1.77469, 2.11798)
 
 [node name="camera_outside_window" type="Camera3D" parent="camera" index="8"]
 transform = Transform3D(0.985589, 0, -0.16916, 0, 1, 0, 0.16916, 0, 0.985589, -3.29193, 1.40087, -0.16569)
@@ -777,6 +791,9 @@ transform = Transform3D(0.987582, 3.67903e-09, -0.157107, 0.0221012, 0.990056, 0
 
 [node name="camera_telephone" type="Camera3D" parent="camera" index="20"]
 transform = Transform3D(0.453923, -0.441772, 0.773816, -0.105822, 0.835567, 0.539101, -0.884735, -0.326597, 0.332534, 2.80226, 1.47872, 5.03588)
+
+[node name="camera_friend_chessboard" type="Camera3D" parent="camera" index="21"]
+transform = Transform3D(1, 0, 0, 0, 0.370006, 0.929029, 0, -0.929029, 0.370006, -5.30046, 1.3661, 0.49747)
 
 [node name="radio" parent="." index="22" instance=ExtResource("7_geasp")]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 2.57244, 1.28184, 5.44932)
@@ -1289,10 +1306,10 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.4796, 0, 1.66837)
 transform = Transform3D(1.31134e-07, 0, 1, 0, 1, 0, -1, 0, 1.31134e-07, 2.59183, 1.28231, 3.95914)
 
 [node name="chessboard_friend" parent="." index="57" instance=ExtResource("2_3p4nk")]
-transform = Transform3D(5.5732e-08, 0, 0.425, 0, 0.425, 0, -0.425, 0, 5.5732e-08, -5.27578, 0.862027, 0.253498)
+transform = Transform3D(5.5732e-08, 0, 0.425, 0, 0.425, 0, -0.425, 0, 5.5732e-08, -5.29076, 0.862027, 0.253498)
 
 [node name="clock_friend" parent="." index="58" instance=ExtResource("3_po4na")]
-transform = Transform3D(1, 0, -1.06581e-14, 0, 1, 0, 1.06581e-14, 0, 1, -5.24966, 0.849788, -0.0957035)
+transform = Transform3D(1, 0, -1.06581e-14, 0, 1, 0, 1.06581e-14, 0, 1, -5.26464, 0.849788, -0.0957035)
 
 [editable path="cup_pastor"]
 [editable path="cup_cheshire"]
