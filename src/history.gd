@@ -3,8 +3,8 @@ extends Document
 var state:State = null
 var history:PackedStringArray = []
 
-func parse(str:String) -> void:
-	var data_dict:Dictionary = JSON.parse_string(str)
+func parse(data:String) -> void:
+	var data_dict:Dictionary = JSON.parse_string(data)
 	var fen:String = data_dict["state"]
 	state = RuleStandard.parse(fen)
 	history = data_dict["history"]
