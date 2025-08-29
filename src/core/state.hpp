@@ -5,26 +5,23 @@
 #include <godot_cpp/variant/packed_int32_array.hpp>
 #include <unordered_map>
 
-class State;
-
-class PieceIterator
-{
-	public:
-		void begin();
-		void next();
-		int piece();
-		int pos();
-		bool end();
-	private:
-		friend State;
-		State *parent;
-		int by;
-};
-
 class State : public godot::RefCounted
 {
 	GDCLASS(State, RefCounted)
 	public:
+		class PieceIterator
+		{
+			public:
+				void begin();
+				void next();
+				int piece();
+				int pos();
+				bool end();
+			private:
+				friend State;
+				State *parent;
+				int by;
+		};
 		State();
 		godot::Ref<State> duplicate();
 		PieceIterator piece_iterator_begin();
@@ -54,7 +51,6 @@ class State : public godot::RefCounted
 		int get_relative_score(int _group);
 		static void _bind_methods();
 	private:
-		friend PieceIterator;
 		int pieces[128];
 		int turn;
 		int castle;

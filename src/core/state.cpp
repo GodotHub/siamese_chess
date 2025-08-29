@@ -3,7 +3,7 @@
 #include "rule_standard.hpp"
 #include <cstring>
 
-void PieceIterator::begin()
+void State::PieceIterator::begin()
 {
 	while (!parent->pieces[by] && by < 128)
 	{
@@ -16,7 +16,7 @@ void PieceIterator::begin()
 	}
 }
 
-void PieceIterator::next()
+void State::PieceIterator::next()
 {
 	by++;
 	while (!parent->pieces[by] && by < 128)
@@ -30,17 +30,17 @@ void PieceIterator::next()
 	}
 }
 
-int PieceIterator::piece()
+int State::PieceIterator::piece()
 {
 	return parent->pieces[by];
 }
 
-int PieceIterator::pos()
+int State::PieceIterator::pos()
 {
 	return by;
 }
 
-bool PieceIterator::end()
+bool State::PieceIterator::end()
 {
 	return by & 0x88;
 }
@@ -65,9 +65,9 @@ godot::Ref<State> State::duplicate()
 	return new_state;
 }
 
-PieceIterator State::piece_iterator_begin()
+State::PieceIterator State::piece_iterator_begin()
 {
-	PieceIterator instance;
+	State::PieceIterator instance;
 	instance.parent = this;
 	instance.by = 0;
 	instance.begin();

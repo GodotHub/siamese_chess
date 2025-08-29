@@ -273,7 +273,7 @@ bool RuleStandard::is_move_valid(godot::Ref<State>_state, int _group, int _move)
 
 bool RuleStandard::is_check(godot::Ref<State> _state, int _group)
 {
-	for (PieceIterator iter = _state->piece_iterator_begin(); !iter.end(); iter.next())
+	for (State::PieceIterator iter = _state->piece_iterator_begin(); !iter.end(); iter.next())
 	{
 		int _from = iter.pos();
 		int from_piece = iter.piece();
@@ -349,7 +349,7 @@ bool RuleStandard::is_check(godot::Ref<State> _state, int _group)
 godot::PackedInt32Array RuleStandard::generate_premove(godot::Ref<State>_state, int _group)
 {
 	godot::PackedInt32Array output;
-	for (PieceIterator iter = _state->piece_iterator_begin(); !iter.end(); iter.next())
+	for (State::PieceIterator iter = _state->piece_iterator_begin(); !iter.end(); iter.next())
 	{
 		int _from = iter.pos();
 		int from_piece = iter.piece();
@@ -454,7 +454,7 @@ godot::PackedInt32Array RuleStandard::generate_premove(godot::Ref<State>_state, 
 godot::PackedInt32Array RuleStandard::generate_move(godot::Ref<State>_state, int _group)
 {
 	godot::PackedInt32Array output;
-	for (PieceIterator iter = _state->piece_iterator_begin(); !iter.end(); iter.next())
+	for (State::PieceIterator iter = _state->piece_iterator_begin(); !iter.end(); iter.next())
 	{
 		int _from = iter.pos();
 		int from_piece = iter.piece();

@@ -172,7 +172,7 @@ double PastorAI::plan_time_cost(godot::Ref<State> _state)
 godot::PackedInt32Array PastorAI::generate_good_capture_move(godot::Ref<State>_state, int _group)
 {
 	godot::PackedInt32Array output;
-	for (PieceIterator iter = _state->piece_iterator_begin(); !iter.end(); iter.next())
+	for (State::PieceIterator iter = _state->piece_iterator_begin(); !iter.end(); iter.next())
 	{
 		int _from = iter.pos();
 		int from_piece = iter.piece();
