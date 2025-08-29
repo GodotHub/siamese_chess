@@ -273,80 +273,78 @@ bool RuleStandard::is_move_valid(godot::Ref<State>_state, int _group, int _move)
 
 bool RuleStandard::is_check(godot::Ref<State> _state, int _group)
 {
-	for (int _from_1 = 0; _from_1 < 8; _from_1++)
+	godot::PackedInt32Array positions = _state->get_all_pieces();
+	for (int i = 0; i < positions.size(); i++)
 	{
-		for (int _from_2 = 0; _from_2 < 8; _from_2++)
+		int _from = positions[i];
+		if (!_state->has_piece(_from))
 		{
-			int _from = (_from_1 << 4) + _from_2;
-			if (!_state->has_piece(_from))
+			continue;
+		}
+		int from_piece = _state->get_piece(_from);
+		if (_group != Chess::group(from_piece))
+		{
+			continue;
+		}
+		godot::PackedInt32Array directions;
+		if ((from_piece & 95) == 'P')
+		{
+			int front = from_piece == 'P' ? -16 : 16;
+			bool on_start = (_from >> 4) == (from_piece == 'P' ? 6 : 1);
+			bool on_end = (_from >> 4) == (from_piece == 'P' ? 1 : 6);
+			if (_state->has_piece(_from + front + 1) && !Chess::is_same_group(from_piece, _state->get_piece(_from + front + 1)) && (_state->get_piece(_from + front + 1) & 95) == 'K'
+			|| !((_from + front + 1) & 0x88) && on_end && _state->get_king_passant() != -1 && abs(_state->get_king_passant() - (_from + front + 1)) <= 1)
 			{
-				continue;
+				return true;
 			}
-			int from_piece = _state->get_piece(_from);
-			if (_group != Chess::group(from_piece))
+			if (_state->has_piece(_from + front - 1) && !Chess::is_same_group(from_piece, _state->get_piece(_from + front - 1)) && (_state->get_piece(_from + front - 1) & 95) == 'K'
+			|| !((_from + front - 1) & 0x88) && on_end && _state->get_king_passant() != -1 && abs(_state->get_king_passant() - (_from + front - 1)) <= 1)
 			{
-				continue;
+				return true;
 			}
-			godot::PackedInt32Array directions;
-			if ((from_piece & 95) == 'P')
-			{
-				int front = from_piece == 'P' ? -16 : 16;
-				bool on_start = (_from >> 4) == (from_piece == 'P' ? 6 : 1);
-				bool on_end = (_from >> 4) == (from_piece == 'P' ? 1 : 6);
-				if (_state->has_piece(_from + front + 1) && !Chess::is_same_group(from_piece, _state->get_piece(_from + front + 1)) && (_state->get_piece(_from + front + 1) & 95) == 'K'
-				|| !((_from + front + 1) & 0x88) && on_end && _state->get_king_passant() != -1 && abs(_state->get_king_passant() - (_from + front + 1)) <= 1)
-				{
-					return true;
-				}
-				if (_state->has_piece(_from + front - 1) && !Chess::is_same_group(from_piece, _state->get_piece(_from + front - 1)) && (_state->get_piece(_from + front - 1) & 95) == 'K'
-				|| !((_from + front - 1) & 0x88) && on_end && _state->get_king_passant() != -1 && abs(_state->get_king_passant() - (_from + front - 1)) <= 1)
-				{
-					return true;
-				}
-				continue;
-			}
-			else if ((from_piece & 95) == 'K' || (from_piece & 95) == 'Q')
-			{
-				directions = directions_eight_way;
-			}
-			else if ((from_piece & 95) == 'R')
-			{
-				directions = directions_straight;
-			}
-			else if ((from_piece & 95) == 'N')
-			{
-				directions = directions_horse;
-			}
-			else if ((from_piece & 95) == 'B')
-			{
-				directions = directions_diagonal;
-			}
+			continue;
+		}
+		else if ((from_piece & 95) == 'K' || (from_piece & 95) == 'Q')
+		{
+			directions = directions_eight_way;
+		}
+		else if ((from_piece & 95) == 'R')
+		{
+			directions = directions_straight;
+		}
+		else if ((from_piece & 95) == 'N')
+		{
+			directions = directions_horse;
+		}
+		else if ((from_piece & 95) == 'B')
+		{
+			directions = directions_diagonal;
+		}
 
-			for (int i = 0; i < directions.size(); i++)
+		for (int i = 0; i < directions.size(); i++)
+		{
+			int to = _from + directions[i];
+			int to_piece = _state->get_piece(to);
+			while (!(to & 0x88) && (!to_piece || !Chess::is_same_group(from_piece, to_piece)))
 			{
-				int to = _from + directions[i];
-				int to_piece = _state->get_piece(to);
-				while (!(to & 0x88) && (!to_piece || !Chess::is_same_group(from_piece, to_piece)))
+				if (_state->get_king_passant() != -1 && abs(to - _state->get_king_passant()) <= 1 && (to >> 4) == _group * 7)
 				{
-					if (_state->get_king_passant() != -1 && abs(to - _state->get_king_passant()) <= 1 && (to >> 4) == _group * 7)
+					return true;
+				}
+				if (!(to & 0x88) && to_piece && !Chess::is_same_group(from_piece, to_piece))
+				{
+					if ((to_piece & 95) == 'K')
 					{
 						return true;
 					}
-					if (!(to & 0x88) && to_piece && !Chess::is_same_group(from_piece, to_piece))
-					{
-						if ((to_piece & 95) == 'K')
-						{
-							return true;
-						}
-						break;
-					}
-					if ((from_piece & 95) == 'K' || (from_piece & 95) == 'N')
-					{
-						break;
-					}
-					to += directions[i];
-					to_piece = _state->get_piece(to);
+					break;
 				}
+				if ((from_piece & 95) == 'K' || (from_piece & 95) == 'N')
+				{
+					break;
+				}
+				to += directions[i];
+				to_piece = _state->get_piece(to);
 			}
 		}
 	}
@@ -356,93 +354,91 @@ bool RuleStandard::is_check(godot::Ref<State> _state, int _group)
 godot::PackedInt32Array RuleStandard::generate_premove(godot::Ref<State>_state, int _group)
 {
 	godot::PackedInt32Array output;
-	for (int _from_1 = 0; _from_1 < 8; _from_1++)
+	godot::PackedInt32Array positions = _state->get_all_pieces();
+	for (int i = 0; i < positions.size(); i++)
 	{
-		for (int _from_2 = 0; _from_2 < 8; _from_2++)
+		int _from = positions[i];
+		if (!_state->has_piece(_from))
 		{
-			int _from = (_from_1 << 4) + _from_2;
-			if (!_state->has_piece(_from))
+			continue;
+		}
+		int from_piece = _state->get_piece(_from);
+		if (_group != Chess::group(from_piece))
+		{
+			continue;
+		}
+		godot::PackedInt32Array directions;
+		if ((from_piece & 95) == 'P')
+		{
+			int front = _group == 0 ? -16 : 16;
+			bool on_start = (_from >> 4) == (_group == 0 ? 6 : 1);
+			bool on_end = (_from >> 4) == (_group == 0 ? 1 : 6);
+			if (on_end)
 			{
-				continue;
-			}
-			int from_piece = _state->get_piece(_from);
-			if (_group != Chess::group(from_piece))
-			{
-				continue;
-			}
-			godot::PackedInt32Array directions;
-			if ((from_piece & 95) == 'P')
-			{
-				int front = _group == 0 ? -16 : 16;
-				bool on_start = (_from >> 4) == (_group == 0 ? 6 : 1);
-				bool on_end = (_from >> 4) == (_group == 0 ? 1 : 6);
-				if (on_end)
+				output.push_back(Chess::create(_from, _from + front, _group == 0 ? 'Q' : 'q'));
+				output.push_back(Chess::create(_from, _from + front, _group == 0 ? 'R' : 'r'));
+				output.push_back(Chess::create(_from, _from + front, _group == 0 ? 'N' : 'n'));
+				output.push_back(Chess::create(_from, _from + front, _group == 0 ? 'B' : 'b'));
+				if (!((_from + front + 1) & 0x88))
 				{
-					output.push_back(Chess::create(_from, _from + front, _group == 0 ? 'Q' : 'q'));
-					output.push_back(Chess::create(_from, _from + front, _group == 0 ? 'R' : 'r'));
-					output.push_back(Chess::create(_from, _from + front, _group == 0 ? 'N' : 'n'));
-					output.push_back(Chess::create(_from, _from + front, _group == 0 ? 'B' : 'b'));
-					if (!((_from + front + 1) & 0x88))
-					{
-						output.push_back(Chess::create(_from, _from + front + 1, _group == 0 ? 'Q' : 'q'));
-						output.push_back(Chess::create(_from, _from + front + 1, _group == 0 ? 'R' : 'r'));
-						output.push_back(Chess::create(_from, _from + front + 1, _group == 0 ? 'N' : 'n'));
-						output.push_back(Chess::create(_from, _from + front + 1, _group == 0 ? 'B' : 'b'));
-					}
-					if (!((_from + front - 1) & 0x88))
-					{
-						output.push_back(Chess::create(_from, _from + front - 1, _group == 0 ? 'Q' : 'q'));
-						output.push_back(Chess::create(_from, _from + front - 1, _group == 0 ? 'R' : 'r'));
-						output.push_back(Chess::create(_from, _from + front - 1, _group == 0 ? 'N' : 'n'));
-						output.push_back(Chess::create(_from, _from + front - 1, _group == 0 ? 'B' : 'b'));
-					}
+					output.push_back(Chess::create(_from, _from + front + 1, _group == 0 ? 'Q' : 'q'));
+					output.push_back(Chess::create(_from, _from + front + 1, _group == 0 ? 'R' : 'r'));
+					output.push_back(Chess::create(_from, _from + front + 1, _group == 0 ? 'N' : 'n'));
+					output.push_back(Chess::create(_from, _from + front + 1, _group == 0 ? 'B' : 'b'));
 				}
-				else
+				if (!((_from + front - 1) & 0x88))
 				{
-					output.push_back(Chess::create(_from, _from + front, 0));
-					if (!((_from + front + 1) & 0x88))
-					{
-						output.push_back(Chess::create(_from, _from + front + 1, 0));
-					}
-					if (!((_from + front - 1) & 0x88))
-					{
-						output.push_back(Chess::create(_from, _from + front - 1, 0));
-					}
-					if (on_start)
-					{
-						output.push_back(Chess::create(_from, _from + front + front, 0));
-					}
+					output.push_back(Chess::create(_from, _from + front - 1, _group == 0 ? 'Q' : 'q'));
+					output.push_back(Chess::create(_from, _from + front - 1, _group == 0 ? 'R' : 'r'));
+					output.push_back(Chess::create(_from, _from + front - 1, _group == 0 ? 'N' : 'n'));
+					output.push_back(Chess::create(_from, _from + front - 1, _group == 0 ? 'B' : 'b'));
 				}
-				continue;
 			}
-			else if ((from_piece & 95) == 'K' || (from_piece & 95) == 'Q')
+			else
 			{
-				directions = directions_eight_way;
-			}
-			else if ((from_piece & 95) == 'R')
-			{
-				directions = directions_straight;
-			}
-			else if ((from_piece & 95) == 'N')
-			{
-				directions = directions_horse;
-			}
-			else if ((from_piece & 95) == 'B')
-			{
-				directions = directions_diagonal;
-			}
-			for (int i = 0; i < directions.size(); i++)
-			{
-				int to = _from + directions[i];
-				while (!(to & 0x88))
+				output.push_back(Chess::create(_from, _from + front, 0));
+				if (!((_from + front + 1) & 0x88))
 				{
-					output.push_back(Chess::create(_from, to, 0));
-					if ((from_piece & 95) == 'K' || (from_piece & 95) == 'N')
-					{
-						break;
-					}
-					to += directions[i];
+					output.push_back(Chess::create(_from, _from + front + 1, 0));
 				}
+				if (!((_from + front - 1) & 0x88))
+				{
+					output.push_back(Chess::create(_from, _from + front - 1, 0));
+				}
+				if (on_start)
+				{
+					output.push_back(Chess::create(_from, _from + front + front, 0));
+				}
+			}
+			continue;
+		}
+		else if ((from_piece & 95) == 'K' || (from_piece & 95) == 'Q')
+		{
+			directions = directions_eight_way;
+		}
+		else if ((from_piece & 95) == 'R')
+		{
+			directions = directions_straight;
+		}
+		else if ((from_piece & 95) == 'N')
+		{
+			directions = directions_horse;
+		}
+		else if ((from_piece & 95) == 'B')
+		{
+			directions = directions_diagonal;
+		}
+		for (int i = 0; i < directions.size(); i++)
+		{
+			int to = _from + directions[i];
+			while (!(to & 0x88))
+			{
+				output.push_back(Chess::create(_from, to, 0));
+				if ((from_piece & 95) == 'K' || (from_piece & 95) == 'N')
+				{
+					break;
+				}
+				to += directions[i];
 			}
 		}
 	}
@@ -468,120 +464,118 @@ godot::PackedInt32Array RuleStandard::generate_premove(godot::Ref<State>_state, 
 godot::PackedInt32Array RuleStandard::generate_move(godot::Ref<State>_state, int _group)
 {
 	godot::PackedInt32Array output;
-	for (int _from_1 = 0; _from_1 < 8; _from_1++)
+	godot::PackedInt32Array positions = _state->get_all_pieces();
+	for (int i = 0; i < positions.size(); i++)
 	{
-		for (int _from_2 = 0; _from_2 < 8; _from_2++)
+		int _from = positions[i];
+		if (!_state->has_piece(_from))
 		{
-			int _from = (_from_1 << 4) + _from_2;
-			if (!_state->has_piece(_from))
+			continue;
+		}
+		int from_piece = _state->get_piece(_from);
+		if (_group != Chess::group(from_piece))
+		{
+			continue;
+		}
+		godot::PackedInt32Array directions;
+		if ((from_piece & 95) == 'P')
+		{
+			int front = from_piece == 'P' ? -16 : 16;
+			bool on_start = (_from >> 4) == (from_piece == 'P' ? 6 : 1);
+			bool on_end = (_from >> 4) == (from_piece == 'P' ? 1 : 6);
+			if (!_state->has_piece(_from + front))
 			{
-				continue;
-			}
-			int from_piece = _state->get_piece(_from);
-			if (_group != Chess::group(from_piece))
-			{
-				continue;
-			}
-			godot::PackedInt32Array directions;
-			if ((from_piece & 95) == 'P')
-			{
-				int front = from_piece == 'P' ? -16 : 16;
-				bool on_start = (_from >> 4) == (from_piece == 'P' ? 6 : 1);
-				bool on_end = (_from >> 4) == (from_piece == 'P' ? 1 : 6);
-				if (!_state->has_piece(_from + front))
+				if (on_end)
 				{
-					if (on_end)
+					output.push_back(Chess::create(_from, _from + front, _group == 0 ? 'Q' : 'q'));
+					output.push_back(Chess::create(_from, _from + front, _group == 0 ? 'R' : 'r'));
+					output.push_back(Chess::create(_from, _from + front, _group == 0 ? 'N' : 'n'));
+					output.push_back(Chess::create(_from, _from + front, _group == 0 ? 'B' : 'b'));
+				}
+				else
+				{
+					output.push_back(Chess::create(_from, _from + front, 0));
+					if (!_state->has_piece(_from + front + front) && on_start)
 					{
-						output.push_back(Chess::create(_from, _from + front, _group == 0 ? 'Q' : 'q'));
-						output.push_back(Chess::create(_from, _from + front, _group == 0 ? 'R' : 'r'));
-						output.push_back(Chess::create(_from, _from + front, _group == 0 ? 'N' : 'n'));
-						output.push_back(Chess::create(_from, _from + front, _group == 0 ? 'B' : 'b'));
-					}
-					else
-					{
-						output.push_back(Chess::create(_from, _from + front, 0));
-						if (!_state->has_piece(_from + front + front) && on_start)
-						{
-							output.push_back(Chess::create(_from, _from + front + front, 0));
-						}
+						output.push_back(Chess::create(_from, _from + front + front, 0));
 					}
 				}
-				if (_state->has_piece(_from + front + 1) && !Chess::is_same_group(from_piece, _state->get_piece(_from + front + 1)) || ((_from >> 4) == 3 || (_from >> 4) == 4) && _state->get_en_passant() == _from + front + 1)
+			}
+			if (_state->has_piece(_from + front + 1) && !Chess::is_same_group(from_piece, _state->get_piece(_from + front + 1)) || ((_from >> 4) == 3 || (_from >> 4) == 4) && _state->get_en_passant() == _from + front + 1)
+			{
+				if (on_end)
 				{
-					if (on_end)
-					{
-						output.push_back(Chess::create(_from, _from + front + 1, _group == 0 ? 'Q' : 'q'));
-						output.push_back(Chess::create(_from, _from + front + 1, _group == 0 ? 'R' : 'r'));
-						output.push_back(Chess::create(_from, _from + front + 1, _group == 0 ? 'N' : 'n'));
-						output.push_back(Chess::create(_from, _from + front + 1, _group == 0 ? 'B' : 'b'));
-					}
-					else
-					{
-						output.push_back(Chess::create(_from, _from + front + 1, 0));
-					}
+					output.push_back(Chess::create(_from, _from + front + 1, _group == 0 ? 'Q' : 'q'));
+					output.push_back(Chess::create(_from, _from + front + 1, _group == 0 ? 'R' : 'r'));
+					output.push_back(Chess::create(_from, _from + front + 1, _group == 0 ? 'N' : 'n'));
+					output.push_back(Chess::create(_from, _from + front + 1, _group == 0 ? 'B' : 'b'));
 				}
-				if (_state->has_piece(_from + front - 1) && !Chess::is_same_group(from_piece, _state->get_piece(_from + front - 1)) || ((_from >> 4) == 3 || (_from >> 4) == 4) && _state->get_en_passant() == _from + front - 1)
+				else
 				{
-					if (on_end)
-					{
-						output.push_back(Chess::create(_from, _from + front - 1, _group == 0 ? 'Q' : 'q'));
-						output.push_back(Chess::create(_from, _from + front - 1, _group == 0 ? 'R' : 'r'));
-						output.push_back(Chess::create(_from, _from + front - 1, _group == 0 ? 'N' : 'n'));
-						output.push_back(Chess::create(_from, _from + front - 1, _group == 0 ? 'B' : 'b'));
-					}
-					else
-					{
-						output.push_back(Chess::create(_from, _from + front - 1, 0));
-					}
+					output.push_back(Chess::create(_from, _from + front + 1, 0));
 				}
-				continue;
 			}
-			else if ((from_piece & 95) == 'K' || (from_piece & 95) == 'Q')
+			if (_state->has_piece(_from + front - 1) && !Chess::is_same_group(from_piece, _state->get_piece(_from + front - 1)) || ((_from >> 4) == 3 || (_from >> 4) == 4) && _state->get_en_passant() == _from + front - 1)
 			{
-				directions = directions_eight_way;
+				if (on_end)
+				{
+					output.push_back(Chess::create(_from, _from + front - 1, _group == 0 ? 'Q' : 'q'));
+					output.push_back(Chess::create(_from, _from + front - 1, _group == 0 ? 'R' : 'r'));
+					output.push_back(Chess::create(_from, _from + front - 1, _group == 0 ? 'N' : 'n'));
+					output.push_back(Chess::create(_from, _from + front - 1, _group == 0 ? 'B' : 'b'));
+				}
+				else
+				{
+					output.push_back(Chess::create(_from, _from + front - 1, 0));
+				}
 			}
-			else if ((from_piece & 95) == 'R')
-			{
-				directions = directions_straight;
-			}
-			else if ((from_piece & 95) == 'N')
-			{
-				directions = directions_horse;
-			}
-			else if ((from_piece & 95) == 'B')
-			{
-				directions = directions_diagonal;
-			}
+			continue;
+		}
+		else if ((from_piece & 95) == 'K' || (from_piece & 95) == 'Q')
+		{
+			directions = directions_eight_way;
+		}
+		else if ((from_piece & 95) == 'R')
+		{
+			directions = directions_straight;
+		}
+		else if ((from_piece & 95) == 'N')
+		{
+			directions = directions_horse;
+		}
+		else if ((from_piece & 95) == 'B')
+		{
+			directions = directions_diagonal;
+		}
 
-			for (int i = 0; i < directions.size(); i++)
+		for (int i = 0; i < directions.size(); i++)
+		{
+			int to = _from + directions[i];
+			int to_piece = _state->get_piece(to);
+			while (!(to & 0x88) && (!to_piece || !Chess::is_same_group(from_piece, to_piece)))
 			{
-				int to = _from + directions[i];
-				int to_piece = _state->get_piece(to);
-				while (!(to & 0x88) && (!to_piece || !Chess::is_same_group(from_piece, to_piece)))
+				output.push_back(Chess::create(_from, to, 0));
+				if (!(to & 0x88) && to_piece && !Chess::is_same_group(from_piece, to_piece))
 				{
-					output.push_back(Chess::create(_from, to, 0));
-					if (!(to & 0x88) && to_piece && !Chess::is_same_group(from_piece, to_piece))
-					{
-						break;
-					}
-					if ((from_piece & 95) == 'K' || (from_piece & 95) == 'N')
-					{
-						break;
-					}
-					to += directions[i];
-					to_piece = _state->get_piece(to);
-					if (!(from_piece == 'R' && to_piece == 'K' || from_piece == 'r' && to_piece == 'k'))
-					{
-						continue;
-					}
-					if ((_from & 15) >= 4 && (from_piece == 'R' && (_state->get_castle() & 8) || from_piece == 'r' && (_state->get_castle() & 2)))
-					{
-						output.push_back(Chess::create(to, from_piece == 'R' ? Chess::g1() : Chess::g8(), 'K'));
-					}
-					else if ((_from & 15) <= 3 && (from_piece == 'R' && (_state->get_castle() & 4) || from_piece == 'r' && (_state->get_castle() & 1)))
-					{
-						output.push_back(Chess::create(to,from_piece == 'R' ? Chess::c1() : Chess::c8(), 'Q'));
-					}
+					break;
+				}
+				if ((from_piece & 95) == 'K' || (from_piece & 95) == 'N')
+				{
+					break;
+				}
+				to += directions[i];
+				to_piece = _state->get_piece(to);
+				if (!(from_piece == 'R' && to_piece == 'K' || from_piece == 'r' && to_piece == 'k'))
+				{
+					continue;
+				}
+				if ((_from & 15) >= 4 && (from_piece == 'R' && (_state->get_castle() & 8) || from_piece == 'r' && (_state->get_castle() & 2)))
+				{
+					output.push_back(Chess::create(to, from_piece == 'R' ? Chess::g1() : Chess::g8(), 'K'));
+				}
+				else if ((_from & 15) <= 3 && (from_piece == 'R' && (_state->get_castle() & 4) || from_piece == 'r' && (_state->get_castle() & 1)))
+				{
+					output.push_back(Chess::create(to,from_piece == 'R' ? Chess::c1() : Chess::c8(), 'Q'));
 				}
 			}
 		}

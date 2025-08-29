@@ -172,103 +172,101 @@ double PastorAI::plan_time_cost(godot::Ref<State> _state)
 godot::PackedInt32Array PastorAI::generate_good_capture_move(godot::Ref<State>_state, int _group)
 {
 	godot::PackedInt32Array output;
-	for (int _from_1 = 0; _from_1 < 8; _from_1++)
+	godot::PackedInt32Array positions = _state->get_all_pieces();
+	for (int i = 0; i < positions.size(); i++)
 	{
-		for (int _from_2 = 0; _from_2 < 8; _from_2++)
+		int _from = positions[i];
+		if (!_state->has_piece(_from))
 		{
-			int _from = (_from_1 << 4) + _from_2;
-			if (!_state->has_piece(_from))
+			continue;
+		}
+		int from_piece = _state->get_piece(_from);
+		if (_group != Chess::group(from_piece))
+		{
+			continue;
+		}
+		godot::PackedInt32Array directions;
+		if ((from_piece & 95) == 'P')
+		{
+			int front = from_piece == 'P' ? -16 : 16;
+			bool on_start = (_from >> 4) == (from_piece == 'P' ? 6 : 1);
+			bool on_end = (_from >> 4) == (from_piece == 'P' ? 1 : 6);
+			if (_state->has_piece(_from + front + 1) && !Chess::is_same_group(from_piece, _state->get_piece(_from + front + 1))
+			|| ((_from >> 4) == 3 || (_from >> 4) == 4) && _state->get_en_passant() == _from + front + 1
+			|| !((_from + front + 1) & 0x88) && on_end && _state->get_king_passant() != -1 && abs(_state->get_king_passant() - (_from + front + 1)) <= 1)
 			{
-				continue;
-			}
-			int from_piece = _state->get_piece(_from);
-			if (_group != Chess::group(from_piece))
-			{
-				continue;
-			}
-			godot::PackedInt32Array directions;
-			if ((from_piece & 95) == 'P')
-			{
-				int front = from_piece == 'P' ? -16 : 16;
-				bool on_start = (_from >> 4) == (from_piece == 'P' ? 6 : 1);
-				bool on_end = (_from >> 4) == (from_piece == 'P' ? 1 : 6);
-				if (_state->has_piece(_from + front + 1) && !Chess::is_same_group(from_piece, _state->get_piece(_from + front + 1))
-				|| ((_from >> 4) == 3 || (_from >> 4) == 4) && _state->get_en_passant() == _from + front + 1
-				|| !((_from + front + 1) & 0x88) && on_end && _state->get_king_passant() != -1 && abs(_state->get_king_passant() - (_from + front + 1)) <= 1)
+				if (on_end)
 				{
-					if (on_end)
-					{
-						output.push_back(Chess::create(_from, _from + front + 1, _group == 0 ? 'Q' : 'q'));
-						output.push_back(Chess::create(_from, _from + front + 1, _group == 0 ? 'R' : 'r'));
-						output.push_back(Chess::create(_from, _from + front + 1, _group == 0 ? 'N' : 'n'));
-						output.push_back(Chess::create(_from, _from + front + 1, _group == 0 ? 'B' : 'b'));
-					}
-					else
-					{
-						output.push_back(Chess::create(_from, _from + front + 1, 0));
-					}
+					output.push_back(Chess::create(_from, _from + front + 1, _group == 0 ? 'Q' : 'q'));
+					output.push_back(Chess::create(_from, _from + front + 1, _group == 0 ? 'R' : 'r'));
+					output.push_back(Chess::create(_from, _from + front + 1, _group == 0 ? 'N' : 'n'));
+					output.push_back(Chess::create(_from, _from + front + 1, _group == 0 ? 'B' : 'b'));
 				}
-				if (_state->has_piece(_from + front - 1) && !Chess::is_same_group(from_piece, _state->get_piece(_from + front - 1))
-				|| ((_from >> 4) == 3 || (_from >> 4) == 4) && _state->get_en_passant() == _from + front - 1
-				|| !((_from + front - 1) & 0x88) && on_end && _state->get_king_passant() != -1 && abs(_state->get_king_passant() - (_from + front - 1)) <= 1)
+				else
 				{
-					if (on_end)
-					{
-						output.push_back(Chess::create(_from, _from + front - 1, _group == 0 ? 'Q' : 'q'));
-						output.push_back(Chess::create(_from, _from + front - 1, _group == 0 ? 'R' : 'r'));
-						output.push_back(Chess::create(_from, _from + front - 1, _group == 0 ? 'N' : 'n'));
-						output.push_back(Chess::create(_from, _from + front - 1, _group == 0 ? 'B' : 'b'));
-					}
-					else
-					{
-						output.push_back(Chess::create(_from, _from + front - 1, 0));
-					}
+					output.push_back(Chess::create(_from, _from + front + 1, 0));
 				}
-				continue;
 			}
-			else if ((from_piece & 95) == 'K' || (from_piece & 95) == 'Q')
+			if (_state->has_piece(_from + front - 1) && !Chess::is_same_group(from_piece, _state->get_piece(_from + front - 1))
+			|| ((_from >> 4) == 3 || (_from >> 4) == 4) && _state->get_en_passant() == _from + front - 1
+			|| !((_from + front - 1) & 0x88) && on_end && _state->get_king_passant() != -1 && abs(_state->get_king_passant() - (_from + front - 1)) <= 1)
 			{
-				directions = directions_eight_way;
+				if (on_end)
+				{
+					output.push_back(Chess::create(_from, _from + front - 1, _group == 0 ? 'Q' : 'q'));
+					output.push_back(Chess::create(_from, _from + front - 1, _group == 0 ? 'R' : 'r'));
+					output.push_back(Chess::create(_from, _from + front - 1, _group == 0 ? 'N' : 'n'));
+					output.push_back(Chess::create(_from, _from + front - 1, _group == 0 ? 'B' : 'b'));
+				}
+				else
+				{
+					output.push_back(Chess::create(_from, _from + front - 1, 0));
+				}
 			}
-			else if ((from_piece & 95) == 'R')
-			{
-				directions = directions_straight;
-			}
-			else if ((from_piece & 95) == 'N')
-			{
-				directions = directions_horse;
-			}
-			else if ((from_piece & 95) == 'B')
-			{
-				directions = directions_diagonal;
-			}
+			continue;
+		}
+		else if ((from_piece & 95) == 'K' || (from_piece & 95) == 'Q')
+		{
+			directions = directions_eight_way;
+		}
+		else if ((from_piece & 95) == 'R')
+		{
+			directions = directions_straight;
+		}
+		else if ((from_piece & 95) == 'N')
+		{
+			directions = directions_horse;
+		}
+		else if ((from_piece & 95) == 'B')
+		{
+			directions = directions_diagonal;
+		}
 
-			for (int i = 0; i < directions.size(); i++)
+		for (int i = 0; i < directions.size(); i++)
+		{
+			int to = _from + directions[i];
+			int to_piece = _state->get_piece(to);
+			while (!(to & 0x88) && (!to_piece || !Chess::is_same_group(from_piece, to_piece)))
 			{
-				int to = _from + directions[i];
-				int to_piece = _state->get_piece(to);
-				while (!(to & 0x88) && (!to_piece || !Chess::is_same_group(from_piece, to_piece)))
+				if (!(to & 0x88) && to_piece && !Chess::is_same_group(from_piece, to_piece))
 				{
-					if (!(to & 0x88) && to_piece && !Chess::is_same_group(from_piece, to_piece))
-					{
-						if (abs(piece_value[_from]) <= abs(piece_value[to]))
-						{
-							output.push_back(Chess::create(_from, to, 0));
-						}
-						break;
-					}
-					if (_state->get_king_passant() != -1 && abs(to - _state->get_king_passant()) <= 1)
+					if (abs(piece_value[_from]) <= abs(piece_value[to]))
 					{
 						output.push_back(Chess::create(_from, to, 0));
-						break;
 					}
-					if ((from_piece & 95) == 'K' || (from_piece & 95) == 'N')
-					{
-						break;
-					}
-					to += directions[i];
-					to_piece = _state->get_piece(to);
+					break;
 				}
+				if (_state->get_king_passant() != -1 && abs(to - _state->get_king_passant()) <= 1)
+				{
+					output.push_back(Chess::create(_from, to, 0));
+					break;
+				}
+				if ((from_piece & 95) == 'K' || (from_piece & 95) == 'N')
+				{
+					break;
+				}
+				to += directions[i];
+				to_piece = _state->get_piece(to);
 			}
 		}
 	}
