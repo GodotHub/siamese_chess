@@ -7,7 +7,6 @@
 #include <godot_cpp/godot.hpp>
 
 #include "chess.hpp"
-#include "rule.hpp"
 #include "rule_standard.hpp"
 #include "state.hpp"
 #include "opening_book.hpp"
@@ -25,7 +24,6 @@ void initialize_siamese_module(godot::ModuleInitializationLevel p_level)
 	}
 
 	godot::ClassDB::register_class<Chess>();
-	godot::ClassDB::register_class<Rule>();
 	godot::ClassDB::register_class<RuleStandard>();
 	godot::ClassDB::register_class<State>();
 	godot::ClassDB::register_class<OpeningBook>();

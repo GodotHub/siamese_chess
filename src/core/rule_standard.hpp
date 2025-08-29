@@ -1,13 +1,13 @@
 #ifndef _RULE_STANDARD_HPP_
 #define _RULE_STANDARD_HPP_
 
-#include "rule.hpp"
 #include <unordered_map>
 #include <array>
+#include <godot_cpp/classes/object.hpp>
 
-class RuleStandard : public Rule
+class RuleStandard : public godot::Object
 {
-	GDCLASS(RuleStandard, Rule)
+	GDCLASS(RuleStandard, Object)
 	public:
 		RuleStandard();
 		virtual godot::String get_end_type(godot::Ref<State> _state);
@@ -31,6 +31,5 @@ class RuleStandard : public Rule
 		godot::PackedInt32Array directions_eight_way;
 		godot::PackedInt32Array directions_horse;
 };
-
 
 #endif
