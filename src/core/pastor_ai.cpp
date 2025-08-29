@@ -172,15 +172,10 @@ double PastorAI::plan_time_cost(godot::Ref<State> _state)
 godot::PackedInt32Array PastorAI::generate_good_capture_move(godot::Ref<State>_state, int _group)
 {
 	godot::PackedInt32Array output;
-	godot::PackedInt32Array positions = _state->get_all_pieces();
-	for (int i = 0; i < positions.size(); i++)
+	for (PieceIterator iter = _state->piece_iterator_begin(); !iter.end(); iter.next())
 	{
-		int _from = positions[i];
-		if (!_state->has_piece(_from))
-		{
-			continue;
-		}
-		int from_piece = _state->get_piece(_from);
+		int _from = iter.pos();
+		int from_piece = iter.piece();
 		if (_group != Chess::group(from_piece))
 		{
 			continue;

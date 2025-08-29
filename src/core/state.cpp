@@ -3,6 +3,48 @@
 #include "rule_standard.hpp"
 #include <cstring>
 
+void PieceIterator::begin()
+{
+	while (!parent->pieces[by] && by < 128)
+	{
+		by++;
+		if (by & 0x88)
+		{
+			by += 8;
+			by -= by & 15;
+		}
+	}
+}
+
+void PieceIterator::next()
+{
+	by++;
+	while (!parent->pieces[by] && by < 128)
+	{
+		by++;
+		if (by & 0x88)
+		{
+			by += 8;
+			by -= by & 15;
+		}
+	}
+}
+
+int PieceIterator::piece()
+{
+	return parent->pieces[by];
+}
+
+int PieceIterator::pos()
+{
+	return by;
+}
+
+bool PieceIterator::end()
+{
+	return by & 0x88;
+}
+
 State::State()
 {
 	memset(pieces, 0, sizeof(pieces));
@@ -21,6 +63,15 @@ godot::Ref<State> State::duplicate()
 	new_state->score = score;
 	new_state->zobrist = zobrist;
 	return new_state;
+}
+
+PieceIterator State::piece_iterator_begin()
+{
+	PieceIterator instance;
+	instance.parent = this;
+	instance.by = 0;
+	instance.begin();
+	return instance;
 }
 
 godot::PackedInt32Array State::get_all_pieces()

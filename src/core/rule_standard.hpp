@@ -4,6 +4,8 @@
 #include <unordered_map>
 #include <array>
 #include <godot_cpp/classes/object.hpp>
+#include <godot_cpp/classes/ref.hpp>
+#include <state.hpp>
 
 class RuleStandard : public godot::Object
 {
@@ -23,6 +25,7 @@ class RuleStandard : public godot::Object
 		virtual int name_to_move(godot::Ref<State> _state, godot::String name);
 		virtual void apply_move(godot::Ref<State> _state, int _move);
 		virtual void apply_move_custom(godot::Ref<State> _state, int _move, godot::Callable _callback_add_piece = godot::Callable(), godot::Callable _callback_capture_piece = godot::Callable(), godot::Callable _callback_move_piece = godot::Callable());
+		virtual uint64_t perft(godot::Ref<State> _state, int _depth, int group);
 		static void _bind_methods();
 		static RuleStandard *get_singleton();
 	private:

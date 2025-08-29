@@ -273,15 +273,10 @@ bool RuleStandard::is_move_valid(godot::Ref<State>_state, int _group, int _move)
 
 bool RuleStandard::is_check(godot::Ref<State> _state, int _group)
 {
-	godot::PackedInt32Array positions = _state->get_all_pieces();
-	for (int i = 0; i < positions.size(); i++)
+	for (PieceIterator iter = _state->piece_iterator_begin(); !iter.end(); iter.next())
 	{
-		int _from = positions[i];
-		if (!_state->has_piece(_from))
-		{
-			continue;
-		}
-		int from_piece = _state->get_piece(_from);
+		int _from = iter.pos();
+		int from_piece = iter.piece();
 		if (_group != Chess::group(from_piece))
 		{
 			continue;
@@ -354,15 +349,10 @@ bool RuleStandard::is_check(godot::Ref<State> _state, int _group)
 godot::PackedInt32Array RuleStandard::generate_premove(godot::Ref<State>_state, int _group)
 {
 	godot::PackedInt32Array output;
-	godot::PackedInt32Array positions = _state->get_all_pieces();
-	for (int i = 0; i < positions.size(); i++)
+	for (PieceIterator iter = _state->piece_iterator_begin(); !iter.end(); iter.next())
 	{
-		int _from = positions[i];
-		if (!_state->has_piece(_from))
-		{
-			continue;
-		}
-		int from_piece = _state->get_piece(_from);
+		int _from = iter.pos();
+		int from_piece = iter.piece();
 		if (_group != Chess::group(from_piece))
 		{
 			continue;
@@ -464,15 +454,10 @@ godot::PackedInt32Array RuleStandard::generate_premove(godot::Ref<State>_state, 
 godot::PackedInt32Array RuleStandard::generate_move(godot::Ref<State>_state, int _group)
 {
 	godot::PackedInt32Array output;
-	godot::PackedInt32Array positions = _state->get_all_pieces();
-	for (int i = 0; i < positions.size(); i++)
+	for (PieceIterator iter = _state->piece_iterator_begin(); !iter.end(); iter.next())
 	{
-		int _from = positions[i];
-		if (!_state->has_piece(_from))
-		{
-			continue;
-		}
-		int from_piece = _state->get_piece(_from);
+		int _from = iter.pos();
+		int from_piece = iter.piece();
 		if (_group != Chess::group(from_piece))
 		{
 			continue;
@@ -926,6 +911,27 @@ void RuleStandard::apply_move_custom(godot::Ref<State> _state, int _move, godot:
 	}
 }
 
+uint64_t RuleStandard::perft(godot::Ref<State> _state, int _depth, int group)
+{
+	if (_depth == 0)
+	{
+		return 1ULL;
+	}
+	godot::PackedInt32Array move_list = generate_valid_move(_state, group);
+	uint64_t cnt = 0;
+	if (_depth == 1)
+	{
+		return move_list.size();
+	}
+	for (int i = 0; i < move_list.size(); i++)
+	{
+		godot::Ref<State> test_state = _state->duplicate();
+		apply_move(test_state, move_list[i]);
+		cnt += perft(test_state, _depth - 1, 1 - group);
+	}
+	return cnt;
+}
+
 RuleStandard *RuleStandard::get_singleton()
 {
 	static RuleStandard *singleton = memnew(RuleStandard);
@@ -947,4 +953,5 @@ void RuleStandard::_bind_methods()
 	godot::ClassDB::bind_method(godot::D_METHOD("name_to_move"), &RuleStandard::name_to_move);
 	godot::ClassDB::bind_method(godot::D_METHOD("apply_move"), &RuleStandard::apply_move);
 	godot::ClassDB::bind_method(godot::D_METHOD("apply_move_custom"), &RuleStandard::apply_move_custom);
+	godot::ClassDB::bind_method(godot::D_METHOD("perft"), &RuleStandard::perft);
 }

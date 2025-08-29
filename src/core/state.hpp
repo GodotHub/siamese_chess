@@ -5,7 +5,21 @@
 #include <godot_cpp/variant/packed_int32_array.hpp>
 #include <unordered_map>
 
-class Rule;
+class State;
+
+class PieceIterator
+{
+	public:
+		void begin();
+		void next();
+		int piece();
+		int pos();
+		bool end();
+	private:
+		friend State;
+		State *parent;
+		int by;
+};
 
 class State : public godot::RefCounted
 {
@@ -13,6 +27,7 @@ class State : public godot::RefCounted
 	public:
 		State();
 		godot::Ref<State> duplicate();
+		PieceIterator piece_iterator_begin();
 		godot::PackedInt32Array get_all_pieces();
 		godot::Array get_pieces_info();
 		int get_piece(int _by);
@@ -38,8 +53,8 @@ class State : public godot::RefCounted
 		void push_history(int64_t _zobrist);
 		int get_relative_score(int _group);
 		static void _bind_methods();
-
 	private:
+		friend PieceIterator;
 		int pieces[128];
 		int turn;
 		int castle;
