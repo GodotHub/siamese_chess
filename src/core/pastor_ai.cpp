@@ -458,9 +458,10 @@ int PastorAI::alphabeta(const godot::Ref<State> &_state, int _alpha, int _beta, 
 		}
 	}
 	int move_count = move_list.size();
-	if (_depth > 2 && move_count > 5)
+	if (_depth > 2)
 	{
-		move_count = 5;
+		move_count -= 0.57 + (pow(_depth, 0.10) * pow(move_count, 0.16)) / 2.49;
+		move_count = move_count <= 0 ? 1 : move_count;
 	}
 	int next_killer_1 = 0;
 	int next_killer_2 = 0;
