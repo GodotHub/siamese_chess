@@ -12,7 +12,7 @@ albedo_texture = SubResource("ViewportTexture_a3dfu")
 
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_a3dfu"]
 height = 0.03
-radius = 0.0224609
+radius = 0.05
 
 [node name="radio" instance=ExtResource("1_6yaaa")]
 script = ExtResource("2_a3dfu")
