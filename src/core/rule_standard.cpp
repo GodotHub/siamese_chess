@@ -13,6 +13,32 @@ RuleStandard::RuleStandard()
 	directions_horse = {33, 31, 18, 14, -33, -31, -18, -14};
 }
 
+void RuleStandard::MoveIterator::begin()
+{
+	piece_iter = state->piece_iterator_begin();
+	index = 0;
+}
+
+void RuleStandard::MoveIterator::next()
+{
+	
+}
+
+void RuleStandard::MoveIterator::pawn_next()
+{
+
+}
+
+int RuleStandard::MoveIterator::move()
+{
+	
+}
+
+bool RuleStandard::MoveIterator::end()
+{
+	
+}
+
 godot::String RuleStandard::get_end_type(godot::Ref<State>_state)
 {
 	int group = _state->get_turn();

@@ -11,21 +11,38 @@ class RuleStandard : public godot::Object
 {
 	GDCLASS(RuleStandard, Object)
 	public:
+		class MoveIterator
+		{
+			public:
+				void begin();
+				void next();
+				void pawn_next();
+				int move();
+				bool end();
+			private:
+				State *state;
+				State::PieceIterator piece_iter;
+				bool premove;
+				int index;	//当前棋子所有方案数量
+		};
 		RuleStandard();
-		virtual godot::String get_end_type(godot::Ref<State> _state);
-		virtual godot::Ref<State> parse(godot::String _str);
-		virtual godot::Ref<State> create_initial_state();
-		virtual godot::String stringify(godot::Ref<State> _state);
-		virtual bool is_move_valid(godot::Ref<State> _state, int _group, int _move);
-		virtual bool is_check(godot::Ref<State> _state, int _group);
-		virtual godot::PackedInt32Array generate_premove(godot::Ref<State> _state, int _group);
-		virtual godot::PackedInt32Array generate_move(godot::Ref<State> _state, int _group);
-		virtual godot::PackedInt32Array generate_valid_move(godot::Ref<State> _state, int _group);
-		virtual godot::String get_move_name(godot::Ref<State> _state, int move);
-		virtual int name_to_move(godot::Ref<State> _state, godot::String name);
-		virtual void apply_move(godot::Ref<State> _state, int _move);
-		virtual void apply_move_custom(godot::Ref<State> _state, int _move, godot::Callable _callback_add_piece = godot::Callable(), godot::Callable _callback_capture_piece = godot::Callable(), godot::Callable _callback_move_piece = godot::Callable());
-		virtual uint64_t perft(godot::Ref<State> _state, int _depth, int group);
+		godot::String get_end_type(godot::Ref<State> _state);
+		godot::Ref<State> parse(godot::String _str);
+		godot::Ref<State> create_initial_state();
+		godot::String stringify(godot::Ref<State> _state);
+		bool is_move_valid(godot::Ref<State> _state, int _group, int _move);
+		bool is_check(godot::Ref<State> _state, int _group);
+		godot::PackedInt32Array generate_premove(godot::Ref<State> _state, int _group);
+		godot::PackedInt32Array generate_move(godot::Ref<State> _state, int _group);
+		godot::PackedInt32Array generate_valid_move(godot::Ref<State> _state, int _group);
+		MoveIterator premove_iterator_begin();
+		MoveIterator move_iterator_begin();
+		MoveIterator valid_move_iterator_begin();
+		godot::String get_move_name(godot::Ref<State> _state, int move);
+		int name_to_move(godot::Ref<State> _state, godot::String name);
+		void apply_move(godot::Ref<State> _state, int _move);
+		void apply_move_custom(godot::Ref<State> _state, int _move, godot::Callable _callback_add_piece = godot::Callable(), godot::Callable _callback_capture_piece = godot::Callable(), godot::Callable _callback_move_piece = godot::Callable());
+		uint64_t perft(godot::Ref<State> _state, int _depth, int group);
 		static void _bind_methods();
 		static RuleStandard *get_singleton();
 	private:
