@@ -374,13 +374,10 @@ int PastorAI::quies(godot::Ref<State>_state, int score, int _alpha, int _beta, i
 int PastorAI::alphabeta(const godot::Ref<State> &_state, int score, int _alpha, int _beta, int _depth, int _group, int _ply, bool _can_null, std::array<int, 65536> *_history_table, int *killer_1, int *killer_2, const godot::Callable &_debug_output)
 {
 	bool found_pv = false;
-	if (!transposition_table.is_null())
+	int transposition_table_score = transposition_table->probe_hash(_state->get_zobrist(), _depth, _alpha, _beta);
+	if (transposition_table_score != 65535)
 	{
-		int next_score = transposition_table->probe_hash(_state->get_zobrist(), _depth, _alpha, _beta);
-		if (next_score != 65535)
-		{
-			return next_score;
-		}
+		return transposition_table_score;
 	}
 	if (_depth <= 0)
 	{
@@ -492,10 +489,7 @@ int PastorAI::alphabeta(const godot::Ref<State> &_state, int score, int _alpha, 
 
 		if (_beta <= next_score)
 		{
-			if (!transposition_table.is_null())
-			{
-				transposition_table->record_hash(_state->get_zobrist(), _depth, _beta, BETA, move_list[i]);
-			}
+			transposition_table->record_hash(_state->get_zobrist(), _depth, _beta, BETA, move_list[i]);
 			if (killer_1 && killer_2)
 			{
 				*killer_2 = *killer_1;
@@ -516,13 +510,10 @@ int PastorAI::alphabeta(const godot::Ref<State> &_state, int score, int _alpha, 
 		}
 		if (time_passed() >= plan_time_cost(_state) || interrupted)
 		{
-			return _alpha;
+			break;
 		}
 	}
-	if (!transposition_table.is_null())
-	{
-		transposition_table->record_hash(_state->get_zobrist(), _depth, _alpha, flag, best_move);
-	}
+	transposition_table->record_hash(_state->get_zobrist(), _depth, _alpha, flag, best_move);
 	return _alpha;
 }
 
@@ -547,6 +538,7 @@ void PastorAI::search(const godot::Ref<State> &_state, int _group, const godot::
 			break;
 		}
 	}
+	godot::print_line(transposition_table->probe_hash(_state->get_zobrist(), 0, -THRESHOLD, THRESHOLD));
 	best_move = transposition_table->best_move(_state->get_zobrist());
 }
 
