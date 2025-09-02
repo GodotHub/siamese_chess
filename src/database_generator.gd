@@ -17,7 +17,7 @@ func performance_test() -> float:
 	chess_state = RuleStandard.parse("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
 	var time_start:float = Time.get_ticks_usec()
 	# RuleStandard.search(chess_state, 0, transposition_table, Callable(), 6, debug_output)
-	ai.start_search(chess_state, 0, INF, debug_output)
+	ai.start_search(chess_state, 0, INF, [], debug_output)
 	await ai.search_finished
 	var time_end:float = Time.get_ticks_usec()
 	return time_end - time_start
@@ -73,7 +73,7 @@ func make_database() -> void:
 	chess_state = RuleStandard.parse("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
 	# RuleStandard.search(chess_state, 0, transposition_table, Callable(), 10, debug_output)
 	ai.set_max_depth(20)
-	ai.start_search(chess_state, 0, INF, debug_output)
+	ai.start_search(chess_state, 0, INF, [], debug_output)
 	await ai.search_finished
 	print(main_variation)
 	#$pastor.transposition_table = transposition_table

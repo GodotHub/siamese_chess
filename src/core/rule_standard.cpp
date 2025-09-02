@@ -27,10 +27,6 @@ godot::String RuleStandard::get_end_type(godot::Ref<State>_state)
 			return group == 0 ? "stalemate_black" : "stalemate_white";
 		}
 	}
-	if (_state->has_history(_state->get_zobrist()) == 3)
-	{
-		return "threefold_repetition";	// 三次重复局面
-	}
 	if (_state->get_step_to_draw() == 50)
 	{
 		return "50_moves";
@@ -682,7 +678,6 @@ int RuleStandard::name_to_move(godot::Ref<State> _state, godot::String _name)
 
 void RuleStandard::apply_move(godot::Ref<State>_state, int _move)
 {
-	_state->push_history(_state->get_zobrist());	// 上一步的局面
 	if (_state->get_turn() == 1)
 	{
 		_state->set_round(_state->get_round() + 1);

@@ -3,7 +3,6 @@
 
 #include <godot_cpp/classes/ref_counted.hpp>
 #include <godot_cpp/variant/packed_int32_array.hpp>
-#include <unordered_map>
 #include <generator>
 #include <coroutine>
 
@@ -34,8 +33,6 @@ class State : public godot::RefCounted
 		int get_king_passant();
 		void set_king_passant(int _king_passant);
 		int64_t get_zobrist();
-		int has_history(int64_t _zobrist);
-		void push_history(int64_t _zobrist);
 		static void _bind_methods();
 	private:
 		int pieces[128];
@@ -45,7 +42,6 @@ class State : public godot::RefCounted
 		int step_to_draw;
 		int round;
 		int king_passant;
-		std::unordered_map<int64_t, int> history;
 		int64_t zobrist = 0;
 };
 

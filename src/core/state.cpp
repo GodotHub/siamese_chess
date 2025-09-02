@@ -208,23 +208,6 @@ int64_t State::get_zobrist()
 	return zobrist;
 }
 
-int State::has_history(int64_t _zobrist)
-{
-	return history.count(_zobrist) ? history[_zobrist] : 0;
-}
-
-void State::push_history(int64_t _zobrist)
-{
-	if (history.count(_zobrist))
-	{
-		history[_zobrist]++;
-	}
-	else
-	{
-		history[_zobrist] = 1;
-	}
-}
-
 void State::_bind_methods()
 {
 	godot::ClassDB::bind_method(godot::D_METHOD("duplicate"), &State::duplicate);
@@ -247,7 +230,5 @@ void State::_bind_methods()
 	godot::ClassDB::bind_method(godot::D_METHOD("get_king_passant"), &State::get_king_passant);
 	godot::ClassDB::bind_method(godot::D_METHOD("set_king_passant"), &State::set_king_passant);
 	godot::ClassDB::bind_method(godot::D_METHOD("get_zobrist"), &State::get_zobrist);
-	godot::ClassDB::bind_method(godot::D_METHOD("has_history"), &State::has_history);
-	godot::ClassDB::bind_method(godot::D_METHOD("push_history"), &State::push_history);
 	godot::ClassDB::bind_method(godot::D_METHOD("get_pieces_info"), &State::get_pieces_info);
 }
