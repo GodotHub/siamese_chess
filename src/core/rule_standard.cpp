@@ -13,37 +13,10 @@ RuleStandard::RuleStandard()
 	directions_horse = {33, 31, 18, 14, -33, -31, -18, -14};
 }
 
-void RuleStandard::MoveIterator::begin()
-{
-	piece_iter = state->piece_iterator_begin();
-	index = 0;
-}
-
-void RuleStandard::MoveIterator::next()
-{
-	
-}
-
-void RuleStandard::MoveIterator::pawn_next()
-{
-
-}
-
-int RuleStandard::MoveIterator::move()
-{
-	
-}
-
-bool RuleStandard::MoveIterator::end()
-{
-	
-}
-
 godot::String RuleStandard::get_end_type(godot::Ref<State>_state)
 {
 	int group = _state->get_turn();
-	godot::PackedInt32Array move_list = generate_valid_move(_state, group);
-	if (!move_list.size())
+	if (generate_valid_move(_state, group).size() == 0)
 	{
 		if (is_check(_state, 1 - group))
 		{
@@ -477,9 +450,8 @@ godot::PackedInt32Array RuleStandard::generate_premove(godot::Ref<State>_state, 
 	return output;
 }
 
-godot::PackedInt32Array RuleStandard::generate_move(godot::Ref<State>_state, int _group)
+std::generator<int> RuleStandard::generate_move(godot::Ref<State>_state, int _group)
 {
-	godot::PackedInt32Array output;
 	for (State::PieceIterator iter = _state->piece_iterator_begin(); !iter.end(); iter.next())
 	{
 		int _from = iter.pos();
@@ -498,17 +470,17 @@ godot::PackedInt32Array RuleStandard::generate_move(godot::Ref<State>_state, int
 			{
 				if (on_end)
 				{
-					output.push_back(Chess::create(_from, _from + front, _group == 0 ? 'Q' : 'q'));
-					output.push_back(Chess::create(_from, _from + front, _group == 0 ? 'R' : 'r'));
-					output.push_back(Chess::create(_from, _from + front, _group == 0 ? 'N' : 'n'));
-					output.push_back(Chess::create(_from, _from + front, _group == 0 ? 'B' : 'b'));
+					co_yield Chess::create(_from, _from + front, _group == 0 ? 'Q' : 'q');
+					co_yield Chess::create(_from, _from + front, _group == 0 ? 'R' : 'r');
+					co_yield Chess::create(_from, _from + front, _group == 0 ? 'N' : 'n');
+					co_yield Chess::create(_from, _from + front, _group == 0 ? 'B' : 'b');
 				}
 				else
 				{
-					output.push_back(Chess::create(_from, _from + front, 0));
+					co_yield Chess::create(_from, _from + front, 0);
 					if (!_state->has_piece(_from + front + front) && on_start)
 					{
-						output.push_back(Chess::create(_from, _from + front + front, 0));
+						co_yield Chess::create(_from, _from + front + front, 0);
 					}
 				}
 			}
@@ -516,28 +488,28 @@ godot::PackedInt32Array RuleStandard::generate_move(godot::Ref<State>_state, int
 			{
 				if (on_end)
 				{
-					output.push_back(Chess::create(_from, _from + front + 1, _group == 0 ? 'Q' : 'q'));
-					output.push_back(Chess::create(_from, _from + front + 1, _group == 0 ? 'R' : 'r'));
-					output.push_back(Chess::create(_from, _from + front + 1, _group == 0 ? 'N' : 'n'));
-					output.push_back(Chess::create(_from, _from + front + 1, _group == 0 ? 'B' : 'b'));
+					co_yield Chess::create(_from, _from + front + 1, _group == 0 ? 'Q' : 'q');
+					co_yield Chess::create(_from, _from + front + 1, _group == 0 ? 'R' : 'r');
+					co_yield Chess::create(_from, _from + front + 1, _group == 0 ? 'N' : 'n');
+					co_yield Chess::create(_from, _from + front + 1, _group == 0 ? 'B' : 'b');
 				}
 				else
 				{
-					output.push_back(Chess::create(_from, _from + front + 1, 0));
+					co_yield Chess::create(_from, _from + front + 1, 0);
 				}
 			}
 			if (_state->has_piece(_from + front - 1) && !Chess::is_same_group(from_piece, _state->get_piece(_from + front - 1)) || ((_from >> 4) == 3 || (_from >> 4) == 4) && _state->get_en_passant() == _from + front - 1)
 			{
 				if (on_end)
 				{
-					output.push_back(Chess::create(_from, _from + front - 1, _group == 0 ? 'Q' : 'q'));
-					output.push_back(Chess::create(_from, _from + front - 1, _group == 0 ? 'R' : 'r'));
-					output.push_back(Chess::create(_from, _from + front - 1, _group == 0 ? 'N' : 'n'));
-					output.push_back(Chess::create(_from, _from + front - 1, _group == 0 ? 'B' : 'b'));
+					co_yield Chess::create(_from, _from + front - 1, _group == 0 ? 'Q' : 'q');
+					co_yield Chess::create(_from, _from + front - 1, _group == 0 ? 'R' : 'r');
+					co_yield Chess::create(_from, _from + front - 1, _group == 0 ? 'N' : 'n');
+					co_yield Chess::create(_from, _from + front - 1, _group == 0 ? 'B' : 'b');
 				}
 				else
 				{
-					output.push_back(Chess::create(_from, _from + front - 1, 0));
+					co_yield Chess::create(_from, _from + front - 1, 0);
 				}
 			}
 			continue;
@@ -565,7 +537,7 @@ godot::PackedInt32Array RuleStandard::generate_move(godot::Ref<State>_state, int
 			int to_piece = _state->get_piece(to);
 			while (!(to & 0x88) && (!to_piece || !Chess::is_same_group(from_piece, to_piece)))
 			{
-				output.push_back(Chess::create(_from, to, 0));
+				co_yield Chess::create(_from, to, 0);
 				if (!(to & 0x88) && to_piece && !Chess::is_same_group(from_piece, to_piece))
 				{
 					break;
@@ -582,29 +554,27 @@ godot::PackedInt32Array RuleStandard::generate_move(godot::Ref<State>_state, int
 				}
 				if ((_from & 15) >= 4 && (from_piece == 'R' && (_state->get_castle() & 8) || from_piece == 'r' && (_state->get_castle() & 2)))
 				{
-					output.push_back(Chess::create(to, from_piece == 'R' ? Chess::g1() : Chess::g8(), 'K'));
+					co_yield Chess::create(to, from_piece == 'R' ? Chess::g1() : Chess::g8(), 'K');
 				}
 				else if ((_from & 15) <= 3 && (from_piece == 'R' && (_state->get_castle() & 4) || from_piece == 'r' && (_state->get_castle() & 1)))
 				{
-					output.push_back(Chess::create(to,from_piece == 'R' ? Chess::c1() : Chess::c8(), 'Q'));
+					co_yield Chess::create(to,from_piece == 'R' ? Chess::c1() : Chess::c8(), 'Q');
 				}
 			}
 		}
 	}
-	return output;
 }
 
 godot::PackedInt32Array RuleStandard::generate_valid_move(godot::Ref<State>_state, int _group)
 {
-	godot::PackedInt32Array move_list = generate_move(_state, _group);
 	godot::PackedInt32Array output;
-	for (int i = 0; i < move_list.size(); i++)
+	for (int &&iter : generate_move(_state, _group))
 	{
 		godot::Ref<State>test_state = _state->duplicate();
-		apply_move(test_state, move_list[i]);
+		apply_move(test_state, iter);
 		if (!is_check(test_state, 1 - _group))
 		{
-			output.push_back(move_list[i]);
+			output.push_back(iter);
 		}
 	}
 	return output;
@@ -699,13 +669,12 @@ godot::String RuleStandard::get_move_name(godot::Ref<State> _state, int move)
 
 int RuleStandard::name_to_move(godot::Ref<State> _state, godot::String _name)
 {
-	godot::PackedInt32Array move_list = generate_move(_state, _state->get_turn());
-	for (int i = 0; i < move_list.size(); i++)
+	for (int &&iter : generate_move(_state, _state->get_turn()))
 	{
-		godot::String name = get_move_name(_state, move_list[i]);
+		godot::String name = get_move_name(_state, iter);
 		if (name == _name)
 		{
-			return move_list[i];
+			return iter;
 		}
 	}
 	return -1;
@@ -974,7 +943,7 @@ void RuleStandard::_bind_methods()
 	godot::ClassDB::bind_method(godot::D_METHOD("is_move_valid"), &RuleStandard::is_move_valid);
 	godot::ClassDB::bind_method(godot::D_METHOD("generate_premove"), &RuleStandard::generate_premove);
 	godot::ClassDB::bind_method(godot::D_METHOD("generate_move"), &RuleStandard::generate_move);
-	godot::ClassDB::bind_method(godot::D_METHOD("generate_valid_move"), &RuleStandard::generate_valid_move);
+	//godot::ClassDB::bind_method(godo t::D_METHOD("generate_valid_move"), &RuleStandard::generate_valid_move);
 	godot::ClassDB::bind_method(godot::D_METHOD("get_move_name"), &RuleStandard::get_move_name);
 	godot::ClassDB::bind_method(godot::D_METHOD("name_to_move"), &RuleStandard::name_to_move);
 	godot::ClassDB::bind_method(godot::D_METHOD("apply_move"), &RuleStandard::apply_move);

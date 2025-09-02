@@ -3,6 +3,7 @@
 
 #include <unordered_map>
 #include <array>
+#include <generator>
 #include <godot_cpp/classes/object.hpp>
 #include <godot_cpp/classes/ref.hpp>
 #include <state.hpp>
@@ -11,20 +12,6 @@ class RuleStandard : public godot::Object
 {
 	GDCLASS(RuleStandard, Object)
 	public:
-		class MoveIterator
-		{
-			public:
-				void begin();
-				void next();
-				void pawn_next();
-				int move();
-				bool end();
-			private:
-				State *state;
-				State::PieceIterator piece_iter;
-				bool premove;
-				int index;	//当前棋子所有方案数量
-		};
 		RuleStandard();
 		godot::String get_end_type(godot::Ref<State> _state);
 		godot::Ref<State> parse(godot::String _str);
@@ -33,11 +20,8 @@ class RuleStandard : public godot::Object
 		bool is_move_valid(godot::Ref<State> _state, int _group, int _move);
 		bool is_check(godot::Ref<State> _state, int _group);
 		godot::PackedInt32Array generate_premove(godot::Ref<State> _state, int _group);
-		godot::PackedInt32Array generate_move(godot::Ref<State> _state, int _group);
+		std::generator<int> generate_move(godot::Ref<State> _state, int _group);
 		godot::PackedInt32Array generate_valid_move(godot::Ref<State> _state, int _group);
-		MoveIterator premove_iterator_begin();
-		MoveIterator move_iterator_begin();
-		MoveIterator valid_move_iterator_begin();
 		godot::String get_move_name(godot::Ref<State> _state, int move);
 		int name_to_move(godot::Ref<State> _state, godot::String name);
 		void apply_move(godot::Ref<State> _state, int _move);

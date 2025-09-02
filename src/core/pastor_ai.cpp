@@ -169,9 +169,8 @@ double PastorAI::plan_time_cost(godot::Ref<State> _state)
 	return pow(time_left * (_state->get_round()), 0.2);
 }
 
-godot::PackedInt32Array PastorAI::generate_good_capture_move(godot::Ref<State>_state, int _group)
+std::generator<int> PastorAI::generate_good_capture_move(godot::Ref<State>_state, int _group)
 {
-	godot::PackedInt32Array output;
 	for (State::PieceIterator iter = _state->piece_iterator_begin(); !iter.end(); iter.next())
 	{
 		int _from = iter.pos();
@@ -192,14 +191,14 @@ godot::PackedInt32Array PastorAI::generate_good_capture_move(godot::Ref<State>_s
 			{
 				if (on_end)
 				{
-					output.push_back(Chess::create(_from, _from + front + 1, _group == 0 ? 'Q' : 'q'));
-					output.push_back(Chess::create(_from, _from + front + 1, _group == 0 ? 'R' : 'r'));
-					output.push_back(Chess::create(_from, _from + front + 1, _group == 0 ? 'N' : 'n'));
-					output.push_back(Chess::create(_from, _from + front + 1, _group == 0 ? 'B' : 'b'));
+					co_yield Chess::create(_from, _from + front + 1, _group == 0 ? 'Q' : 'q');
+					co_yield Chess::create(_from, _from + front + 1, _group == 0 ? 'R' : 'r');
+					co_yield Chess::create(_from, _from + front + 1, _group == 0 ? 'N' : 'n');
+					co_yield Chess::create(_from, _from + front + 1, _group == 0 ? 'B' : 'b');
 				}
 				else
 				{
-					output.push_back(Chess::create(_from, _from + front + 1, 0));
+					co_yield Chess::create(_from, _from + front + 1, 0);
 				}
 			}
 			if (_state->has_piece(_from + front - 1) && !Chess::is_same_group(from_piece, _state->get_piece(_from + front - 1))
@@ -208,14 +207,14 @@ godot::PackedInt32Array PastorAI::generate_good_capture_move(godot::Ref<State>_s
 			{
 				if (on_end)
 				{
-					output.push_back(Chess::create(_from, _from + front - 1, _group == 0 ? 'Q' : 'q'));
-					output.push_back(Chess::create(_from, _from + front - 1, _group == 0 ? 'R' : 'r'));
-					output.push_back(Chess::create(_from, _from + front - 1, _group == 0 ? 'N' : 'n'));
-					output.push_back(Chess::create(_from, _from + front - 1, _group == 0 ? 'B' : 'b'));
+					co_yield Chess::create(_from, _from + front - 1, _group == 0 ? 'Q' : 'q');
+					co_yield Chess::create(_from, _from + front - 1, _group == 0 ? 'R' : 'r');
+					co_yield Chess::create(_from, _from + front - 1, _group == 0 ? 'N' : 'n');
+					co_yield Chess::create(_from, _from + front - 1, _group == 0 ? 'B' : 'b');
 				}
 				else
 				{
-					output.push_back(Chess::create(_from, _from + front - 1, 0));
+					co_yield Chess::create(_from, _from + front - 1, 0);
 				}
 			}
 			continue;
@@ -247,13 +246,13 @@ godot::PackedInt32Array PastorAI::generate_good_capture_move(godot::Ref<State>_s
 				{
 					if (abs(piece_value[_from]) <= abs(piece_value[to]))
 					{
-						output.push_back(Chess::create(_from, to, 0));
+						co_yield Chess::create(_from, to, 0);
 					}
 					break;
 				}
 				if (_state->get_king_passant() != -1 && abs(to - _state->get_king_passant()) <= 1)
 				{
-					output.push_back(Chess::create(_from, to, 0));
+					co_yield Chess::create(_from, to, 0);
 					break;
 				}
 				if ((from_piece & 95) == 'K' || (from_piece & 95) == 'N')
@@ -265,7 +264,6 @@ godot::PackedInt32Array PastorAI::generate_good_capture_move(godot::Ref<State>_s
 			}
 		}
 	}
-	return output;
 }
 
 
@@ -345,12 +343,11 @@ int PastorAI::quies(godot::Ref<State>_state, int _alpha, int _beta, int _group)
 	{
 		_alpha = value;
 	}
-	godot::PackedInt32Array move_list = generate_good_capture_move(_state, _group);
-	for (int i = 0; i < move_list.size(); i++)
+	for (int &&iter : generate_good_capture_move(_state, _group))
 	{
 		godot::Ref<State> test_state = _state->duplicate();
-		RuleStandard::get_singleton()->apply_move(test_state, move_list[i]);
-		test_state->change_score(evaluate(_state, move_list[i]));
+		RuleStandard::get_singleton()->apply_move(test_state, iter);
+		test_state->change_score(evaluate(_state, iter));
 		value = -quies(test_state, -_beta, -_alpha, 1 - _group);
 		if (value >= _beta)
 		{
