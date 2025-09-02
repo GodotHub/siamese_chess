@@ -9,7 +9,7 @@ var ai: PastorAI = PastorAI.new()
 
 func _ready() -> void:
 	chess_state = RuleStandard.parse("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
-	ai.set_max_depth(100)
+	ai.set_max_depth(8)
 	var thread:Thread = Thread.new()
 	thread.start(make_database)
 
@@ -72,6 +72,7 @@ func make_database() -> void:
 	print("before: %dms" % await performance_test())
 	chess_state = RuleStandard.parse("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
 	# RuleStandard.search(chess_state, 0, transposition_table, Callable(), 10, debug_output)
+	ai.set_max_depth(20)
 	ai.start_search(chess_state, 0, INF, debug_output)
 	await ai.search_finished
 	print(main_variation)
