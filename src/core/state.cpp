@@ -3,48 +3,6 @@
 #include "rule_standard.hpp"
 #include <cstring>
 
-void State::PieceIterator::begin()
-{
-	while (!parent->pieces[by] && by < 128)
-	{
-		by++;
-		if (by & 0x88)
-		{
-			by += 8;
-			by -= by & 15;
-		}
-	}
-}
-
-void State::PieceIterator::next()
-{
-	by++;
-	while (!parent->pieces[by] && by < 128)
-	{
-		by++;
-		if (by & 0x88)
-		{
-			by += 8;
-			by -= by & 15;
-		}
-	}
-}
-
-int State::PieceIterator::piece()
-{
-	return parent->pieces[by];
-}
-
-int State::PieceIterator::pos()
-{
-	return by;
-}
-
-bool State::PieceIterator::end()
-{
-	return by & 0x88;
-}
-
 State::State()
 {
 	memset(pieces, 0, sizeof(pieces));
@@ -65,13 +23,19 @@ godot::Ref<State> State::duplicate()
 	return new_state;
 }
 
-State::PieceIterator State::piece_iterator_begin()
+std::generator<int> State::get_all_pieces_iterative()
 {
-	State::PieceIterator instance;
-	instance.parent = this;
-	instance.by = 0;
-	instance.begin();
-	return instance;
+	for (int from_1 = 0; from_1 < 8; from_1++)
+	{
+		for (int from_2 = 0; from_2 < 8; from_2++)
+		{
+			int from = (from_1 << 4) + from_2;
+			if (has_piece(from))
+			{
+				co_yield from;
+			}
+		}
+	}
 }
 
 godot::PackedInt32Array State::get_all_pieces()

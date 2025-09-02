@@ -171,10 +171,10 @@ double PastorAI::plan_time_cost(godot::Ref<State> _state)
 
 std::generator<int> PastorAI::generate_good_capture_move(godot::Ref<State>_state, int _group)
 {
-	for (State::PieceIterator iter = _state->piece_iterator_begin(); !iter.end(); iter.next())
+	for (int &&iter : _state->get_all_pieces_iterative())
 	{
-		int _from = iter.pos();
-		int from_piece = iter.piece();
+		int _from = iter;
+		int from_piece = _state->get_piece(iter);
 		if (_group != Chess::group(from_piece))
 		{
 			continue;

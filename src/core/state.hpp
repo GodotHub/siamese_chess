@@ -4,27 +4,16 @@
 #include <godot_cpp/classes/ref_counted.hpp>
 #include <godot_cpp/variant/packed_int32_array.hpp>
 #include <unordered_map>
+#include <generator>
+#include <coroutine>
 
 class State : public godot::RefCounted
 {
 	GDCLASS(State, RefCounted)
 	public:
-		class PieceIterator
-		{
-			public:
-				void begin();
-				void next();
-				int piece();
-				int pos();
-				bool end();
-			private:
-				friend State;
-				State *parent;
-				int by;
-		};
 		State();
 		godot::Ref<State> duplicate();
-		PieceIterator piece_iterator_begin();
+		std::generator<int> get_all_pieces_iterative();
 		godot::PackedInt32Array get_all_pieces();
 		godot::Array get_pieces_info();
 		int get_piece(int _by);

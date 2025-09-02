@@ -272,10 +272,10 @@ bool RuleStandard::is_move_valid(godot::Ref<State>_state, int _group, int _move)
 
 bool RuleStandard::is_check(godot::Ref<State> _state, int _group)
 {
-	for (State::PieceIterator iter = _state->piece_iterator_begin(); !iter.end(); iter.next())
+	for (int &&iter : _state->get_all_pieces_iterative())
 	{
-		int _from = iter.pos();
-		int from_piece = iter.piece();
+		int _from = iter;
+		int from_piece = _state->get_piece(iter);
 		if (_group != Chess::group(from_piece))
 		{
 			continue;
@@ -348,10 +348,10 @@ bool RuleStandard::is_check(godot::Ref<State> _state, int _group)
 godot::PackedInt32Array RuleStandard::generate_premove(godot::Ref<State>_state, int _group)
 {
 	godot::PackedInt32Array output;
-	for (State::PieceIterator iter = _state->piece_iterator_begin(); !iter.end(); iter.next())
+	for (int &&iter : _state->get_all_pieces_iterative())
 	{
-		int _from = iter.pos();
-		int from_piece = iter.piece();
+		int _from = iter;
+		int from_piece = _state->get_piece(iter);
 		if (_group != Chess::group(from_piece))
 		{
 			continue;
@@ -452,10 +452,10 @@ godot::PackedInt32Array RuleStandard::generate_premove(godot::Ref<State>_state, 
 
 std::generator<int> RuleStandard::generate_move(godot::Ref<State>_state, int _group)
 {
-	for (State::PieceIterator iter = _state->piece_iterator_begin(); !iter.end(); iter.next())
+	for (int &&iter : _state->get_all_pieces_iterative())
 	{
-		int _from = iter.pos();
-		int from_piece = iter.piece();
+		int _from = iter;
+		int from_piece = _state->get_piece(iter);
 		if (_group != Chess::group(from_piece))
 		{
 			continue;
@@ -942,8 +942,8 @@ void RuleStandard::_bind_methods()
 	godot::ClassDB::bind_method(godot::D_METHOD("is_check"), &RuleStandard::is_check);
 	godot::ClassDB::bind_method(godot::D_METHOD("is_move_valid"), &RuleStandard::is_move_valid);
 	godot::ClassDB::bind_method(godot::D_METHOD("generate_premove"), &RuleStandard::generate_premove);
-	godot::ClassDB::bind_method(godot::D_METHOD("generate_move"), &RuleStandard::generate_move);
-	//godot::ClassDB::bind_method(godo t::D_METHOD("generate_valid_move"), &RuleStandard::generate_valid_move);
+	//godot::ClassDB::bind_method(godot::D_METHOD("generate_move"), &RuleStandard::generate_move);
+	godot::ClassDB::bind_method(godot::D_METHOD("generate_valid_move"), &RuleStandard::generate_valid_move);
 	godot::ClassDB::bind_method(godot::D_METHOD("get_move_name"), &RuleStandard::get_move_name);
 	godot::ClassDB::bind_method(godot::D_METHOD("name_to_move"), &RuleStandard::name_to_move);
 	godot::ClassDB::bind_method(godot::D_METHOD("apply_move"), &RuleStandard::apply_move);
