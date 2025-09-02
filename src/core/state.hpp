@@ -33,11 +33,9 @@ class State : public godot::RefCounted
 		void set_round(int _round);
 		int get_king_passant();
 		void set_king_passant(int _king_passant);
-		void change_score(int delta);
 		int64_t get_zobrist();
 		int has_history(int64_t _zobrist);
 		void push_history(int64_t _zobrist);
-		int get_relative_score(int _group);
 		static void _bind_methods();
 	private:
 		int pieces[128];
@@ -49,7 +47,6 @@ class State : public godot::RefCounted
 		int king_passant;
 		std::unordered_map<int64_t, int> history;
 		int64_t zobrist = 0;
-		int score = 0;
 };
 
 #endif

@@ -18,7 +18,6 @@ godot::Ref<State> State::duplicate()
 	new_state->step_to_draw = step_to_draw;
 	new_state->round = round;
 	new_state->king_passant = king_passant;
-	new_state->score = score;
 	new_state->zobrist = zobrist;
 	return new_state;
 }
@@ -204,11 +203,6 @@ void State::set_king_passant(int _king_passant)
 	king_passant = _king_passant;
 }
 
-void State::change_score(int delta)
-{
-	score += delta;
-}
-
 int64_t State::get_zobrist()
 {
 	return zobrist;
@@ -229,11 +223,6 @@ void State::push_history(int64_t _zobrist)
 	{
 		history[_zobrist] = 1;
 	}
-}
-
-int State::get_relative_score(int _group)
-{
-	return _group == 0 ? score : -score;
 }
 
 void State::_bind_methods()
@@ -257,8 +246,6 @@ void State::_bind_methods()
 	godot::ClassDB::bind_method(godot::D_METHOD("set_round"), &State::set_round);
 	godot::ClassDB::bind_method(godot::D_METHOD("get_king_passant"), &State::get_king_passant);
 	godot::ClassDB::bind_method(godot::D_METHOD("set_king_passant"), &State::set_king_passant);
-	godot::ClassDB::bind_method(godot::D_METHOD("change_score"), &State::change_score);
-	godot::ClassDB::bind_method(godot::D_METHOD("get_relative_score"), &State::get_relative_score);
 	godot::ClassDB::bind_method(godot::D_METHOD("get_zobrist"), &State::get_zobrist);
 	godot::ClassDB::bind_method(godot::D_METHOD("has_history"), &State::has_history);
 	godot::ClassDB::bind_method(godot::D_METHOD("push_history"), &State::push_history);
