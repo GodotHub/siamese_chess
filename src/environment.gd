@@ -15,7 +15,7 @@ var telephone_2025_first_time:bool = false
 
 func _ready() -> void:
 	$history.set_document(pastor_history_chart)
-	$cheshire.set_initial_interact($interact/area_passthrough)
+	$player.set_initial_interact($interact/area_passthrough)
 	$clock_pastor.connect("timeout", pastor_game_timeout)
 	$telephone.connect("call_number", dialog_telephone)
 	$interact/area_pastor.connect("clicked", pastor_select_dialog)
@@ -72,7 +72,7 @@ func dialog_telephone_2025() -> void:
 			await $dialog.on_next
 
 func dialog_pastor_idle() -> void:
-	$cheshire.force_set_camera($camera/camera_pastor_closeup)
+	$player.force_set_camera($camera/camera_pastor_closeup)
 	$dialog.push_selection(["下棋？", "询问规则", "返回"])
 	await $dialog.on_next
 	if $dialog.selected == 0:
@@ -82,26 +82,26 @@ func dialog_pastor_idle() -> void:
 
 func dialog_description_chess() -> void:
 	$dialog.push_dialog("这只是标准的国际象棋。", true, true)
-	$cheshire.force_set_camera($camera/camera_pastor_closeup)
+	$player.force_set_camera($camera/camera_pastor_closeup)
 	await $dialog.on_next
 	$dialog.push_dialog("在这里，您至少需要了解国际象棋的基本规则。", true, true)
-	$cheshire.force_set_camera($camera/camera_pastor_closeup)
+	$player.force_set_camera($camera/camera_pastor_closeup)
 	await $dialog.on_next
 	$dialog.push_dialog("不过，如果您对这种游戏仍然一头雾水，您也可以试着上手，", true, true)
-	$cheshire.force_set_camera($camera/camera_pastor_closeup)
+	$player.force_set_camera($camera/camera_pastor_closeup)
 	await $dialog.on_next
 	$dialog.push_dialog("您可以边对照规则边上手实践，我也会提示一些可走的着法，", true, true)
-	$cheshire.force_set_camera($camera/camera_pastor_closeup)
+	$player.force_set_camera($camera/camera_pastor_closeup)
 	await $dialog.on_next
 	$dialog.push_dialog("不过……我不会放水，请做好输棋的心理准备吧。", true, true)
-	$cheshire.force_set_camera($camera/camera_pastor_closeup)
+	$player.force_set_camera($camera/camera_pastor_closeup)
 	await $dialog.on_next
 
 func dialog_pastor_in_game() -> void:
 	$dialog.push_selection(["提出悔棋", "结束棋局", "取消"])
-	$cheshire.force_set_camera($camera/camera_pastor_closeup)
+	$player.force_set_camera($camera/camera_pastor_closeup)
 	await $dialog.on_next
-	$cheshire.add_stack($interact/area_pastor_chessboard)
+	$player.add_stack($interact/area_pastor_chessboard)
 	if $dialog.selected == 0:
 		if pastor_history.size() <= 2:	# 白方第一步棋无法撤回
 			return
@@ -139,13 +139,13 @@ func dialog_pastor_game_start() -> void:
 			elif $dialog.selected == 2:
 				$clock_pastor.set_time(300, 1, 3)
 			$dialog.push_dialog("现在棋盘已经准备好了。", true, true)
-			$cheshire.force_set_camera($camera/camera_pastor_chessboard)
+			$player.force_set_camera($camera/camera_pastor_chessboard)
 			await $dialog.on_next
 			$dialog.push_dialog("您是黑方后手开局，时间有限，请注意合理分配。", true, true)
-			$cheshire.force_set_camera($camera/camera_pastor_closeup)
+			$player.force_set_camera($camera/camera_pastor_closeup)
 			await $dialog.on_next
 			$clock_pastor.start()
-			$cheshire.add_stack($interact/area_pastor_chessboard)
+			$player.add_stack($interact/area_pastor_chessboard)
 			pastor_state = "game_with_pastor"
 			call_deferred("game_with_pastor")
 			break
@@ -156,13 +156,13 @@ func dialog_pastor_game_start() -> void:
 			pastor_history_chart.set_filename("history." + String.num_int64(Time.get_unix_time_from_system()) + ".json")
 			$clock_pastor.set_time(30, 1, 0)
 			$dialog.push_dialog("现在棋盘已经准备好了。", true, true)
-			$cheshire.force_set_camera($camera/camera_pastor_chessboard)
+			$player.force_set_camera($camera/camera_pastor_chessboard)
 			await $dialog.on_next
 			$dialog.push_dialog("该对局为特殊布局，时间上较为紧张，注意速战速决。", true, true)
-			$cheshire.force_set_camera($camera/camera_pastor_closeup)
+			$player.force_set_camera($camera/camera_pastor_closeup)
 			await $dialog.on_next
 			$clock_pastor.start()
-			$cheshire.add_stack($interact/area_pastor_chessboard)
+			$player.add_stack($interact/area_pastor_chessboard)
 			pastor_state = "game_with_pastor"
 			call_deferred("game_with_pastor")
 			break
@@ -176,19 +176,19 @@ func dialog_pastor_game_start() -> void:
 				pastor_history_chart.set_state(pastor_game_state)
 				pastor_history_chart.set_filename("history." + String.num_int64(Time.get_unix_time_from_system()) + ".json")
 				$dialog.push_dialog("现在棋盘已经准备好了。", true, true)
-				$cheshire.force_set_camera($camera/camera_pastor_chessboard)
+				$player.force_set_camera($camera/camera_pastor_chessboard)
 				await $dialog.on_next
 				$dialog.push_dialog("根据棋局信息，" + ("目前是白方先手。" if pastor_game_state.get_turn() == 0 else "目前是黑方先手。"), true, true)
-				$cheshire.force_set_camera($camera/camera_pastor_closeup)
+				$player.force_set_camera($camera/camera_pastor_closeup)
 				await $dialog.on_next
 				pastor_state = "game_with_pastor"
-				$cheshire.add_stack($interact/area_pastor_chessboard)
+				$player.add_stack($interact/area_pastor_chessboard)
 				call_deferred("game_with_pastor")
 				break
 		elif $dialog.selected == 5:
 			return
 		$dialog.push_dialog("您输入的格式有误，请重新检查。", true, true)
-		$cheshire.force_set_camera($camera/camera_pastor_chessboard)
+		$player.force_set_camera($camera/camera_pastor_chessboard)
 		await $dialog.on_next
 
 func game_with_pastor() -> void:
@@ -268,9 +268,9 @@ func check_menu() -> void:	# 玩家初次遇到时归档
 func dialog_friend_start_game() -> void:
 	if friend_state == "in_game":
 		if friend_game_state.get_turn() == 0:
-			$cheshire.move_camera.call_deferred($camera/camera_friend_chessboard_white)
+			$player.move_camera.call_deferred($camera/camera_friend_chessboard_white)
 		else:
-			$cheshire.move_camera.call_deferred($camera/camera_friend_chessboard_black)
+			$player.move_camera.call_deferred($camera/camera_friend_chessboard_black)
 		return
 	while true:
 		$dialog.push_selection(["标准棋局（30+0）", "快棋（10+5）", "超快棋（5+3）", "导入棋局", "取消"])
@@ -307,7 +307,7 @@ func game_with_friend() -> void:
 	while RuleStandard.get_end_type(friend_game_state) == "":
 		$chessboard_friend.set_valid_move(RuleStandard.generate_valid_move(friend_game_state, 0))
 		$chessboard_friend.set_valid_premove([])
-		$cheshire.move_camera($camera/camera_friend_chessboard_white)
+		$player.move_camera($camera/camera_friend_chessboard_white)
 		await $chessboard_friend.move_played
 		RuleStandard.apply_move(friend_game_state, $chessboard_friend.confirm_move)
 		$clock_friend.next()
@@ -315,7 +315,7 @@ func game_with_friend() -> void:
 			break
 		$chessboard_friend.set_valid_move(RuleStandard.generate_valid_move(friend_game_state, 1))
 		$chessboard_friend.set_valid_premove([])
-		$cheshire.move_camera($camera/camera_friend_chessboard_black)
+		$player.move_camera($camera/camera_friend_chessboard_black)
 		await $chessboard_friend.move_played
 		RuleStandard.apply_move(friend_game_state, $chessboard_friend.confirm_move)
 		$clock_friend.next()
