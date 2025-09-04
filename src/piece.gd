@@ -1,7 +1,5 @@
-extends Node3D
-class_name PieceInstance
+extends Actor
 
-var chessboard:Chessboard = null
 var position_name:String = ""
 var group:int = 0
 var sfx:AudioStreamPlayer3D = null
@@ -16,11 +14,11 @@ func _ready() -> void:
 	add_child(sfx)
 	sfx.unit_size = 2
 	sfx.volume_db = -20
-	if position_name:
-		position = chessboard.convert_name_to_position(position_name)
-	else:
-		position_name = chessboard.get_position_name(position)
-		position = chessboard.convert_name_to_position(position_name)
+	#if position_name:
+	#	position = chessboard.convert_name_to_position(position_name)
+	#else:
+	#	position_name = chessboard.get_position_name(position)
+	#	position = chessboard.convert_name_to_position(position_name)
 		
 	var material:ShaderMaterial = ShaderMaterial.new()
 	material.shader = load("res://src/unmoving_plaid.gdshader")
@@ -41,13 +39,6 @@ func _ready() -> void:
 		next_pass_material.albedo_color = Color(0, 0, 0, 1)
 	material.next_pass = next_pass_material
 	$piece.set_surface_override_material(0, material)
-
-func move(_position_name:String) -> void:
-	position_name = _position_name
-	var tween:Tween = create_tween()
-	tween.set_trans(Tween.TRANS_SINE)
-	tween.tween_property(self, "position", chessboard.convert_name_to_position(position_name), 0.4)
-	tween.tween_callback(sfx.play)
 
 func set_warning(enabled:bool) -> void:
 	if enabled:

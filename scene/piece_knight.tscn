@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://bg76sf8la38xa"]
 
 [ext_resource type="PackedScene" uid="uid://d3hqei5f4weey" path="res://assets/model/piece_knight.glb" id="1_fmedb"]
-[ext_resource type="Script" uid="uid://pofjvdbbj3iy" path="res://src/piece_instance.gd" id="2_qe16t"]
+[ext_resource type="Script" uid="uid://pofjvdbbj3iy" path="res://src/piece.gd" id="2_qe16t"]
 
 [node name="piece_knight" instance=ExtResource("1_fmedb")]
 script = ExtResource("2_qe16t")

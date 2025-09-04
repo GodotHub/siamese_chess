@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://h3jb5oale3vn"]
 
 [ext_resource type="PackedScene" uid="uid://ceaorwghlvaej" path="res://assets/model/piece_feral_cat.glb" id="1_0xx2r"]
-[ext_resource type="Script" uid="uid://pofjvdbbj3iy" path="res://src/piece_instance.gd" id="2_t0rxm"]
+[ext_resource type="Script" uid="uid://pofjvdbbj3iy" path="res://src/piece.gd" id="2_t0rxm"]
 
 [node name="piece_feral_cat" instance=ExtResource("1_0xx2r")]
 script = ExtResource("2_t0rxm")

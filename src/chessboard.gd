@@ -10,8 +10,8 @@ var valid_move:Dictionary[int, Array] = {}
 var valid_premove:Dictionary[int, Array] = {}
 var selected:int = -1
 var premove:int = -1
-var piece_instance:Dictionary[int, PieceInstance] = {}
-var king_instance:Array[PieceInstance] = [null, null]
+var piece_instance:Dictionary[int, Actor] = {}
+var king_instance:Array[Actor] = [null, null]
 var confirm_move:int = 0
 
 func _ready() -> void:
@@ -44,8 +44,8 @@ func set_state(_state:State) -> void:
 		if !state.has_piece(i):
 			continue
 		add_piece_instance(i, state.get_piece(i))
-	king_instance[0].set_warning(RuleStandard.is_check(state, 1))
-	king_instance[1].set_warning(RuleStandard.is_check(state, 0))
+	#king_instance[0].set_warning(RuleStandard.is_check(state, 1))
+	#king_instance[1].set_warning(RuleStandard.is_check(state, 0))
 
 func get_position_name(_position:Vector3) -> String:
 	var chess_pos:Vector2i = Vector2i(int(_position.x + 4) / 1, int(_position.z + 4) / 1)
@@ -137,8 +137,8 @@ func execute_move(move:int) -> void:
 	$canvas.clear_move_position()
 	$canvas.draw_move_position($canvas.convert_name_to_position(Chess.to_position_name(Chess.from(move))))
 	$canvas.draw_move_position($canvas.convert_name_to_position(Chess.to_position_name(Chess.to(move))))
-	king_instance[0].set_warning(RuleStandard.is_check(state, 1))
-	king_instance[1].set_warning(RuleStandard.is_check(state, 0))
+	#king_instance[0].set_warning(RuleStandard.is_check(state, 1))
+	#king_instance[1].set_warning(RuleStandard.is_check(state, 0))
 	selected = -1
 	move_played.emit()
 
@@ -175,8 +175,7 @@ func add_piece_instance(by:int, piece:int) -> void:
 		"b": {"instance": "res://scene/piece_bishop.tscn", "group": 1},
 		"p": {"instance": "res://scene/piece_pawn.tscn", "group": 1},
 	}
-	var instance:PieceInstance = load(piece_mapping[char(piece)]["instance"]).instantiate()
-	instance.chessboard = self
+	var instance:Actor = load(piece_mapping[char(piece)]["instance"]).instantiate()
 	instance.position_name = Chess.to_position_name(by)
 	instance.group = piece_mapping[char(piece)]["group"]
 	piece_instance[by] = instance
@@ -185,15 +184,16 @@ func add_piece_instance(by:int, piece:int) -> void:
 	if piece == "k".unicode_at(0):
 		king_instance[1] = instance
 	$pieces.add_child(instance)
+	instance.global_position = get_node(Chess.to_position_name(by)).global_position
 
 func move_piece_instance(from:int, to:int) -> void:
-	var instance:PieceInstance = piece_instance[from]
-	instance.move(Chess.to_position_name(to))
+	var instance:Actor = piece_instance[from]
+	instance.move(get_node(Chess.to_position_name(to)).global_position)
 	piece_instance.erase(from)
 	piece_instance[to] = instance
 
 func remove_piece_instance(by:int) -> void:
-	var instance:PieceInstance = piece_instance[by]
+	var instance:Actor = piece_instance[by]
 	piece_instance.erase(by)
 	instance.queue_free()
 

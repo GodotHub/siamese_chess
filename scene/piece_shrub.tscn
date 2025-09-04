@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://6bijbje3jt30"]
 
 [ext_resource type="PackedScene" uid="uid://cvoy4mwssrwjx" path="res://assets/model/piece_shrub.glb" id="1_sx106"]
-[ext_resource type="Script" uid="uid://pofjvdbbj3iy" path="res://src/piece_instance.gd" id="2_dhofv"]
+[ext_resource type="Script" uid="uid://pofjvdbbj3iy" path="res://src/piece.gd" id="2_dhofv"]
 
 [node name="piece_shrub" instance=ExtResource("1_sx106")]
 script = ExtResource("2_dhofv")
