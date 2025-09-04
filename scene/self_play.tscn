@@ -6,14 +6,17 @@
 
 [node name="sandbox" instance=ExtResource("1_u3cmr")]
 
-[node name="player" type="Node3D" parent="." index="5"]
+[node name="interact" parent="." index="4" node_paths=PackedStringArray("inspectable_item")]
+inspectable_item = [null]
+
+[node name="self_play" type="Node3D" parent="." index="5"]
 script = ExtResource("2_fpof4")
 epoch = 1
 
-[node name="a" type="Node3D" parent="player" index="0"]
+[node name="a" type="Node3D" parent="self_play" index="0"]
 script = ExtResource("3_uawfv")
 
-[node name="b" type="Node3D" parent="player" index="1"]
+[node name="b" type="Node3D" parent="self_play" index="1"]
 script = ExtResource("3_uawfv")
 group = 1
 
@@ -21,4 +24,4 @@ group = 1
 layout_mode = 2
 text = "开始自对弈"
 
-[connection signal="pressed" from="canvas_layer/panel/v_box_container/margin_container/h_box_container/button_start" to="player" method="on_button_start_pressed"]
+[connection signal="pressed" from="canvas_layer/panel/v_box_container/margin_container/h_box_container/button_start" to="self_play" method="on_button_start_pressed"]
