@@ -373,7 +373,7 @@ shader_parameter/contrast_mult = 1.0
 script = ExtResource("2_7r8ay")
 
 [node name="cheshire" parent="." index="0" instance=ExtResource("3_1vcsq")]
-transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -3.58332, 0, 0)
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -3.53642, 0, 0)
 
 [node name="ceil" parent="." index="3"]
 surface_material_override/0 = SubResource("ShaderMaterial_neu4h")
