@@ -50,11 +50,11 @@ godot::Ref<State>RuleStandard::parse(godot::String _str)
 			pointer.x = 0;
 			pointer.y += 1;
 		}
-		else if (fen_splited[0][i] >= '0' && fen_splited[0][i] <= '9')
+		else if (fen_splited[0][i] >= '1' && fen_splited[0][i] <= '9')
 		{
 			pointer.x += fen_splited[0][i] - '0';
 		}
-		else if (fen_splited[0][i])
+		else
 		{
 			state->add_piece(pointer.x + pointer.y * 16, fen_splited[0][i]);
 			pointer.x += 1;
