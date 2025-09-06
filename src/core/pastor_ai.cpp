@@ -537,7 +537,8 @@ void PastorAI::search(const godot::Ref<State> &_state, int _group, godot::Packed
 	}
 	for (int i = 1; i < max_depth; i++)
 	{
-		alphabeta(_state, evaluate_all(_state), -THRESHOLD, THRESHOLD, i, _group, 0, true, &map_history_state, &history_table, nullptr, nullptr, _debug_output);
+		int relative_score = _state->get_turn() == 0 ? evaluate_all(_state) : -evaluate_all(_state);
+		alphabeta(_state, relative_score, -THRESHOLD, THRESHOLD, i, _group, 0, true, &map_history_state, &history_table, nullptr, nullptr, _debug_output);
 		if (time_passed() >= plan_time_cost(_state) || interrupted)
 		{
 			break;
