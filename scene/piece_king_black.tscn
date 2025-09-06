@@ -1,0 +1,13 @@
+[gd_scene load_steps=4 format=3 uid="uid://bxsyg5lji0s5g"]
+
+[ext_resource type="PackedScene" uid="uid://bopgdgv46gefh" path="res://assets/model/piece_king.glb" id="1_o5l3u"]
+[ext_resource type="Script" uid="uid://pofjvdbbj3iy" path="res://src/piece.gd" id="2_j4cai"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_bjoa2"]
+
+[node name="chess_king" instance=ExtResource("1_o5l3u")]
+script = ExtResource("2_j4cai")
+group = 1
+
+[node name="piece" parent="." index="0"]
+surface_material_override/0 = SubResource("StandardMaterial3D_bjoa2")

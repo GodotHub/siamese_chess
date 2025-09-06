@@ -1,7 +1,7 @@
 extends Actor
 
 var position_name:String = ""
-var group:int = 0
+@export var group:int = 0
 var sfx:AudioStreamPlayer3D = null
 
 func _ready() -> void:
@@ -39,6 +39,10 @@ func _ready() -> void:
 		next_pass_material.albedo_color = Color(0, 0, 0, 1)
 	material.next_pass = next_pass_material
 	$piece.set_surface_override_material(0, material)
+
+func move(_pos:Vector3) -> void:
+	var tween:Tween = create_tween()
+	tween.tween_property(self, "global_position", _pos, 0.3).set_trans(Tween.TRANS_SINE)
 
 func set_warning(enabled:bool) -> void:
 	if enabled:

@@ -1,0 +1,13 @@
+[gd_scene load_steps=4 format=3 uid="uid://wlf2bpitdmjk"]
+
+[ext_resource type="PackedScene" uid="uid://3uniw2jsey4r" path="res://assets/model/piece_queen.glb" id="1_hcmrp"]
+[ext_resource type="Script" uid="uid://pofjvdbbj3iy" path="res://src/piece.gd" id="2_heo6i"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_f4icp"]
+
+[node name="piece_queen" instance=ExtResource("1_hcmrp")]
+script = ExtResource("2_heo6i")
+group = 1
+
+[node name="piece" parent="." index="0"]
+surface_material_override/0 = SubResource("StandardMaterial3D_f4icp")

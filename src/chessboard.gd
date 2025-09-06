@@ -2,7 +2,20 @@ extends InspectableItem
 class_name Chessboard
 
 signal move_played()
-
+var piece_mapping:Dictionary = {
+	"K": load("res://scene/piece_king_white.tscn").instantiate(),
+	"Q": load("res://scene/piece_queen_white.tscn").instantiate(),
+	"R": load("res://scene/piece_rook_white.tscn").instantiate(),
+	"N": load("res://scene/piece_knight_white.tscn").instantiate(),
+	"B": load("res://scene/piece_bishop_white.tscn").instantiate(),
+	"P": load("res://scene/piece_pawn_white.tscn").instantiate(),
+	"k": load("res://scene/piece_king_black.tscn").instantiate(),
+	"q": load("res://scene/piece_queen_black.tscn").instantiate(),
+	"r": load("res://scene/piece_rook_black.tscn").instantiate(),
+	"n": load("res://scene/piece_knight_black.tscn").instantiate(),
+	"b": load("res://scene/piece_bishop_black.tscn").instantiate(),
+	"p": load("res://scene/piece_pawn_black.tscn").instantiate(),
+}
 var mouse_start_position_name:String = ""
 var mouse_moved:bool = false
 var state:State = null
@@ -161,23 +174,7 @@ func set_valid_premove(move_list:PackedInt32Array) -> void:
 		valid_premove[Chess.from(move)].push_back(move)
 
 func add_piece_instance(by:int, piece:int) -> void:
-	const piece_mapping:Dictionary = {
-		"K": {"instance": "res://scene/piece_king.tscn", "group": 0},
-		"Q": {"instance": "res://scene/piece_queen.tscn", "group": 0},
-		"R": {"instance": "res://scene/piece_rook.tscn", "group": 0},
-		"N": {"instance": "res://scene/piece_knight.tscn", "group": 0},
-		"B": {"instance": "res://scene/piece_bishop.tscn", "group": 0},
-		"P": {"instance": "res://scene/piece_pawn.tscn", "group": 0},
-		"k": {"instance": "res://scene/piece_king.tscn", "group": 1},
-		"q": {"instance": "res://scene/piece_queen.tscn", "group": 1},
-		"r": {"instance": "res://scene/piece_rook.tscn", "group": 1},
-		"n": {"instance": "res://scene/piece_knight.tscn", "group": 1},
-		"b": {"instance": "res://scene/piece_bishop.tscn", "group": 1},
-		"p": {"instance": "res://scene/piece_pawn.tscn", "group": 1},
-	}
-	var instance:Actor = load(piece_mapping[char(piece)]["instance"]).instantiate()
-	instance.position_name = Chess.to_position_name(by)
-	instance.group = piece_mapping[char(piece)]["group"]
+	var instance:Actor = piece_mapping[char(piece)].duplicate()
 	piece_instance[by] = instance
 	if piece == "K".unicode_at(0):
 		king_instance[0] = instance

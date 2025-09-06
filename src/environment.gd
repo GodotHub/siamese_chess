@@ -18,6 +18,7 @@ func _ready() -> void:
 	$player.set_initial_interact($interact/area_passthrough)
 	$clock_pastor.connect("timeout", pastor_game_timeout)
 	$telephone.connect("call_number", dialog_telephone)
+	$cheshire.play_animation("thinking")
 	$interact/area_pastor.connect("clicked", pastor_select_dialog)
 	$interact/area_archive.connect("clicked", $archive.open)
 	$interact/area_menu.connect("clicked", check_menu)
