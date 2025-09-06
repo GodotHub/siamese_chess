@@ -10,7 +10,7 @@ random_volume_offset_db = 0.89
 streams_count = 1
 stream_0/stream = ExtResource("3_uowm0")
 
-[node name="cheshire" type="Node3D"]
+[node name="player" type="Node3D"]
 script = ExtResource("1_tpg0u")
 
 [node name="touch_input_manager" type="Node" parent="."]
