@@ -1,25 +1,55 @@
-[gd_scene load_steps=7 format=3 uid="uid://bjdbj6ulswxgl"]
+[gd_scene load_steps=13 format=3 uid="uid://bjdbj6ulswxgl"]
 
 [ext_resource type="PackedScene" uid="uid://s1v4ec45m2i5" path="res://assets/model/cheshire.glb" id="1_lkfns"]
 [ext_resource type="Script" uid="uid://bt4vtnpxu5i4x" path="res://src/actor.gd" id="2_lp02k"]
 
-[sub_resource type="AnimationNodeBlend2" id="AnimationNodeBlend2_lp02k"]
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_lp02k"]
+animation = &"battle_idle"
+advance_on_start = true
 
 [sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_uowm0"]
-animation = &"battle_idle"
-
-[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_lidw1"]
 animation = &"battle_move"
 
-[sub_resource type="AnimationNodeBlendTree" id="AnimationNodeBlendTree_uniqn"]
-graph_offset = Vector2(-380.565, 28.8041)
-nodes/Blend2/node = SubResource("AnimationNodeBlend2_lp02k")
-nodes/Blend2/position = Vector2(124.16, 153.24)
-nodes/battle_idle/node = SubResource("AnimationNodeAnimation_uowm0")
-nodes/battle_idle/position = Vector2(-120, 100)
-nodes/battle_move/node = SubResource("AnimationNodeAnimation_lidw1")
-nodes/battle_move/position = Vector2(-120, 280)
-node_connections = [&"Blend2", 0, &"battle_idle", &"Blend2", 1, &"battle_move", &"output", 0, &"Blend2"]
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_lidw1"]
+animation = &"handshake"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_uniqn"]
+animation = &"idle"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_iy7iy"]
+animation = &"thinking"
+
+[sub_resource type="Curve" id="Curve_lp02k"]
+_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_uowm0"]
+xfade_time = 0.2
+xfade_curve = SubResource("Curve_lp02k")
+
+[sub_resource type="Curve" id="Curve_lidw1"]
+_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_uniqn"]
+xfade_time = 0.2
+xfade_curve = SubResource("Curve_lidw1")
+
+[sub_resource type="AnimationNodeStateMachine" id="AnimationNodeStateMachine_pjgvl"]
+states/End/position = Vector2(808, 101.333)
+states/Start/position = Vector2(185.333, 101.63)
+states/battle_idle/node = SubResource("AnimationNodeAnimation_lp02k")
+states/battle_idle/position = Vector2(427.753, 40.6264)
+states/battle_move/node = SubResource("AnimationNodeAnimation_uowm0")
+states/battle_move/position = Vector2(428.889, 179.333)
+states/handshake/node = SubResource("AnimationNodeAnimation_lidw1")
+states/handshake/position = Vector2(653.333, 40.288)
+states/idle/node = SubResource("AnimationNodeAnimation_uniqn")
+states/idle/position = Vector2(606, 169)
+states/thinking/node = SubResource("AnimationNodeAnimation_iy7iy")
+states/thinking/position = Vector2(719.333, 177.889)
+transitions = ["battle_idle", "battle_move", SubResource("AnimationNodeStateMachineTransition_uowm0"), "battle_move", "battle_idle", SubResource("AnimationNodeStateMachineTransition_uniqn")]
+graph_offset = Vector2(-71, -21)
 
 [node name="cheshire" instance=ExtResource("1_lkfns")]
 script = ExtResource("2_lp02k")
@@ -118,6 +148,5 @@ bones/83/rotation = Quaternion(-0.706758, 0.0222116, -0.0222116, 0.706758)
 bones/84/position = Vector3(-0.014441, -0.296129, 0.229524)
 
 [node name="animation_tree" type="AnimationTree" parent="." index="2"]
-tree_root = SubResource("AnimationNodeBlendTree_uniqn")
+tree_root = SubResource("AnimationNodeStateMachine_pjgvl")
 anim_player = NodePath("../AnimationPlayer")
-parameters/Blend2/blend_amount = 0.0
