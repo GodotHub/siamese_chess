@@ -25,6 +25,7 @@ func stringify() -> String:
 func save_file() -> void:
 	var data:String = stringify()
 	var path:String = "user://archive/" + filename
+	DirAccess.make_dir_absolute("user://archive/")
 	var file:FileAccess = FileAccess.open(path, FileAccess.WRITE)
 	file.store_string(data)
 	file.close()
