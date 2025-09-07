@@ -8,6 +8,7 @@ var selected:int = 0
 var waiting:bool = false
 var click_anywhere:bool = false
 var force_selection:bool = false
+var click_cooldown:float = 0
 
 func _ready() -> void:
 	$texture_rect_bottom/label.connect("meta_clicked", clicked_selection)
@@ -30,9 +31,10 @@ func test() -> void:
 
 func _unhandled_input(event:InputEvent) -> void:
 	if click_anywhere && !waiting:
-		if event is InputEventMouseButton && event.button_index == MOUSE_BUTTON_LEFT && event.pressed:
+		if event is InputEventMouseButton && event.button_index == MOUSE_BUTTON_LEFT && event.pressed && Time.get_unix_time_from_system() - click_cooldown >= 0.3:
 			next()
-	if click_anywhere || force_selection:
+			click_cooldown = Time.get_unix_time_from_system()
+	if click_anywhere || force_selection || Time.get_unix_time_from_system() - click_cooldown < 0.3:
 		get_viewport().set_input_as_handled()
 
 func push_dialog(text:String, blackscreen:bool = false, _click_anywhere:bool = false, _waiting:bool = false) -> void:
