@@ -169,12 +169,13 @@ double PastorAI::plan_time_cost(godot::Ref<State> _state)
 	return pow(time_left * (_state->get_round()), 0.2);
 }
 
-std::generator<int> PastorAI::generate_good_capture_move(godot::Ref<State>_state, int _group)
+godot::PackedInt32Array PastorAI::generate_good_capture_move(godot::Ref<State>_state, int _group)
 {
-	for (int &&iter : _state->get_all_pieces_iterative())
+	godot::PackedInt32Array output;
+	for (State::PieceIterator iter = _state->piece_iterator_begin(); !iter.end(); iter.next())
 	{
-		int _from = iter;
-		int from_piece = _state->get_piece(iter);
+		int _from = iter.pos();
+		int from_piece = iter.piece();
 		if (_group != Chess::group(from_piece))
 		{
 			continue;
@@ -191,14 +192,14 @@ std::generator<int> PastorAI::generate_good_capture_move(godot::Ref<State>_state
 			{
 				if (on_end)
 				{
-					co_yield Chess::create(_from, _from + front + 1, _group == 0 ? 'Q' : 'q');
-					co_yield Chess::create(_from, _from + front + 1, _group == 0 ? 'R' : 'r');
-					co_yield Chess::create(_from, _from + front + 1, _group == 0 ? 'N' : 'n');
-					co_yield Chess::create(_from, _from + front + 1, _group == 0 ? 'B' : 'b');
+					output.push_back(Chess::create(_from, _from + front + 1, _group == 0 ? 'Q' : 'q'));
+					output.push_back(Chess::create(_from, _from + front + 1, _group == 0 ? 'R' : 'r'));
+					output.push_back(Chess::create(_from, _from + front + 1, _group == 0 ? 'N' : 'n'));
+					output.push_back(Chess::create(_from, _from + front + 1, _group == 0 ? 'B' : 'b'));
 				}
 				else
 				{
-					co_yield Chess::create(_from, _from + front + 1, 0);
+					output.push_back(Chess::create(_from, _from + front + 1, 0));
 				}
 			}
 			if (_state->has_piece(_from + front - 1) && !Chess::is_same_group(from_piece, _state->get_piece(_from + front - 1))
@@ -207,14 +208,14 @@ std::generator<int> PastorAI::generate_good_capture_move(godot::Ref<State>_state
 			{
 				if (on_end)
 				{
-					co_yield Chess::create(_from, _from + front - 1, _group == 0 ? 'Q' : 'q');
-					co_yield Chess::create(_from, _from + front - 1, _group == 0 ? 'R' : 'r');
-					co_yield Chess::create(_from, _from + front - 1, _group == 0 ? 'N' : 'n');
-					co_yield Chess::create(_from, _from + front - 1, _group == 0 ? 'B' : 'b');
+					output.push_back(Chess::create(_from, _from + front - 1, _group == 0 ? 'Q' : 'q'));
+					output.push_back(Chess::create(_from, _from + front - 1, _group == 0 ? 'R' : 'r'));
+					output.push_back(Chess::create(_from, _from + front - 1, _group == 0 ? 'N' : 'n'));
+					output.push_back(Chess::create(_from, _from + front - 1, _group == 0 ? 'B' : 'b'));
 				}
 				else
 				{
-					co_yield Chess::create(_from, _from + front - 1, 0);
+					output.push_back(Chess::create(_from, _from + front - 1, 0));
 				}
 			}
 			continue;
@@ -246,13 +247,13 @@ std::generator<int> PastorAI::generate_good_capture_move(godot::Ref<State>_state
 				{
 					if (abs(piece_value[_from]) <= abs(piece_value[to]))
 					{
-						co_yield Chess::create(_from, to, 0);
+						output.push_back(Chess::create(_from, to, 0));
 					}
 					break;
 				}
 				if (_state->get_king_passant() != -1 && abs(to - _state->get_king_passant()) <= 1)
 				{
-					co_yield Chess::create(_from, to, 0);
+					output.push_back(Chess::create(_from, to, 0));
 					break;
 				}
 				if ((from_piece & 95) == 'K' || (from_piece & 95) == 'N')
@@ -264,6 +265,7 @@ std::generator<int> PastorAI::generate_good_capture_move(godot::Ref<State>_state
 			}
 		}
 	}
+	return output;
 }
 
 
@@ -280,10 +282,10 @@ int PastorAI::get_piece_score(int _by, int _piece)
 int PastorAI::evaluate_all(godot::Ref<State> _state)
 {
 	int score = 0;
-	for (int &&iter : _state->get_all_pieces_iterative())
+	for (State::PieceIterator iter = _state->piece_iterator_begin(); !iter.end(); iter.next())
 	{
-		int by = iter;
-		int piece = _state->get_piece(iter);
+		int by = iter.pos();
+		int piece = iter.piece();
 		score += get_piece_score(by, piece);
 	}
 	return score;
@@ -354,11 +356,12 @@ int PastorAI::quies(godot::Ref<State>_state, int score, int _alpha, int _beta, i
 	{
 		_alpha = score_relative;
 	}
-	for (int &&iter : generate_good_capture_move(_state, _group))
+	godot::PackedInt32Array move_list = generate_good_capture_move(_state, _group);
+	for (int i = 0; i < move_list.size(); i++)
 	{
 		godot::Ref<State> test_state = _state->duplicate();
-		RuleStandard::get_singleton()->apply_move(test_state, iter);
-		int test_score = -quies(test_state, score + evaluate(_state, iter), -_beta, -_alpha, 1 - _group);
+		RuleStandard::get_singleton()->apply_move(test_state, move_list[i]);
+		int test_score = -quies(test_state, score + evaluate(_state, move_list[i]), -_beta, -_alpha, 1 - _group);
 		if (test_score >= _beta)
 		{
 			return _beta;

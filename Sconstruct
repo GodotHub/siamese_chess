@@ -3,7 +3,6 @@ import os
 import sys
 
 env = SConscript("library/godot-cpp/SConstruct")
-env["CXXFLAGS"] = "-std=c++23 -fcoroutines"
 
 # For reference:
 # - CCFLAGS are compilation flags shared between C and C++
