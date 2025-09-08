@@ -23,6 +23,7 @@ PastorAI::PastorAI()
 	}
 	max_depth = 100;
 	piece_value = {
+		{0, 0},
 		{'K', 60000},
 		{'Q', 929},
 		{'R', 479},
@@ -334,7 +335,7 @@ int PastorAI::evaluate(godot::Ref<State>_state, int _move)
 	return score;
 }
 
-int PastorAI::compare_move(int a, int b, int best_move, std::array<int, 65536> *history_table)
+int PastorAI::compare_move(int a, int b, int mvv_a, int lva_a, int mvv_b, int lva_b, int best_move, std::array<int, 65536> *history_table)
 {
 	if (best_move == a)
 		return true;
@@ -342,6 +343,14 @@ int PastorAI::compare_move(int a, int b, int best_move, std::array<int, 65536> *
 		return false;
 	if (history_table)
 		return (*history_table)[a & 0xFFFF] > (*history_table)[b & 0xFFFF];
+	if (mvv_a != mvv_b)
+	{
+		return mvv_a > mvv_b;
+	}
+	if (lva_a != lva_b)
+	{
+		return lva_a < lva_b;
+	}
 	return true;
 }
 
@@ -472,7 +481,7 @@ int PastorAI::alphabeta(const godot::Ref<State> &_state, int score, int _alpha, 
 	{
 		for (int j = move_list.size() - 2; j >= i; j--)
 		{
-			if (!compare_move(move_list[j], move_list[j + 1], best_move, _history_table))
+			if (!compare_move(move_list[j], move_list[j + 1], abs(piece_value[_state->get_piece(Chess::to(move_list[j]))]), abs(piece_value[_state->get_piece(Chess::from(move_list[j]))]), abs(piece_value[_state->get_piece(Chess::to(move_list[j + 1]))]), abs(piece_value[_state->get_piece(Chess::from(move_list[j + 1]))]), best_move, _history_table))
 			{
 				std::swap(move_list[j], move_list[j + 1]);
 			}
@@ -511,10 +520,6 @@ int PastorAI::alphabeta(const godot::Ref<State> &_state, int score, int _alpha, 
 				(*_history_table)[move_list[i] & 0xFFFF] += (1 << _depth);
 			}
 		}
-		if (time_passed() >= plan_time_cost(_state) || interrupted)
-		{
-			break;
-		}
 	}
 	transposition_table->record_hash(_state->get_zobrist(), _depth, _alpha, flag, best_move);
 	return _alpha;
@@ -538,10 +543,9 @@ void PastorAI::search(const godot::Ref<State> &_state, int _group, godot::Packed
 	{
 		map_history_state[history_state[i]]++;
 	}
-	for (int i = 1; i < max_depth; i++)
+	for (int i = 1; i <= max_depth; i++)
 	{
-		int relative_score = _state->get_turn() == 0 ? evaluate_all(_state) : -evaluate_all(_state);
-		alphabeta(_state, relative_score, -THRESHOLD, THRESHOLD, i, _group, 0, true, &map_history_state, &history_table, nullptr, nullptr, _debug_output);
+		alphabeta(_state, evaluate_all(_state), -THRESHOLD, THRESHOLD, i, _group, 0, true, &map_history_state, &history_table, nullptr, nullptr, _debug_output);
 		if (time_passed() >= plan_time_cost(_state) || interrupted)
 		{
 			break;
