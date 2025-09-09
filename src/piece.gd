@@ -44,6 +44,13 @@ func move(_pos:Vector3) -> void:
 	var tween:Tween = create_tween()
 	tween.tween_property(self, "global_position", _pos, 0.3).set_trans(Tween.TRANS_SINE)
 
+func capturing(_pos:Vector3) -> void:	# 攻击
+	var tween:Tween = create_tween()
+	tween.tween_property(self, "global_position", _pos, 0.3).set_trans(Tween.TRANS_SINE)
+
+func captured() -> void:	# 被攻击
+	queue_free()
+
 func set_warning(enabled:bool) -> void:
 	if enabled:
 		$piece.get_surface_override_material(0).next_pass.albedo_color = Color(1, 0, 0, 1)
