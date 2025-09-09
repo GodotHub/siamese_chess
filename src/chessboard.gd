@@ -185,14 +185,17 @@ func add_piece_instance(by:int, piece:int) -> void:
 
 func move_piece_instance(from:int, to:int) -> void:
 	var instance:Actor = piece_instance[from]
-	instance.move(get_node(Chess.to_position_name(to)).global_position)
+	if state.has_piece(to):
+		instance.capturing(get_node(Chess.to_position_name(to)).global_position)
+	else:
+		instance.move(get_node(Chess.to_position_name(to)).global_position)
 	piece_instance.erase(from)
 	piece_instance[to] = instance
 
 func remove_piece_instance(by:int) -> void:
 	var instance:Actor = piece_instance[by]
+	instance.captured()
 	piece_instance.erase(by)
-	instance.queue_free()
 
 func set_enabled(enabled:bool) -> void:
 	super.set_enabled(enabled)
