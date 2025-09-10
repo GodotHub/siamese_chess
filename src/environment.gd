@@ -173,6 +173,7 @@ func dialog_pastor_game_start() -> void:
 			await text_input_instance.confirmed
 			pastor_game_state = RuleStandard.parse(text_input_instance.text)
 			if is_instance_valid(pastor_game_state):
+				$clock_pastor.set_time(1800, 1, 0)
 				$chessboard_pastor.set_state(pastor_game_state)
 				pastor_history_chart.set_state(pastor_game_state)
 				pastor_history_chart.set_filename("history." + String.num_int64(Time.get_unix_time_from_system()) + ".json")
@@ -183,6 +184,7 @@ func dialog_pastor_game_start() -> void:
 				$player.force_set_camera($camera/camera_pastor_closeup)
 				await $dialog.on_next
 				pastor_state = "game_with_pastor"
+				$clock_pastor.start()
 				$player.add_stack($interact/area_pastor_chessboard)
 				call_deferred("game_with_pastor")
 				break
