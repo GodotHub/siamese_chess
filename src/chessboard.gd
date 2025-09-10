@@ -9,12 +9,20 @@ var piece_mapping:Dictionary = {
 	"N": load("res://scene/piece_knight_white.tscn").instantiate(),
 	"B": load("res://scene/piece_bishop_white.tscn").instantiate(),
 	"P": load("res://scene/piece_pawn_white.tscn").instantiate(),
+	"W": load("res://scene/piece_checker_1_white.tscn").instantiate(),
+	"X": load("res://scene/piece_checker_2_white.tscn").instantiate(),
+	"Y": load("res://scene/piece_checker_3_white.tscn").instantiate(),
+	"Z": load("res://scene/piece_checker_4_white.tscn").instantiate(),
 	"k": load("res://scene/piece_king_black.tscn").instantiate(),
 	"q": load("res://scene/piece_queen_black.tscn").instantiate(),
 	"r": load("res://scene/piece_rook_black.tscn").instantiate(),
 	"n": load("res://scene/piece_knight_black.tscn").instantiate(),
 	"b": load("res://scene/piece_bishop_black.tscn").instantiate(),
 	"p": load("res://scene/piece_pawn_black.tscn").instantiate(),
+	"w": load("res://scene/piece_checker_1_black.tscn").instantiate(),
+	"x": load("res://scene/piece_checker_2_black.tscn").instantiate(),
+	"y": load("res://scene/piece_checker_3_black.tscn").instantiate(),
+	"z": load("res://scene/piece_checker_4_black.tscn").instantiate(),
 }
 var mouse_start_position_name:String = ""
 var mouse_moved:bool = false

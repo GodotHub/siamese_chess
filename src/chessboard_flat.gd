@@ -27,6 +27,8 @@ func draw() -> void:
 	var piece_position:PackedInt32Array = state.get_all_pieces()
 	for by:int in piece_position:
 		var by_piece:int = state.get_piece(by)
+		if !piece_path.has(String.chr(by_piece)):
+			continue
 		var piece_texture:Texture = load(piece_path[String.chr(by_piece)])
 		var piece_instance:Sprite2D = Sprite2D.new()
 		piece_instance.position = upper_left + Vector2(by % 16, by / 16) * 128
