@@ -20,15 +20,7 @@ int Chess::x88_to_64(int n)
 
 int Chess::group(int piece)
 {
-	if (piece >= 'A' && piece <= 'Z')
-	{
-		return 0;
-	}
-	else if (piece >= 'a' && piece <= 'z')
-	{
-		return 1;
-	}
-	return 2;
+	return piece >= 'a' && piece <= 'z';
 }
 
 bool Chess::is_same_group(int piece_1, int piece_2)
