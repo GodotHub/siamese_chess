@@ -705,6 +705,7 @@ void RuleStandard::apply_move(godot::Ref<State>_state, int _move)
 	int to = Chess::to(_move);
 	int to_piece = _state->get_piece(to);
 	bool dont_move = false;
+	bool has_grafting = false;
 	bool has_en_passant = false;
 	bool has_king_passant = false;
 	if (to_piece)	//在apply_move阶段其实就默许了吃同阵营棋子的情况。
@@ -714,7 +715,7 @@ void RuleStandard::apply_move(godot::Ref<State>_state, int _move)
 	}
 	if ((to_piece & 95) == 'W')
 	{
-		_state->add_piece(from, to_piece);
+		has_grafting = true;
 	}
 	if (_state->get_king_passant() != -1 && abs(_state->get_king_passant() - to) <= 1)
 	{
@@ -826,6 +827,10 @@ void RuleStandard::apply_move(godot::Ref<State>_state, int _move)
 	{
 		_state->move_piece(from, to);
 	}
+	if (has_grafting)
+	{
+		_state->add_piece(from, to_piece);
+	}
 
 	if (!has_en_passant)
 	{
@@ -846,15 +851,16 @@ void RuleStandard::apply_move_custom(godot::Ref<State> _state, int _move, godot:
 	int to = Chess::to(_move);
 	int to_piece = _state->get_piece(to);
 	bool dont_move = false;
+	bool has_grafting = false;
 	bool has_en_passant = false;
 	bool has_king_passant = false;
-	if (to_piece && (to_piece & 95) != 'W')
+	if (to_piece)
 	{
 		_callback_capture_piece.call(to);
 	}
 	if ((to_piece & 95) == 'W')
 	{
-		_callback_add_piece.call(from, to_piece);
+		has_grafting = true;
 	}
 	if (_state->get_king_passant() != -1 && abs(_state->get_king_passant() - to) <= 1)
 	{
@@ -921,6 +927,10 @@ void RuleStandard::apply_move_custom(godot::Ref<State> _state, int _move, godot:
 	if (!dont_move)
 	{
 		_callback_move_piece.call(from, to);
+	}
+	if (has_grafting)
+	{
+		_callback_add_piece.call(from, to_piece);
 	}
 }
 
