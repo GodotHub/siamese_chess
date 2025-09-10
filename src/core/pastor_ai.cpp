@@ -240,16 +240,30 @@ godot::PackedInt32Array PastorAI::generate_good_capture_move(godot::Ref<State>_s
 
 		for (int i = 0; i < directions.size(); i++)
 		{
-			int to = _from + directions[i];
+			int to = _from;
 			int to_piece = _state->get_piece(to);
-			while (!(to & 0x88) && (!to_piece || !Chess::is_same_group(from_piece, to_piece)))
+			while (true)
 			{
-				if (!(to & 0x88) && to_piece && !Chess::is_same_group(from_piece, to_piece))
+				to += directions[i];
+				if ((to & 0x88))
 				{
-					if (abs(piece_value[_from]) <= abs(piece_value[to]))
+					break;
+				}
+				to_piece = _state->get_piece(to);
+				if (to_piece && Chess::is_same_group(from_piece, to_piece) && (to_piece & 95) != 'W' && (to_piece & 95) != 'X')
+				{
+					break;
+				}
+				if (to_piece)
+				{
+					if (abs(piece_value[from_piece]) <= abs(piece_value[to_piece]))
 					{
 						output.push_back(Chess::create(_from, to, 0));
 					}
+					break;
+				}
+				if ((from_piece & 95) == 'K' || (from_piece & 95) == 'N')
+				{
 					break;
 				}
 				if (_state->get_king_passant() != -1 && abs(to - _state->get_king_passant()) <= 1)
@@ -261,8 +275,6 @@ godot::PackedInt32Array PastorAI::generate_good_capture_move(godot::Ref<State>_s
 				{
 					break;
 				}
-				to += directions[i];
-				to_piece = _state->get_piece(to);
 			}
 		}
 	}
