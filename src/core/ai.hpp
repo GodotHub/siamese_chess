@@ -1,5 +1,5 @@
-#ifndef __CHESS_AI_H__
-#define __CHESS_AI_H__
+#ifndef _AI_H_
+#define _AI_H_
 
 #include "./state.hpp"
 #include "./transposition_table.hpp"
@@ -25,4 +25,4 @@ public:
 	virtual void search(const godot::Ref<State> &_state, int _group, godot::PackedInt32Array history_state, const godot::Callable &_debug_output) = 0;
 	virtual int get_search_result() = 0;
 };
-#endif // __CHESS_AI_H__
+#endif // _AI_H_
