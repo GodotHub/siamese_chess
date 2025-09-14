@@ -126,7 +126,7 @@ func dialog_pastor_in_game() -> void:
 
 func dialog_pastor_game_start() -> void:
 	while true:
-		$dialog.push_selection(["标准棋局（30+0）", "快棋（10+5）", "超快棋（5+3）", "子弹棋（小规模布局，1/2+0）", "导入棋局", "取消"])
+		$dialog.push_selection(["标准棋局（30+0）", "快棋（10+5）", "超快棋（5+3）", "子弹棋（随机布局，3+0）", "导入棋局", "取消"])
 		await $dialog.on_next
 		if $dialog.selected in [0, 1, 2]:
 			pastor_game_state = RuleStandard.parse("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
@@ -151,16 +151,15 @@ func dialog_pastor_game_start() -> void:
 			call_deferred("game_with_pastor")
 			break
 		elif $dialog.selected == 3:
-			pastor_game_state = RuleStandard.parse("8/8/2rbqk2/2pppn2/2NPPP2/2KQBR2/8/8 w - - 0 1")
+			pastor_game_state = RuleStandard.create_random_state(8)
 			$chessboard_pastor.set_state(pastor_game_state)
 			pastor_history_chart.set_state(pastor_game_state)
 			pastor_history_chart.set_filename("history." + String.num_int64(Time.get_unix_time_from_system()) + ".json")
-			$clock_pastor.set_time(30, 1, 0)
+			$clock_pastor.set_time(180, 1, 0)
 			$dialog.push_dialog("现在棋盘已经准备好了。", true, true)
 			$player.force_set_camera($camera/camera_pastor_chessboard)
 			await $dialog.on_next
-			$dialog.push_dialog("该对局为特殊布局，时间上较为紧张，注意速战速决。", true, true)
-			$player.force_set_camera($camera/camera_pastor_closeup)
+			$dialog.push_dialog("该对局为特殊布局，请仔细观察棋盘后开始。", true, true)
 			await $dialog.on_next
 			$clock_pastor.start()
 			$player.add_stack($interact/area_pastor_chessboard)
