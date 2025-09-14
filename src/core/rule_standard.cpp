@@ -1,6 +1,7 @@
 #include "rule_standard.hpp"
 #include <godot_cpp/classes/resource_loader.hpp>
 #include <godot_cpp/classes/packed_scene.hpp>
+#include <random>
 #include "state.hpp"
 #include "chess.hpp"
 #include "transposition_table.hpp"
@@ -87,6 +88,55 @@ godot::Ref<State>RuleStandard::parse(godot::String _str)
 godot::Ref<State> RuleStandard::create_initial_state()
 {
 	return parse("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
+}
+
+godot::Ref<State> RuleStandard::create_random_state(int piece_count)
+{
+	std::mt19937_64 rng(time(nullptr));
+	godot::PackedInt32Array type = {'P', 'N', 'B', 'R', 'Q', 'W', 'X', 'Y'};
+	godot::PackedInt32Array pieces;
+	pieces.push_back('K');
+	pieces.push_back('k');
+	for (int i = 2; i < piece_count; i++)
+	{
+		int piece = type[rng() % type.size()];
+		pieces.push_back(piece);
+		pieces.push_back(piece + 32);	// 黑方
+	}
+	pieces.resize(64);
+	while (true)
+	{
+		godot::Ref<State> new_state = parse("8/8/8/8/8/8/8/8 w - - 0 1");
+		bool valid_pawn = true;
+		for (int i = 0; i < pieces.size(); i++)
+		{
+			int k = rng() % (i + 1);
+			std::swap(pieces[i], pieces[k]);
+		}
+		for (int i = 0; i < 64; i++)
+		{
+			if (pieces[i] & 95 == 'P' && (i <= 7 || i >= 56))
+			{
+				valid_pawn = false;
+				break;
+			}
+			if (pieces[i] != 0)
+			{
+				new_state->add_piece(i % 8 + i / 8 * 16, pieces[i]);
+			}
+		}
+		if (!valid_pawn)
+		{
+			continue;
+		}
+		if (is_check(new_state, 0) && is_check(new_state, 1))
+		{
+			continue;
+		}
+
+		return new_state;
+	}
+	return nullptr;
 }
 
 godot::String RuleStandard::stringify(godot::Ref<State>_state)
@@ -966,6 +1016,7 @@ void RuleStandard::_bind_methods()
 	godot::ClassDB::bind_method(godot::D_METHOD("get_end_type"), &RuleStandard::get_end_type);
 	godot::ClassDB::bind_method(godot::D_METHOD("parse"), &RuleStandard::parse);
 	godot::ClassDB::bind_method(godot::D_METHOD("create_initial_state"), &RuleStandard::create_initial_state);
+	godot::ClassDB::bind_method(godot::D_METHOD("create_random_state"), &RuleStandard::create_random_state);
 	godot::ClassDB::bind_method(godot::D_METHOD("stringify"), &RuleStandard::stringify);
 	godot::ClassDB::bind_method(godot::D_METHOD("is_check"), &RuleStandard::is_check);
 	godot::ClassDB::bind_method(godot::D_METHOD("is_move_valid"), &RuleStandard::is_move_valid);

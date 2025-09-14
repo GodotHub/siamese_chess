@@ -15,6 +15,7 @@ class RuleStandard : public godot::Object
 		godot::String get_end_type(godot::Ref<State> _state);
 		godot::Ref<State> parse(godot::String _str);
 		godot::Ref<State> create_initial_state();
+		godot::Ref<State> create_random_state(int piece_count);
 		godot::String stringify(godot::Ref<State> _state);
 		bool is_move_valid(godot::Ref<State> _state, int _group, int _move);
 		bool is_check(godot::Ref<State> _state, int _group);
