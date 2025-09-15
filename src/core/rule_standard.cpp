@@ -115,7 +115,7 @@ godot::Ref<State> RuleStandard::create_random_state(int piece_count)
 		}
 		for (int i = 0; i < 64; i++)
 		{
-			if (pieces[i] & 95 == 'P' && (i <= 7 || i >= 56))
+			if ((pieces[i] & 95) == 'P' && (i <= 7 || i >= 56))
 			{
 				valid_pawn = false;
 				break;
@@ -129,7 +129,7 @@ godot::Ref<State> RuleStandard::create_random_state(int piece_count)
 		{
 			continue;
 		}
-		if (is_check(new_state, 0) && is_check(new_state, 1))
+		if (is_check(new_state, 0) || is_check(new_state, 1))
 		{
 			continue;
 		}
