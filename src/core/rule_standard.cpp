@@ -893,49 +893,22 @@ void RuleStandard::apply_move(godot::Ref<State>_state, int _move)
 }
 
 
-void RuleStandard::apply_move_custom(godot::Ref<State> _state, int _move, godot::Callable _callback_add_piece, godot::Callable _callback_capture_piece, godot::Callable _callback_move_piece)
+void RuleStandard::apply_move_custom(godot::Ref<State> _state, int _move, godot::Callable _callback_event)
 {
 	int from = Chess::from(_move);
 	int from_piece = _state->get_piece(from);
 	int from_group = Chess::group(from_piece);
 	int to = Chess::to(_move);
 	int to_piece = _state->get_piece(to);
-	bool dont_move = false;
-	bool has_grafting = false;
-	bool has_en_passant = false;
-	bool has_king_passant = false;
-	if (to_piece)
-	{
-		_callback_capture_piece.call(to);
-	}
 	if ((to_piece & 95) == 'W')
 	{
-		has_grafting = true;
+		_callback_event.call("grafting", godot::Array::make(from, to));	//移花接木机制有特殊动作
+		return;
 	}
-	if (_state->get_king_passant() != -1 && abs(_state->get_king_passant() - to) <= 1)
+	if (to_piece)
 	{
-		if (from_group == 0)
-		{
-			if (_state->get_piece(Chess::c8()) == 'k')
-			{
-				_callback_capture_piece.call(Chess::c8());
-			}
-			if (_state->get_piece(Chess::g8()) == 'k')
-			{
-				_callback_capture_piece.call(Chess::g8());
-			}
-		}
-		else
-		{
-			if (_state->get_piece(Chess::c1()) == 'K')
-			{
-				_callback_capture_piece.call(Chess::c1());
-			}
-			if (_state->get_piece(Chess::g1()) == 'K')
-			{
-				_callback_capture_piece.call(Chess::g1());
-			}
-		}
+		_callback_event.call("capture", godot::Array::make(from, to));	//双方共同进行演出
+		return;
 	}
 	if ((from_piece & 95) == 'K')
 	{
@@ -943,20 +916,21 @@ void RuleStandard::apply_move_custom(godot::Ref<State> _state, int _move, godot:
 		{
 			if (to == Chess::g1())
 			{
-				_callback_move_piece.call(Chess::h1(), Chess::f1());
+				_callback_event.call("castle", godot::Array::make(Chess::e1(), Chess::g1(), Chess::h1(), Chess::f1()));	//王车易位，王和车分开进行
 			}
 			if (to == Chess::c1())
 			{
-				_callback_move_piece.call(Chess::a1(), Chess::d1());
+				_callback_event.call("castle", godot::Array::make(Chess::e1(), Chess::c1(), Chess::a1(), Chess::d1()));
 			}
 			if (to == Chess::g8())
 			{
-				_callback_move_piece.call(Chess::h8(), Chess::f8());
+				_callback_event.call("castle", godot::Array::make(Chess::e8(), Chess::g8(), Chess::h8(), Chess::f8()));
 			}
 			if (to == Chess::c8())
 			{
-				_callback_move_piece.call(Chess::a8(), Chess::d8());
+				_callback_event.call("castle", godot::Array::make(Chess::e8(), Chess::c8(), Chess::a8(), Chess::d8()));
 			}
+			return;
 		}
 	}
 	if ((from_piece & 95) == 'P')
@@ -965,23 +939,16 @@ void RuleStandard::apply_move_custom(godot::Ref<State> _state, int _move, godot:
 		if (((from >> 4) == 3 || (from >> 4) == 4) && to == _state->get_en_passant())
 		{
 			int captured = to - front;
-			_callback_capture_piece.call(captured);
+			_callback_event.call("en_passant", godot::Array::make(from, to, captured));
+			return;
 		}
 		if (Chess::extra(_move))
 		{
-			dont_move = true;
-			_callback_capture_piece.call(from);
-			_callback_add_piece.call(to, Chess::extra(_move));
+			_callback_event.call("promotion", godot::Array::make(from, to, Chess::extra(_move)));
+			return;
 		}
 	}
-	if (!dont_move)
-	{
-		_callback_move_piece.call(from, to);
-	}
-	if (has_grafting)
-	{
-		_callback_add_piece.call(from, to_piece);
-	}
+	_callback_event.call("move", godot::Array::make(from, to));
 }
 
 uint64_t RuleStandard::perft(godot::Ref<State> _state, int _depth, int group)

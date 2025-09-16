@@ -151,7 +151,7 @@ func check_move(from:int, to:int) -> void:
 
 func execute_move(move:int) -> void:
 	confirm_move = move
-	RuleStandard.apply_move_custom(state, move, add_piece_instance, remove_piece_instance, move_piece_instance)
+	RuleStandard.apply_move_custom(state, move, receive_event)
 	RuleStandard.apply_move(state, move)
 	$canvas.clear_select_position()
 	$canvas.clear_premove_position()
@@ -180,6 +180,27 @@ func set_valid_premove(move_list:PackedInt32Array) -> void:
 		if !valid_premove.has(Chess.from(move)):
 			valid_premove[Chess.from(move)] = []
 		valid_premove[Chess.from(move)].push_back(move)
+
+func receive_event(type:String, value:PackedInt32Array = []) -> void:
+	match type:	# 暂时的做法
+		"capture":
+			remove_piece_instance(value[1])
+			move_piece_instance(value[0], value[1])
+		"promotion":
+			remove_piece_instance(value[0])
+			add_piece_instance(value[1], value[2])
+		"move":
+			move_piece_instance(value[0], value[1])
+		"castle":
+			move_piece_instance(value[0], value[1])
+			move_piece_instance(value[2], value[3])
+		"en_passant":
+			move_piece_instance(value[0], value[1])
+			remove_piece_instance(value[2])
+		"grafting":
+			remove_piece_instance(value[1])
+			move_piece_instance(value[0], value[1])
+			add_piece_instance(value[0], "w".unicode_at(0))
 
 func add_piece_instance(by:int, piece:int) -> void:
 	var instance:Actor = piece_mapping[char(piece)].duplicate()

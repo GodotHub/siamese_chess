@@ -25,7 +25,7 @@ class RuleStandard : public godot::Object
 		godot::String get_move_name(godot::Ref<State> _state, int move);
 		int name_to_move(godot::Ref<State> _state, godot::String name);
 		void apply_move(godot::Ref<State> _state, int _move);
-		void apply_move_custom(godot::Ref<State> _state, int _move, godot::Callable _callback_add_piece = godot::Callable(), godot::Callable _callback_capture_piece = godot::Callable(), godot::Callable _callback_move_piece = godot::Callable());
+		void apply_move_custom(godot::Ref<State> _state, int _move, godot::Callable _callback_event = godot::Callable());
 		uint64_t perft(godot::Ref<State> _state, int _depth, int group);
 		static void _bind_methods();
 		static RuleStandard *get_singleton();
