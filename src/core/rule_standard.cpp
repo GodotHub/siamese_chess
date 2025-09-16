@@ -610,7 +610,7 @@ godot::PackedInt32Array RuleStandard::generate_move(godot::Ref<State>_state, int
 					break;
 				}
 				output.push_back(Chess::create(_from, to, 0));
-				if ((from_piece & 95) == 'K' || (from_piece & 95) == 'N' || to_piece)
+				if ((from_piece & 95) == 'K' || (from_piece & 95) == 'N' || to_piece && (to_piece & 95) != 'W')
 				{
 					break;
 				}
