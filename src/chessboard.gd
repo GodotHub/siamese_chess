@@ -199,9 +199,7 @@ func receive_event(event:Dictionary) -> void:
 			move_piece_instance(event["from"], event["to"])
 			remove_piece_instance(event["captured"])
 		"grafting":
-			remove_piece_instance(event["to"])
-			move_piece_instance(event["from"], event["to"])
-			add_piece_instance(event["from"], "w".unicode_at(0))
+			graft_piece_instance(event["from"], event["to"])
 
 func add_piece_instance(by:int, piece:int) -> void:
 	var instance:Actor = piece_mapping[char(piece)].duplicate()
@@ -221,6 +219,16 @@ func move_piece_instance(from:int, to:int) -> void:
 		instance.move(get_node(Chess.to_position_name(to)).global_position)
 	piece_instance.erase(from)
 	piece_instance[to] = instance
+
+func graft_piece_instance(from:int, to:int) -> void:
+	var instance_1:Actor = piece_instance[from]
+	var instance_2:Actor = piece_instance[to]
+	piece_instance.erase(from)
+	piece_instance.erase(to)
+	instance_1.move(get_node(Chess.to_position_name(to)).global_position)
+	instance_2.move(get_node(Chess.to_position_name(from)).global_position)
+	piece_instance[from] = instance_2
+	piece_instance[to] = instance_1
 
 func remove_piece_instance(by:int) -> void:
 	var instance:Actor = piece_instance[by]
