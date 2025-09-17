@@ -2,28 +2,7 @@ extends InspectableItem
 class_name Chessboard
 
 signal move_played()
-var piece_mapping:Dictionary = {
-	"K": load("res://scene/piece_king_white.tscn").instantiate(),
-	"Q": load("res://scene/piece_queen_white.tscn").instantiate(),
-	"R": load("res://scene/piece_rook_white.tscn").instantiate(),
-	"N": load("res://scene/piece_knight_white.tscn").instantiate(),
-	"B": load("res://scene/piece_bishop_white.tscn").instantiate(),
-	"P": load("res://scene/piece_pawn_white.tscn").instantiate(),
-	"W": load("res://scene/piece_checker_1_white.tscn").instantiate(),
-	"X": load("res://scene/piece_checker_2_white.tscn").instantiate(),
-	"Y": load("res://scene/piece_checker_3_white.tscn").instantiate(),
-	"Z": load("res://scene/piece_checker_4_white.tscn").instantiate(),
-	"k": load("res://scene/piece_king_black.tscn").instantiate(),
-	"q": load("res://scene/piece_queen_black.tscn").instantiate(),
-	"r": load("res://scene/piece_rook_black.tscn").instantiate(),
-	"n": load("res://scene/piece_knight_black.tscn").instantiate(),
-	"b": load("res://scene/piece_bishop_black.tscn").instantiate(),
-	"p": load("res://scene/piece_pawn_black.tscn").instantiate(),
-	"w": load("res://scene/piece_checker_1_black.tscn").instantiate(),
-	"x": load("res://scene/piece_checker_2_black.tscn").instantiate(),
-	"y": load("res://scene/piece_checker_3_black.tscn").instantiate(),
-	"z": load("res://scene/piece_checker_4_black.tscn").instantiate(),
-}
+var backup_piece:Array = []
 var mouse_start_position_name:String = ""
 var mouse_moved:bool = false
 var state:State = null
@@ -37,6 +16,44 @@ var confirm_move:int = 0
 
 func _ready() -> void:
 	super._ready()
+
+func reserve_piece_instance() -> void:
+	add_piece_instance(load("res://scene/piece_king_white.tscn").instantiate())
+	add_piece_instance(load("res://scene/piece_queen_white.tscn").instantiate())
+	add_piece_instance(load("res://scene/piece_queen_white.tscn").instantiate())
+	add_piece_instance(load("res://scene/piece_rook_white.tscn").instantiate())
+	add_piece_instance(load("res://scene/piece_rook_white.tscn").instantiate())
+	add_piece_instance(load("res://scene/piece_knight_white.tscn").instantiate())
+	add_piece_instance(load("res://scene/piece_knight_white.tscn").instantiate())
+	add_piece_instance(load("res://scene/piece_bishop_white.tscn").instantiate())
+	add_piece_instance(load("res://scene/piece_bishop_white.tscn").instantiate())
+	for i in 8:
+		add_piece_instance(load("res://scene/piece_pawn_white.tscn").instantiate())
+	for i in 64:
+		add_piece_instance(load("res://scene/piece_checker_1_white.tscn").instantiate())
+	for i in 64:
+		add_piece_instance(load("res://scene/piece_checker_2_white.tscn").instantiate())
+	for i in 64:
+		add_piece_instance(load("res://scene/piece_checker_3_white.tscn").instantiate())
+	add_piece_instance(load("res://scene/piece_checker_4_white.tscn").instantiate())
+	add_piece_instance(load("res://scene/piece_king_black.tscn").instantiate())
+	add_piece_instance(load("res://scene/piece_queen_black.tscn").instantiate())
+	add_piece_instance(load("res://scene/piece_queen_black.tscn").instantiate())
+	add_piece_instance(load("res://scene/piece_rook_black.tscn").instantiate())
+	add_piece_instance(load("res://scene/piece_rook_black.tscn").instantiate())
+	add_piece_instance(load("res://scene/piece_knight_black.tscn").instantiate())
+	add_piece_instance(load("res://scene/piece_knight_black.tscn").instantiate())
+	add_piece_instance(load("res://scene/piece_bishop_black.tscn").instantiate())
+	add_piece_instance(load("res://scene/piece_bishop_black.tscn").instantiate())
+	for i in 8:
+		add_piece_instance(load("res://scene/piece_pawn_black.tscn").instantiate())
+	for i in 64:
+		add_piece_instance(load("res://scene/piece_checker_1_black.tscn").instantiate())
+	for i in 64:
+		add_piece_instance(load("res://scene/piece_checker_2_black.tscn").instantiate())
+	for i in 64:
+		add_piece_instance(load("res://scene/piece_checker_3_black.tscn").instantiate())
+	add_piece_instance(load("res://scene/piece_checker_4_black.tscn").instantiate())
 
 func input(_from:Node3D, _to:Area3D, _event:InputEvent, _event_position:Vector3, _normal:Vector3) -> void:
 	if _event is InputEventMouseButton:
@@ -64,7 +81,7 @@ func set_state(_state:State) -> void:
 	for i:int in range(128):
 		if !state.has_piece(i):
 			continue
-		add_piece_instance(i, state.get_piece(i))
+		move_piece_instance_from_backup(i, state.get_piece(i))
 	#king_instance[0].set_warning(RuleStandard.is_check(state, 1))
 	#king_instance[1].set_warning(RuleStandard.is_check(state, 0))
 
@@ -185,11 +202,11 @@ func set_valid_premove(move_list:PackedInt32Array) -> void:
 func receive_event(event:Dictionary) -> void:
 	match event["type"]:	# 暂时的做法
 		"capture":
-			remove_piece_instance(event["to"])
+			move_piece_instance_to_backup(event["to"])
 			move_piece_instance(event["from"], event["to"])
 		"promotion":
-			remove_piece_instance(event["from"])
-			add_piece_instance(event["to"], event["piece"])
+			move_piece_instance_to_backup(event["from"])
+			move_piece_instance_from_backup(event["to"], event["piece"])
 		"move":
 			move_piece_instance(event["from"], event["to"])
 		"castle":
@@ -197,19 +214,36 @@ func receive_event(event:Dictionary) -> void:
 			move_piece_instance(event["from_rook"], event["to_rook"])
 		"en_passant":
 			move_piece_instance(event["from"], event["to"])
-			remove_piece_instance(event["captured"])
+			move_piece_instance_to_backup(event["captured"])
 		"grafting":
 			graft_piece_instance(event["from"], event["to"])
 
-func add_piece_instance(by:int, piece:int) -> void:
-	var instance:Actor = piece_mapping[char(piece)].duplicate()
-	piece_instance[by] = instance
-	if piece == "K".unicode_at(0):
-		king_instance[0] = instance
-	if piece == "k".unicode_at(0):
-		king_instance[1] = instance
+func add_piece_instance(instance:Actor) -> void:
+	var group:int = Chess.group(instance.piece_type[0])
 	$pieces.add_child(instance)
-	instance.global_position = get_node(Chess.to_position_name(by)).global_position
+	instance.global_position = $backup.global_position + Vector3(0, 0, 0.1) * (backup_piece.size() % 8) + Vector3(0.1, 0, 0) * (backup_piece.size() / 8)
+	backup_piece.push_back(instance)
+
+func move_piece_instance_from_backup(by:int, piece:int) -> void:
+	var target_piece_instance:Actor = null
+	for iter:Actor in backup_piece:
+		if iter.piece_type[0] == by:
+			target_piece_instance = iter
+			break
+	if !target_piece_instance:
+		for iter:Actor in backup_piece:
+			if iter.piece_type.has(by):
+				target_piece_instance = iter
+				break
+	if target_piece_instance:
+		backup_piece.erase(target_piece_instance)
+		piece_instance[by] = target_piece_instance
+		if piece == "K".unicode_at(0):
+			king_instance[0] = target_piece_instance
+		if piece == "k".unicode_at(0):
+			king_instance[1] = target_piece_instance
+		$pieces.add_child(target_piece_instance)
+		target_piece_instance.move(get_node(Chess.to_position_name(by)).global_position)
 
 func move_piece_instance(from:int, to:int) -> void:
 	var instance:Actor = piece_instance[from]
@@ -230,10 +264,11 @@ func graft_piece_instance(from:int, to:int) -> void:
 	piece_instance[from] = instance_2
 	piece_instance[to] = instance_1
 
-func remove_piece_instance(by:int) -> void:
+func move_piece_instance_to_backup(by:int) -> void:
 	var instance:Actor = piece_instance[by]
 	instance.captured()
 	piece_instance.erase(by)
+	backup_piece.push_back(instance)
 
 func set_enabled(enabled:bool) -> void:
 	super.set_enabled(enabled)

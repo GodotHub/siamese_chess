@@ -50,7 +50,7 @@ func capturing(_pos:Vector3) -> void:	# 攻击
 	tween.tween_property(self, "global_position", _pos, 0.3).set_trans(Tween.TRANS_SINE)
 
 func captured() -> void:	# 被攻击
-	queue_free()
+	pass
 
 func set_warning(enabled:bool) -> void:
 	if enabled:

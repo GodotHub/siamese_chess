@@ -52,3 +52,6 @@ surface_material_override/2 = SubResource("ShaderMaterial_07eby")
 [node name="canvas" parent="." index="3" instance=ExtResource("5_07eby")]
 
 [node name="pieces" type="Node3D" parent="." index="4"]
+
+[node name="backup" type="Marker3D" parent="." index="69"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.659393, 0, -0.435468)
