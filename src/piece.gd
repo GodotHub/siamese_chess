@@ -1,10 +1,11 @@
 extends Actor
 
 var position_name:String = ""
-@export var group:int = 0
 var sfx:AudioStreamPlayer3D = null
+var group:int = 0
 
 func _ready() -> void:
+	group = Chess.group(piece_type[0])
 	var audio_stream_randomizer:AudioStreamRandomizer = AudioStreamRandomizer.new()
 	audio_stream_randomizer.random_pitch = 1.3
 	audio_stream_randomizer.random_volume_offset_db = 2.0

@@ -5,3 +5,4 @@
 
 [node name="piece_checker_1" instance=ExtResource("1_4slle")]
 script = ExtResource("2_gap5k")
+piece_type = [87]

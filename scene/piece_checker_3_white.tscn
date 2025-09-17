@@ -5,3 +5,4 @@
 
 [node name="piece_checker_3" instance=ExtResource("1_41jpv")]
 script = ExtResource("2_wpdbj")
+piece_type = [89]

@@ -5,3 +5,4 @@
 
 [node name="piece_checker_2" instance=ExtResource("1_w6ocv")]
 script = ExtResource("2_pcss2")
+piece_type = [88]

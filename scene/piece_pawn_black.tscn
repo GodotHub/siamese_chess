@@ -5,4 +5,4 @@
 
 [node name="piece_pawn" instance=ExtResource("1_wvvgf")]
 script = ExtResource("2_p51lj")
-group = 1
+piece_type = [112]

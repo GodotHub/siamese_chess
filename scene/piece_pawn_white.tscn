@@ -5,3 +5,4 @@
 
 [node name="piece_pawn" instance=ExtResource("1_vidub")]
 script = ExtResource("2_d1f2g")
+piece_type = [80]

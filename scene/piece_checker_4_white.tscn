@@ -5,3 +5,4 @@
 
 [node name="piece_checker_4" instance=ExtResource("1_lqay7")]
 script = ExtResource("2_taweb")
+piece_type = [90]

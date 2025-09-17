@@ -3,6 +3,9 @@ class_name Actor
 
 # SiameseChess中100%的人都会参与到战斗中。
 
+# 由于棋子总量有限，SiameseChess中部分人会兼有其他定位
+@export var piece_type:PackedInt32Array = []
+
 func _ready() -> void:
 	super._ready()
 	$animation_tree.get("parameters/playback").start("battle_idle")

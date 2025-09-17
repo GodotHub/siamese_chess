@@ -7,7 +7,7 @@
 
 [node name="piece_rook" instance=ExtResource("1_4fjsw")]
 script = ExtResource("2_fmjvr")
-group = 1
+piece_type = [114, 113]
 
 [node name="piece" parent="." index="0"]
 surface_material_override/0 = SubResource("StandardMaterial3D_n2rvg")

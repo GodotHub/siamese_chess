@@ -5,4 +5,4 @@
 
 [node name="piece_checker_2" instance=ExtResource("1_ulftp")]
 script = ExtResource("2_fl07x")
-group = 1
+piece_type = [120]

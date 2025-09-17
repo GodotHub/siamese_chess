@@ -7,6 +7,7 @@
 
 [node name="piece_queen" instance=ExtResource("1_7iafw")]
 script = ExtResource("2_f4icp")
+piece_type = [81]
 
 [node name="piece" parent="." index="0"]
 surface_material_override/0 = SubResource("StandardMaterial3D_f4icp")

@@ -7,7 +7,7 @@
 
 [node name="piece_bishop" instance=ExtResource("1_0yd1k")]
 script = ExtResource("2_g7twr")
-group = 1
+piece_type = [98]
 
 [node name="piece" parent="." index="0"]
 surface_material_override/0 = SubResource("StandardMaterial3D_tb7mb")
