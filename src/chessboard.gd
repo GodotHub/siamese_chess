@@ -2,6 +2,7 @@ extends InspectableItem
 class_name Chessboard
 
 signal move_played()
+var pieces:Dictionary = {}
 var backup_piece:Array = []
 var mouse_start_position_name:String = ""
 var mouse_moved:bool = false
@@ -10,50 +11,63 @@ var valid_move:Dictionary[int, Array] = {}
 var valid_premove:Dictionary[int, Array] = {}
 var selected:int = -1
 var premove:int = -1
-var piece_instance:Dictionary[int, Actor] = {}
+var chessboard_piece:Dictionary[int, Actor] = {}
 var king_instance:Array[Actor] = [null, null]
 var confirm_move:int = 0
 
 func _ready() -> void:
+	reserve_piece_instance()
 	super._ready()
 
 func reserve_piece_instance() -> void:
-	add_piece_instance(load("res://scene/piece_king_white.tscn").instantiate())
-	add_piece_instance(load("res://scene/piece_queen_white.tscn").instantiate())
-	add_piece_instance(load("res://scene/piece_queen_white.tscn").instantiate())
-	add_piece_instance(load("res://scene/piece_rook_white.tscn").instantiate())
-	add_piece_instance(load("res://scene/piece_rook_white.tscn").instantiate())
-	add_piece_instance(load("res://scene/piece_knight_white.tscn").instantiate())
-	add_piece_instance(load("res://scene/piece_knight_white.tscn").instantiate())
-	add_piece_instance(load("res://scene/piece_bishop_white.tscn").instantiate())
-	add_piece_instance(load("res://scene/piece_bishop_white.tscn").instantiate())
-	for i in 8:
-		add_piece_instance(load("res://scene/piece_pawn_white.tscn").instantiate())
-	for i in 64:
-		add_piece_instance(load("res://scene/piece_checker_1_white.tscn").instantiate())
-	for i in 64:
-		add_piece_instance(load("res://scene/piece_checker_2_white.tscn").instantiate())
-	for i in 64:
-		add_piece_instance(load("res://scene/piece_checker_3_white.tscn").instantiate())
-	add_piece_instance(load("res://scene/piece_checker_4_white.tscn").instantiate())
-	add_piece_instance(load("res://scene/piece_king_black.tscn").instantiate())
-	add_piece_instance(load("res://scene/piece_queen_black.tscn").instantiate())
-	add_piece_instance(load("res://scene/piece_queen_black.tscn").instantiate())
-	add_piece_instance(load("res://scene/piece_rook_black.tscn").instantiate())
-	add_piece_instance(load("res://scene/piece_rook_black.tscn").instantiate())
-	add_piece_instance(load("res://scene/piece_knight_black.tscn").instantiate())
-	add_piece_instance(load("res://scene/piece_knight_black.tscn").instantiate())
-	add_piece_instance(load("res://scene/piece_bishop_black.tscn").instantiate())
-	add_piece_instance(load("res://scene/piece_bishop_black.tscn").instantiate())
-	for i in 8:
-		add_piece_instance(load("res://scene/piece_pawn_black.tscn").instantiate())
-	for i in 64:
-		add_piece_instance(load("res://scene/piece_checker_1_black.tscn").instantiate())
-	for i in 64:
-		add_piece_instance(load("res://scene/piece_checker_2_black.tscn").instantiate())
-	for i in 64:
-		add_piece_instance(load("res://scene/piece_checker_3_black.tscn").instantiate())
-	add_piece_instance(load("res://scene/piece_checker_4_black.tscn").instantiate())
+	add_piece_instance(load("res://scene/piece_king_white.tscn").instantiate(), Vector3($h1.position.x + 0.2, 0, $h1.position.z))
+	add_piece_instance(load("res://scene/piece_queen_white.tscn").instantiate(), Vector3($h1.position.x + 0.3, 0, $h1.position.z))
+	add_piece_instance(load("res://scene/piece_queen_white.tscn").instantiate(), Vector3($h1.position.x + 0.4, 0, $h1.position.z))
+	add_piece_instance(load("res://scene/piece_rook_white.tscn").instantiate(), Vector3($h2.position.x + 0.2, 0, $h2.position.z))
+	add_piece_instance(load("res://scene/piece_rook_white.tscn").instantiate(), Vector3($h2.position.x + 0.3, 0, $h2.position.z))
+	add_piece_instance(load("res://scene/piece_knight_white.tscn").instantiate(), Vector3($h3.position.x + 0.2, 0, $h3.position.z))
+	add_piece_instance(load("res://scene/piece_knight_white.tscn").instantiate(), Vector3($h3.position.x + 0.3, 0, $h3.position.z))
+	add_piece_instance(load("res://scene/piece_bishop_white.tscn").instantiate(), Vector3($h4.position.x + 0.2, 0, $h4.position.z))
+	add_piece_instance(load("res://scene/piece_bishop_white.tscn").instantiate(), Vector3($h4.position.x + 0.3, 0, $h4.position.z))
+	add_piece_instance(load("res://scene/piece_pawn_white.tscn").instantiate(), Vector3($h5.position.x + 0.2, 0, $h5.position.z))
+	add_piece_instance(load("res://scene/piece_pawn_white.tscn").instantiate(), Vector3($h5.position.x + 0.3, 0, $h5.position.z))
+	add_piece_instance(load("res://scene/piece_pawn_white.tscn").instantiate(), Vector3($h6.position.x + 0.2, 0, $h6.position.z))
+	add_piece_instance(load("res://scene/piece_pawn_white.tscn").instantiate(), Vector3($h6.position.x + 0.3, 0, $h6.position.z))
+	add_piece_instance(load("res://scene/piece_pawn_white.tscn").instantiate(), Vector3($h7.position.x + 0.2, 0, $h7.position.z))
+	add_piece_instance(load("res://scene/piece_pawn_white.tscn").instantiate(), Vector3($h7.position.x + 0.3, 0, $h7.position.z))
+	add_piece_instance(load("res://scene/piece_pawn_white.tscn").instantiate(), Vector3($h8.position.x + 0.2, 0, $h8.position.z))
+	add_piece_instance(load("res://scene/piece_pawn_white.tscn").instantiate(), Vector3($h8.position.x + 0.3, 0, $h8.position.z))
+	for i in 10:
+		add_piece_instance(load("res://scene/piece_checker_1_white.tscn").instantiate(), Vector3(0, 0, 0), true)
+	for i in 10:
+		add_piece_instance(load("res://scene/piece_checker_2_white.tscn").instantiate(), Vector3(0, 0, 0), true)
+	for i in 10:
+		add_piece_instance(load("res://scene/piece_checker_3_white.tscn").instantiate(), Vector3(0, 0, 0), true)
+	add_piece_instance(load("res://scene/piece_checker_4_white.tscn").instantiate(), Vector3(0, 0, 0), true)
+	add_piece_instance(load("res://scene/piece_king_black.tscn").instantiate(), Vector3($a8.position.x - 0.2, 0, $a8.position.z))
+	add_piece_instance(load("res://scene/piece_queen_black.tscn").instantiate(), Vector3($a8.position.x - 0.3, 0, $a8.position.z))
+	add_piece_instance(load("res://scene/piece_queen_black.tscn").instantiate(), Vector3($a8.position.x - 0.4, 0, $a8.position.z))
+	add_piece_instance(load("res://scene/piece_rook_black.tscn").instantiate(), Vector3($a7.position.x - 0.2, 0, $a7.position.z))
+	add_piece_instance(load("res://scene/piece_rook_black.tscn").instantiate(), Vector3($a7.position.x - 0.3, 0, $a7.position.z))
+	add_piece_instance(load("res://scene/piece_knight_black.tscn").instantiate(), Vector3($a6.position.x - 0.2, 0, $a6.position.z))
+	add_piece_instance(load("res://scene/piece_knight_black.tscn").instantiate(), Vector3($a6.position.x - 0.3, 0, $a6.position.z))
+	add_piece_instance(load("res://scene/piece_bishop_black.tscn").instantiate(), Vector3($a5.position.x - 0.2, 0, $a5.position.z))
+	add_piece_instance(load("res://scene/piece_bishop_black.tscn").instantiate(), Vector3($a5.position.x - 0.3, 0, $a5.position.z))
+	add_piece_instance(load("res://scene/piece_pawn_black.tscn").instantiate(), Vector3($a4.position.x - 0.2, 0, $a4.position.z))
+	add_piece_instance(load("res://scene/piece_pawn_black.tscn").instantiate(), Vector3($a4.position.x - 0.3, 0, $a4.position.z))
+	add_piece_instance(load("res://scene/piece_pawn_black.tscn").instantiate(), Vector3($a3.position.x - 0.2, 0, $a3.position.z))
+	add_piece_instance(load("res://scene/piece_pawn_black.tscn").instantiate(), Vector3($a3.position.x - 0.3, 0, $a3.position.z))
+	add_piece_instance(load("res://scene/piece_pawn_black.tscn").instantiate(), Vector3($a2.position.x - 0.2, 0, $a2.position.z))
+	add_piece_instance(load("res://scene/piece_pawn_black.tscn").instantiate(), Vector3($a2.position.x - 0.3, 0, $a2.position.z))
+	add_piece_instance(load("res://scene/piece_pawn_black.tscn").instantiate(), Vector3($a1.position.x - 0.2, 0, $a1.position.z))
+	add_piece_instance(load("res://scene/piece_pawn_black.tscn").instantiate(), Vector3($a1.position.x - 0.3, 0, $a1.position.z))
+	for i in 10:
+		add_piece_instance(load("res://scene/piece_checker_1_black.tscn").instantiate(), Vector3(0, 0, 0), true)
+	for i in 10:
+		add_piece_instance(load("res://scene/piece_checker_2_black.tscn").instantiate(), Vector3(0, 0, 0), true)
+	for i in 10:
+		add_piece_instance(load("res://scene/piece_checker_3_black.tscn").instantiate(), Vector3(0, 0, 0), true)
+	add_piece_instance(load("res://scene/piece_checker_4_black.tscn").instantiate(), Vector3(0, 0, 0), true)
 
 func input(_from:Node3D, _to:Area3D, _event:InputEvent, _event_position:Vector3, _normal:Vector3) -> void:
 	if _event is InputEventMouseButton:
@@ -75,9 +89,9 @@ func set_state(_state:State) -> void:
 	$canvas.clear_move_position()
 	$canvas.clear_select_position()
 	state = _state.duplicate()
-	for key:int in piece_instance:
-		piece_instance[key].queue_free()
-	piece_instance.clear()
+	var keys:Array = chessboard_piece.keys()
+	for key:int in keys:
+		move_piece_instance_to_backup(key)
 	for i:int in range(128):
 		if !state.has_piece(i):
 			continue
@@ -218,57 +232,61 @@ func receive_event(event:Dictionary) -> void:
 		"grafting":
 			graft_piece_instance(event["from"], event["to"])
 
-func add_piece_instance(instance:Actor) -> void:
-	var group:int = Chess.group(instance.piece_type[0])
+func add_piece_instance(instance:Actor, initial_position:Vector3 = Vector3(0, 0, 0), hide_piece:bool = false) -> void:
+	pieces[instance] = {"initial_position": initial_position, "hide_piece": hide_piece}
 	$pieces.add_child(instance)
-	instance.global_position = $backup.global_position + Vector3(0, 0, 0.1) * (backup_piece.size() % 8) + Vector3(0.1, 0, 0) * (backup_piece.size() / 8)
+	if hide_piece:
+		instance.visible = false
+	instance.position = initial_position
 	backup_piece.push_back(instance)
 
 func move_piece_instance_from_backup(by:int, piece:int) -> void:
 	var target_piece_instance:Actor = null
 	for iter:Actor in backup_piece:
-		if iter.piece_type[0] == by:
+		if iter.piece_type[0] == piece:
 			target_piece_instance = iter
 			break
 	if !target_piece_instance:
 		for iter:Actor in backup_piece:
-			if iter.piece_type.has(by):
+			if iter.piece_type.has(piece):
 				target_piece_instance = iter
 				break
 	if target_piece_instance:
+		target_piece_instance.visible = true
 		backup_piece.erase(target_piece_instance)
-		piece_instance[by] = target_piece_instance
+		chessboard_piece[by] = target_piece_instance
 		if piece == "K".unicode_at(0):
 			king_instance[0] = target_piece_instance
 		if piece == "k".unicode_at(0):
 			king_instance[1] = target_piece_instance
-		$pieces.add_child(target_piece_instance)
 		target_piece_instance.move(get_node(Chess.to_position_name(by)).global_position)
 
 func move_piece_instance(from:int, to:int) -> void:
-	var instance:Actor = piece_instance[from]
+	var instance:Actor = chessboard_piece[from]
 	if state.has_piece(to):
 		instance.capturing(get_node(Chess.to_position_name(to)).global_position)
 	else:
 		instance.move(get_node(Chess.to_position_name(to)).global_position)
-	piece_instance.erase(from)
-	piece_instance[to] = instance
+	chessboard_piece.erase(from)
+	chessboard_piece[to] = instance
 
 func graft_piece_instance(from:int, to:int) -> void:
-	var instance_1:Actor = piece_instance[from]
-	var instance_2:Actor = piece_instance[to]
-	piece_instance.erase(from)
-	piece_instance.erase(to)
+	var instance_1:Actor = chessboard_piece[from]
+	var instance_2:Actor = chessboard_piece[to]
+	chessboard_piece.erase(from)
+	chessboard_piece.erase(to)
 	instance_1.move(get_node(Chess.to_position_name(to)).global_position)
 	instance_2.move(get_node(Chess.to_position_name(from)).global_position)
-	piece_instance[from] = instance_2
-	piece_instance[to] = instance_1
+	chessboard_piece[from] = instance_2
+	chessboard_piece[to] = instance_1
 
 func move_piece_instance_to_backup(by:int) -> void:
-	var instance:Actor = piece_instance[by]
+	var instance:Actor = chessboard_piece[by]
 	instance.captured()
-	piece_instance.erase(by)
+	chessboard_piece.erase(by)
 	backup_piece.push_back(instance)
+	instance.visible = !pieces[instance]["hide_piece"]
+	instance.move(to_global(pieces[instance]["initial_position"]))
 
 func set_enabled(enabled:bool) -> void:
 	super.set_enabled(enabled)
