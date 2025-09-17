@@ -151,7 +151,8 @@ func check_move(from:int, to:int) -> void:
 
 func execute_move(move:int) -> void:
 	confirm_move = move
-	RuleStandard.apply_move_custom(state, move, receive_event)
+	var event:Dictionary = RuleStandard.apply_move_custom(state, move)
+	receive_event(event)
 	RuleStandard.apply_move(state, move)
 	$canvas.clear_select_position()
 	$canvas.clear_premove_position()
@@ -181,26 +182,26 @@ func set_valid_premove(move_list:PackedInt32Array) -> void:
 			valid_premove[Chess.from(move)] = []
 		valid_premove[Chess.from(move)].push_back(move)
 
-func receive_event(type:String, value:PackedInt32Array = []) -> void:
-	match type:	# 暂时的做法
+func receive_event(event:Dictionary) -> void:
+	match event["type"]:	# 暂时的做法
 		"capture":
-			remove_piece_instance(value[1])
-			move_piece_instance(value[0], value[1])
+			remove_piece_instance(event["to"])
+			move_piece_instance(event["from"], event["to"])
 		"promotion":
-			remove_piece_instance(value[0])
-			add_piece_instance(value[1], value[2])
+			remove_piece_instance(event["from"])
+			add_piece_instance(event["to"], event["piece"])
 		"move":
-			move_piece_instance(value[0], value[1])
+			move_piece_instance(event["from"], event["to"])
 		"castle":
-			move_piece_instance(value[0], value[1])
-			move_piece_instance(value[2], value[3])
+			move_piece_instance(event["from_king"], event["to_king"])
+			move_piece_instance(event["from_rook"], event["to_rook"])
 		"en_passant":
-			move_piece_instance(value[0], value[1])
-			remove_piece_instance(value[2])
+			move_piece_instance(event["from"], event["to"])
+			remove_piece_instance(event["captured"])
 		"grafting":
-			remove_piece_instance(value[1])
-			move_piece_instance(value[0], value[1])
-			add_piece_instance(value[0], "w".unicode_at(0))
+			remove_piece_instance(event["to"])
+			move_piece_instance(event["from"], event["to"])
+			add_piece_instance(event["from"], "w".unicode_at(0))
 
 func add_piece_instance(by:int, piece:int) -> void:
 	var instance:Actor = piece_mapping[char(piece)].duplicate()

@@ -893,8 +893,9 @@ void RuleStandard::apply_move(godot::Ref<State>_state, int _move)
 }
 
 
-void RuleStandard::apply_move_custom(godot::Ref<State> _state, int _move, godot::Callable _callback_event)
+godot::Dictionary RuleStandard::apply_move_custom(godot::Ref<State> _state, int _move)
 {
+	godot::Dictionary output;
 	int from = Chess::from(_move);
 	int from_piece = _state->get_piece(from);
 	int from_group = Chess::group(from_piece);
@@ -902,13 +903,17 @@ void RuleStandard::apply_move_custom(godot::Ref<State> _state, int _move, godot:
 	int to_piece = _state->get_piece(to);
 	if ((to_piece & 95) == 'W')
 	{
-		_callback_event.call("grafting", godot::Array::make(from, to));	//移花接木机制有特殊动作
-		return;
+		output["type"] = "grafting";
+		output["from"] = from;
+		output["to"] = to;
+		return output;	//移花接木机制有特殊动作
 	}
 	if (to_piece)
 	{
-		_callback_event.call("capture", godot::Array::make(from, to));	//双方共同进行演出
-		return;
+		output["type"] = "capture";
+		output["from"] = from;
+		output["to"] = to;
+		return output;	//双方共同进行演出
 	}
 	if ((from_piece & 95) == 'K')
 	{
@@ -916,21 +921,40 @@ void RuleStandard::apply_move_custom(godot::Ref<State> _state, int _move, godot:
 		{
 			if (to == Chess::g1())
 			{
-				_callback_event.call("castle", godot::Array::make(Chess::e1(), Chess::g1(), Chess::h1(), Chess::f1()));	//王车易位，王和车分开进行
+				output["type"] = "castle";
+				output["from_king"] = Chess::e1();
+				output["to_king"] = Chess::g1();
+				output["from_rook"] = Chess::h1();
+				output["to_rook"] = Chess::f1();
+				return output; //王车易位，王和车分开进行
 			}
 			if (to == Chess::c1())
 			{
-				_callback_event.call("castle", godot::Array::make(Chess::e1(), Chess::c1(), Chess::a1(), Chess::d1()));
+				output["type"] = "castle";
+				output["from_king"] = Chess::e1();
+				output["to_king"] = Chess::c1();
+				output["from_rook"] = Chess::a1();
+				output["to_rook"] = Chess::d1();
+				return output;
 			}
 			if (to == Chess::g8())
 			{
-				_callback_event.call("castle", godot::Array::make(Chess::e8(), Chess::g8(), Chess::h8(), Chess::f8()));
+				output["type"] = "castle";
+				output["from_king"] = Chess::e8();
+				output["to_king"] = Chess::g8();
+				output["from_rook"] = Chess::h8();
+				output["to_rook"] = Chess::f8();
+				return output;
 			}
 			if (to == Chess::c8())
 			{
-				_callback_event.call("castle", godot::Array::make(Chess::e8(), Chess::c8(), Chess::a8(), Chess::d8()));
+				output["type"] = "castle";
+				output["from_king"] = Chess::e8();
+				output["to_king"] = Chess::c8();
+				output["from_rook"] = Chess::a8();
+				output["to_rook"] = Chess::d8();
+				return output;
 			}
-			return;
 		}
 	}
 	if ((from_piece & 95) == 'P')
@@ -939,16 +963,25 @@ void RuleStandard::apply_move_custom(godot::Ref<State> _state, int _move, godot:
 		if (((from >> 4) == 3 || (from >> 4) == 4) && to == _state->get_en_passant())
 		{
 			int captured = to - front;
-			_callback_event.call("en_passant", godot::Array::make(from, to, captured));
-			return;
+			output["type"] = "en_passant";
+			output["from"] = from;
+			output["to"] = to;
+			output["captured"] = captured;
+			return output;
 		}
 		if (Chess::extra(_move))
 		{
-			_callback_event.call("promotion", godot::Array::make(from, to, Chess::extra(_move)));
-			return;
+			output["type"] = "promotion";
+			output["from"] = from;
+			output["to"] = to;
+			output["piece"] = Chess::extra(_move);
+			return output;
 		}
 	}
-	_callback_event.call("move", godot::Array::make(from, to));
+	output["type"] = "move";
+	output["from"] = from;
+	output["to"] = to;
+	return output;
 }
 
 uint64_t RuleStandard::perft(godot::Ref<State> _state, int _depth, int group)
