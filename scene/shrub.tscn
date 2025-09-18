@@ -1,0 +1,17 @@
+[gd_scene load_steps=3 format=3 uid="uid://rlos56ckp02d"]
+
+[ext_resource type="PackedScene" uid="uid://biv8ghyjqw63y" path="res://assets/model/shrub.glb" id="1_08tlt"]
+[ext_resource type="Script" uid="uid://bt4vtnpxu5i4x" path="res://src/actor.gd" id="2_4hxfj"]
+
+[node name="shrub" instance=ExtResource("1_08tlt")]
+script = ExtResource("2_4hxfj")
+piece_type = [120, 88]
+
+[node name="root" parent="." index="0"]
+transform = Transform3D(2.685, 0, 0, 0, 2.685, 0, 0, 0, 2.685, 0, 0, 0)
+
+[node name="leaves" parent="." index="1"]
+transform = Transform3D(0.715, 0, 0, 0, 0.715, 0, 0, 0, 0.715, 0, 1.0751, 0)
+
+[node name="leaves_001" parent="." index="2"]
+transform = Transform3D(1.39216e-07, 0, -0.715, 0, 0.715, 0, 0.715, 0, 1.39216e-07, 0, 1.0751, 0)

@@ -1,0 +1,8 @@
+[gd_scene load_steps=3 format=3 uid="uid://bfl3bn4u2am21"]
+
+[ext_resource type="PackedScene" uid="uid://dbxji8pi5nulg" path="res://assets/model/tree.glb" id="1_dcgk5"]
+[ext_resource type="Script" uid="uid://bt4vtnpxu5i4x" path="res://src/actor.gd" id="2_lutej"]
+
+[node name="tree" instance=ExtResource("1_dcgk5")]
+script = ExtResource("2_lutej")
+piece_type = [121, 89]
