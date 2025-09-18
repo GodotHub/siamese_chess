@@ -16,14 +16,14 @@ func idle() -> void:
 
 func capturing(_pos:Vector3) -> void:	# 攻击
 	var tween:Tween = create_tween()
-	tween.tween_property(self, "global_position", _pos, global_position.distance_to(_pos) / 5)
+	tween.tween_property(self, "global_position", _pos, 0.3).set_trans(Tween.TRANS_SINE)
 
 func captured() -> void:	# 被攻击
 	pass
 
 func move(_pos:Vector3) -> void:	# 单纯的移动
 	var tween:Tween = create_tween()
-	tween.tween_property(self, "global_position", _pos, global_position.distance_to(_pos) / 5)
+	tween.tween_property(self, "global_position", _pos, 0.3).set_trans(Tween.TRANS_SINE)
 
 func target() -> void:	# 作为轻子威胁重子，或牵制对手的棋子时将会面向目标准备攻击，包括将军
 	pass
