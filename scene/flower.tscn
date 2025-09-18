@@ -1,0 +1,7 @@
+[gd_scene load_steps=3 format=3 uid="uid://ekjtt81nkr2f"]
+
+[ext_resource type="PackedScene" uid="uid://b6hedyxsn7pau" path="res://assets/model/flower.glb" id="1_4b0bg"]
+[ext_resource type="Script" uid="uid://bt4vtnpxu5i4x" path="res://src/actor.gd" id="2_xm5fp"]
+
+[node name="flower" instance=ExtResource("1_4b0bg")]
+script = ExtResource("2_xm5fp")

@@ -1,0 +1,39 @@
+[remap]
+
+importer="texture"
+type="CompressedTexture2D"
+uid="uid://c71is0kjidk63"
+path.s3tc="res://.godot/imported/flower_grass.png-214283c937c893322af4b6458bb2a1be.s3tc.ctex"
+path.etc2="res://.godot/imported/flower_grass.png-214283c937c893322af4b6458bb2a1be.etc2.ctex"
+metadata={
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
+"vram_texture": true
+}
+generator_parameters={
+"md5": "18870e80d621d75d6e79d5421589dce7"
+}
+
+[deps]
+
+source_file="res://assets/model/flower_grass.png"
+dest_files=["res://.godot/imported/flower_grass.png-214283c937c893322af4b6458bb2a1be.s3tc.ctex", "res://.godot/imported/flower_grass.png-214283c937c893322af4b6458bb2a1be.etc2.ctex"]
+
+[params]
+
+compress/mode=2
+compress/high_quality=false
+compress/lossy_quality=0.7
+compress/hdr_compression=1
+compress/normal_map=0
+compress/channel_pack=0
+mipmaps/generate=true
+mipmaps/limit=-1
+roughness/mode=0
+roughness/src_normal=""
+process/fix_alpha_border=true
+process/premult_alpha=false
+process/normal_map_invert_y=false
+process/hdr_as_srgb=false
+process/hdr_clamp_exposure=false
+process/size_limit=0
+detect_3d/compress_to=0
