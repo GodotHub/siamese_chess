@@ -3,10 +3,11 @@ extends Node3D
 var state:State = null
 
 func _ready() -> void:
-	var cheshire_instance:Actor = load("res://scene/cheshire.tscn").instantiate()
-	cheshire_instance.scale = Vector3(0.05, 0.05, 0.05)
+	var fallback_piece:Actor = load("res://scene/piece_shrub.tscn").instantiate()
+	fallback_piece.scale *= 16
 	state = RuleStandard.create_initial_state()
-	$chessboard_blank.add_piece_instance(cheshire_instance, Vector3(0, 0, 0), true)
+	$chessboard_blank.fallback_piece = fallback_piece
+	$chessboard_blank.add_piece_instance(load("res://scene/cheshire.tscn").instantiate(), Vector3(0, 0, 0), true)
 	$chessboard_blank.set_state(state.duplicate())
 	$chessboard_blank.connect("move_played", receive_move)
 	$player.set_initial_interact($interact)

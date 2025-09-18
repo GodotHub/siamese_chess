@@ -28,7 +28,6 @@ shadow_enabled = true
 environment = SubResource("Environment_w3jsn")
 
 [node name="chessboard_blank" parent="." instance=ExtResource("1_m2ffg")]
-transform = Transform3D(10, 0, 0, 0, 10, 0, 0, 0, 10, 0, 0, 0)
 
 [node name="player" parent="." instance=ExtResource("3_gs8dr")]
 
@@ -39,4 +38,4 @@ inspectable_item = [NodePath("../chessboard_blank")]
 metadata/_custom_type_script = "uid://dg85frcnjlauy"
 
 [node name="camera_3d" type="Camera3D" parent="."]
-transform = Transform3D(-1, 0, -8.74228e-08, -7.21009e-08, 0.565514, 0.824739, 4.94388e-08, 0.824739, -0.565514, 0, 6.92516, -6.08193)
+transform = Transform3D(-1, 3.19744e-14, -8.74227e-08, -7.21009e-08, 0.565514, 0.824739, 4.94388e-08, 0.824739, -0.565514, 0, 10, -10.4848)

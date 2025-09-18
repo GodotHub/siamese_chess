@@ -117,6 +117,7 @@ size = Vector2(0.1, 0.1)
 
 [node name="cheshire" instance=ExtResource("1_lkfns")]
 script = ExtResource("2_lp02k")
+piece_type = [107, 110]
 
 [node name="animation_tree" type="AnimationTree" parent="." index="2"]
 tree_root = SubResource("AnimationNodeStateMachine_pjgvl")
