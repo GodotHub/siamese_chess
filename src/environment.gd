@@ -14,6 +14,8 @@ var friend_state:String = "idle"
 var telephone_2025_first_time:bool = false
 
 func _ready() -> void:
+	$chessboard_pastor.add_default_piece_set()
+	$chessboard_friend.add_default_piece_set()
 	$history.set_document(pastor_history_chart)
 	$player.set_initial_interact($interact/area_passthrough)
 	$clock_pastor.connect("timeout", pastor_game_timeout)
@@ -151,7 +153,7 @@ func dialog_pastor_game_start() -> void:
 			call_deferred("game_with_pastor")
 			break
 		elif $dialog.selected == 3:
-			pastor_game_state = RuleStandard.create_random_state(8)
+			pastor_game_state = RuleStandard.create_random_state(15)
 			$chessboard_pastor.set_state(pastor_game_state)
 			pastor_history_chart.set_state(pastor_game_state)
 			pastor_history_chart.set_filename("history." + String.num_int64(Time.get_unix_time_from_system()) + ".json")

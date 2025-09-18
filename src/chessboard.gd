@@ -17,10 +17,9 @@ var king_instance:Array[Actor] = [null, null]
 var confirm_move:int = 0
 
 func _ready() -> void:
-	reserve_piece_instance()
 	super._ready()
 
-func reserve_piece_instance() -> void:	# 最好交由外部来负责棋子的准备
+func add_default_piece_set() -> void:	# 最好交由外部来负责棋子的准备
 	add_piece_instance(load("res://scene/piece_king_white.tscn").instantiate(), Vector3($h1.position.x + 0.2, 0, $h1.position.z))
 	add_piece_instance(load("res://scene/piece_queen_white.tscn").instantiate(), Vector3($h1.position.x + 0.3, 0, $h1.position.z))
 	add_piece_instance(load("res://scene/piece_queen_white.tscn").instantiate(), Vector3($h1.position.x + 0.4, 0, $h1.position.z))
@@ -38,11 +37,11 @@ func reserve_piece_instance() -> void:	# 最好交由外部来负责棋子的准
 	add_piece_instance(load("res://scene/piece_pawn_white.tscn").instantiate(), Vector3($h7.position.x + 0.3, 0, $h7.position.z))
 	add_piece_instance(load("res://scene/piece_pawn_white.tscn").instantiate(), Vector3($h8.position.x + 0.2, 0, $h8.position.z))
 	add_piece_instance(load("res://scene/piece_pawn_white.tscn").instantiate(), Vector3($h8.position.x + 0.3, 0, $h8.position.z))
-	for i in 10:
+	for i in 15:
 		add_piece_instance(load("res://scene/piece_checker_1_white.tscn").instantiate(), Vector3(0, 0, 0), true)
-	for i in 10:
+	for i in 7:
 		add_piece_instance(load("res://scene/piece_checker_2_white.tscn").instantiate(), Vector3(0, 0, 0), true)
-	for i in 10:
+	for i in 5:
 		add_piece_instance(load("res://scene/piece_checker_3_white.tscn").instantiate(), Vector3(0, 0, 0), true)
 	add_piece_instance(load("res://scene/piece_checker_4_white.tscn").instantiate(), Vector3(0, 0, 0), true)
 	add_piece_instance(load("res://scene/piece_king_black.tscn").instantiate(), Vector3($a8.position.x - 0.2, 0, $a8.position.z))
@@ -62,11 +61,11 @@ func reserve_piece_instance() -> void:	# 最好交由外部来负责棋子的准
 	add_piece_instance(load("res://scene/piece_pawn_black.tscn").instantiate(), Vector3($a2.position.x - 0.3, 0, $a2.position.z))
 	add_piece_instance(load("res://scene/piece_pawn_black.tscn").instantiate(), Vector3($a1.position.x - 0.2, 0, $a1.position.z))
 	add_piece_instance(load("res://scene/piece_pawn_black.tscn").instantiate(), Vector3($a1.position.x - 0.3, 0, $a1.position.z))
-	for i in 10:
+	for i in 15:
 		add_piece_instance(load("res://scene/piece_checker_1_black.tscn").instantiate(), Vector3(0, 0, 0), true)
-	for i in 10:
+	for i in 7:
 		add_piece_instance(load("res://scene/piece_checker_2_black.tscn").instantiate(), Vector3(0, 0, 0), true)
-	for i in 10:
+	for i in 5:
 		add_piece_instance(load("res://scene/piece_checker_3_black.tscn").instantiate(), Vector3(0, 0, 0), true)
 	add_piece_instance(load("res://scene/piece_checker_4_black.tscn").instantiate(), Vector3(0, 0, 0), true)
 

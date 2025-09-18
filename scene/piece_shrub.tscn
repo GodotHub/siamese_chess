@@ -5,4 +5,3 @@
 
 [node name="piece_shrub" instance=ExtResource("1_sx106")]
 script = ExtResource("2_dhofv")
-piece_type = [65]

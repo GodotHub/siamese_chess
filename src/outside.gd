@@ -4,9 +4,9 @@ var state:State = null
 
 func _ready() -> void:
 	var cheshire_instance:Actor = load("res://scene/cheshire.tscn").instantiate()
-	cheshire_instance.scale = Vector3(0.15, 0.15, 0.15)
+	cheshire_instance.scale = Vector3(0.05, 0.05, 0.05)
 	state = RuleStandard.create_initial_state()
-	$chessboard_blank.piece_mapping["k"] = cheshire_instance
+	$chessboard_blank.add_piece_instance(cheshire_instance, Vector3(0, 0, 0), true)
 	$chessboard_blank.set_state(state.duplicate())
 	$chessboard_blank.connect("move_played", receive_move)
 	$player.set_initial_interact($interact)
