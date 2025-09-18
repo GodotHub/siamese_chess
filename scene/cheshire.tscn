@@ -1,7 +1,7 @@
-[gd_scene load_steps=21 format=3 uid="uid://bjdbj6ulswxgl"]
+[gd_scene load_steps=26 format=3 uid="uid://bjdbj6ulswxgl"]
 
 [ext_resource type="PackedScene" uid="uid://s1v4ec45m2i5" path="res://assets/model/cheshire.glb" id="1_lkfns"]
-[ext_resource type="Script" uid="uid://bt4vtnpxu5i4x" path="res://src/actor.gd" id="2_lp02k"]
+[ext_resource type="Script" uid="uid://ckqop5jjivbg0" path="res://scene/cheshire.gd" id="2_lp02k"]
 
 [sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_3kauh"]
 animation = &"battle_attack"
@@ -73,7 +73,7 @@ advance_mode = 2
 states/End/position = Vector2(808, 101.333)
 states/Start/position = Vector2(185.333, 101.63)
 states/battle_attack/node = SubResource("AnimationNodeAnimation_3kauh")
-states/battle_attack/position = Vector2(606, -46)
+states/battle_attack/position = Vector2(676, -46)
 states/battle_idle/node = SubResource("AnimationNodeAnimation_lp02k")
 states/battle_idle/position = Vector2(428.889, 70.6264)
 states/battle_move/node = SubResource("AnimationNodeAnimation_uowm0")
@@ -87,12 +87,47 @@ states/idle/position = Vector2(606, 169)
 states/thinking/node = SubResource("AnimationNodeAnimation_iy7iy")
 states/thinking/position = Vector2(719.333, 177.889)
 transitions = ["battle_idle", "battle_move", SubResource("AnimationNodeStateMachineTransition_uowm0"), "battle_move", "battle_idle", SubResource("AnimationNodeStateMachineTransition_uniqn"), "battle_idle", "battle_target", SubResource("AnimationNodeStateMachineTransition_pjgvl"), "battle_target", "battle_attack", SubResource("AnimationNodeStateMachineTransition_a5ln7"), "battle_attack", "battle_idle", SubResource("AnimationNodeStateMachineTransition_68j70")]
-graph_offset = Vector2(-277, -88)
+graph_offset = Vector2(36, -123)
+
+[sub_resource type="Curve" id="Curve_uniqn"]
+_limits = [0.0, 3.0, 0.0, 1.0]
+_data = [Vector2(0, 0), 0.0, 0.118067, 0, 0, Vector2(1, 1.00067), 2.09419, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_iy7iy"]
+curve = SubResource("Curve_uniqn")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_3kauh"]
+direction = Vector3(0, 0, -1)
+spread = 32.0
+initial_velocity_min = 1.0
+initial_velocity_max = 4.12
+gravity = Vector3(0, -0.5, 0)
+damping_min = 2.0
+damping_max = 2.0
+scale_over_velocity_max = 1.0
+scale_over_velocity_curve = SubResource("CurveTexture_iy7iy")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ftdew"]
+albedo_color = Color(0.16, 0.0784, 0.0784, 1)
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_2ct1d"]
+material = SubResource("StandardMaterial3D_ftdew")
+size = Vector2(0.1, 0.1)
 
 [node name="cheshire" instance=ExtResource("1_lkfns")]
 script = ExtResource("2_lp02k")
-piece_type = [107, 110]
 
 [node name="animation_tree" type="AnimationTree" parent="." index="2"]
 tree_root = SubResource("AnimationNodeStateMachine_pjgvl")
 anim_player = NodePath("../AnimationPlayer")
+
+[node name="gpu_particles_attack" type="GPUParticles3D" parent="." index="3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.084022, 0.78316, 2.45072)
+emitting = false
+amount = 30
+lifetime = 2.0
+one_shot = true
+explosiveness = 0.9
+process_material = SubResource("ParticleProcessMaterial_3kauh")
+draw_pass_1 = SubResource("PlaneMesh_2ct1d")
