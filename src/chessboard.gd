@@ -2,6 +2,7 @@ extends InspectableItem
 class_name Chessboard
 
 signal move_played()
+@onready var fallback_piece:Actor = load("res://scene/piece_shrub.tscn").instantiate()
 var pieces:Dictionary = {}
 var backup_piece:Array = []
 var mouse_start_position_name:String = ""
@@ -19,7 +20,7 @@ func _ready() -> void:
 	reserve_piece_instance()
 	super._ready()
 
-func reserve_piece_instance() -> void:
+func reserve_piece_instance() -> void:	# 最好交由外部来负责棋子的准备
 	add_piece_instance(load("res://scene/piece_king_white.tscn").instantiate(), Vector3($h1.position.x + 0.2, 0, $h1.position.z))
 	add_piece_instance(load("res://scene/piece_queen_white.tscn").instantiate(), Vector3($h1.position.x + 0.3, 0, $h1.position.z))
 	add_piece_instance(load("res://scene/piece_queen_white.tscn").instantiate(), Vector3($h1.position.x + 0.4, 0, $h1.position.z))
@@ -251,6 +252,11 @@ func move_piece_instance_from_backup(by:int, piece:int) -> void:
 			if iter.piece_type.has(piece):
 				target_piece_instance = iter
 				break
+	if !target_piece_instance:
+		var new_instance = fallback_piece.duplicate()
+		new_instance.piece_type = [piece]
+		add_piece_instance(new_instance, Vector3(0, 0, 0), true)
+		target_piece_instance = new_instance
 	if target_piece_instance:
 		target_piece_instance.visible = true
 		backup_piece.erase(target_piece_instance)
@@ -259,7 +265,7 @@ func move_piece_instance_from_backup(by:int, piece:int) -> void:
 			king_instance[0] = target_piece_instance
 		if piece == "k".unicode_at(0):
 			king_instance[1] = target_piece_instance
-		target_piece_instance.move(get_node(Chess.to_position_name(by)).global_position)
+		target_piece_instance.move.call_deferred(get_node(Chess.to_position_name(by)).global_position)
 
 func move_piece_instance(from:int, to:int) -> void:
 	var instance:Actor = chessboard_piece[from]
