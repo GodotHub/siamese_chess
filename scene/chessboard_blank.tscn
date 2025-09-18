@@ -11,5 +11,6 @@ script = ExtResource("2_p767r")
 visible = false
 
 [node name="canvas" parent="." index="67" instance=ExtResource("3_vvu1j")]
+transform = Transform3D(-16, 0, -2.41593e-06, 0, 16, 0, 2.41593e-06, 0, -16, 0, 0, 0)
 
 [node name="pieces" type="Node3D" parent="." index="68"]
