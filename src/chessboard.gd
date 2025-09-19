@@ -3,7 +3,6 @@ class_name Chessboard
 
 signal move_played()
 @onready var fallback_piece:Actor = load("res://scene/piece_shrub.tscn").instantiate()
-var pieces:Dictionary = {}
 var backup_piece:Array = []
 var mouse_start_position_name:String = ""
 var mouse_moved:bool = false
@@ -20,54 +19,122 @@ func _ready() -> void:
 	super._ready()
 
 func add_default_piece_set() -> void:	# 最好交由外部来负责棋子的准备
-	add_piece_instance(load("res://scene/piece_king_white.tscn").instantiate(), Vector3($h1.position.x + 0.2, 0, $h1.position.z))
-	add_piece_instance(load("res://scene/piece_queen_white.tscn").instantiate(), Vector3($h1.position.x + 0.3, 0, $h1.position.z))
-	add_piece_instance(load("res://scene/piece_queen_white.tscn").instantiate(), Vector3($h1.position.x + 0.4, 0, $h1.position.z))
-	add_piece_instance(load("res://scene/piece_rook_white.tscn").instantiate(), Vector3($h2.position.x + 0.2, 0, $h2.position.z))
-	add_piece_instance(load("res://scene/piece_rook_white.tscn").instantiate(), Vector3($h2.position.x + 0.3, 0, $h2.position.z))
-	add_piece_instance(load("res://scene/piece_knight_white.tscn").instantiate(), Vector3($h3.position.x + 0.2, 0, $h3.position.z))
-	add_piece_instance(load("res://scene/piece_knight_white.tscn").instantiate(), Vector3($h3.position.x + 0.3, 0, $h3.position.z))
-	add_piece_instance(load("res://scene/piece_bishop_white.tscn").instantiate(), Vector3($h4.position.x + 0.2, 0, $h4.position.z))
-	add_piece_instance(load("res://scene/piece_bishop_white.tscn").instantiate(), Vector3($h4.position.x + 0.3, 0, $h4.position.z))
-	add_piece_instance(load("res://scene/piece_pawn_white.tscn").instantiate(), Vector3($h5.position.x + 0.2, 0, $h5.position.z))
-	add_piece_instance(load("res://scene/piece_pawn_white.tscn").instantiate(), Vector3($h5.position.x + 0.3, 0, $h5.position.z))
-	add_piece_instance(load("res://scene/piece_pawn_white.tscn").instantiate(), Vector3($h6.position.x + 0.2, 0, $h6.position.z))
-	add_piece_instance(load("res://scene/piece_pawn_white.tscn").instantiate(), Vector3($h6.position.x + 0.3, 0, $h6.position.z))
-	add_piece_instance(load("res://scene/piece_pawn_white.tscn").instantiate(), Vector3($h7.position.x + 0.2, 0, $h7.position.z))
-	add_piece_instance(load("res://scene/piece_pawn_white.tscn").instantiate(), Vector3($h7.position.x + 0.3, 0, $h7.position.z))
-	add_piece_instance(load("res://scene/piece_pawn_white.tscn").instantiate(), Vector3($h8.position.x + 0.2, 0, $h8.position.z))
-	add_piece_instance(load("res://scene/piece_pawn_white.tscn").instantiate(), Vector3($h8.position.x + 0.3, 0, $h8.position.z))
+	add_piece_instance(load("res://scene/piece_king_white.tscn").instantiate()
+		.set_show_on_backup(true)
+		.set_backup_position(Vector3($h1.position.x + 0.2, 0, $h1.position.z)))
+	add_piece_instance(load("res://scene/piece_queen_white.tscn").instantiate()
+		.set_show_on_backup(true)
+		.set_backup_position(Vector3($h1.position.x + 0.3, 0, $h1.position.z)))
+	add_piece_instance(load("res://scene/piece_queen_white.tscn").instantiate()
+		.set_show_on_backup(true)
+		.set_backup_position(Vector3($h1.position.x + 0.4, 0, $h1.position.z)))
+	add_piece_instance(load("res://scene/piece_rook_white.tscn").instantiate()
+		.set_show_on_backup(true)
+		.set_backup_position(Vector3($h2.position.x + 0.2, 0, $h2.position.z)))
+	add_piece_instance(load("res://scene/piece_rook_white.tscn").instantiate()
+		.set_show_on_backup(true)
+		.set_backup_position(Vector3($h2.position.x + 0.3, 0, $h2.position.z)))
+	add_piece_instance(load("res://scene/piece_knight_white.tscn").instantiate()
+		.set_show_on_backup(true)
+		.set_backup_position(Vector3($h3.position.x + 0.2, 0, $h3.position.z)))
+	add_piece_instance(load("res://scene/piece_knight_white.tscn").instantiate()
+		.set_show_on_backup(true)
+		.set_backup_position(Vector3($h3.position.x + 0.3, 0, $h3.position.z)))
+	add_piece_instance(load("res://scene/piece_bishop_white.tscn").instantiate()
+		.set_show_on_backup(true)
+		.set_backup_position(Vector3($h4.position.x + 0.2, 0, $h4.position.z)))
+	add_piece_instance(load("res://scene/piece_bishop_white.tscn").instantiate()
+		.set_show_on_backup(true)
+		.set_backup_position(Vector3($h4.position.x + 0.3, 0, $h4.position.z)))
+	add_piece_instance(load("res://scene/piece_pawn_white.tscn").instantiate()
+		.set_show_on_backup(true)
+		.set_backup_position(Vector3($h5.position.x + 0.2, 0, $h5.position.z)))
+	add_piece_instance(load("res://scene/piece_pawn_white.tscn").instantiate()
+		.set_show_on_backup(true)
+		.set_backup_position(Vector3($h5.position.x + 0.3, 0, $h5.position.z)))
+	add_piece_instance(load("res://scene/piece_pawn_white.tscn").instantiate()
+		.set_show_on_backup(true)
+		.set_backup_position(Vector3($h6.position.x + 0.2, 0, $h6.position.z)))
+	add_piece_instance(load("res://scene/piece_pawn_white.tscn").instantiate()
+		.set_show_on_backup(true)
+		.set_backup_position(Vector3($h6.position.x + 0.3, 0, $h6.position.z)))
+	add_piece_instance(load("res://scene/piece_pawn_white.tscn").instantiate()
+		.set_show_on_backup(true)
+		.set_backup_position(Vector3($h7.position.x + 0.2, 0, $h7.position.z)))
+	add_piece_instance(load("res://scene/piece_pawn_white.tscn").instantiate()
+		.set_show_on_backup(true)
+		.set_backup_position(Vector3($h7.position.x + 0.3, 0, $h7.position.z)))
+	add_piece_instance(load("res://scene/piece_pawn_white.tscn").instantiate()
+		.set_show_on_backup(true)
+		.set_backup_position(Vector3($h8.position.x + 0.2, 0, $h8.position.z)))
+	add_piece_instance(load("res://scene/piece_pawn_white.tscn").instantiate()
+		.set_show_on_backup(true)
+		.set_backup_position(Vector3($h8.position.x + 0.3, 0, $h8.position.z)))
 	for i in 15:
-		add_piece_instance(load("res://scene/piece_checker_1_white.tscn").instantiate(), Vector3(0, 0, 0), true)
+		add_piece_instance(load("res://scene/piece_checker_1_white.tscn").instantiate().set_show_on_backup(false))
 	for i in 7:
-		add_piece_instance(load("res://scene/piece_checker_2_white.tscn").instantiate(), Vector3(0, 0, 0), true)
+		add_piece_instance(load("res://scene/piece_checker_2_white.tscn").instantiate().set_show_on_backup(false))
 	for i in 5:
-		add_piece_instance(load("res://scene/piece_checker_3_white.tscn").instantiate(), Vector3(0, 0, 0), true)
-	add_piece_instance(load("res://scene/piece_checker_4_white.tscn").instantiate(), Vector3(0, 0, 0), true)
-	add_piece_instance(load("res://scene/piece_king_black.tscn").instantiate(), Vector3($a8.position.x - 0.2, 0, $a8.position.z))
-	add_piece_instance(load("res://scene/piece_queen_black.tscn").instantiate(), Vector3($a8.position.x - 0.3, 0, $a8.position.z))
-	add_piece_instance(load("res://scene/piece_queen_black.tscn").instantiate(), Vector3($a8.position.x - 0.4, 0, $a8.position.z))
-	add_piece_instance(load("res://scene/piece_rook_black.tscn").instantiate(), Vector3($a7.position.x - 0.2, 0, $a7.position.z))
-	add_piece_instance(load("res://scene/piece_rook_black.tscn").instantiate(), Vector3($a7.position.x - 0.3, 0, $a7.position.z))
-	add_piece_instance(load("res://scene/piece_knight_black.tscn").instantiate(), Vector3($a6.position.x - 0.2, 0, $a6.position.z))
-	add_piece_instance(load("res://scene/piece_knight_black.tscn").instantiate(), Vector3($a6.position.x - 0.3, 0, $a6.position.z))
-	add_piece_instance(load("res://scene/piece_bishop_black.tscn").instantiate(), Vector3($a5.position.x - 0.2, 0, $a5.position.z))
-	add_piece_instance(load("res://scene/piece_bishop_black.tscn").instantiate(), Vector3($a5.position.x - 0.3, 0, $a5.position.z))
-	add_piece_instance(load("res://scene/piece_pawn_black.tscn").instantiate(), Vector3($a4.position.x - 0.2, 0, $a4.position.z))
-	add_piece_instance(load("res://scene/piece_pawn_black.tscn").instantiate(), Vector3($a4.position.x - 0.3, 0, $a4.position.z))
-	add_piece_instance(load("res://scene/piece_pawn_black.tscn").instantiate(), Vector3($a3.position.x - 0.2, 0, $a3.position.z))
-	add_piece_instance(load("res://scene/piece_pawn_black.tscn").instantiate(), Vector3($a3.position.x - 0.3, 0, $a3.position.z))
-	add_piece_instance(load("res://scene/piece_pawn_black.tscn").instantiate(), Vector3($a2.position.x - 0.2, 0, $a2.position.z))
-	add_piece_instance(load("res://scene/piece_pawn_black.tscn").instantiate(), Vector3($a2.position.x - 0.3, 0, $a2.position.z))
-	add_piece_instance(load("res://scene/piece_pawn_black.tscn").instantiate(), Vector3($a1.position.x - 0.2, 0, $a1.position.z))
-	add_piece_instance(load("res://scene/piece_pawn_black.tscn").instantiate(), Vector3($a1.position.x - 0.3, 0, $a1.position.z))
+		add_piece_instance(load("res://scene/piece_checker_3_white.tscn").instantiate().set_show_on_backup(false))
+	add_piece_instance(load("res://scene/piece_checker_4_white.tscn").instantiate().set_show_on_backup(false))
+	add_piece_instance(load("res://scene/piece_king_black.tscn").instantiate()
+		.set_show_on_backup(true)
+		.set_backup_position(Vector3($a8.position.x - 0.2, 0, $a8.position.z)))
+	add_piece_instance(load("res://scene/piece_queen_black.tscn").instantiate()
+		.set_show_on_backup(true)
+		.set_backup_position(Vector3($a8.position.x - 0.3, 0, $a8.position.z)))
+	add_piece_instance(load("res://scene/piece_queen_black.tscn").instantiate()
+		.set_show_on_backup(true)
+		.set_backup_position(Vector3($a8.position.x - 0.4, 0, $a8.position.z)))
+	add_piece_instance(load("res://scene/piece_rook_black.tscn").instantiate()
+		.set_show_on_backup(true)
+		.set_backup_position(Vector3($a7.position.x - 0.2, 0, $a7.position.z)))
+	add_piece_instance(load("res://scene/piece_rook_black.tscn").instantiate()
+		.set_show_on_backup(true)
+		.set_backup_position(Vector3($a7.position.x - 0.3, 0, $a7.position.z)))
+	add_piece_instance(load("res://scene/piece_knight_black.tscn").instantiate()
+		.set_show_on_backup(true)
+		.set_backup_position(Vector3($a6.position.x - 0.2, 0, $a6.position.z)))
+	add_piece_instance(load("res://scene/piece_knight_black.tscn").instantiate()
+		.set_show_on_backup(true)
+		.set_backup_position(Vector3($a6.position.x - 0.3, 0, $a6.position.z)))
+	add_piece_instance(load("res://scene/piece_bishop_black.tscn").instantiate()
+		.set_show_on_backup(true)
+		.set_backup_position(Vector3($a5.position.x - 0.2, 0, $a5.position.z)))
+	add_piece_instance(load("res://scene/piece_bishop_black.tscn").instantiate()
+		.set_show_on_backup(true)
+		.set_backup_position(Vector3($a5.position.x - 0.3, 0, $a5.position.z)))
+	add_piece_instance(load("res://scene/piece_pawn_black.tscn").instantiate()
+		.set_show_on_backup(true)
+		.set_backup_position(Vector3($a4.position.x - 0.2, 0, $a4.position.z)))
+	add_piece_instance(load("res://scene/piece_pawn_black.tscn").instantiate()
+		.set_show_on_backup(true)
+		.set_backup_position(Vector3($a4.position.x - 0.3, 0, $a4.position.z)))
+	add_piece_instance(load("res://scene/piece_pawn_black.tscn").instantiate()
+		.set_show_on_backup(true)
+		.set_backup_position(Vector3($a3.position.x - 0.2, 0, $a3.position.z)))
+	add_piece_instance(load("res://scene/piece_pawn_black.tscn").instantiate()
+		.set_show_on_backup(true)
+		.set_backup_position(Vector3($a3.position.x - 0.3, 0, $a3.position.z)))
+	add_piece_instance(load("res://scene/piece_pawn_black.tscn").instantiate()
+		.set_show_on_backup(true)
+		.set_backup_position(Vector3($a2.position.x - 0.2, 0, $a2.position.z)))
+	add_piece_instance(load("res://scene/piece_pawn_black.tscn").instantiate()
+		.set_show_on_backup(true)
+		.set_backup_position(Vector3($a2.position.x - 0.3, 0, $a2.position.z)))
+	add_piece_instance(load("res://scene/piece_pawn_black.tscn").instantiate()
+		.set_show_on_backup(true)
+		.set_backup_position(Vector3($a1.position.x - 0.2, 0, $a1.position.z)))
+	add_piece_instance(load("res://scene/piece_pawn_black.tscn").instantiate()
+		.set_show_on_backup(true)
+		.set_backup_position(Vector3($a1.position.x - 0.3, 0, $a1.position.z)))
 	for i in 15:
-		add_piece_instance(load("res://scene/piece_checker_1_black.tscn").instantiate(), Vector3(0, 0, 0), true)
+		add_piece_instance(load("res://scene/piece_checker_1_black.tscn").instantiate().set_show_on_backup(false))
 	for i in 7:
-		add_piece_instance(load("res://scene/piece_checker_2_black.tscn").instantiate(), Vector3(0, 0, 0), true)
+		add_piece_instance(load("res://scene/piece_checker_2_black.tscn").instantiate().set_show_on_backup(false))
 	for i in 5:
-		add_piece_instance(load("res://scene/piece_checker_3_black.tscn").instantiate(), Vector3(0, 0, 0), true)
-	add_piece_instance(load("res://scene/piece_checker_4_black.tscn").instantiate(), Vector3(0, 0, 0), true)
+		add_piece_instance(load("res://scene/piece_checker_3_black.tscn").instantiate().set_show_on_backup(false))
+	add_piece_instance(load("res://scene/piece_checker_4_black.tscn").instantiate().set_show_on_backup(false))
 
 func input(_from:Node3D, _to:Area3D, _event:InputEvent, _event_position:Vector3, _normal:Vector3) -> void:
 	if _event is InputEventMouseButton:
@@ -232,12 +299,8 @@ func receive_event(event:Dictionary) -> void:
 		"grafting":
 			graft_piece_instance(event["from"], event["to"])
 
-func add_piece_instance(instance:Actor, initial_position:Vector3 = Vector3(0, 0, 0), hide_piece:bool = false) -> void:
-	pieces[instance] = {"initial_position": initial_position, "hide_piece": hide_piece}
+func add_piece_instance(instance:Actor) -> void:
 	$pieces.add_child(instance)
-	if hide_piece:
-		instance.visible = false
-	instance.position = initial_position
 	backup_piece.push_back(instance)
 
 func move_piece_instance_from_backup(by:int, piece:int) -> void:
@@ -252,19 +315,18 @@ func move_piece_instance_from_backup(by:int, piece:int) -> void:
 				target_piece_instance = iter
 				break
 	if !target_piece_instance:
-		var new_instance = fallback_piece.duplicate()
+		var new_instance:Actor = fallback_piece.duplicate(DuplicateFlags.DUPLICATE_SCRIPTS)
 		new_instance.piece_type = [piece]
-		add_piece_instance(new_instance, Vector3(0, 0, 0), true)
+		add_piece_instance(new_instance)
 		target_piece_instance = new_instance
 	if target_piece_instance:
-		target_piece_instance.visible = true
 		backup_piece.erase(target_piece_instance)
 		chessboard_piece[by] = target_piece_instance
 		if piece == "K".unicode_at(0):
 			king_instance[0] = target_piece_instance
 		if piece == "k".unicode_at(0):
 			king_instance[1] = target_piece_instance
-		target_piece_instance.move.call_deferred(get_node(Chess.to_position_name(by)).global_position)
+		target_piece_instance.introduce(get_node(Chess.to_position_name(by)).global_position)
 
 func move_piece_instance(from:int, to:int) -> void:
 	var instance:Actor = chessboard_piece[from]
@@ -290,8 +352,8 @@ func move_piece_instance_to_backup(by:int) -> void:
 	instance.captured()
 	chessboard_piece.erase(by)
 	backup_piece.push_back(instance)
-	instance.visible = !pieces[instance]["hide_piece"]
-	instance.move(to_global(pieces[instance]["initial_position"]))
+	#instance.visible = !pieces[instance]["hide_piece"]
+	#instance.move(to_global(pieces[instance]["initial_position"]))
 
 func set_enabled(enabled:bool) -> void:
 	super.set_enabled(enabled)

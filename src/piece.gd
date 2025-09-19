@@ -3,8 +3,13 @@ extends Actor
 var position_name:String = ""
 var sfx:AudioStreamPlayer3D = null
 var group:int = 0
+var show_on_backup:bool = false
+var backup_position:Vector3 = Vector3(0, 0, 0)
 
 func _ready() -> void:
+	super._ready()
+	visible = show_on_backup
+	global_position = backup_position
 	group = Chess.group(piece_type[0])
 	var audio_stream_randomizer:AudioStreamRandomizer = AudioStreamRandomizer.new()
 	audio_stream_randomizer.random_pitch = 1.3
@@ -41,6 +46,10 @@ func _ready() -> void:
 	material.next_pass = next_pass_material
 	$piece.set_surface_override_material(0, material)
 
+func introduce(_pos:Vector3) -> void:	# 登场动画
+	visible = true
+	move(_pos)
+
 func move(_pos:Vector3) -> void:
 	var tween:Tween = create_tween()
 	tween.tween_property(self, "global_position", _pos, 0.3).set_trans(Tween.TRANS_SINE)
@@ -50,7 +59,11 @@ func capturing(_pos:Vector3) -> void:	# 攻击
 	tween.tween_property(self, "global_position", _pos, 0.3).set_trans(Tween.TRANS_SINE)
 
 func captured() -> void:	# 被攻击
-	pass
+	if !show_on_backup:
+		visible = false
+		return
+	var tween:Tween = create_tween()
+	tween.tween_property(self, "global_position", backup_position, 0.3).set_trans(Tween.TRANS_SINE)
 
 func set_warning(enabled:bool) -> void:
 	if enabled:
@@ -59,3 +72,11 @@ func set_warning(enabled:bool) -> void:
 		$piece.get_surface_override_material(0).next_pass.albedo_color = Color(1, 1, 1, 1)
 	else:
 		$piece.get_surface_override_material(0).next_pass.albedo_color = Color(0, 0, 0, 1)
+
+func set_show_on_backup(_show_on_backup:bool) -> Actor:
+	show_on_backup = _show_on_backup
+	return self
+
+func set_backup_position(_backup_position:Vector3) -> Actor:
+	backup_position = _backup_position
+	return self
