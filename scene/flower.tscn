@@ -1,7 +1,7 @@
 [gd_scene load_steps=8 format=3 uid="uid://ekjtt81nkr2f"]
 
 [ext_resource type="PackedScene" uid="uid://b6hedyxsn7pau" path="res://assets/model/flower.glb" id="1_4b0bg"]
-[ext_resource type="Script" uid="uid://bt4vtnpxu5i4x" path="res://src/actor.gd" id="2_xm5fp"]
+[ext_resource type="Script" uid="uid://b3i8txuk1xb6v" path="res://src/flower.gd" id="2_xm5fp"]
 
 [sub_resource type="Curve" id="Curve_xm5fp"]
 _limits = [0.0, 3.0, 0.0, 1.0]
