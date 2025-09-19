@@ -1,16 +1,11 @@
 extends Actor
 
 func _ready() -> void:
-	$animation_tree.connect("animation_finished", play_particle)
 	$animation_tree.get("parameters/playback").start("battle_idle")
 	super._ready()
 
 func play_animation(anim:String) -> void:
 	$animation_tree.get("parameters/playback").travel(anim)
-
-func play_particle(anim_name:String) -> void:
-	if anim_name == "battle_attack":
-		$gpu_particles_attack.restart()
 
 func capturing(_pos:Vector3) -> void:	# 攻击
 	var current_position_2d:Vector2 = Vector2(global_position.x, global_position.z)
