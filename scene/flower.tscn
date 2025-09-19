@@ -8,7 +8,7 @@ _limits = [0.0, 3.0, 0.0, 1.0]
 _data = [Vector2(0, 0), 0.0, 0.118067, 0, 0, Vector2(1, 1.00067), 2.09419, 0.0, 0, 0]
 point_count = 2
 
-[sub_resource type="CurveTexture" id="CurveTexture_iy7iy"]
+[sub_resource type="CurveTexture" id="CurveTexture_xm5fp"]
 curve = SubResource("Curve_xm5fp")
 
 [sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_lulix"]
@@ -22,13 +22,13 @@ gravity = Vector3(0, -0.5, 0)
 damping_min = 2.0
 damping_max = 2.0
 scale_over_velocity_max = 1.0
-scale_over_velocity_curve = SubResource("CurveTexture_iy7iy")
+scale_over_velocity_curve = SubResource("CurveTexture_xm5fp")
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ftdew"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_lulix"]
 albedo_color = Color(0.16, 0.0784, 0.0784, 1)
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_f3vd4"]
-material = SubResource("StandardMaterial3D_ftdew")
+material = SubResource("StandardMaterial3D_lulix")
 size = Vector2(0.1, 0.1)
 
 [node name="flower" instance=ExtResource("1_4b0bg")]

@@ -1,7 +1,35 @@
-[gd_scene load_steps=3 format=3 uid="uid://rlos56ckp02d"]
+[gd_scene load_steps=8 format=3 uid="uid://rlos56ckp02d"]
 
 [ext_resource type="PackedScene" uid="uid://biv8ghyjqw63y" path="res://assets/model/shrub.glb" id="1_08tlt"]
-[ext_resource type="Script" uid="uid://bt4vtnpxu5i4x" path="res://src/actor.gd" id="2_4hxfj"]
+[ext_resource type="Script" uid="uid://df1er0legxfcr" path="res://src/shrub.gd" id="2_4hxfj"]
+
+[sub_resource type="Curve" id="Curve_4hxfj"]
+_limits = [0.0, 3.0, 0.0, 1.0]
+_data = [Vector2(0, 0), 0.0, 0.118067, 0, 0, Vector2(1, 1.00067), 2.09419, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_iy7iy"]
+curve = SubResource("Curve_4hxfj")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_dmn6y"]
+emission_shape = 3
+emission_box_extents = Vector3(1, 0.04, 1)
+direction = Vector3(0, 1, 0)
+spread = 32.0
+initial_velocity_min = 1.0
+initial_velocity_max = 4.12
+gravity = Vector3(0, -0.5, 0)
+damping_min = 2.0
+damping_max = 2.0
+scale_over_velocity_max = 1.0
+scale_over_velocity_curve = SubResource("CurveTexture_iy7iy")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ftdew"]
+albedo_color = Color(0.16, 0.0784, 0.0784, 1)
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_2sf7p"]
+material = SubResource("StandardMaterial3D_ftdew")
+size = Vector2(0.1, 0.1)
 
 [node name="shrub" instance=ExtResource("1_08tlt")]
 script = ExtResource("2_4hxfj")
@@ -15,3 +43,12 @@ transform = Transform3D(0.715, 0, 0, 0, 0.715, 0, 0, 0, 0.715, 0, 1.0751, 0)
 
 [node name="leaves_001" parent="." index="2"]
 transform = Transform3D(1.39216e-07, 0, -0.715, 0, 0.715, 0, 0.715, 0, 1.39216e-07, 0, 1.0751, 0)
+
+[node name="gpu_particles_died" type="GPUParticles3D" parent="." index="3"]
+emitting = false
+amount = 30
+lifetime = 2.0
+one_shot = true
+explosiveness = 0.9
+process_material = SubResource("ParticleProcessMaterial_dmn6y")
+draw_pass_1 = SubResource("PlaneMesh_2sf7p")
