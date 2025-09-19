@@ -8,18 +8,18 @@ class_name Actor
 
 func _ready() -> void:
 	super._ready()
+	visible = false
 
-func idle() -> void:
-	var tween:Tween = create_tween()
-	if has_node("animation_tree"):
-		tween.tween_callback($animation_tree.get("parameters/playback").travel.bind("idle"))
+func introduce(_pos:Vector3) -> void:	# 登场动画
+	visible = true
+	global_position = _pos
 
 func capturing(_pos:Vector3) -> void:	# 攻击
 	var tween:Tween = create_tween()
 	tween.tween_property(self, "global_position", _pos, 0.3).set_trans(Tween.TRANS_SINE)
 
 func captured() -> void:	# 被攻击
-	pass
+	visible = false
 
 func move(_pos:Vector3) -> void:	# 单纯的移动
 	var tween:Tween = create_tween()
