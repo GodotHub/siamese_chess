@@ -1,5 +1,7 @@
 extends Actor
 
+var target_position:Vector3 = Vector3()
+
 func _ready() -> void:
 	$animation_tree.get("parameters/playback").start("battle_idle")
 	super._ready()
@@ -8,6 +10,7 @@ func play_animation(anim:String) -> void:
 	$animation_tree.get("parameters/playback").travel(anim)
 
 func capturing(_pos:Vector3) -> void:	# 攻击
+	target_position = _pos
 	var current_position_2d:Vector2 = Vector2(global_position.x, global_position.z)
 	var target_position_2d:Vector2 = Vector2(_pos.x, _pos.z)
 	var target_angle:float = -current_position_2d.angle_to_point(target_position_2d) + PI / 2
@@ -16,7 +19,10 @@ func capturing(_pos:Vector3) -> void:	# 攻击
 	if has_node("animation_tree"):
 		tween.tween_callback($animation_tree.get("parameters/playback").travel.bind("battle_attack"))
 	tween.tween_property(self, "global_rotation:y", target_angle, 0.1).set_trans(Tween.TRANS_SINE)
-	tween.tween_property(self, "global_position", _pos, global_position.distance_to(_pos) / 5)
+
+func fast_move() -> void:
+	var tween:Tween = create_tween()
+	tween.tween_property(self, "global_position", target_position, 0.3).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
 
 func captured() -> void:	# 被攻击
 	var tween:Tween = create_tween()
@@ -24,6 +30,7 @@ func captured() -> void:	# 被攻击
 		tween.tween_callback($animation_tree.get("parameters/playback").travel.bind("battle_dead"))
 
 func move(_pos:Vector3) -> void:	# 单纯的移动
+	target_position = _pos
 	var current_position_2d:Vector2 = Vector2(global_position.x, global_position.z)
 	var target_position_2d:Vector2 = Vector2(_pos.x, _pos.z)
 	var target_angle:float = -current_position_2d.angle_to_point(target_position_2d) + PI / 2
