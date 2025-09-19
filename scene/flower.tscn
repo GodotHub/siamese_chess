@@ -33,6 +33,7 @@ size = Vector2(0.1, 0.1)
 
 [node name="flower" instance=ExtResource("1_4b0bg")]
 script = ExtResource("2_xm5fp")
+piece_type = [119, 87]
 
 [node name="gpu_particles_died" type="GPUParticles3D" parent="." index="1"]
 emitting = false
