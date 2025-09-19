@@ -594,6 +594,10 @@ godot::PackedInt32Array RuleStandard::generate_move(godot::Ref<State>_state, int
 					break;
 				}
 				to_piece = _state->get_piece(to);
+				if ((to_piece & 95) == 'Y')
+				{
+					break;
+				}
 				if (to_piece && Chess::is_same_group(from_piece, to_piece) && (to_piece & 95) != 'W' && (to_piece & 95) != 'X')
 				{
 					if ((from_piece & 95) == 'R' && (to_piece & 95) == 'K')
