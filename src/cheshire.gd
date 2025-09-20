@@ -1,6 +1,7 @@
 extends Actor
 
 var target_position:Vector3 = Vector3()
+var target_actor:Actor = null
 
 func _ready() -> void:
 	$animation_tree.get("parameters/playback").start("battle_idle")
@@ -9,8 +10,9 @@ func _ready() -> void:
 func play_animation(anim:String) -> void:
 	$animation_tree.get("parameters/playback").travel(anim)
 
-func capturing(_pos:Vector3) -> void:	# 攻击
+func capturing(_pos:Vector3, _captured:Actor) -> void:	# 攻击
 	target_position = _pos
+	target_actor = _captured
 	var current_position_2d:Vector2 = Vector2(global_position.x, global_position.z)
 	var target_position_2d:Vector2 = Vector2(_pos.x, _pos.z)
 	var target_angle:float = -current_position_2d.angle_to_point(target_position_2d) + PI / 2
@@ -23,6 +25,9 @@ func capturing(_pos:Vector3) -> void:	# 攻击
 func fast_move() -> void:
 	var tween:Tween = create_tween()
 	tween.tween_property(self, "global_position", target_position, 0.3).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+
+func knockdown_target() -> void:
+	target_actor.captured()
 
 func captured() -> void:	# 被攻击
 	var tween:Tween = create_tween()

@@ -283,8 +283,7 @@ func set_valid_premove(move_list:PackedInt32Array) -> void:
 func receive_event(event:Dictionary) -> void:
 	match event["type"]:	# 暂时的做法
 		"capture":
-			move_piece_instance_to_backup(event["to"])
-			move_piece_instance(event["from"], event["to"])
+			capture_piece_instance(event["from"], event["to"])
 		"promotion":
 			move_piece_instance_to_backup(event["from"])
 			move_piece_instance_from_backup(event["to"], event["piece"])
@@ -330,12 +329,17 @@ func move_piece_instance_from_backup(by:int, piece:int) -> void:
 
 func move_piece_instance(from:int, to:int) -> void:
 	var instance:Actor = chessboard_piece[from]
-	if state.has_piece(to):
-		instance.capturing(get_node(Chess.to_position_name(to)).global_position)
-	else:
-		instance.move(get_node(Chess.to_position_name(to)).global_position)
+	instance.move(get_node(Chess.to_position_name(to)).global_position)
 	chessboard_piece.erase(from)
 	chessboard_piece[to] = instance
+
+func capture_piece_instance(from:int, to:int) -> void:
+	var instance_from:Actor = chessboard_piece[from]
+	var instance_to:Actor = chessboard_piece[to]
+	instance_from.capturing(get_node(Chess.to_position_name(to)).global_position, instance_to)
+	move_piece_instance_to_backup(to)
+	chessboard_piece.erase(from)
+	chessboard_piece[to] = instance_from
 
 func graft_piece_instance(from:int, to:int) -> void:
 	var instance_1:Actor = chessboard_piece[from]
@@ -349,7 +353,6 @@ func graft_piece_instance(from:int, to:int) -> void:
 
 func move_piece_instance_to_backup(by:int) -> void:
 	var instance:Actor = chessboard_piece[by]
-	instance.captured()
 	chessboard_piece.erase(by)
 	backup_piece.push_back(instance)
 	#instance.visible = !pieces[instance]["hide_piece"]

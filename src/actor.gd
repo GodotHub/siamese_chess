@@ -14,9 +14,10 @@ func introduce(_pos:Vector3) -> void:	# 登场动画
 	visible = true
 	global_position = _pos
 
-func capturing(_pos:Vector3) -> void:	# 攻击
+func capturing(_pos:Vector3, _captured:Actor) -> void:	# 攻击
 	var tween:Tween = create_tween()
 	tween.tween_property(self, "global_position", _pos, 0.3).set_trans(Tween.TRANS_SINE)
+	_captured.captured()
 
 func captured() -> void:	# 被攻击
 	visible = false
