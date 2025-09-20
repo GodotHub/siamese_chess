@@ -107,31 +107,31 @@ godot::Array State::get_pieces_info() {
 				switch (piece_type)
 				{
 					case 'k':
-					case 'K':{
+					case 'K':
 						dict["piece_type"] = 0;
-					} break;
+					break;
 					case 'q':
-					case 'Q':{
+					case 'Q':
 						dict["piece_type"] = 1;
-					} break;
+					break;
 					case 'r':
-					case 'R':{
+					case 'R':
 						dict["piece_type"] = 2;
-					} break;
+					break;
 					case 'n':
-					case 'N':{
+					case 'N':
 						dict["piece_type"] = 3;
-					} break;
+					break;
 					case 'b':
-					case 'B':{
+					case 'B':
 						dict["piece_type"] = 4;
-					} break;
+					break;
 					case 'p':
-					case 'P':{
+					case 'P':
 						dict["piece_type"] = 5;
-					} break;
+					break;
 					default:
-						break;
+					break;
 				}
 				output.append(dict);
 			}
