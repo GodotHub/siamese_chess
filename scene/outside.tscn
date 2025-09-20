@@ -16,6 +16,8 @@ sky_material = SubResource("ProceduralSkyMaterial_arvm7")
 background_mode = 2
 sky = SubResource("Sky_gs8dr")
 tonemap_mode = 2
+fog_enabled = true
+fog_light_color = Color(1, 1, 1, 1)
 
 [node name="outside" type="Node3D"]
 script = ExtResource("1_arvm7")
