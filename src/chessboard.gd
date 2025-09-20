@@ -285,8 +285,7 @@ func receive_event(event:Dictionary) -> void:
 		"capture":
 			capture_piece_instance(event["from"], event["to"])
 		"promotion":
-			move_piece_instance_to_backup(event["from"])
-			move_piece_instance_from_backup(event["to"], event["piece"])
+			promote_piece_instance(event["from"], event["to"], event["piece"])
 		"move":
 			move_piece_instance(event["from"], event["to"])
 		"castle":
@@ -350,6 +349,11 @@ func graft_piece_instance(from:int, to:int) -> void:
 	instance_2.move(get_node(Chess.to_position_name(from)).global_position)
 	chessboard_piece[from] = instance_2
 	chessboard_piece[to] = instance_1
+
+func promote_piece_instance(from:int, to:int, piece:int) -> void:
+	chessboard_piece[from].captured()
+	move_piece_instance_to_backup(from)
+	move_piece_instance_from_backup(to, piece)
 
 func move_piece_instance_to_backup(by:int) -> void:
 	var instance:Actor = chessboard_piece[by]
