@@ -57,9 +57,16 @@ func move(_pos:Vector3) -> void:
 func capturing(_pos:Vector3, _captured:Actor) -> void:	# 攻击
 	var tween:Tween = create_tween()
 	tween.tween_property(self, "global_position", _pos, 0.3).set_trans(Tween.TRANS_SINE)
-	_captured.captured()
+	_captured.captured(self)
 
-func captured() -> void:	# 被攻击
+func captured(_capturing:Actor) -> void:	# 被攻击
+	if !show_on_backup:
+		visible = false
+		return
+	var tween:Tween = create_tween()
+	tween.tween_property(self, "global_position", backup_position, 0.3).set_trans(Tween.TRANS_SINE)
+
+func promote() -> void:
 	if !show_on_backup:
 		visible = false
 		return

@@ -27,11 +27,19 @@ func fast_move() -> void:
 	tween.tween_property(self, "global_position", target_position, 0.3).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
 
 func knockdown_target() -> void:
-	target_actor.captured()
+	target_actor.captured(self)
 
-func captured() -> void:	# 被攻击
+func captured(_capturing:Actor) -> void:	# 被攻击
+	var target_position_2d:Vector2 = Vector2(_capturing.global_position.x, _capturing.global_position.z)
+	var current_position_2d:Vector2 = Vector2(global_position.x, global_position.z)
+	var target_angle:float = -current_position_2d.angle_to_point(target_position_2d) + PI / 2
+	var tween:Tween = create_tween()
+	tween.tween_property(self, "global_rotation:y", target_angle, 0.1).set_trans(Tween.TRANS_SINE)
 	$animation_tree.get("parameters/playback").travel("battle_died")
 
+func promote() -> void:	# 升变，不过对于Cheshire而言不太可能，先留空
+	pass
+	
 func move(_pos:Vector3) -> void:	# 单纯的移动
 	target_position = _pos
 	var current_position_2d:Vector2 = Vector2(global_position.x, global_position.z)

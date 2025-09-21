@@ -160,6 +160,7 @@ size = Vector2(0.1, 0.1)
 
 [node name="cheshire" instance=ExtResource("1_gqvfc")]
 script = ExtResource("2_i4qp0")
+piece_type = [78]
 
 [node name="body" parent="skeleton/Skeleton3D" index="0"]
 surface_material_override/0 = SubResource("StandardMaterial3D_gqvfc")

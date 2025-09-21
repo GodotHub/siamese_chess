@@ -351,7 +351,7 @@ func graft_piece_instance(from:int, to:int) -> void:
 	chessboard_piece[to] = instance_1
 
 func promote_piece_instance(from:int, to:int, piece:int) -> void:
-	chessboard_piece[from].captured()
+	chessboard_piece[from].promote()
 	move_piece_instance_to_backup(from)
 	move_piece_instance_from_backup(to, piece)
 
