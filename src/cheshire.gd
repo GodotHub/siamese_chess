@@ -30,9 +30,7 @@ func knockdown_target() -> void:
 	target_actor.captured()
 
 func captured() -> void:	# 被攻击
-	var tween:Tween = create_tween()
-	if has_node("animation_tree"):
-		tween.tween_callback($animation_tree.get("parameters/playback").travel.bind("battle_dead"))
+	$animation_tree.get("parameters/playback").travel("battle_died")
 
 func move(_pos:Vector3) -> void:	# 单纯的移动
 	target_position = _pos
