@@ -292,8 +292,7 @@ func receive_event(event:Dictionary) -> void:
 			move_piece_instance(event["from_king"], event["to_king"])
 			move_piece_instance(event["from_rook"], event["to_rook"])
 		"en_passant":
-			move_piece_instance(event["from"], event["to"])
-			move_piece_instance_to_backup(event["captured"])
+			en_passant_piece_instance(event["from"], event["to"], event["captured"])
 		"grafting":
 			graft_piece_instance(event["from"], event["to"])
 
@@ -354,6 +353,13 @@ func promote_piece_instance(from:int, to:int, piece:int) -> void:
 	chessboard_piece[from].promote()
 	move_piece_instance_to_backup(from)
 	move_piece_instance_from_backup(to, piece)
+
+func en_passant_piece_instance(from:int, to:int, captured:int) -> void:
+	var instance_from:Actor = chessboard_piece[from]
+	chessboard_piece[from].capturing(get_node(Chess.to_position_name(to)).global_position, chessboard_piece[captured])
+	move_piece_instance_to_backup(captured)
+	chessboard_piece.erase(from)
+	chessboard_piece[to] = instance_from
 
 func move_piece_instance_to_backup(by:int) -> void:
 	var instance:Actor = chessboard_piece[by]
