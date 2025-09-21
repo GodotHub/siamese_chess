@@ -1,0 +1,211 @@
+[gd_scene load_steps=42 format=3 uid="uid://b3f1o547exhk0"]
+
+[ext_resource type="PackedScene" uid="uid://s1v4ec45m2i5" path="res://assets/model/cheshire.glb" id="1_gqvfc"]
+[ext_resource type="Script" uid="uid://ckqop5jjivbg0" path="res://src/cheshire.gd" id="2_i4qp0"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_gqvfc"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_i4qp0"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_k1beu"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_xj0a2"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_bj61b"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_15geq"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_a4sxh"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_g1xjb"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_6olrt"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_q7635"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ivdye"]
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_3kauh"]
+animation = &"battle_attack"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_2ct1d"]
+animation = &"battle_died"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_lp02k"]
+animation = &"battle_idle"
+advance_on_start = true
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_uowm0"]
+animation = &"battle_move"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_ftdew"]
+animation = &"battle_target"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_lidw1"]
+animation = &"handshake"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_uniqn"]
+animation = &"idle"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_iy7iy"]
+animation = &"thinking"
+
+[sub_resource type="Curve" id="Curve_lp02k"]
+_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_uowm0"]
+xfade_time = 0.2
+xfade_curve = SubResource("Curve_lp02k")
+
+[sub_resource type="Curve" id="Curve_lidw1"]
+_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_uniqn"]
+xfade_time = 0.2
+xfade_curve = SubResource("Curve_lidw1")
+
+[sub_resource type="Curve" id="Curve_2ct1d"]
+_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_pjgvl"]
+xfade_time = 0.3
+xfade_curve = SubResource("Curve_2ct1d")
+switch_mode = 1
+
+[sub_resource type="Curve" id="Curve_cm4hu"]
+_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_a5ln7"]
+xfade_time = 0.05
+xfade_curve = SubResource("Curve_cm4hu")
+switch_mode = 1
+
+[sub_resource type="Curve" id="Curve_uowm0"]
+_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(0.434286, 0), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_68j70"]
+xfade_time = 0.7
+xfade_curve = SubResource("Curve_uowm0")
+switch_mode = 1
+advance_mode = 2
+
+[sub_resource type="Curve" id="Curve_3kauh"]
+_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_cm4hu"]
+xfade_time = 0.1
+xfade_curve = SubResource("Curve_3kauh")
+
+[sub_resource type="Curve" id="Curve_iy7iy"]
+_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_4on3n"]
+xfade_time = 0.1
+xfade_curve = SubResource("Curve_iy7iy")
+
+[sub_resource type="AnimationNodeStateMachine" id="AnimationNodeStateMachine_pjgvl"]
+states/End/position = Vector2(826, 129.333)
+states/Start/position = Vector2(185.333, 101.63)
+states/battle_attack/node = SubResource("AnimationNodeAnimation_3kauh")
+states/battle_attack/position = Vector2(676, -46)
+states/battle_died/node = SubResource("AnimationNodeAnimation_2ct1d")
+states/battle_died/position = Vector2(676, 136.626)
+states/battle_idle/node = SubResource("AnimationNodeAnimation_lp02k")
+states/battle_idle/position = Vector2(428.889, 70.6264)
+states/battle_move/node = SubResource("AnimationNodeAnimation_uowm0")
+states/battle_move/position = Vector2(428.889, 179.333)
+states/battle_target/node = SubResource("AnimationNodeAnimation_ftdew")
+states/battle_target/position = Vector2(676, 48)
+states/handshake/node = SubResource("AnimationNodeAnimation_lidw1")
+states/handshake/position = Vector2(868.333, -32.3736)
+states/idle/node = SubResource("AnimationNodeAnimation_uniqn")
+states/idle/position = Vector2(521, 265)
+states/thinking/node = SubResource("AnimationNodeAnimation_iy7iy")
+states/thinking/position = Vector2(666.333, 265)
+transitions = ["battle_idle", "battle_move", SubResource("AnimationNodeStateMachineTransition_uowm0"), "battle_move", "battle_idle", SubResource("AnimationNodeStateMachineTransition_uniqn"), "battle_idle", "battle_target", SubResource("AnimationNodeStateMachineTransition_pjgvl"), "battle_target", "battle_attack", SubResource("AnimationNodeStateMachineTransition_a5ln7"), "battle_attack", "battle_idle", SubResource("AnimationNodeStateMachineTransition_68j70"), "battle_target", "battle_died", SubResource("AnimationNodeStateMachineTransition_cm4hu"), "battle_idle", "battle_died", SubResource("AnimationNodeStateMachineTransition_4on3n")]
+graph_offset = Vector2(35, -53)
+
+[sub_resource type="Curve" id="Curve_uniqn"]
+_limits = [0.0, 3.0, 0.0, 1.0]
+_data = [Vector2(0, 0), 0.0, 0.118067, 0, 0, Vector2(1, 1.00067), 2.09419, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_iy7iy"]
+curve = SubResource("Curve_uniqn")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_3kauh"]
+direction = Vector3(0, 0, -1)
+spread = 32.0
+initial_velocity_min = 1.0
+initial_velocity_max = 4.12
+gravity = Vector3(0, -0.5, 0)
+damping_min = 2.0
+damping_max = 2.0
+scale_over_velocity_max = 1.0
+scale_over_velocity_curve = SubResource("CurveTexture_iy7iy")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ftdew"]
+albedo_color = Color(0.16, 0.0784, 0.0784, 1)
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_2ct1d"]
+material = SubResource("StandardMaterial3D_ftdew")
+size = Vector2(0.1, 0.1)
+
+[node name="cheshire" instance=ExtResource("1_gqvfc")]
+script = ExtResource("2_i4qp0")
+
+[node name="body" parent="skeleton/Skeleton3D" index="0"]
+surface_material_override/0 = SubResource("StandardMaterial3D_gqvfc")
+surface_material_override/1 = SubResource("StandardMaterial3D_i4qp0")
+surface_material_override/2 = SubResource("StandardMaterial3D_k1beu")
+surface_material_override/3 = SubResource("StandardMaterial3D_xj0a2")
+
+[node name="clothes" parent="skeleton/Skeleton3D" index="1"]
+surface_material_override/0 = SubResource("StandardMaterial3D_bj61b")
+
+[node name="coat" parent="skeleton/Skeleton3D" index="2"]
+surface_material_override/0 = SubResource("StandardMaterial3D_15geq")
+
+[node name="pants" parent="skeleton/Skeleton3D" index="3"]
+surface_material_override/0 = SubResource("StandardMaterial3D_a4sxh")
+
+[node name="shoes" parent="skeleton/Skeleton3D" index="4"]
+surface_material_override/0 = SubResource("StandardMaterial3D_g1xjb")
+
+[node name="sword" parent="skeleton/Skeleton3D" index="5"]
+surface_material_override/0 = SubResource("StandardMaterial3D_6olrt")
+surface_material_override/1 = SubResource("StandardMaterial3D_q7635")
+
+[node name="sword_cover" parent="skeleton/Skeleton3D" index="6"]
+surface_material_override/0 = SubResource("StandardMaterial3D_ivdye")
+
+[node name="animation_tree" type="AnimationTree" parent="." index="2"]
+tree_root = SubResource("AnimationNodeStateMachine_pjgvl")
+anim_player = NodePath("../AnimationPlayer")
+
+[node name="gpu_particles_attack" type="GPUParticles3D" parent="." index="3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.084022, 0.78316, 2.45072)
+emitting = false
+amount = 30
+lifetime = 2.0
+one_shot = true
+explosiveness = 0.9
+process_material = SubResource("ParticleProcessMaterial_3kauh")
+draw_pass_1 = SubResource("PlaneMesh_2ct1d")
+
+[node name="gpu_particles_died" type="GPUParticles3D" parent="." index="4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0170799, 1.29493, -0.192439)
+emitting = false
+amount = 30
+lifetime = 2.0
+one_shot = true
+explosiveness = 0.9
+process_material = SubResource("ParticleProcessMaterial_3kauh")
+draw_pass_1 = SubResource("PlaneMesh_2ct1d")

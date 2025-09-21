@@ -14,6 +14,7 @@ func _ready() -> void:
 	for i:int in 10:
 		$chessboard_blank.add_piece_instance(load("res://scene/tree.tscn").instantiate())
 	$chessboard_blank.add_piece_instance(load("res://scene/cheshire.tscn").instantiate())
+	$chessboard_blank.add_piece_instance(load("res://scene/enemy_cheshire.tscn").instantiate())
 	$chessboard_blank.set_state(state.duplicate())
 	$chessboard_blank.connect("move_played", receive_move)
 	$player.set_initial_interact($interact)
