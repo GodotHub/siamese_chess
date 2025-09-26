@@ -116,11 +116,14 @@ func dialog_pastor_in_game() -> void:
 			pastor_history_state.resize(pastor_history_state.size() - 1)
 			ai.stop_search()
 		pastor_game_state = pastor_history.back().duplicate()
+		$chessboard_pastor.set_state(pastor_game_state)
+		$chessboard_pastor.set_valid_move(RuleStandard.generate_valid_move(pastor_game_state, 1))
+		$chessboard_pastor.set_valid_premove([])
 	elif $dialog.selected == 1:
 		ai.stop_search()
 		$clock_pastor.stop()
-		$chessboard_friend.set_valid_move([])
-		$chessboard_friend.set_valid_premove([])
+		$chessboard_pastor.set_valid_move([])
+		$chessboard_pastor.set_valid_premove([])
 		pastor_state = "idle"
 		pastor_history_chart.save_file()
 	elif $dialog.selected == 2:
@@ -149,7 +152,7 @@ func dialog_pastor_game_start() -> void:
 			await $dialog.on_next
 			$clock_pastor.start()
 			$player.add_stack($interact/area_pastor_chessboard)
-			pastor_state = "game_with_pastor"
+			pastor_state = "in_game"
 			call_deferred("game_with_pastor")
 			break
 		elif $dialog.selected == 3:
@@ -165,7 +168,7 @@ func dialog_pastor_game_start() -> void:
 			await $dialog.on_next
 			$clock_pastor.start()
 			$player.add_stack($interact/area_pastor_chessboard)
-			pastor_state = "game_with_pastor"
+			pastor_state = "in_game"
 			call_deferred("game_with_pastor")
 			break
 		elif $dialog.selected == 4:
@@ -184,7 +187,7 @@ func dialog_pastor_game_start() -> void:
 				$dialog.push_dialog("根据棋局信息，" + ("目前是白方先手。" if pastor_game_state.get_turn() == 0 else "目前是黑方先手。"), true, true)
 				$player.force_set_camera($camera/camera_pastor_closeup)
 				await $dialog.on_next
-				pastor_state = "game_with_pastor"
+				pastor_state = "in_game"
 				$clock_pastor.start()
 				$player.add_stack($interact/area_pastor_chessboard)
 				call_deferred("game_with_pastor")
