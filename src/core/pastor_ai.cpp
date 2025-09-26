@@ -435,11 +435,19 @@ int PastorAI::evaluate(godot::Ref<State>_state, int _move)
 	return score;
 }
 
-int PastorAI::compare_move(int a, int b, int mvv_a, int lva_a, int mvv_b, int lva_b, int best_move, std::array<int, 65536> *history_table)
+int PastorAI::compare_move(int a, int b, int best_move, int killer_1, int killer_2, int mvv_a, int lva_a, int mvv_b, int lva_b, std::array<int, 65536> *history_table)
 {
 	if (best_move == a)
 		return true;
 	if (best_move == b)
+		return false;
+	if (killer_1 == a)
+		return true;
+	if (killer_1 == b)
+		return false;
+	if (killer_2 == a)
+		return true;
+	if (killer_2 == b)
 		return false;
 	if (history_table)
 		return (*history_table)[a & 0xFFFF] > (*history_table)[b & 0xFFFF];
@@ -513,6 +521,7 @@ int PastorAI::alphabeta(const godot::Ref<State> &_state, int score, int _alpha, 
 	godot::PackedInt32Array move_list;
 	unsigned char flag = ALPHA;
 	int best_move = 0;
+	bool has_transposition_table_move = false;
 	if (!transposition_table.is_null())
 	{
 		best_move = transposition_table->best_move(_state->get_zobrist());
@@ -521,6 +530,7 @@ int PastorAI::alphabeta(const godot::Ref<State> &_state, int score, int _alpha, 
 			godot::Ref<State> test_state = _state->duplicate();
 			RuleStandard::get_singleton()->apply_move(test_state, best_move);
 			int next_score = -alphabeta(test_state, score + evaluate(_state, best_move), -_beta, -_alpha, _depth - 1, 1 - _group, _ply + 1, true, _history_state, _history_table, nullptr, nullptr, _debug_output);
+			has_transposition_table_move = true;
 			if (_beta <= next_score)
 			{
 				return _beta;
@@ -531,21 +541,25 @@ int PastorAI::alphabeta(const godot::Ref<State> &_state, int score, int _alpha, 
 			best_move = 0;
 		}
 	}
+	bool has_killer_1 = false;
 	if (killer_1 && RuleStandard::get_singleton()->is_move_valid(_state, _group, *killer_1))
 	{
 		godot::Ref<State> test_state = _state->duplicate();
 		RuleStandard::get_singleton()->apply_move(test_state, *killer_1);
 		int next_score = -alphabeta(test_state, score + evaluate(_state, *killer_1), -_beta, -_alpha, _depth - 1, 1 - _group, _ply + 1, true, _history_state, _history_table, nullptr, nullptr, _debug_output);
+		has_killer_1 = true;
 		if (_beta <= next_score)
 		{
 			return _beta;
 		}
 	}
+	bool has_killer_2 = false;
 	if (killer_2 && RuleStandard::get_singleton()->is_move_valid(_state, _group, *killer_2))
 	{
 		godot::Ref<State> test_state = _state->duplicate();
 		RuleStandard::get_singleton()->apply_move(test_state, *killer_2);
 		int next_score = -alphabeta(test_state, score + evaluate(_state, *killer_2), -_beta, -_alpha, _depth - 1, 1 - _group, _ply + 1, true, _history_state, _history_table, nullptr, nullptr, _debug_output);
+		has_killer_2 = true;
 		if (_beta <= next_score)
 		{
 			return _beta;
@@ -581,10 +595,14 @@ int PastorAI::alphabeta(const godot::Ref<State> &_state, int score, int _alpha, 
 	{
 		for (int j = move_list.size() - 2; j >= i; j--)
 		{
-			if (!compare_move(move_list[j], move_list[j + 1], abs(piece_value[_state->get_piece(Chess::to(move_list[j]))]), abs(piece_value[_state->get_piece(Chess::from(move_list[j]))]), abs(piece_value[_state->get_piece(Chess::to(move_list[j + 1]))]), abs(piece_value[_state->get_piece(Chess::from(move_list[j + 1]))]), best_move, _history_table))
+			if (!compare_move(move_list[j], move_list[j + 1], best_move, killer_1 ? *killer_1 : 0, killer_2 ? *killer_2 : 0, abs(piece_value[_state->get_piece(Chess::to(move_list[j]))]), abs(piece_value[_state->get_piece(Chess::from(move_list[j]))]), abs(piece_value[_state->get_piece(Chess::to(move_list[j + 1]))]), abs(piece_value[_state->get_piece(Chess::from(move_list[j + 1]))]), _history_table))
 			{
 				std::swap(move_list[j], move_list[j + 1]);
 			}
+		}
+		if (i == 0 && has_transposition_table_move || i == 1 && has_killer_1 || i == 2 && has_killer_2)
+		{
+			continue;
 		}
 		_debug_output.call(_state->get_zobrist(), _depth, i, move_list.size());
 		godot::Ref<State> test_state = _state->duplicate();
