@@ -88,3 +88,7 @@ func set_show_on_backup(_show_on_backup:bool) -> Actor:
 func set_backup_position(_backup_position:Vector3) -> Actor:
 	backup_position = _backup_position
 	return self
+
+func set_larger_scale() -> Actor:
+	scale = Vector3(12, 12, 12)
+	return self
