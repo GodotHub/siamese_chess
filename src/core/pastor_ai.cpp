@@ -455,7 +455,7 @@ int PastorAI::compare_move(int a, int b, int best_move, int killer_1, int killer
 	{
 		return mvv_a > mvv_b;
 	}
-	if (lva_a != lva_b)
+	if (mvv_a != 0 && lva_a != lva_b)
 	{
 		return lva_a < lva_b;
 	}
