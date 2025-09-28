@@ -2,6 +2,8 @@ extends InspectableItem
 class_name Chessboard
 
 signal move_played()
+signal ready_to_move(by:int)
+
 @onready var fallback_piece:Actor = load("res://scene/piece_shrub.tscn").instantiate()
 var backup_piece:Array = []
 var mouse_start_position_name:String = ""
@@ -188,9 +190,11 @@ func tap_position(position_name:String) -> void:
 	if !state.has_piece(by) || !valid_move.has(by) && !valid_premove.has(by):
 		return
 	if valid_move.has(by):
+		ready_to_move.emit(by)
 		for iter:int in valid_move[by]:
 			$canvas.draw_select_position($canvas.convert_name_to_position(Chess.to_position_name(Chess.to(iter))))
 	if valid_premove.has(by):
+		ready_to_move.emit(by)
 		for iter:int in valid_premove[by]:
 			$canvas.draw_premove_position($canvas.convert_name_to_position(Chess.to_position_name(Chess.to(iter))))
 	selected = by
