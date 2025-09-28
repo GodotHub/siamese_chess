@@ -46,6 +46,8 @@ class State : public godot::RefCounted
 		static void _bind_methods();
 	private:
 		int pieces[128];
+		uint64_t bit[128];
+		//'*'表示所有棋子
 		int turn;
 		int castle;
 		int en_passant;

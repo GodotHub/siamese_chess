@@ -1,6 +1,7 @@
 #include "state.hpp"
 #include "zobrist_hash.hpp"
 #include "rule_standard.hpp"
+#include "chess.hpp"
 #include <cstring>
 
 void State::PieceIterator::begin()
@@ -54,6 +55,7 @@ godot::Ref<State> State::duplicate()
 {
 	godot::Ref<State> new_state = memnew(State);
 	memcpy(new_state->pieces, pieces, sizeof(pieces));
+	memcpy(new_state->bit, bit, sizeof(bit));
 	new_state->turn = turn;
 	new_state->castle = castle;
 	new_state->en_passant = en_passant;
@@ -106,7 +108,10 @@ int State::has_piece(int _by)
 
 void State::add_piece(int _by, int _piece)
 {
+	uint64_t by_mask = Chess::mask(Chess::x88_to_64(_by));
 	pieces[_by] = _piece;
+	bit[_piece] |= by_mask;
+	bit[Chess::group(_piece) == 0 ? 'A' : 'a'] |= by_mask;
 	zobrist ^= ZobristHash::get_singleton()->hash_piece(_piece, _by);
 }
 
@@ -114,8 +119,12 @@ void State::capture_piece(int _by)
 {
 	if (has_piece(_by))
 	{
-		zobrist ^= ZobristHash::get_singleton()->hash_piece(pieces[_by], _by);
-		pieces[_by] = 0;
+		int piece = pieces[_by];
+		uint64_t by_mask = Chess::mask(Chess::x88_to_64(_by));
+		zobrist ^= ZobristHash::get_singleton()->hash_piece(piece, _by);
+		bit[piece] &= ~by_mask;
+		bit[Chess::group(piece) == 0 ? 'A' : 'a'] &= ~by_mask;
+		piece = 0;
 		// 虽然大多数情况是攻击者移到被攻击者上，但是吃过路兵是例外，后续可能会出现类似情况，所以还是得手多一下
 	}
 }
@@ -123,8 +132,14 @@ void State::capture_piece(int _by)
 void State::move_piece(int _from, int _to)
 {
 	int piece = get_piece(_from);
+	uint64_t from_mask = Chess::mask(Chess::x88_to_64(_from));
+	uint64_t to_mask = Chess::mask(Chess::x88_to_64(_to));
 	zobrist ^= ZobristHash::get_singleton()->hash_piece(piece, _from);
 	zobrist ^= ZobristHash::get_singleton()->hash_piece(piece, _to);
+	bit[pieces[_from]] &= ~from_mask;
+	bit[Chess::group(piece) == 0 ? 'A' : 'a'] &= ~from_mask;
+	bit[pieces[_to]] |= to_mask;
+	bit[Chess::group(piece) == 0 ? 'A' : 'a'] |= to_mask;
 	pieces[_to] = pieces[_from];
 	pieces[_from] = 0;
 }
