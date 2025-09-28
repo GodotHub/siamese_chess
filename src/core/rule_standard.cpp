@@ -517,7 +517,7 @@ godot::PackedInt32Array RuleStandard::generate_move(godot::Ref<State>_state, int
 			int front = from_piece == 'P' ? -16 : 16;
 			bool on_start = (_from >> 4) == (from_piece == 'P' ? 6 : 1);
 			bool on_end = (_from >> 4) == (from_piece == 'P' ? 1 : 6);
-			if (!_state->has_piece(_from + front))
+			if (!_state->has_piece(_from + front) || (_state->get_piece(_from + front) & 95) == 'W')
 			{
 				if (on_end)
 				{
@@ -535,7 +535,7 @@ godot::PackedInt32Array RuleStandard::generate_move(godot::Ref<State>_state, int
 					}
 				}
 			}
-			if (_state->has_piece(_from + front + 1) && !Chess::is_same_group(from_piece, _state->get_piece(_from + front + 1)) || ((_from >> 4) == 3 || (_from >> 4) == 4) && _state->get_en_passant() == _from + front + 1)
+			if (_state->has_piece(_from + front + 1) && (_state->get_piece(_from + front + 1) & 95) != 'W' && !Chess::is_same_group(from_piece, _state->get_piece(_from + front + 1)) || ((_from >> 4) == 3 || (_from >> 4) == 4) && _state->get_en_passant() == _from + front + 1)
 			{
 				if (on_end)
 				{
@@ -549,7 +549,7 @@ godot::PackedInt32Array RuleStandard::generate_move(godot::Ref<State>_state, int
 					output.push_back(Chess::create(_from, _from + front + 1, 0));
 				}
 			}
-			if (_state->has_piece(_from + front - 1) && !Chess::is_same_group(from_piece, _state->get_piece(_from + front - 1)) || ((_from >> 4) == 3 || (_from >> 4) == 4) && _state->get_en_passant() == _from + front - 1)
+			if (_state->has_piece(_from + front - 1) && (_state->get_piece(_from + front - 1) & 95) != 'W' && !Chess::is_same_group(from_piece, _state->get_piece(_from + front - 1)) || ((_from >> 4) == 3 || (_from >> 4) == 4) && _state->get_en_passant() == _from + front - 1)
 			{
 				if (on_end)
 				{
