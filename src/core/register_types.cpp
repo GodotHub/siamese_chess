@@ -14,7 +14,6 @@
 #include "zobrist_hash.hpp"
 #include "ai.hpp"
 #include "pastor_ai.hpp"
-#include "violet_ai.hpp"
 
 void initialize_siamese_module(godot::ModuleInitializationLevel p_level)
 {
@@ -31,8 +30,6 @@ void initialize_siamese_module(godot::ModuleInitializationLevel p_level)
 	godot::ClassDB::register_class<ZobristHash>();
 	godot::ClassDB::register_abstract_class<AI>();
 	godot::ClassDB::register_class<PastorAI>();
-	godot::ClassDB::register_class<NNUE>();
-	godot::ClassDB::register_class<VioletAI>();
 	
 	godot::Engine::get_singleton()->register_singleton("Chess", Chess::get_singleton());
 	godot::Engine::get_singleton()->register_singleton("ZobristHash", ZobristHash::get_singleton());

@@ -25,7 +25,6 @@ class State : public godot::RefCounted
 		godot::Ref<State> duplicate();
 		PieceIterator piece_iterator_begin();
 		godot::PackedInt32Array get_all_pieces();
-		godot::Array get_pieces_info();
 		int get_piece(int _by);
 		int has_piece(int _by);
 		void add_piece(int _by, int _piece);
