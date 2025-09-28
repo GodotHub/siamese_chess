@@ -26,7 +26,7 @@ collide_with_bodies = false
 [node name="head" type="Node3D" parent="."]
 
 [node name="camera" type="Camera3D" parent="head"]
-transform = Transform3D(0.997673, -0.0328499, 0.0597393, -0.00846872, 0.809756, 0.586706, -0.0676475, -0.585847, 0.807593, 0.829986, 2.12031, 1.35375)
+transform = Transform3D(0.9977, -0.056302, 0.0377515, 0.0152154, 0.728702, 0.684662, -0.0660574, -0.682513, 0.727882, 0.829986, 3.63449, 1.35375)
 rotation_order = 1
 current = true
 

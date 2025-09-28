@@ -10,8 +10,9 @@ func _ready() -> void:
 	pass
 
 func _physics_process(_delta:float) -> void:
-	if is_instance_valid(actor):
-		global_position = global_position.lerp(actor.global_position, 0.3)
+	pass
+	#if is_instance_valid(actor):
+	#	global_position = global_position.lerp(actor.global_position, 0.3)
 	#$head/camera.set_rotation(Vector3(deg_to_rad(sin(Time.get_unix_time_from_system())), 0, 0))
 	#$head/camera.set_rotation(Vector3(0, deg_to_rad(sin(Time.get_unix_time_from_system() + 5)) * 0.5, 0))
 	#$head/camera.set_rotation(Vector3(0, 0, deg_to_rad(sin(Time.get_unix_time_from_system()) * 0.5)))
@@ -45,6 +46,9 @@ func set_actor(_actor:Actor) -> void:
 	if !is_instance_valid(_actor):
 		return
 	actor = _actor
+	
+	var tween:Tween = create_tween()
+	tween.tween_property($head, "global_position", _actor.global_position, 1).set_trans(Tween.TRANS_SINE)
 
 func force_set_camera(other:Camera3D) -> void:
 	$head.global_transform = other.global_transform
