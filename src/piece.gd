@@ -90,5 +90,5 @@ func set_backup_position(_backup_position:Vector3) -> Actor:
 	return self
 
 func set_larger_scale() -> Actor:
-	scale = Vector3(12, 12, 12)
+	scale = Vector3(8, 8, 8)
 	return self
