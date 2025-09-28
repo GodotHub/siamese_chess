@@ -36,10 +36,12 @@ func _ready() -> void:
 	$chessboard_blank.add_piece_instance(load("res://scene/piece_queen_black.tscn").instantiate().set_show_on_backup(false).set_larger_scale())
 	for i:int in 8:
 		$chessboard_blank.add_piece_instance(load("res://scene/piece_pawn_black.tscn").instantiate().set_show_on_backup(false).set_larger_scale())
-	$chessboard_blank.add_piece_instance(load("res://scene/cheshire.tscn").instantiate())
+	var cheshire:Actor = load("res://scene/cheshire.tscn").instantiate()
+	$chessboard_blank.add_piece_instance(cheshire)
 	$chessboard_blank.add_piece_instance(load("res://scene/enemy_cheshire.tscn").instantiate())
 	$chessboard_blank.set_state(state.duplicate())
 	$player.set_initial_interact($interact)
+	$player.set_actor(cheshire)
 	play()
 
 func play() -> void:
