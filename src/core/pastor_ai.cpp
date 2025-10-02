@@ -518,7 +518,6 @@ int PastorAI::alphabeta(const godot::Ref<State> &_state, int score, int _alpha, 
 		return quies(_state, score, _alpha, _beta, _group);
 	}
 
-	godot::PackedInt32Array move_list;
 	unsigned char flag = ALPHA;
 	int best_move = 0;
 	bool has_transposition_table_move = false;
@@ -573,7 +572,7 @@ int PastorAI::alphabeta(const godot::Ref<State> &_state, int score, int _alpha, 
 			return _beta;
 		}
 	}
-	move_list = RuleStandard::get_singleton()->generate_valid_move(_state, _group);
+	godot::PackedInt32Array move_list = RuleStandard::get_singleton()->generate_valid_move(_state, _group);
 	if (move_list.size() == 0)
 	{
 		if (RuleStandard::get_singleton()->is_check(_state, 1 - _group))
@@ -643,7 +642,7 @@ int PastorAI::alphabeta(const godot::Ref<State> &_state, int score, int _alpha, 
 	return _alpha;
 }
 
-void PastorAI::search(const godot::Ref<State> &_state, int _group, godot::PackedInt32Array history_state, const godot::Callable &_debug_output)
+void PastorAI::search(const godot::Ref<State> &_state, int _group, const godot::PackedInt32Array &history_state, const godot::Callable &_debug_output)
 {
 	if (opening_book->has_record(_state))
 	{

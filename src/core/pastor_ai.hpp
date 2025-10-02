@@ -19,7 +19,7 @@ class PastorAI : public AI {
 		int quies(godot::Ref<State> _state, int score, int alpha, int beta, int _group = 0);
 		godot::PackedInt32Array generate_good_capture_move(godot::Ref<State> _state, int _group);
 		int alphabeta(const godot::Ref<State> &_state, int score, int _alpha, int _beta, int _depth, int _group = 0, int _ply = 0, bool _can_null = true, std::unordered_map<int, int> *_history_state = nullptr, std::array<int, 65536> *_history_table = nullptr, int *killer_1 = nullptr, int *killer_2 = nullptr, const godot::Callable &_debug_output = godot::Callable());
-		void search(const godot::Ref<State> &_state, int _group, godot::PackedInt32Array history_state, const godot::Callable &_debug_output) override;
+		void search(const godot::Ref<State> &_state, int _group, const godot::PackedInt32Array &history_state, const godot::Callable &_debug_output) override;
 		int get_search_result() override;
 		godot::PackedInt32Array get_principal_variation();
 		void set_max_depth(int max_depth);

@@ -2,7 +2,7 @@
 #include <godot_cpp/classes/time.hpp>
 #include <thread>
 
-void AI::start_search(const godot::Ref<State> &_state, int _group, double _time_left, godot::PackedInt32Array history_state, const godot::Callable &_debug_output)
+void AI::start_search(const godot::Ref<State> &_state, int _group, double _time_left, const godot::PackedInt32Array &history_state, const godot::Callable &_debug_output)
 {
 	searching = true;
 	interrupted = false;
@@ -12,7 +12,7 @@ void AI::start_search(const godot::Ref<State> &_state, int _group, double _time_
 	thread.detach();
 }
 
-void AI::search_thread(const godot::Ref<State> &_state, int _group, godot::PackedInt32Array history_state, const godot::Callable &_debug_output)
+void AI::search_thread(const godot::Ref<State> &_state, int _group, const godot::PackedInt32Array &history_state, const godot::Callable &_debug_output)
 {
 	search(_state, _group, history_state, _debug_output);
 	call_deferred("emit_signal", "search_finished");
