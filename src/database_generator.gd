@@ -55,7 +55,7 @@ func perft_test() -> void:
 		var result:int = RuleStandard.perft(chess_state, i, 0)
 		print("perft_test_6 depth:%d expect:%d actual:%d" % [i, node_count[i], result])
 	chess_state = RuleStandard.parse("r4rk1/1pp1qppp/p1np1n2/2b1p1B1/2B1P1b1/P1NP1N2/1PP1QPPP/R4RK1 w - - 0 10")
-	node_count = [1, 46, 2079, 89890, 3894594, 89941194]
+	node_count = [1, 46, 2079, 89890, 3894594, 164075551]
 	for i:int in range(node_count.size()):
 		var result:int = RuleStandard.perft(chess_state, i, 0)
 		print("perft_test_7 depth:%d expect:%d actual:%d" % [i, node_count[i], result])
