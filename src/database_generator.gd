@@ -20,6 +20,14 @@ func performance_test() -> float:
 	ai.start_search(chess_state, 0, INF, [], debug_output)
 	await ai.search_finished
 	var time_end:float = Time.get_ticks_usec()
+	var test_state:State = chess_state.duplicate()
+	var variation:PackedInt32Array = ai.get_principal_variation()
+	var text:String = ""
+	for iter:int in variation:
+		var move_name:String = RuleStandard.get_move_name(test_state, iter)
+		text += move_name + " "
+		RuleStandard.apply_move(test_state, iter)
+	print(text)
 	return time_end - time_start
 
 func perft_test() -> void:
@@ -65,16 +73,16 @@ func _physics_process(_delta:float):
 		add_progress_bar()
 	for i:int in range(progress_bar_data.size()):
 		progress_bar[i].value = progress_bar_data[i]
-		$panel/margin_container/label.text = "%x" % ai.get_transposition_table().best_move(chess_state.get_zobrist())
 
 func make_database() -> void:
-	#perft_test()
+	# perft_test()
 	print("before: %dms" % await performance_test())
 	chess_state = RuleStandard.parse("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
 	# RuleStandard.search(chess_state, 0, transposition_table, Callable(), 10, debug_output)
 	ai.set_max_depth(20)
 	ai.start_search(chess_state, 0, INF, [], debug_output)
 	await ai.search_finished
+	main_variation = ai.get_principal_variation()
 	print(main_variation)
 	#$pastor.transposition_table = transposition_table
 	ai.get_transposition_table().save_file("user://standard_opening.fa")

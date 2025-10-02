@@ -670,11 +670,24 @@ void PastorAI::search(const godot::Ref<State> &_state, int _group, godot::Packed
 		}
 	}
 	best_move = transposition_table->best_move(_state->get_zobrist());
+	principal_variation.clear();
+	godot::Ref<State> test_state = _state->duplicate();
+	while (transposition_table->probe_hash(test_state->get_zobrist(), 1, -THRESHOLD, THRESHOLD) != 65535)
+	{
+		int move = transposition_table->best_move(test_state->get_zobrist());
+		principal_variation.push_back(move);
+		RuleStandard::get_singleton()->apply_move(test_state, move);
+	}
 }
 
 int PastorAI::get_search_result()
 {
 	return best_move;
+}
+
+godot::PackedInt32Array PastorAI::get_principal_variation()
+{
+	return principal_variation;
 }
 
 void PastorAI::set_max_depth(int max_depth)
@@ -702,6 +715,7 @@ void PastorAI::_bind_methods()
 	ADD_SIGNAL(godot::MethodInfo("search_finished"));
 	godot::ClassDB::bind_method(godot::D_METHOD("search", "state", "group", "history_state", "debug_output"), &PastorAI::search);
 	godot::ClassDB::bind_method(godot::D_METHOD("get_search_result"), &PastorAI::get_search_result);
+	godot::ClassDB::bind_method(godot::D_METHOD("get_principal_variation"), &PastorAI::get_principal_variation);
 	godot::ClassDB::bind_method(godot::D_METHOD("set_max_depth", "max_depth"), &PastorAI::set_max_depth);
 	godot::ClassDB::bind_method(godot::D_METHOD("get_max_depth"), &PastorAI::get_max_depth);
 	// godot::ClassDB::bind_method(godot::D_METHOD("set_transposition_table", "transposition_table"), &PastorAI::set_transposition_table);
