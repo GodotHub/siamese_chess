@@ -349,10 +349,7 @@ godot::PackedInt32Array PastorAI::generate_good_capture_move(godot::Ref<State>_s
 				}
 				if (to_piece)
 				{
-					if (abs(piece_value[from_piece]) <= abs(piece_value[to_piece]))
-					{
-						output.push_back(Chess::create(_from, to, 0));
-					}
+					output.push_back(Chess::create(_from, to, 0));
 					break;
 				}
 				if ((from_piece & 95) == 'K' || (from_piece & 95) == 'N')
@@ -471,7 +468,7 @@ int PastorAI::compare_move(int a, int b, int best_move, int killer_1, int killer
 	return a > b;
 }
 
-int PastorAI::quies(godot::Ref<State>_state, int score, int _alpha, int _beta, int _group)
+int PastorAI::quies(godot::Ref<State> _state, int score, int _alpha, int _beta, int _group)
 {
 	int score_relative = _group == 0 ? score : -score;
 	if (score_relative >= _beta)
@@ -483,6 +480,7 @@ int PastorAI::quies(godot::Ref<State>_state, int score, int _alpha, int _beta, i
 		_alpha = score_relative;
 	}
 	godot::PackedInt32Array move_list = generate_good_capture_move(_state, _group);
+	std::sort(move_list.ptrw(), move_list.ptrw() + move_list.size(), std::bind(compare_move, this, std::placeholders::_1, std::placeholders::_2, 0, 0, 0, _state, nullptr));
 	for (int i = 0; i < move_list.size(); i++)
 	{
 		godot::Ref<State> test_state = _state->duplicate();
