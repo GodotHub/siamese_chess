@@ -198,7 +198,7 @@ bool RuleStandard::is_move_valid(godot::Ref<State>_state, int _group, int _move)
 	int to = Chess::to(_move);
 	int to_piece = _state->get_piece(to);
 	int flag = false;
-	godot::PackedInt32Array *directions;
+	godot::PackedInt32Array *directions = nullptr;
 	if ((from_piece & 95) == 'P')
 	{
 		int front = from_piece == 'P' ? -16 : 16;
@@ -274,7 +274,10 @@ bool RuleStandard::is_move_valid(godot::Ref<State>_state, int _group, int _move)
 	{
 		directions = &directions_diagonal;
 	}
-
+	if (!directions)	//这种情况下不可能有着法
+	{
+		return false;
+	}
 	for (int i = 0; i < directions->size(); i++)
 	{
 		int to = from + (*directions)[i];
@@ -360,7 +363,10 @@ bool RuleStandard::is_check(godot::Ref<State> _state, int _group)
 		{
 			directions = &directions_diagonal;
 		}
-
+		if (!directions)
+		{
+			continue;
+		}
 		for (int i = 0; i < directions->size(); i++)
 		{
 			int to = _from;
@@ -466,6 +472,10 @@ godot::PackedInt32Array RuleStandard::generate_premove(godot::Ref<State>_state, 
 		else if ((from_piece & 95) == 'B')
 		{
 			directions = &directions_diagonal;
+		}
+		if (!directions)
+		{
+			continue;
 		}
 		for (int i = 0; i < directions->size(); i++)
 		{
@@ -581,7 +591,10 @@ godot::PackedInt32Array RuleStandard::generate_move(godot::Ref<State>_state, int
 		{
 			directions = &directions_diagonal;
 		}
-
+		if (!directions)
+		{
+			continue;
+		}
 		for (int i = 0; i < directions->size(); i++)
 		{
 			int to = _from;

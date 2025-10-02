@@ -269,7 +269,7 @@ godot::PackedInt32Array PastorAI::generate_good_capture_move(godot::Ref<State>_s
 		{
 			continue;
 		}
-		godot::PackedInt32Array *directions;
+		godot::PackedInt32Array *directions = nullptr;
 		if ((from_piece & 95) == 'P')
 		{
 			int front = from_piece == 'P' ? -16 : 16;
@@ -325,7 +325,10 @@ godot::PackedInt32Array PastorAI::generate_good_capture_move(godot::Ref<State>_s
 		{
 			directions = &directions_diagonal;
 		}
-
+		if (!directions)
+		{
+			continue;
+		}
 		for (int i = 0; i < directions->size(); i++)
 		{
 			int to = _from;
