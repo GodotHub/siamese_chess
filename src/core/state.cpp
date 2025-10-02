@@ -144,6 +144,16 @@ void State::move_piece(int _from, int _to)
 	pieces[_from] = 0;
 }
 
+uint64_t State::get_bit(int _piece)
+{
+	return bit[_piece];
+}
+
+void State::set_bit(int _piece, uint64_t _bit)
+{
+	bit[_piece] = _bit;
+}
+
 int State::get_turn()
 {
 	return turn;
