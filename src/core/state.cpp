@@ -124,7 +124,7 @@ void State::capture_piece(int _by)
 		zobrist ^= ZobristHash::get_singleton()->hash_piece(piece, _by);
 		bit[piece] &= ~by_mask;
 		bit[Chess::group(piece) == 0 ? 'A' : 'a'] &= ~by_mask;
-		piece = 0;
+		pieces[_by] = 0;
 		// 虽然大多数情况是攻击者移到被攻击者上，但是吃过路兵是例外，后续可能会出现类似情况，所以还是得手多一下
 	}
 }
