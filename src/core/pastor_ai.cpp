@@ -4,6 +4,8 @@
 #include <godot_cpp/core/error_macros.hpp>
 #include <godot_cpp/classes/file_access.hpp>
 #include <random>
+#include <algorithm>
+#include <functional>
 
 PastorAI::PastorAI()
 {
@@ -438,7 +440,7 @@ int PastorAI::evaluate(godot::Ref<State> _state, int _move)
 	return score;
 }
 
-int PastorAI::compare_move(int a, int b, int best_move, int killer_1, int killer_2, int mvv_a, int lva_a, int mvv_b, int lva_b, std::array<int, 65536> *history_table)
+int PastorAI::compare_move(int a, int b, int best_move, int killer_1, int killer_2, const godot::Ref<State> &state, std::array<int, 65536> *history_table)
 {
 	if (best_move == a)
 		return true;
@@ -454,15 +456,19 @@ int PastorAI::compare_move(int a, int b, int best_move, int killer_1, int killer
 		return false;
 	if (history_table)
 		return (*history_table)[a & 0xFFFF] > (*history_table)[b & 0xFFFF];
+	int mvv_a = abs(piece_value[state->get_piece(Chess::to(a))]);
+	int mvv_b = abs(piece_value[state->get_piece(Chess::to(b))]);
 	if (mvv_a != mvv_b)
 	{
 		return mvv_a > mvv_b;
 	}
+	int lva_a = abs(piece_value[state->get_piece(Chess::from(a))]);
+	int lva_b = abs(piece_value[state->get_piece(Chess::from(b))]);
 	if (mvv_a != 0 && lva_a != lva_b)
 	{
 		return lva_a < lva_b;
 	}
-	return true;
+	return a > b;
 }
 
 int PastorAI::quies(godot::Ref<State>_state, int score, int _alpha, int _beta, int _group)
@@ -585,6 +591,7 @@ int PastorAI::alphabeta(const godot::Ref<State> &_state, int score, int _alpha, 
 			return 0;
 		}
 	}
+	std::sort(move_list.ptrw(), move_list.ptrw() + move_list.size(), std::bind(compare_move, this, std::placeholders::_1, std::placeholders::_2, best_move, killer_1 ? *killer_1 : 0, killer_2 ? *killer_2 : 0, _state, _history_table));
 	int move_count = move_list.size();
 	if (_depth > 2)
 	{
@@ -595,13 +602,6 @@ int PastorAI::alphabeta(const godot::Ref<State> &_state, int score, int _alpha, 
 	int next_killer_2 = 0;
 	for (int i = 0; i < move_count; i++)
 	{
-		for (int j = move_list.size() - 2; j >= i; j--)
-		{
-			if (!compare_move(move_list[j], move_list[j + 1], best_move, killer_1 ? *killer_1 : 0, killer_2 ? *killer_2 : 0, abs(piece_value[_state->get_piece(Chess::to(move_list[j]))]), abs(piece_value[_state->get_piece(Chess::from(move_list[j]))]), abs(piece_value[_state->get_piece(Chess::to(move_list[j + 1]))]), abs(piece_value[_state->get_piece(Chess::from(move_list[j + 1]))]), _history_table))
-			{
-				std::swap(move_list[j], move_list[j + 1]);
-			}
-		}
 		if (i == 0 && has_transposition_table_move || i == 1 && has_killer_1 || i == 2 && has_killer_2)
 		{
 			continue;
