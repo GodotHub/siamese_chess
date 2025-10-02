@@ -392,7 +392,7 @@ int PastorAI::evaluate_all(godot::Ref<State> _state)
 	return score;
 }
 
-int PastorAI::evaluate(godot::Ref<State>_state, int _move)
+int PastorAI::evaluate(godot::Ref<State> _state, int _move)
 {
 	int from = Chess::from(_move);
 	int from_piece = _state->get_piece(from);
@@ -663,7 +663,7 @@ void PastorAI::search(const godot::Ref<State> &_state, int _group, const godot::
 	{
 		map_history_state[history_state[i]]++;
 	}
-	for (int i = 1; i <= max_depth; i++)
+	for (int i = 0; i <= max_depth; i += 2)
 	{
 		alphabeta(_state, evaluate_all(_state), -THRESHOLD, THRESHOLD, i, _group, 0, true, &map_history_state, &history_table, nullptr, nullptr, _debug_output);
 		if (time_passed() >= plan_time_cost(_state) || interrupted)
