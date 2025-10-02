@@ -603,7 +603,10 @@ int PastorAI::alphabeta(const godot::Ref<State> &_state, int score, int _alpha, 
 		{
 			continue;
 		}
-		_debug_output.call(_state->get_zobrist(), _depth, i, move_list.size());
+		if (_debug_output.is_valid())
+		{
+			_debug_output.call(_state->get_zobrist(), _depth, i, move_list.size());
+		}
 		godot::Ref<State> test_state = _state->duplicate();
 		RuleStandard::get_singleton()->apply_move(test_state, move_list[i]);
 		int next_score = 0;
