@@ -198,7 +198,7 @@ bool RuleStandard::is_move_valid(godot::Ref<State>_state, int _group, int _move)
 	int to = Chess::to(_move);
 	int to_piece = _state->get_piece(to);
 	int flag = false;
-	godot::PackedInt32Array directions;
+	godot::PackedInt32Array *directions;
 	if ((from_piece & 95) == 'P')
 	{
 		int front = from_piece == 'P' ? -16 : 16;
@@ -260,24 +260,24 @@ bool RuleStandard::is_move_valid(godot::Ref<State>_state, int _group, int _move)
 	}
 	else if ((from_piece & 95) == 'K' || (from_piece & 95) == 'Q')
 	{
-		directions = directions_eight_way;
+		directions = &directions_eight_way;
 	}
 	else if ((from_piece & 95) == 'R')
 	{
-		directions = directions_straight;
+		directions = &directions_straight;
 	}
 	else if ((from_piece & 95) == 'N')
 	{
-		directions = directions_horse;
+		directions = &directions_horse;
 	}
 	else if ((from_piece & 95) == 'B')
 	{
-		directions = directions_diagonal;
+		directions = &directions_diagonal;
 	}
 
-	for (int i = 0; i < directions.size(); i++)
+	for (int i = 0; i < directions->size(); i++)
 	{
-		int to = from + directions[i];
+		int to = from + (*directions)[i];
 		int to_piece = _state->get_piece(to);
 		while (!(to & 0x88) && (!to_piece || !Chess::is_same_group(from_piece, to_piece)))
 		{
@@ -290,7 +290,7 @@ bool RuleStandard::is_move_valid(godot::Ref<State>_state, int _group, int _move)
 			{
 				break;
 			}
-			to += directions[i];
+			to += (*directions)[i];
 			to_piece = _state->get_piece(to);
 			if (!(from_piece == 'R' && to_piece == 'K' || from_piece == 'r' && to_piece == 'k'))
 			{
@@ -326,7 +326,7 @@ bool RuleStandard::is_check(godot::Ref<State> _state, int _group)
 		{
 			continue;
 		}
-		godot::PackedInt32Array directions;
+		godot::PackedInt32Array *directions = nullptr;
 		if ((from_piece & 95) == 'P')
 		{
 			int front = from_piece == 'P' ? -16 : 16;
@@ -346,28 +346,28 @@ bool RuleStandard::is_check(godot::Ref<State> _state, int _group)
 		}
 		else if ((from_piece & 95) == 'K' || (from_piece & 95) == 'Q')
 		{
-			directions = directions_eight_way;
+			directions = &directions_eight_way;
 		}
 		else if ((from_piece & 95) == 'R')
 		{
-			directions = directions_straight;
+			directions = &directions_straight;
 		}
 		else if ((from_piece & 95) == 'N')
 		{
-			directions = directions_horse;
+			directions = &directions_horse;
 		}
 		else if ((from_piece & 95) == 'B')
 		{
-			directions = directions_diagonal;
+			directions = &directions_diagonal;
 		}
 
-		for (int i = 0; i < directions.size(); i++)
+		for (int i = 0; i < directions->size(); i++)
 		{
 			int to = _from;
 			int to_piece = _state->get_piece(to);
 			while (true)
 			{
-				to += directions[i];
+				to += (*directions)[i];
 				if (to & 0x88)
 				{
 					break;
@@ -406,7 +406,7 @@ godot::PackedInt32Array RuleStandard::generate_premove(godot::Ref<State>_state, 
 		{
 			continue;
 		}
-		godot::PackedInt32Array directions;
+		godot::PackedInt32Array *directions = nullptr;
 		if ((from_piece & 95) == 'P')
 		{
 			int front = _group == 0 ? -16 : 16;
@@ -453,23 +453,23 @@ godot::PackedInt32Array RuleStandard::generate_premove(godot::Ref<State>_state, 
 		}
 		else if ((from_piece & 95) == 'K' || (from_piece & 95) == 'Q')
 		{
-			directions = directions_eight_way;
+			directions = &directions_eight_way;
 		}
 		else if ((from_piece & 95) == 'R')
 		{
-			directions = directions_straight;
+			directions = &directions_straight;
 		}
 		else if ((from_piece & 95) == 'N')
 		{
-			directions = directions_horse;
+			directions = &directions_horse;
 		}
 		else if ((from_piece & 95) == 'B')
 		{
-			directions = directions_diagonal;
+			directions = &directions_diagonal;
 		}
-		for (int i = 0; i < directions.size(); i++)
+		for (int i = 0; i < directions->size(); i++)
 		{
-			int to = _from + directions[i];
+			int to = _from + (*directions)[i];
 			while (!(to & 0x88))
 			{
 				output.push_back(Chess::create(_from, to, 0));
@@ -477,7 +477,7 @@ godot::PackedInt32Array RuleStandard::generate_premove(godot::Ref<State>_state, 
 				{
 					break;
 				}
-				to += directions[i];
+				to += (*directions)[i];
 			}
 		}
 	}
@@ -511,7 +511,7 @@ godot::PackedInt32Array RuleStandard::generate_move(godot::Ref<State>_state, int
 		{
 			continue;
 		}
-		godot::PackedInt32Array directions;
+		godot::PackedInt32Array *directions = nullptr;
 		if ((from_piece & 95) == 'P')
 		{
 			int front = from_piece == 'P' ? -16 : 16;
@@ -567,28 +567,28 @@ godot::PackedInt32Array RuleStandard::generate_move(godot::Ref<State>_state, int
 		}
 		else if ((from_piece & 95) == 'K' || (from_piece & 95) == 'Q')
 		{
-			directions = directions_eight_way;
+			directions = &directions_eight_way;
 		}
 		else if ((from_piece & 95) == 'R')
 		{
-			directions = directions_straight;
+			directions = &directions_straight;
 		}
 		else if ((from_piece & 95) == 'N')
 		{
-			directions = directions_horse;
+			directions = &directions_horse;
 		}
 		else if ((from_piece & 95) == 'B')
 		{
-			directions = directions_diagonal;
+			directions = &directions_diagonal;
 		}
 
-		for (int i = 0; i < directions.size(); i++)
+		for (int i = 0; i < directions->size(); i++)
 		{
 			int to = _from;
 			int to_piece = _state->get_piece(to);
 			while (true)
 			{
-				to += directions[i];
+				to += (*directions)[i];
 				if ((to & 0x88))
 				{
 					break;
