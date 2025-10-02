@@ -454,7 +454,7 @@ int PastorAI::compare_move(int a, int b, int best_move, int killer_1, int killer
 		return true;
 	if (killer_2 == b)
 		return false;
-	if (history_table)
+	if (history_table && (*history_table)[a & 0xFFFF] != (*history_table)[b & 0xFFFF])
 		return (*history_table)[a & 0xFFFF] > (*history_table)[b & 0xFFFF];
 	int mvv_a = abs(piece_value[state->get_piece(Chess::to(a))]);
 	int mvv_b = abs(piece_value[state->get_piece(Chess::to(b))]);
