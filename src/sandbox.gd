@@ -6,6 +6,7 @@ var initial_state:State = null
 
 func _ready() -> void:
 	$player.set_initial_interact($interact)
+	chessboard.add_default_piece_set()
 	chessboard.connect("move_played", receive_move)
 	while !is_instance_valid(state):
 		var text_input_instance:TextInput = TextInput.create_text_input_instance("输入FEN格式的布局：", "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
