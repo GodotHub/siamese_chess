@@ -1,4 +1,4 @@
-[gd_scene load_steps=96 format=3 uid="uid://bmyf2h17xaxlj"]
+[gd_scene load_steps=95 format=3 uid="uid://bmyf2h17xaxlj"]
 
 [ext_resource type="PackedScene" uid="uid://gdof8yy8yrjv" path="res://assets/model/environment.glb" id="1_b3374"]
 [ext_resource type="PackedScene" uid="uid://d1s6qj7aofldk" path="res://scene/chessboard.tscn" id="2_3p4nk"]
@@ -11,7 +11,6 @@
 [ext_resource type="PackedScene" uid="uid://bw127d1iawnv3" path="res://assets/model/radermachera_sinica.glb" id="7_ps37q"]
 [ext_resource type="PackedScene" uid="uid://de73qrhtkiaka" path="res://scene/chessboard_draft.tscn" id="8_tnamw"]
 [ext_resource type="PackedScene" uid="uid://crucchfeabm" path="res://scene/pastor.tscn" id="9_560hc"]
-[ext_resource type="PackedScene" uid="uid://y13y4nucxo2v" path="res://scene/bible.tscn" id="9_u78ad"]
 [ext_resource type="PackedScene" uid="uid://8niy1q4npun7" path="res://scene/a4paper.tscn" id="10_r58fw"]
 [ext_resource type="PackedScene" uid="uid://n6i5vwajcqn4" path="res://assets/model/cup.glb" id="10_u78ad"]
 [ext_resource type="PackedScene" uid="uid://biv8ghyjqw63y" path="res://assets/model/shrub.glb" id="11_j14fg"]
@@ -140,7 +139,7 @@ size = Vector3(1, 0.561096, 0.486084)
 size = Vector3(0.197998, 0.307373, 0.0737305)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_e7hh8"]
-size = Vector3(2.94971, 1, 2.70023)
+size = Vector3(2.91345, 1, 2.07606)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_eosfh"]
 size = Vector3(1.7439, 3.47151, 4.58435)
@@ -373,7 +372,7 @@ shader_parameter/contrast_mult = 1.0
 script = ExtResource("2_7r8ay")
 
 [node name="cheshire" parent="." index="0" instance=ExtResource("3_1vcsq")]
-transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -3.53642, -0.125616, 0)
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -3.42074, 0.00953795, 0)
 
 [node name="ceil" parent="." index="3"]
 surface_material_override/0 = SubResource("ShaderMaterial_neu4h")
@@ -650,7 +649,7 @@ camera = NodePath("../../camera/camera_back")
 metadata/_custom_type_script = "uid://dg85frcnjlauy"
 
 [node name="collision_shape_3d" type="CollisionShape3D" parent="interact/area_back" index="0"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.79336, 0, -2.15097)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.81149, 0, -2.46306)
 shape = SubResource("BoxShape3D_e7hh8")
 
 [node name="area_bar_table" type="Area3D" parent="interact" index="15" node_paths=PackedStringArray("next_interact", "camera")]
@@ -748,14 +747,14 @@ transform = Transform3D(-0.965926, -0.0669873, 0.25, 1.54268e-08, 0.965926, 0.25
 fov = 49.0616
 
 [node name="camera_on_seat" type="Camera3D" parent="camera" index="5"]
-transform = Transform3D(-4.11896e-08, 0.334744, -0.942309, 1.46321e-08, 0.942309, 0.334744, 1, 1.24345e-14, -4.37113e-08, -2.90324, 1.3125, -0.0455534)
+transform = Transform3D(0.466217, 0.594606, -0.655047, 2.93793e-08, 0.740441, 0.672121, 0.88467, -0.313354, 0.345206, -2.98767, 1.73783, 0.451946)
 
 [node name="camera_pastor_closeup" type="Camera3D" parent="camera" index="6"]
-transform = Transform3D(-4.25417e-08, 0.229777, -0.973243, 1.00439e-08, 0.973243, 0.229777, 1, -5.15143e-14, -4.37113e-08, -2.90156, 1.31505, -0.0455534)
+transform = Transform3D(-4.25417e-08, 0.229777, -0.973243, 1.00439e-08, 0.973243, 0.229777, 1, -5.06262e-14, -4.37113e-08, -2.71982, 1.31505, -0.0455534)
 fov = 38.1
 
 [node name="camera_table_side" type="Camera3D" parent="camera" index="7"]
-transform = Transform3D(0.69712, 0.22432, -0.680959, -0.00311953, 0.950733, 0.309995, 0.716948, -0.213979, 0.663475, -3.84698, 1.77469, 2.11798)
+transform = Transform3D(0.69712, 0.22432, -0.680959, -0.00311953, 0.950733, 0.309995, 0.716948, -0.213979, 0.663475, -4.37887, 1.77469, 2.43847)
 
 [node name="camera_outside_window" type="Camera3D" parent="camera" index="8"]
 transform = Transform3D(0.985589, 0, -0.16916, 0, 1, 0, 0.16916, 0, 0.985589, -3.29193, 1.40087, -0.16569)
@@ -823,12 +822,9 @@ transform = Transform3D(0.07162, 0, -0.997431, 0, 1, 0, 0.997431, 0, 0.07162, -2
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.35787, 0.869977, -0.0607151)
 
 [node name="pastor" parent="." index="29" instance=ExtResource("9_560hc")]
-transform = Transform3D(0.0263339, 0, -0.999653, 0, 1, 0, 0.999653, 0, 0.0263339, -1.37885, -0.0145503, -0.0821158)
+transform = Transform3D(0.0263339, 0, -0.999653, 0, 1, 0, 0.999653, 0, 0.0263339, -1.36212, -0.0145503, -0.0821158)
 
-[node name="bible" parent="." index="30" instance=ExtResource("9_u78ad")]
-transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -1.93542, 0.879041, -0.0665558)
-
-[node name="cup_pastor" parent="." index="31" instance=ExtResource("10_u78ad")]
+[node name="cup_pastor" parent="." index="30" instance=ExtResource("10_u78ad")]
 transform = Transform3D(-0.666767, 0, -0.745266, 0, 1, 0, 0.745266, 0, -0.666767, -1.92466, 0.853505, 0.469984)
 
 [node name="cup" parent="cup_pastor" index="0"]
@@ -837,7 +833,7 @@ surface_material_override/0 = SubResource("ShaderMaterial_vtg4w")
 [node name="drink" parent="cup_pastor" index="1"]
 surface_material_override/0 = SubResource("ShaderMaterial_vloyq")
 
-[node name="cup_cheshire" parent="." index="32" instance=ExtResource("10_u78ad")]
+[node name="cup_cheshire" parent="." index="31" instance=ExtResource("10_u78ad")]
 transform = Transform3D(-0.593447, 0, 0.804873, 0, 1, 0, -0.804873, 0, -0.593447, -2.69562, 0.853505, 0.400202)
 
 [node name="cup" parent="cup_cheshire" index="0"]
@@ -846,7 +842,7 @@ surface_material_override/0 = SubResource("ShaderMaterial_b2ntd")
 [node name="drink" parent="cup_cheshire" index="1"]
 surface_material_override/0 = SubResource("ShaderMaterial_1nkwo")
 
-[node name="outside" type="Node3D" parent="." index="33"]
+[node name="outside" type="Node3D" parent="." index="32"]
 
 [node name="shrub_0" parent="outside" index="0" instance=ExtResource("11_j14fg")]
 transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -1.35632, 0, -2.88739)
@@ -938,10 +934,10 @@ transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 11.509
 [node name="fence_8" parent="outside" index="25" instance=ExtResource("12_cqi1n")]
 transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 11.5094, 0, 13.0783)
 
-[node name="pen" parent="." index="34" instance=ExtResource("19_u0pxc")]
+[node name="pen" parent="." index="33" instance=ExtResource("19_u0pxc")]
 transform = Transform3D(-0.0669528, 0.997756, 4.36133e-08, -8.57176e-16, -4.37114e-08, 1, 0.997756, 0.0669528, 2.92664e-09, -2.48507, 0.853147, 0.209584)
 
-[node name="seat" type="Node3D" parent="." index="35"]
+[node name="seat" type="Node3D" parent="." index="34"]
 
 [node name="table_0" parent="seat" index="0" instance=ExtResource("14_7clsy")]
 transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -2.32462, 0, 0.240975)
@@ -1215,110 +1211,110 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.32974, 3.56888, 0)
 [node name="hang_light_12" parent="seat" index="52" instance=ExtResource("30_xqn0k")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.34745, 3.58598, 0)
 
-[node name="painting_frame" parent="." index="36" instance=ExtResource("22_cjf2n")]
+[node name="painting_frame" parent="." index="35" instance=ExtResource("22_cjf2n")]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -6.87407, 1.53993, 4.45094)
 
 [node name="painting" parent="painting_frame" index="0"]
 surface_material_override/1 = SubResource("StandardMaterial3D_i1jpj")
 
-[node name="painting_frame_2" parent="." index="37" instance=ExtResource("22_cjf2n")]
+[node name="painting_frame_2" parent="." index="36" instance=ExtResource("22_cjf2n")]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -6.87407, 1.87309, 5.22777)
 
 [node name="painting" parent="painting_frame_2" index="0"]
 surface_material_override/1 = SubResource("StandardMaterial3D_giber")
 
-[node name="bookshelf" parent="." index="38" instance=ExtResource("21_71yyv")]
+[node name="bookshelf" parent="." index="37" instance=ExtResource("21_71yyv")]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -6.52695, 0, 2.81752)
 
 [node name="bookshelf" parent="bookshelf" index="0"]
 surface_material_override/0 = SubResource("ShaderMaterial_wlijh")
 
-[node name="bookshelf_2" parent="." index="39" instance=ExtResource("21_71yyv")]
+[node name="bookshelf_2" parent="." index="38" instance=ExtResource("21_71yyv")]
 transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, -3.01157, 0, 7.96477)
 
 [node name="bookshelf" parent="bookshelf_2" index="0"]
 surface_material_override/0 = SubResource("ShaderMaterial_wlijh")
 
-[node name="bookshelf_3" parent="." index="40" instance=ExtResource("21_71yyv")]
+[node name="bookshelf_3" parent="." index="39" instance=ExtResource("21_71yyv")]
 transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, -1.26677, 0, 7.96477)
 
 [node name="bookshelf" parent="bookshelf_3" index="0"]
 surface_material_override/0 = SubResource("ShaderMaterial_wlijh")
 
-[node name="bookshelf_4" parent="." index="41" instance=ExtResource("21_71yyv")]
+[node name="bookshelf_4" parent="." index="40" instance=ExtResource("21_71yyv")]
 transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0.443182, 0, 7.96477)
 
 [node name="bookshelf" parent="bookshelf_4" index="0"]
 surface_material_override/0 = SubResource("ShaderMaterial_wlijh")
 
-[node name="painting_frame_square" parent="." index="42" instance=ExtResource("26_x2qnl")]
+[node name="painting_frame_square" parent="." index="41" instance=ExtResource("26_x2qnl")]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -6.8745, 2.32117, 0.456253)
 
 [node name="painting_square" parent="painting_frame_square" index="0"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.16372, -0.505017, 0)
 
-[node name="painting_frame_square_2" parent="." index="43" instance=ExtResource("26_x2qnl")]
+[node name="painting_frame_square_2" parent="." index="42" instance=ExtResource("26_x2qnl")]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -6.8745, 1.97004, -0.0778655)
 
 [node name="painting_square" parent="painting_frame_square_2" index="0"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.57287, -0.799601, -4.76837e-07)
 surface_material_override/1 = SubResource("StandardMaterial3D_b1ytd")
 
-[node name="painting_frame_square_3" parent="." index="44" instance=ExtResource("26_x2qnl")]
+[node name="painting_frame_square_3" parent="." index="43" instance=ExtResource("26_x2qnl")]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -6.8745, 2.65638, -0.0778655)
 
 [node name="painting_square" parent="painting_frame_square_3" index="0"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.96599, -0.810736, -4.76837e-07)
 surface_material_override/1 = SubResource("StandardMaterial3D_q0tgb")
 
-[node name="audio_stream_player" type="AudioStreamPlayer" parent="." index="45"]
+[node name="audio_stream_player" type="AudioStreamPlayer" parent="." index="44"]
 stream = ExtResource("29_x2qnl")
 volume_db = 17.71
 autoplay = true
 
-[node name="dialog" parent="." index="46" instance=ExtResource("30_b1ytd")]
+[node name="dialog" parent="." index="45" instance=ExtResource("30_b1ytd")]
 
-[node name="archive" parent="." index="47" instance=ExtResource("43_oo81l")]
+[node name="archive" parent="." index="46" instance=ExtResource("43_oo81l")]
 visible = false
 
-[node name="rose" parent="." index="48" instance=ExtResource("28_x2qnl")]
+[node name="rose" parent="." index="47" instance=ExtResource("28_x2qnl")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.43895, 0.842041, -0.718518)
 
 [node name="flower_bottle" parent="rose" index="0"]
 surface_material_override/0 = SubResource("ShaderMaterial_m4o3h")
 
-[node name="menu" parent="." index="49" instance=ExtResource("33_gw0lo")]
+[node name="menu" parent="." index="48" instance=ExtResource("33_gw0lo")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.31515, 0.847289, -0.72478)
 
-[node name="phonograph" parent="." index="50" instance=ExtResource("35_eosfh")]
+[node name="phonograph" parent="." index="49" instance=ExtResource("35_eosfh")]
 transform = Transform3D(1.31134e-07, 0, 1, 0, 1, 0, -1, 0, 1.31134e-07, 2.57562, 1.13928, 6.08806)
 audio_stream = ExtResource("36_gw0lo")
 
-[node name="safe_lock" parent="." index="51" instance=ExtResource("37_ps37q")]
+[node name="safe_lock" parent="." index="50" instance=ExtResource("37_ps37q")]
 transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 4.06172, 0.285388, 2.59597)
 
-[node name="telephone" parent="." index="52" instance=ExtResource("31_vndhl")]
+[node name="telephone" parent="." index="51" instance=ExtResource("31_vndhl")]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 2.64696, 1.27398, 4.92819)
 
-[node name="piece_queen" parent="." index="53" instance=ExtResource("39_xqn0k")]
+[node name="piece_queen" parent="." index="52" instance=ExtResource("39_xqn0k")]
 transform = Transform3D(0.505, 0, 0, 0, 0.505, 0, 0, 0, 0.505, 3.99457, 0.247538, 2.55837)
 
-[node name="radermachera_sinica" parent="." index="54" instance=ExtResource("7_ps37q")]
+[node name="radermachera_sinica" parent="." index="53" instance=ExtResource("7_ps37q")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.4796, 0, 7.96234)
 
-[node name="radermachera_sinica_2" parent="." index="55" instance=ExtResource("7_ps37q")]
+[node name="radermachera_sinica_2" parent="." index="54" instance=ExtResource("7_ps37q")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.07932, 0, 7.96234)
 
-[node name="radermachera_sinica_3" parent="." index="56" instance=ExtResource("7_ps37q")]
+[node name="radermachera_sinica_3" parent="." index="55" instance=ExtResource("7_ps37q")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.4796, 0, 1.66837)
 
-[node name="coffee_machine" parent="." index="57" instance=ExtResource("42_r58fw")]
+[node name="coffee_machine" parent="." index="56" instance=ExtResource("42_r58fw")]
 transform = Transform3D(1.31134e-07, 0, 1, 0, 1, 0, -1, 0, 1.31134e-07, 2.59183, 1.28231, 3.95914)
 
-[node name="chessboard_friend" parent="." index="58" instance=ExtResource("2_3p4nk")]
+[node name="chessboard_friend" parent="." index="57" instance=ExtResource("2_3p4nk")]
 transform = Transform3D(5.5732e-08, 0, 0.425, 0, 0.425, 0, -0.425, 0, 5.5732e-08, -5.29076, 0.862027, 0.253498)
 
-[node name="clock_friend" parent="." index="59" instance=ExtResource("3_po4na")]
+[node name="clock_friend" parent="." index="58" instance=ExtResource("3_po4na")]
 transform = Transform3D(1, 0, -1.06581e-14, 0, 1, 0, 1.06581e-14, 0, 1, -5.26464, 0.849788, -0.0957035)
 
 [editable path="cup_pastor"]
