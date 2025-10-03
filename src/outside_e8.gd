@@ -22,3 +22,6 @@ func play() -> void:
 		$chessboard_blank.set_valid_premove([])
 		await $chessboard_blank.move_played
 		RuleStandard.apply_move(state, $chessboard_blank.confirm_move)
+		if state.get_bit("k".unicode_at(0)) & (Chess.mask(59) | Chess.mask(60)):
+			get_tree().change_scene_to_file.call_deferred("res://scene/outside.tscn")
+			break
