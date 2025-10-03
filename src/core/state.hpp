@@ -30,8 +30,8 @@ class State : public godot::RefCounted
 		void add_piece(int _by, int _piece);
 		void capture_piece(int _by);
 		void move_piece(int _from, int _to);
-		uint64_t get_bit(int _piece);
-		void set_bit(int _piece, uint64_t _bit);
+		int64_t get_bit(int _piece);
+		void set_bit(int _piece, int64_t _bit);
 		int get_turn();
 		void set_turn(int _turn);
 		int get_castle();
@@ -48,7 +48,7 @@ class State : public godot::RefCounted
 		static void _bind_methods();
 	private:
 		int pieces[128];
-		uint64_t bit[128];
+		int64_t bit[128];
 		//'*'表示所有棋子
 		int turn;
 		int castle;

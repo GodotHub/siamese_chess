@@ -9,7 +9,7 @@ class Chess : public godot::Object
 	GDCLASS(Chess, godot::Object)
 	public:
 		Chess();
-		static uint64_t mask(int n);
+		static int64_t mask(int n);
 		static int x88_to_64(int n);
 		static int group(int piece);
 		static bool is_same_group(int piece_1, int piece_2);

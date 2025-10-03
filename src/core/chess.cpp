@@ -8,9 +8,9 @@ Chess::Chess()
 
 }
 
-uint64_t Chess::mask(int n)
+int64_t Chess::mask(int n)
 {
-	return 1 << n;
+	return 1LL << n;
 }
 
 int Chess::x88_to_64(int n)

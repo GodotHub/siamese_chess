@@ -108,7 +108,7 @@ int State::has_piece(int _by)
 
 void State::add_piece(int _by, int _piece)
 {
-	uint64_t by_mask = Chess::mask(Chess::x88_to_64(_by));
+	int64_t by_mask = Chess::mask(Chess::x88_to_64(_by));
 	pieces[_by] = _piece;
 	bit[_piece] |= by_mask;
 	bit[Chess::group(_piece) == 0 ? 'A' : 'a'] |= by_mask;
@@ -120,7 +120,7 @@ void State::capture_piece(int _by)
 	if (has_piece(_by))
 	{
 		int piece = pieces[_by];
-		uint64_t by_mask = Chess::mask(Chess::x88_to_64(_by));
+		int64_t by_mask = Chess::mask(Chess::x88_to_64(_by));
 		zobrist ^= ZobristHash::get_singleton()->hash_piece(piece, _by);
 		bit[piece] &= ~by_mask;
 		bit[Chess::group(piece) == 0 ? 'A' : 'a'] &= ~by_mask;
@@ -132,24 +132,24 @@ void State::capture_piece(int _by)
 void State::move_piece(int _from, int _to)
 {
 	int piece = get_piece(_from);
-	uint64_t from_mask = Chess::mask(Chess::x88_to_64(_from));
-	uint64_t to_mask = Chess::mask(Chess::x88_to_64(_to));
+	int64_t from_mask = Chess::mask(Chess::x88_to_64(_from));
+	int64_t to_mask = Chess::mask(Chess::x88_to_64(_to));
 	zobrist ^= ZobristHash::get_singleton()->hash_piece(piece, _from);
 	zobrist ^= ZobristHash::get_singleton()->hash_piece(piece, _to);
-	bit[pieces[_from]] &= ~from_mask;
+	bit[piece] &= ~from_mask;
 	bit[Chess::group(piece) == 0 ? 'A' : 'a'] &= ~from_mask;
-	bit[pieces[_to]] |= to_mask;
+	bit[piece] |= to_mask;
 	bit[Chess::group(piece) == 0 ? 'A' : 'a'] |= to_mask;
 	pieces[_to] = pieces[_from];
 	pieces[_from] = 0;
 }
 
-uint64_t State::get_bit(int _piece)
+int64_t State::get_bit(int _piece)
 {
 	return bit[_piece];
 }
 
-void State::set_bit(int _piece, uint64_t _bit)
+void State::set_bit(int _piece, int64_t _bit)
 {
 	bit[_piece] = _bit;
 }
@@ -228,6 +228,8 @@ void State::_bind_methods()
 	godot::ClassDB::bind_method(godot::D_METHOD("add_piece"), &State::add_piece);
 	godot::ClassDB::bind_method(godot::D_METHOD("capture_piece"), &State::capture_piece);
 	godot::ClassDB::bind_method(godot::D_METHOD("move_piece"), &State::move_piece);
+	godot::ClassDB::bind_method(godot::D_METHOD("get_bit"), &State::get_bit);
+	godot::ClassDB::bind_method(godot::D_METHOD("set_bit"), &State::set_bit);
 	godot::ClassDB::bind_method(godot::D_METHOD("get_turn"), &State::get_turn);
 	godot::ClassDB::bind_method(godot::D_METHOD("set_turn"), &State::set_turn);
 	godot::ClassDB::bind_method(godot::D_METHOD("get_castle"), &State::get_castle);
