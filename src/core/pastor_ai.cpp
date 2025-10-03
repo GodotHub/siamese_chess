@@ -528,25 +528,30 @@ int PastorAI::alphabeta(const godot::Ref<State> &_state, int score, int _alpha, 
 	unsigned char flag = ALPHA;
 	int best_move = 0;
 	bool has_transposition_table_move = false;
-	if (!transposition_table.is_null())
+	best_move = transposition_table->best_move(_state->get_zobrist());
+	if (RuleStandard::get_singleton()->is_move_valid(_state, _group, best_move))
 	{
-		best_move = transposition_table->best_move(_state->get_zobrist());
-		if (RuleStandard::get_singleton()->is_move_valid(_state, _group, best_move))
+		godot::Ref<State> test_state = _state->duplicate();
+		RuleStandard::get_singleton()->apply_move(test_state, best_move);
+		int next_score = -alphabeta(test_state, score + evaluate(_state, best_move), -_beta, -_alpha, _depth - 1, 1 - _group, _ply + 1, true, _history_state, _history_table, nullptr, nullptr, _debug_output);
+		has_transposition_table_move = true;
+		if (_beta <= next_score)
 		{
-			godot::Ref<State> test_state = _state->duplicate();
-			RuleStandard::get_singleton()->apply_move(test_state, best_move);
-			int next_score = -alphabeta(test_state, score + evaluate(_state, best_move), -_beta, -_alpha, _depth - 1, 1 - _group, _ply + 1, true, _history_state, _history_table, nullptr, nullptr, _debug_output);
-			has_transposition_table_move = true;
-			if (_beta <= next_score)
-			{
-				return _beta;
-			}
-		}
-		else
+			return _beta;
+		}	
+		if (_alpha < next_score)
 		{
-			best_move = 0;
+			found_pv = true;
+			_alpha = next_score;
+			flag = EXACT;
+			transposition_table->record_hash(_state->get_zobrist(), _depth, _alpha, flag, best_move);
 		}
 	}
+	else
+	{
+		best_move = 0;
+	}
+	
 	bool has_killer_1 = false;
 	if (killer_1 && RuleStandard::get_singleton()->is_move_valid(_state, _group, *killer_1))
 	{
@@ -557,6 +562,14 @@ int PastorAI::alphabeta(const godot::Ref<State> &_state, int score, int _alpha, 
 		if (_beta <= next_score)
 		{
 			return _beta;
+		}
+		if (_alpha < next_score)
+		{
+			found_pv = true;
+			best_move = *killer_1;
+			_alpha = next_score;
+			flag = EXACT;
+			transposition_table->record_hash(_state->get_zobrist(), _depth, _alpha, flag, *killer_1);
 		}
 	}
 	bool has_killer_2 = false;
@@ -569,6 +582,14 @@ int PastorAI::alphabeta(const godot::Ref<State> &_state, int score, int _alpha, 
 		if (_beta <= next_score)
 		{
 			return _beta;
+		}
+		if (_alpha < next_score)
+		{
+			found_pv = true;
+			best_move = *killer_2;
+			_alpha = next_score;
+			flag = EXACT;
+			transposition_table->record_hash(_state->get_zobrist(), _depth, _alpha, flag, *killer_2);
 		}
 	}
 	if (_can_null)
@@ -640,6 +661,7 @@ int PastorAI::alphabeta(const godot::Ref<State> &_state, int score, int _alpha, 
 			{
 				(*_history_table)[move_list[i] & 0xFFFF] += (1 << _depth);
 			}
+			transposition_table->record_hash(_state->get_zobrist(), _depth, _alpha, flag, move_list[i]);
 		}
 	}
 	transposition_table->record_hash(_state->get_zobrist(), _depth, _alpha, flag, best_move);
