@@ -3,7 +3,7 @@
 [ext_resource type="Script" uid="uid://cjddqgsgfo4hw" path="res://src/outside.gd" id="1_arvm7"]
 [ext_resource type="PackedScene" uid="uid://dwvyc2qlcdag0" path="res://scene/chessboard_blank.tscn" id="1_m2ffg"]
 [ext_resource type="Script" uid="uid://dg85frcnjlauy" path="res://src/interact.gd" id="4_gs8dr"]
-[ext_resource type="PackedScene" uid="uid://rleiij50iq5p" path="res://scene/player_battle.tscn" id="4_w3jsn"]
+[ext_resource type="PackedScene" uid="uid://b3ml34bssywkr" path="res://scene/player.tscn" id="4_w3jsn"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_arvm7"]
 sky_horizon_color = Color(0.662243, 0.671743, 0.686743, 1)

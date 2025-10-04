@@ -40,9 +40,7 @@ func _ready() -> void:
 	$chessboard_blank.add_piece_instance(cheshire)
 	$chessboard_blank.add_piece_instance(load("res://scene/enemy_cheshire.tscn").instantiate())
 	$chessboard_blank.set_state(state.duplicate())
-	$chessboard_blank.connect("ready_to_move", change_actor)
 	$player.set_initial_interact($interact)
-	$player.set_actor(cheshire)
 	play()
 
 func play() -> void:
@@ -53,6 +51,16 @@ func play() -> void:
 		if ai.is_searching():
 			await ai.search_finished
 		var move:int = ai.get_search_result()
+		
+		var test_state:State = state.duplicate()
+		var variation:PackedInt32Array = ai.get_principal_variation()
+		var text:String = ""
+		for iter:int in variation:
+			var move_name:String = RuleStandard.get_move_name(test_state, iter)
+			text += move_name + " "
+			RuleStandard.apply_move(test_state, iter)
+		print(text)
+		
 		history_state.push_back(state.get_zobrist())
 		RuleStandard.apply_move(state, move)
 		$chessboard_blank.execute_move(move)
@@ -67,6 +75,3 @@ func play() -> void:
 		ai.stop_search()
 		if ai.is_searching():
 			await ai.search_finished
-
-func change_actor(by:int) -> void:
-	$player.set_actor($chessboard_blank.chessboard_piece[by])
