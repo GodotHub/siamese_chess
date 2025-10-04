@@ -1,4 +1,4 @@
-[gd_scene load_steps=95 format=3 uid="uid://bmyf2h17xaxlj"]
+[gd_scene load_steps=96 format=3 uid="uid://bmyf2h17xaxlj"]
 
 [ext_resource type="PackedScene" uid="uid://gdof8yy8yrjv" path="res://assets/model/environment.glb" id="1_b3374"]
 [ext_resource type="PackedScene" uid="uid://d1s6qj7aofldk" path="res://scene/chessboard.tscn" id="2_3p4nk"]
@@ -161,6 +161,9 @@ size = Vector3(0.731567, 2.30028, 1.67641)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_m4o3h"]
 size = Vector3(0.593994, 0.0645447, 0.660217)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_vtg4w"]
+size = Vector3(0.168091, 2.5304, 1)
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_vtg4w"]
 render_priority = 0
@@ -571,9 +574,10 @@ metadata/_custom_type_script = "uid://dg85frcnjlauy"
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.487092, 0.0779724, -0.109131)
 shape = SubResource("BoxShape3D_cjf2n")
 
-[node name="area_door" type="Area3D" parent="interact" index="7" node_paths=PackedStringArray("camera")]
+[node name="area_door" type="Area3D" parent="interact" index="7" node_paths=PackedStringArray("next_interact", "camera")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.93634, 0, 0.691723)
 script = ExtResource("7_hgmdq")
+next_interact = [NodePath("../area_outside")]
 camera = NodePath("../../camera/camera_door")
 metadata/_custom_type_script = "uid://dg85frcnjlauy"
 
@@ -726,6 +730,15 @@ metadata/_custom_type_script = "uid://dg85frcnjlauy"
 [node name="collision_shape_3d" type="CollisionShape3D" parent="interact/area_friend_chessboard" index="0"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0452881, 0.0995941, 0.169891)
 shape = SubResource("BoxShape3D_m4o3h")
+
+[node name="area_outside" type="Area3D" parent="interact" index="22"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.93634, 0, 0.691723)
+script = ExtResource("7_hgmdq")
+metadata/_custom_type_script = "uid://dg85frcnjlauy"
+
+[node name="collision_shape_3d" type="CollisionShape3D" parent="interact/area_outside" index="0"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.415955, 1.33063, 0)
+shape = SubResource("BoxShape3D_vtg4w")
 
 [node name="camera" type="Node3D" parent="." index="22"]
 

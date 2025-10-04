@@ -23,6 +23,7 @@ func _ready() -> void:
 	$cheshire.visible = true
 	$cheshire.play_animation("thinking")
 	$interact/area_pastor.connect("clicked", pastor_select_dialog)
+	$interact/area_outside.connect("clicked", go_outside)
 	$interact/area_archive.connect("clicked", $archive.open)
 	$interact/area_menu.connect("clicked", check_menu)
 	$interact/area_friend_chessboard.connect("clicked", dialog_friend_start_game)
@@ -327,3 +328,6 @@ func game_with_friend() -> void:
 		await $chessboard_friend.move_played
 		RuleStandard.apply_move(friend_game_state, $chessboard_friend.confirm_move)
 		$clock_friend.next()
+
+func go_outside() -> void:
+	get_tree().change_scene_to_file.call_deferred("res://scene/outside_e8.tscn")
