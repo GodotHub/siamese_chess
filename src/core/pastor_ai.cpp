@@ -515,7 +515,7 @@ int PastorAI::alphabeta(const godot::Ref<State> &_state, int score, int _alpha, 
 		return 0; // 视作平局，如果局面不太好，也不会选择负分的下法
 	}
 
-	if (time_passed() >= 3 || interrupted)
+	if (time_passed() >= think_time || interrupted)
 	{
 		return quies(_state, score, _alpha, _beta, _group);
 	}
@@ -681,10 +681,10 @@ void PastorAI::search(const godot::Ref<State> &_state, int _group, const godot::
 	{
 		map_history_state[history_state[i]]++;
 	}
-	for (int i = 0; i <= max_depth; i += 2)
+	for (int i = 2; i <= max_depth; i += 2)
 	{
 		alphabeta(_state, evaluate_all(_state), -THRESHOLD, THRESHOLD, i, _group, 0, true, &map_history_state, &history_table, nullptr, nullptr, _debug_output);
-		if (time_passed() >= 3 || interrupted)
+		if (time_passed() >= think_time || interrupted)
 		{
 			break;
 		}
@@ -710,19 +710,19 @@ godot::PackedInt32Array PastorAI::get_principal_variation()
 	return principal_variation;
 }
 
-void PastorAI::set_max_depth(int max_depth)
+void PastorAI::set_max_depth(int _max_depth)
 {
-	this->max_depth = max_depth;
+	max_depth = max_depth;
 }
 
-int PastorAI::get_max_depth() const
+void PastorAI::set_transposition_table(const godot::Ref<TranspositionTable> &_transposition_table)
 {
-	return this->max_depth;
+	transposition_table = _transposition_table;
 }
 
-void PastorAI::set_transposition_table(const godot::Ref<TranspositionTable> &transposition_table)
+void PastorAI::set_think_time(double _think_time)
 {
-	this->transposition_table = transposition_table;
+	think_time = _think_time;
 }
 
 godot::Ref<TranspositionTable> PastorAI::get_transposition_table() const
@@ -733,11 +733,11 @@ godot::Ref<TranspositionTable> PastorAI::get_transposition_table() const
 void PastorAI::_bind_methods()
 {
 	ADD_SIGNAL(godot::MethodInfo("search_finished"));
-	godot::ClassDB::bind_method(godot::D_METHOD("search", "state", "group", "history_state", "debug_output"), &PastorAI::search);
+	godot::ClassDB::bind_method(godot::D_METHOD("search"), &PastorAI::search);
 	godot::ClassDB::bind_method(godot::D_METHOD("get_search_result"), &PastorAI::get_search_result);
 	godot::ClassDB::bind_method(godot::D_METHOD("get_principal_variation"), &PastorAI::get_principal_variation);
-	godot::ClassDB::bind_method(godot::D_METHOD("set_max_depth", "max_depth"), &PastorAI::set_max_depth);
-	godot::ClassDB::bind_method(godot::D_METHOD("get_max_depth"), &PastorAI::get_max_depth);
+	godot::ClassDB::bind_method(godot::D_METHOD("set_max_depth"), &PastorAI::set_max_depth);
+	godot::ClassDB::bind_method(godot::D_METHOD("set_think_time"), &PastorAI::set_think_time);
 	// godot::ClassDB::bind_method(godot::D_METHOD("set_transposition_table", "transposition_table"), &PastorAI::set_transposition_table);
 	godot::ClassDB::bind_method(godot::D_METHOD("get_transposition_table"), &PastorAI::get_transposition_table);
 	// ADD_PROPERTY(PropertyInfo(Variant::INT, "max_depth"), "set_max_depth", "get_max_depth");

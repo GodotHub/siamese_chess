@@ -65,7 +65,7 @@ func dialog_telephone_2025() -> void:
 			$dialog.push_dialog("容我稍作思考。", true, true, true)
 			var telephone_ai:PastorAI = PastorAI.new()
 			telephone_ai.set_max_depth(6)
-			telephone_ai.start_search(test_state, 1, INF, pastor_history_state, Callable())
+			telephone_ai.start_search(test_state, 1, pastor_history_state, Callable())
 			if telephone_ai.is_searching():
 				await telephone_ai.search_finished
 			var best_move:int = telephone_ai.get_search_result()
@@ -142,10 +142,13 @@ func dialog_pastor_game_start() -> void:
 			pastor_history_chart.set_filename("history." + String.num_int64(Time.get_unix_time_from_system()) + ".json")
 			if $dialog.selected == 0:
 				$clock_pastor.set_time(1800, 1, 0)
+				ai.set_think_time(5)
 			elif $dialog.selected == 1:
 				$clock_pastor.set_time(600, 1, 5)
+				ai.set_think_time(3)
 			elif $dialog.selected == 2:
 				$clock_pastor.set_time(300, 1, 3)
+				ai.set_think_time(2)
 			$dialog.push_dialog("现在棋盘已经准备好了。", true, true)
 			$player.force_set_camera($camera/camera_pastor_chessboard)
 			await $dialog.on_next
@@ -158,6 +161,7 @@ func dialog_pastor_game_start() -> void:
 			call_deferred("game_with_pastor")
 			break
 		elif $dialog.selected == 3:
+			ai.set_think_time(1)
 			pastor_game_state = RuleStandard.create_random_state(15)
 			$chessboard_pastor.set_state(pastor_game_state)
 			pastor_history_chart.set_state(pastor_game_state)
@@ -204,7 +208,7 @@ func game_with_pastor() -> void:
 	while RuleStandard.get_end_type(pastor_game_state) == "":
 		$chessboard_pastor.set_valid_move([])
 		$chessboard_pastor.set_valid_premove(RuleStandard.generate_premove(pastor_game_state, 1))
-		ai.start_search(pastor_game_state, 0, $clock_pastor.time_1, pastor_history_state, Callable())
+		ai.start_search(pastor_game_state, 0, pastor_history_state, Callable())
 		if ai.is_searching():
 			await ai.search_finished
 		var move:int = ai.get_search_result()
@@ -218,7 +222,7 @@ func game_with_pastor() -> void:
 		$chessboard_pastor.set_valid_move(RuleStandard.generate_valid_move(pastor_game_state, 1))
 		$chessboard_pastor.set_valid_premove([])
 		$clock_pastor.next()
-		ai.start_search(pastor_game_state, 1, INF, pastor_history_state, Callable())
+		ai.start_search(pastor_game_state, 1, pastor_history_state, Callable())
 		await $chessboard_pastor.move_played
 		pastor_history_state.push_back(pastor_game_state.get_zobrist())
 		RuleStandard.apply_move(pastor_game_state, $chessboard_pastor.confirm_move)

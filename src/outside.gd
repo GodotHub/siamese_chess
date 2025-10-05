@@ -6,7 +6,8 @@ var history_state:PackedInt32Array = []
 
 func _ready() -> void:
 	ai = PastorAI.new()
-	ai.set_max_depth(6)
+	ai.set_max_depth(100)
+	ai.set_think_time(3)
 	var fallback_piece:Actor = load("res://scene/piece_shrub.tscn").instantiate().set_show_on_backup(false).set_larger_scale()
 	state = RuleStandard.create_random_state(10)
 	$chessboard_blank.fallback_piece = fallback_piece
@@ -47,7 +48,8 @@ func play() -> void:
 	while RuleStandard.get_end_type(state) == "":
 		$chessboard_blank.set_valid_move([])
 		$chessboard_blank.set_valid_premove(RuleStandard.generate_premove(state, 1))
-		ai.start_search(state, 0, INF, history_state, Callable())
+		ai.set_think_time(3)
+		ai.start_search(state, 0, history_state, Callable())
 		if ai.is_searching():
 			await ai.search_finished
 		var move:int = ai.get_search_result()
@@ -68,7 +70,8 @@ func play() -> void:
 			break
 		$chessboard_blank.set_valid_move(RuleStandard.generate_valid_move(state, 1))
 		$chessboard_blank.set_valid_premove([])
-		ai.start_search(state, 1, INF, history_state, Callable())
+		ai.set_think_time(INF)
+		ai.start_search(state, 1, history_state, Callable())
 		await $chessboard_blank.move_played
 		history_state.push_back(state.get_zobrist())
 		RuleStandard.apply_move(state, $chessboard_blank.confirm_move)
