@@ -11,7 +11,6 @@ class PastorAI : public AI {
 
 	public:
 		PastorAI();
-		double plan_time_cost(godot::Ref<State> _state);
 		int get_piece_score(int _by, int _piece);
 		int evaluate_all(godot::Ref<State> _state);
 		int evaluate(godot::Ref<State> _state, int _move);

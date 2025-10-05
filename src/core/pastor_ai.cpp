@@ -255,11 +255,6 @@ PastorAI::PastorAI()
 	};
 }
 
-double PastorAI::plan_time_cost(godot::Ref<State> _state)
-{
-	return pow(time_left * (_state->get_round()), 0.2);
-}
-
 godot::PackedInt32Array PastorAI::generate_good_capture_move(godot::Ref<State>_state, int _group)
 {
 	godot::PackedInt32Array output;
@@ -520,7 +515,7 @@ int PastorAI::alphabeta(const godot::Ref<State> &_state, int score, int _alpha, 
 		return 0; // 视作平局，如果局面不太好，也不会选择负分的下法
 	}
 
-	if (time_passed() >= plan_time_cost(_state) || interrupted)
+	if (time_passed() >= 3 || interrupted)
 	{
 		return quies(_state, score, _alpha, _beta, _group);
 	}
@@ -689,7 +684,7 @@ void PastorAI::search(const godot::Ref<State> &_state, int _group, const godot::
 	for (int i = 0; i <= max_depth; i += 2)
 	{
 		alphabeta(_state, evaluate_all(_state), -THRESHOLD, THRESHOLD, i, _group, 0, true, &map_history_state, &history_table, nullptr, nullptr, _debug_output);
-		if (time_passed() >= plan_time_cost(_state) || interrupted)
+		if (time_passed() >= 3 || interrupted)
 		{
 			break;
 		}

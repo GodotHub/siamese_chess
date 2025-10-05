@@ -2,12 +2,11 @@
 #include <godot_cpp/classes/time.hpp>
 #include <thread>
 
-void AI::start_search(const godot::Ref<State> &_state, int _group, double _time_left, const godot::PackedInt32Array &history_state, const godot::Callable &_debug_output)
+void AI::start_search(const godot::Ref<State> &_state, int _group, const godot::PackedInt32Array &history_state, const godot::Callable &_debug_output)
 {
 	searching = true;
 	interrupted = false;
 	start_thinking = godot::Time::get_singleton()->get_unix_time_from_system();
-	time_left = _time_left;
 	std::thread thread(&AI::search_thread, this, _state->duplicate(), _group, history_state, _debug_output);
 	thread.detach();
 }
