@@ -9,6 +9,7 @@ var ai: PastorAI = PastorAI.new()
 
 func _ready() -> void:
 	chess_state = RuleStandard.parse("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
+	ai.set_think_time(INF)
 	ai.set_max_depth(8)
 	var thread:Thread = Thread.new()
 	thread.start(make_database)
@@ -17,7 +18,7 @@ func performance_test() -> float:
 	chess_state = RuleStandard.parse("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
 	var time_start:float = Time.get_ticks_usec()
 	# RuleStandard.search(chess_state, 0, transposition_table, Callable(), 6, debug_output)
-	ai.start_search(chess_state, 0, INF, [], debug_output)
+	ai.start_search(chess_state, 0, [], debug_output)
 	await ai.search_finished
 	var time_end:float = Time.get_ticks_usec()
 	var test_state:State = chess_state.duplicate()
@@ -80,7 +81,7 @@ func make_database() -> void:
 	chess_state = RuleStandard.parse("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
 	# RuleStandard.search(chess_state, 0, transposition_table, Callable(), 10, debug_output)
 	ai.set_max_depth(20)
-	ai.start_search(chess_state, 0, INF, [], debug_output)
+	ai.start_search(chess_state, 0, [], debug_output)
 	await ai.search_finished
 	main_variation = ai.get_principal_variation()
 	print(main_variation)
