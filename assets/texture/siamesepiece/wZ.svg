@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   viewBox="0 0 128 128"
+   version="1.1"
+   id="svg4"
+   width="128"
+   height="128"
+   sodipodi:docname="wZ.svg"
+   inkscape:version="1.4 (86a8ad7, 2024-10-11)"
+   inkscape:export-filename="wZ.svg.svg"
+   inkscape:export-xdpi="273.06668"
+   inkscape:export-ydpi="273.06668"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     showgrid="false"
+     inkscape:zoom="2.8284271"
+     inkscape:cx="-45.785164"
+     inkscape:cy="91.747105"
+     inkscape:window-width="1920"
+     inkscape:window-height="1057"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg4" />
+  <defs
+     id="defs4" />
+  <g
+     id="layer3"
+     transform="matrix(3.0090318,0,0,3.0090318,-3.5357241,-5.407779)">
+    <path
+       d="m 23.17895,27.35376 h -2.51356 v -1.242334 q 0,-1.516804 0.606721,-2.600236 0.606722,-1.097877 2.166863,-2.31132 1.53125,-1.184552 2.181309,-2.2102 0.664504,-1.040094 0.664504,-2.383549 0,-1.430129 -1.025648,-2.354658 Q 24.247936,13.326935 22.5,13.326935 q -2.759138,0 -4.853773,2.094634 v -2.946933 q 2.426887,-1.516804 5.258254,-1.516804 2.816922,0 4.478183,1.487912 1.675707,1.473467 1.675707,3.871462 0,1.675707 -0.78007,3.048054 -0.780071,1.372346 -2.614681,2.88915 -1.473467,1.227889 -1.979068,1.950177 -0.505602,0.722287 -0.505602,2.022405 z m -1.271226,3.019163 q 0.765625,0 1.314564,0.534492 0.548938,0.534493 0.548938,1.300118 0,0.780071 -0.548938,1.314563 -0.548939,0.520048 -1.314564,0.520048 -0.736733,0 -1.285672,-0.520048 -0.548938,-0.520047 -0.548938,-1.314563 0,-0.780071 0.534493,-1.300118 0.548938,-0.534492 1.300117,-0.534492 z"
+       id="text10"
+       style="font-size:29.5849px;font-family:'Crimson Text';-inkscape-font-specification:'Crimson Text';stroke:#000000;stroke-width:2.30105;stroke-linecap:round;stroke-linejoin:round"
+       aria-label="？" />
+  </g>
+</svg>
