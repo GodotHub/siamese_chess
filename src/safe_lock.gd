@@ -84,8 +84,16 @@ func input(_from:Node3D, _to:Area3D, _event:InputEvent, _event_position:Vector3,
 				opened = true
 				create_tween().tween_property($door, "rotation_degrees:y", 90, 2).set_trans(Tween.TRANS_SINE)
 				$audio_stream_player_opening.play()
+				unlock_archive()
 		elif _to == area_close:
 			if opened:
 				create_tween().tween_property($door, "rotation_degrees:y", 0, 2).set_trans(Tween.TRANS_SINE)
 				$audio_stream_player_closing.play()
 		update_text()
+
+func unlock_archive() -> void:
+	if !FileAccess.file_exists("user://archive/piece.queen.json"):
+		var path:String = "user://archive/piece.queen.json"
+		var file:FileAccess = FileAccess.open(path, FileAccess.WRITE)
+		file.store_string("{\"path\": \"res://scene/piece_queen_white.tscn\"}")
+		file.close()
