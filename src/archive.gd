@@ -4,7 +4,8 @@ var template_list:Dictionary = {
 	"menu": "res://scene/menu.tscn",
 	"history": "res://scene/history.tscn",
 	"draft": "res://scene/draft.tscn",
-	"piece": "res://scene/model.tscn"
+	"piece": "res://scene/model.tscn",
+	"inspectable": "res://scene/model.tscn"
 }
 
 var document:Document = null

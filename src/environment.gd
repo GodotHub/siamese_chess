@@ -37,6 +37,11 @@ func dialog_telephone(number:String) -> void:
 		call("dialog_telephone_" + number)
 
 func dialog_telephone_2025() -> void:
+	if !FileAccess.file_exists("user://archive/inspectable.telephone.json"):
+		var path:String = "user://archive/inspectable.telephone.json"
+		var file:FileAccess = FileAccess.open(path, FileAccess.WRITE)
+		file.store_string("{\"path\": \"res://scene/telephone.tscn\"}")
+		file.close()
 	if !telephone_2025_first_time:
 		telephone_2025_first_time = true
 		$dialog.push_dialog("您好！", true, true)
