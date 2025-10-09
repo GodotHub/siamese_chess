@@ -6,8 +6,10 @@
 viewport_path = NodePath("sub_viewport")
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_36njv"]
-sky_horizon_color = Color(0.662243, 0.671743, 0.686743, 1)
-ground_horizon_color = Color(0.662243, 0.671743, 0.686743, 1)
+sky_top_color = Color(1, 1, 1, 1)
+sky_horizon_color = Color(2.1665, 2.1665, 2.1665, 1)
+ground_bottom_color = Color(1, 1, 1, 1)
+ground_horizon_color = Color(2.1665, 2.1665, 2.1665, 1)
 
 [sub_resource type="Sky" id="Sky_x0vwd"]
 sky_material = SubResource("ProceduralSkyMaterial_36njv")
@@ -26,16 +28,16 @@ texture = SubResource("ViewportTexture_36njv")
 [node name="sub_viewport" type="SubViewport" parent="."]
 own_world_3d = true
 handle_input_locally = false
-size = Vector2i(1152, 648)
+size = Vector2i(1028, 1028)
 render_target_update_mode = 4
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="sub_viewport"]
 environment = SubResource("Environment_mi8yu")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="sub_viewport"]
-transform = Transform3D(-0.866023, -0.433016, 0.250001, 0, 0.499998, 0.866027, -0.500003, 0.749999, -0.43301, 0, 0, 0)
+transform = Transform3D(0.936434, -0.303841, 0.175422, 0, 0.5, 0.866025, -0.350845, -0.810975, 0.468217, 0, 0, 0)
 shadow_enabled = true
 
 [node name="camera_3d" type="Camera3D" parent="sub_viewport"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.437064)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.105904, 0.437064)
 current = true
