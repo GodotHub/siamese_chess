@@ -8,7 +8,6 @@ class_name Actor
 
 func _ready() -> void:
 	super._ready()
-	visible = false
 
 func introduce(_pos:Vector3) -> void:	# 登场动画
 	visible = true

@@ -301,6 +301,7 @@ func receive_event(event:Dictionary) -> void:
 			graft_piece_instance(event["from"], event["to"])
 
 func add_piece_instance(instance:Actor) -> void:
+	instance.visible = false
 	$pieces.add_child(instance)
 	backup_piece.push_back(instance)
 

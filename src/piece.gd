@@ -3,7 +3,7 @@ extends Actor
 var position_name:String = ""
 var sfx:AudioStreamPlayer3D = null
 var group:int = 0
-var show_on_backup:bool = false
+var show_on_backup:bool = true
 var backup_position:Vector3 = Vector3(0, 0, 0)
 
 func _ready() -> void:
