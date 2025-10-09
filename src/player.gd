@@ -32,6 +32,8 @@ func _unhandled_input(event:InputEvent) -> void:
 		if event.relative < 1 && interact_stack.size() >= 2:
 			pop_stack()
 		get_viewport().set_input_as_handled()
+	if event is InputEventMultiScreenDrag:
+		$archive.open()
 
 func add_stack(interact:Interact) -> void:
 	interact_stack[-1].leave()

@@ -24,7 +24,6 @@ func _ready() -> void:
 	$cheshire.play_animation("thinking")
 	$interact/area_pastor.connect("clicked", pastor_select_dialog)
 	$interact/area_outside.connect("clicked", go_outside)
-	$interact/area_archive.connect("clicked", $archive.open)
 	$interact/area_menu.connect("clicked", check_menu)
 	$interact/area_friend_chessboard.connect("clicked", dialog_friend_start_game)
 	

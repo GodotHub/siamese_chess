@@ -1,4 +1,4 @@
-[gd_scene load_steps=96 format=3 uid="uid://bmyf2h17xaxlj"]
+[gd_scene load_steps=95 format=3 uid="uid://bmyf2h17xaxlj"]
 
 [ext_resource type="PackedScene" uid="uid://gdof8yy8yrjv" path="res://assets/model/environment.glb" id="1_b3374"]
 [ext_resource type="PackedScene" uid="uid://d1s6qj7aofldk" path="res://scene/chessboard.tscn" id="2_3p4nk"]
@@ -42,7 +42,6 @@
 [ext_resource type="PackedScene" uid="uid://q25etby31xos" path="res://scene/safe_lock.tscn" id="37_ps37q"]
 [ext_resource type="PackedScene" uid="uid://3uniw2jsey4r" path="res://assets/model/piece_queen.glb" id="39_xqn0k"]
 [ext_resource type="PackedScene" uid="uid://wcdgbubct3po" path="res://scene/coffee_machine.tscn" id="42_r58fw"]
-[ext_resource type="PackedScene" uid="uid://dcxfcmifrtqxa" path="res://scene/archive.tscn" id="43_oo81l"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_neu4h"]
 render_priority = 0
@@ -1287,47 +1286,44 @@ autoplay = true
 
 [node name="dialog" parent="." index="45" instance=ExtResource("30_b1ytd")]
 
-[node name="archive" parent="." index="46" instance=ExtResource("43_oo81l")]
-visible = false
-
-[node name="rose" parent="." index="47" instance=ExtResource("28_x2qnl")]
+[node name="rose" parent="." index="46" instance=ExtResource("28_x2qnl")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.43895, 0.842041, -0.718518)
 
 [node name="flower_bottle" parent="rose" index="0"]
 surface_material_override/0 = SubResource("ShaderMaterial_m4o3h")
 
-[node name="menu" parent="." index="48" instance=ExtResource("33_gw0lo")]
+[node name="menu" parent="." index="47" instance=ExtResource("33_gw0lo")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.31515, 0.847289, -0.72478)
 
-[node name="phonograph" parent="." index="49" instance=ExtResource("35_eosfh")]
+[node name="phonograph" parent="." index="48" instance=ExtResource("35_eosfh")]
 transform = Transform3D(1.31134e-07, 0, 1, 0, 1, 0, -1, 0, 1.31134e-07, 2.57562, 1.13928, 6.08806)
 audio_stream = ExtResource("36_gw0lo")
 
-[node name="safe_lock" parent="." index="50" instance=ExtResource("37_ps37q")]
+[node name="safe_lock" parent="." index="49" instance=ExtResource("37_ps37q")]
 transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 4.06172, 0.285388, 2.59597)
 
-[node name="telephone" parent="." index="51" instance=ExtResource("31_vndhl")]
+[node name="telephone" parent="." index="50" instance=ExtResource("31_vndhl")]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 2.64696, 1.27398, 4.92819)
 
-[node name="piece_queen" parent="." index="52" instance=ExtResource("39_xqn0k")]
+[node name="piece_queen" parent="." index="51" instance=ExtResource("39_xqn0k")]
 transform = Transform3D(0.505, 0, 0, 0, 0.505, 0, 0, 0, 0.505, 3.99457, 0.247538, 2.55837)
 
-[node name="radermachera_sinica" parent="." index="53" instance=ExtResource("7_ps37q")]
+[node name="radermachera_sinica" parent="." index="52" instance=ExtResource("7_ps37q")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.4796, 0, 7.96234)
 
-[node name="radermachera_sinica_2" parent="." index="54" instance=ExtResource("7_ps37q")]
+[node name="radermachera_sinica_2" parent="." index="53" instance=ExtResource("7_ps37q")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.07932, 0, 7.96234)
 
-[node name="radermachera_sinica_3" parent="." index="55" instance=ExtResource("7_ps37q")]
+[node name="radermachera_sinica_3" parent="." index="54" instance=ExtResource("7_ps37q")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.4796, 0, 1.66837)
 
-[node name="coffee_machine" parent="." index="56" instance=ExtResource("42_r58fw")]
+[node name="coffee_machine" parent="." index="55" instance=ExtResource("42_r58fw")]
 transform = Transform3D(1.31134e-07, 0, 1, 0, 1, 0, -1, 0, 1.31134e-07, 2.59183, 1.28231, 3.95914)
 
-[node name="chessboard_friend" parent="." index="57" instance=ExtResource("2_3p4nk")]
+[node name="chessboard_friend" parent="." index="56" instance=ExtResource("2_3p4nk")]
 transform = Transform3D(5.5732e-08, 0, 0.425, 0, 0.425, 0, -0.425, 0, 5.5732e-08, -5.29076, 0.862027, 0.253498)
 
-[node name="clock_friend" parent="." index="58" instance=ExtResource("3_po4na")]
+[node name="clock_friend" parent="." index="57" instance=ExtResource("3_po4na")]
 transform = Transform3D(1, 0, -1.06581e-14, 0, 1, 0, 1.06581e-14, 0, 1, -5.26464, 0.849788, -0.0957035)
 
 [editable path="cup_pastor"]

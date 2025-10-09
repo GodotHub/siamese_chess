@@ -1,8 +1,9 @@
-[gd_scene load_steps=5 format=3 uid="uid://b3ml34bssywkr"]
+[gd_scene load_steps=6 format=3 uid="uid://b3ml34bssywkr"]
 
 [ext_resource type="Script" uid="uid://b7tmywppqk1qn" path="res://src/player.gd" id="1_tpg0u"]
 [ext_resource type="Script" uid="uid://wa2q0lswte4p" path="res://addons/gdtim/InputManager.gd" id="2_5do82"]
 [ext_resource type="AudioStream" uid="uid://bjkdx77erva8r" path="res://assets/audio/719560__dartekz_gamez__wind-whirl-small-air-blow.mp3" id="3_uowm0"]
+[ext_resource type="PackedScene" uid="uid://dcxfcmifrtqxa" path="res://scene/archive.tscn" id="4_ct4mp"]
 
 [sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_uowm0"]
 random_pitch = 1.23
@@ -34,3 +35,7 @@ volume_db = -2.261
 pitch_scale = 0.74
 max_polyphony = 10
 bus = &"Wind"
+
+[node name="archive" parent="." instance=ExtResource("4_ct4mp")]
+layer = 2
+visible = false
