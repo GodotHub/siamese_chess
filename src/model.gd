@@ -15,7 +15,7 @@ func stringify() -> String:
 
 func set_model(_model_path:String) -> void:
 	if is_instance_valid(model_instance):
-		model_instance.queue_fee()
+		model_instance.queue_free()
 	model_path = _model_path
 	model_instance = load(model_path).instantiate()
 	$sub_viewport.add_child(model_instance)
