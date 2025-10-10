@@ -1,9 +1,10 @@
-[gd_scene load_steps=8 format=3 uid="uid://dnut8pn3hxg8"]
+[gd_scene load_steps=9 format=3 uid="uid://dnut8pn3hxg8"]
 
 [ext_resource type="Script" uid="uid://cjddqgsgfo4hw" path="res://src/outside.gd" id="1_arvm7"]
 [ext_resource type="PackedScene" uid="uid://dwvyc2qlcdag0" path="res://scene/chessboard_blank.tscn" id="1_m2ffg"]
 [ext_resource type="Script" uid="uid://dg85frcnjlauy" path="res://src/interact.gd" id="4_gs8dr"]
 [ext_resource type="PackedScene" uid="uid://b3ml34bssywkr" path="res://scene/player.tscn" id="4_w3jsn"]
+[ext_resource type="PackedScene" uid="uid://kqoc0aycgs35" path="res://scene/dialog.tscn" id="5_w3jsn"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_gs8dr"]
 sky_top_color = Color(1, 1, 1, 1)
@@ -45,6 +46,8 @@ inspectable_item = [NodePath("../chessboard_blank")]
 metadata/_custom_type_script = "uid://dg85frcnjlauy"
 
 [node name="camera_3d" type="Camera3D" parent="."]
-transform = Transform3D(-0.980843, 0.160659, -0.110162, -7.21009e-08, 0.565514, 0.824739, 0.194799, 0.808939, -0.55468, -2.15842, 7.09792, -8.65473)
+transform = Transform3D(-0.952667, 0.186229, -0.240301, -5.35519e-08, 0.790422, 0.612562, 0.304016, 0.583568, -0.753009, -3.09205, 5.94835, -11.6881)
 
 [node name="player" parent="." instance=ExtResource("4_w3jsn")]
+
+[node name="dialog" parent="." instance=ExtResource("5_w3jsn")]

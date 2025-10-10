@@ -81,6 +81,8 @@ transparency = 1
 blend_mode = 3
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_3p4nk"]
+sky_top_color = Color(1, 1, 1, 1)
+sky_horizon_color = Color(1, 1, 1, 1)
 
 [sub_resource type="Sky" id="Sky_1vcsq"]
 sky_material = SubResource("ProceduralSkyMaterial_3p4nk")
@@ -89,11 +91,16 @@ sky_material = SubResource("ProceduralSkyMaterial_3p4nk")
 background_mode = 2
 sky = SubResource("Sky_1vcsq")
 tonemap_mode = 2
+ssr_enabled = true
+ssao_enabled = true
+ssil_enabled = true
 fog_enabled = true
 fog_mode = 1
 fog_light_color = Color(1, 1, 1, 1)
 fog_density = 1.0
 fog_depth_end = 54.4
+volumetric_fog_enabled = true
+volumetric_fog_emission = Color(1, 1, 1, 1)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_hgmdq"]
 size = Vector3(2.00383, 1.59277, 1.45321)
