@@ -16,9 +16,24 @@ func _ready() -> void:
 	$player.set_initial_interact($interact)
 	play()
 
+func generate_king_move(_state:State) -> PackedInt32Array:
+	var output:PackedInt32Array = []
+	var from_bit:int = _state.get_bit("k".unicode_at(0))
+	var from:int = 0
+	while from_bit != 1:
+		from_bit >>= 1
+		from += 1
+	from = from % 8 + from / 8 * 16
+	for i:int in 64:
+		var to:int = i % 8 + i / 8 * 16
+		if from == to:
+			continue
+		output.push_back(Chess.create(from, to, 0))
+	return output
+
 func play() -> void:
 	while true:
-		$chessboard_blank.set_valid_move(RuleStandard.generate_valid_move(state, 1))
+		$chessboard_blank.set_valid_move(generate_king_move(state))
 		$chessboard_blank.set_valid_premove([])
 		await $chessboard_blank.move_played
 		RuleStandard.apply_move(state, $chessboard_blank.confirm_move)
