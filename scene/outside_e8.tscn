@@ -5,29 +5,36 @@
 [ext_resource type="Script" uid="uid://dg85frcnjlauy" path="res://src/interact.gd" id="3_jvdjh"]
 [ext_resource type="PackedScene" uid="uid://b3ml34bssywkr" path="res://scene/player.tscn" id="4_i0aj0"]
 
-[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_arvm7"]
-sky_horizon_color = Color(0.662243, 0.671743, 0.686743, 1)
-ground_horizon_color = Color(0.662243, 0.671743, 0.686743, 1)
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_i0aj0"]
+sky_top_color = Color(1, 1, 1, 1)
+sky_horizon_color = Color(2.1665, 2.1665, 2.1665, 1)
+ground_bottom_color = Color(1, 1, 1, 1)
+ground_horizon_color = Color(2.1665, 2.1665, 2.1665, 1)
 
-[sub_resource type="Sky" id="Sky_gs8dr"]
-sky_material = SubResource("ProceduralSkyMaterial_arvm7")
+[sub_resource type="Sky" id="Sky_i0aj0"]
+sky_material = SubResource("ProceduralSkyMaterial_i0aj0")
 
-[sub_resource type="Environment" id="Environment_w3jsn"]
+[sub_resource type="Environment" id="Environment_hity3"]
 background_mode = 2
-sky = SubResource("Sky_gs8dr")
-tonemap_mode = 2
+sky = SubResource("Sky_i0aj0")
+ssr_enabled = true
+ssr_max_steps = 128
 fog_enabled = true
 fog_light_color = Color(1, 1, 1, 1)
+volumetric_fog_albedo = Color(0.88, 0.79816, 0.6072, 1)
+volumetric_fog_emission = Color(1, 1, 1, 1)
+adjustment_enabled = true
 
 [node name="outside" type="Node3D"]
 script = ExtResource("1_i0aj0")
 
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_hity3")
+
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(-0.866023, -0.433016, 0.250001, 0, 0.499998, 0.866027, -0.500003, 0.749999, -0.43301, 0, 0, 0)
+light_color = Color(0.419813, 0.419813, 0.419813, 1)
 shadow_enabled = true
-
-[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
-environment = SubResource("Environment_w3jsn")
 
 [node name="chessboard_blank" parent="." instance=ExtResource("2_gs86d")]
 
