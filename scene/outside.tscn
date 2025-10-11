@@ -38,6 +38,8 @@ light_color = Color(0.419813, 0.419813, 0.419813, 1)
 shadow_enabled = true
 
 [node name="chessboard_blank" parent="." instance=ExtResource("1_m2ffg")]
+COLOR_LAST_MOVE = Color(0.56, 0.2296, 0.2296, 1)
+COLOR_MOVE = Color(0.56, 0.2296, 0.2296, 1)
 
 [node name="interact" type="Area3D" parent="." node_paths=PackedStringArray("camera", "inspectable_item")]
 script = ExtResource("4_gs8dr")
