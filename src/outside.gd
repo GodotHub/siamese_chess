@@ -8,6 +8,7 @@ func _ready() -> void:
 	ai = PastorAI.new()
 	ai.set_max_depth(100)
 	ai.set_think_time(3)
+	
 	var fallback_piece:Actor = load("res://scene/piece_shrub.tscn").instantiate().set_show_on_backup(false).set_larger_scale()
 	state = RuleStandard.create_random_state(10)
 	$chessboard_blank.fallback_piece = fallback_piece
@@ -78,3 +79,22 @@ func play() -> void:
 		ai.stop_search()
 		if ai.is_searching():
 			await ai.search_finished
+	match RuleStandard.get_end_type(state):
+		"checkmate_black":
+			for by:int in 128:
+				if state.has_piece(by) && Chess.group(state.get_piece(by)) == 0:
+					state.capture_piece(by)
+					$chessboard_blank.chessboard_piece[by].captured()
+			steady.call_deferred()
+		"checkmate_white":
+			for by:int in 128:
+				if state.has_piece(by) && Chess.group(state.get_piece(by)) == 1:
+					state.capture_piece(by)
+					$chessboard_blank.chessboard_piece[by].captured()
+			lose.call_deferred()
+
+func steady() -> void:
+	print("YOU WIN")
+
+func lose() -> void:
+	print("YOU LOSE")
