@@ -1,6 +1,6 @@
 extends Actor
 
-func captured(_capturing:Actor) -> void:
+func captured(_capturing:Actor = null) -> void:
 	$root.visible = false
 	$leaves.visible = false
 	$leaves_001.visible = false
