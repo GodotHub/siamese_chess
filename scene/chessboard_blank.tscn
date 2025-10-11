@@ -6,6 +6,10 @@
 
 [node name="chessboard_blank" instance=ExtResource("1_x56hs")]
 script = ExtResource("2_p767r")
+POINTER_LAST_MOVE = Color(0.44, 0.2288, 0.39424, 1)
+POINTER_PREMOVE = Color(0.363117, 0.165242, 0.166017, 1)
+POINTER_MOVE = Color(0.4, 0.28, 0, 1)
+POINTER_POINTER = Color(0.303233, 0.303233, 0.303233, 1)
 
 [node name="CollisionShape3D" parent="h3" index="0"]
 visible = false
