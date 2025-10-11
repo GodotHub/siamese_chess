@@ -2,85 +2,34 @@ extends Node3D
 
 @onready var resolution:float = 512
 
-var select_position:Array[Node2D] = []
-var premove_position:Array[Node2D] = []
-var move_position:Array[Node2D] = []
-var pointer_position:Node2D = null
+var pointer:Dictionary[Color, Array] = {}
 
-class ChessboardSelectPosition extends Node2D:
+class ChessboardPointer extends Node2D:
 	var resolution:float = 512
+	var color:Color = Color(0, 0, 0, 1)
 	func _draw() -> void:
-		draw_rect(Rect2(-resolution / 16, -resolution / 16, resolution / 8, resolution / 8), Color(0.1, 0.6, 0.1, 0.4))
-		draw_rect(Rect2(-resolution / 16, -resolution / 16, resolution / 8, resolution / 8), Color(0.3, 0.6, 0.3), false, 10)
-
-class ChessboardPointerPosition extends Node2D:
-	var resolution:float = 512
-	func _draw() -> void:
-		draw_rect(Rect2(-resolution / 16, -resolution / 16, resolution / 8, resolution / 8), Color(0.1, 0.6, 0.1, 0.4))
-		draw_rect(Rect2(-resolution / 16, -resolution / 16, resolution / 8, resolution / 8), Color(0.3, 0.6, 0.3), false, 10)
-
-class ChessboardMovePosition extends Node2D:
-	var resolution:float = 512
-	func _draw() -> void:
-		draw_rect(Rect2(-resolution / 16, -resolution / 16, resolution / 8, resolution / 8), Color(0.69411, 0.933333, 0.82745, 0.4))
-		draw_rect(Rect2(-resolution / 16, -resolution / 16, resolution / 8, resolution / 8), Color(0.69411, 0.933333, 0.82745), false, 5)
-
-class ChessboardPremovePosition extends Node2D:
-	var resolution:float = 512
-	func _draw() -> void:
-		draw_rect(Rect2(-resolution / 16, -resolution / 16, resolution / 8, resolution / 8), Color(0.6, 0.1, 0.1, 0.4))
-		draw_rect(Rect2(-resolution / 16, -resolution / 16, resolution / 8, resolution / 8), Color(0.6, 0.3, 0.3), false, 10)
+		draw_rect(Rect2(-resolution / 16, -resolution / 16, resolution / 8, resolution / 8), color.lightened(0.1))
+		draw_rect(Rect2(-resolution / 16, -resolution / 16, resolution / 8, resolution / 8), color, false, 10)
 
 func _ready() -> void:
 	$sub_viewport.size = Vector2(resolution, resolution)
 
-func draw_pointer_position(drawing_position:Vector2) -> void:
-	if !is_instance_valid(pointer_position):
-		pointer_position = ChessboardPointerPosition.new()
-		pointer_position.resolution = resolution
-	if !pointer_position.is_inside_tree():
-		$sub_viewport.add_child(pointer_position)
-	pointer_position.position = drawing_position
-
-func clear_pointer_position() -> void:
-	if is_instance_valid(pointer_position) && pointer_position.is_inside_tree():
-		$sub_viewport.remove_child(pointer_position)
-
-func draw_select_position(drawing_position:Vector2) -> void:
-	var new_point:ChessboardSelectPosition = ChessboardSelectPosition.new()
+func draw_pointer(color:Color, drawing_position:Vector2) -> void:
+	if !pointer.has(color):
+		pointer[color] = []
+	var new_point:ChessboardPointer = ChessboardPointer.new()
 	new_point.position = drawing_position
+	new_point.color = color
 	new_point.resolution = resolution
 	$sub_viewport.add_child(new_point)
-	select_position.push_back(new_point)
+	pointer[color].push_back(new_point)
 
-func clear_select_position() -> void:
-	for iter:Node2D in select_position:
+func clear_pointer(color:Color) -> void:
+	if !pointer.has(color):
+		return
+	for iter:Node2D in pointer[color]:
 		iter.queue_free()
-	select_position.clear()
-
-func draw_premove_position(drawing_position:Vector2) -> void:
-	var new_point:ChessboardPremovePosition = ChessboardPremovePosition.new()
-	new_point.position = drawing_position
-	new_point.resolution = resolution
-	$sub_viewport.add_child(new_point)
-	premove_position.push_back(new_point)
-
-func clear_premove_position() -> void:
-	for iter:Node2D in premove_position:
-		iter.queue_free()
-	premove_position.clear()
-
-func draw_move_position(drawing_position:Vector2) -> void:
-	var new_point:ChessboardMovePosition = ChessboardMovePosition.new()
-	new_point.position = drawing_position
-	new_point.resolution = resolution
-	$sub_viewport.add_child(new_point)
-	move_position.push_back(new_point)
-
-func clear_move_position() -> void:
-	for iter:Node2D in move_position:
-		iter.queue_free()
-	move_position.clear()
+	pointer.erase(color)
 
 func convert_name_to_position(_name:String) -> Vector2:
 	var ascii:PackedByteArray = _name.to_ascii_buffer()
