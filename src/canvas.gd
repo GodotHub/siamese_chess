@@ -2,7 +2,7 @@ extends Node3D
 
 @onready var resolution:float = 512
 
-var pointer:Dictionary[Color, Array] = {}
+var pointer:Dictionary[String, Array] = {}
 
 class ChessboardPointer extends Node2D:
 	var resolution:float = 512
@@ -14,22 +14,22 @@ class ChessboardPointer extends Node2D:
 func _ready() -> void:
 	$sub_viewport.size = Vector2(resolution, resolution)
 
-func draw_pointer(color:Color, drawing_position:Vector2) -> void:
-	if !pointer.has(color):
-		pointer[color] = []
+func draw_pointer(type:String, color:Color, drawing_position:Vector2) -> void:
+	if !pointer.has(type):
+		pointer[type] = []
 	var new_point:ChessboardPointer = ChessboardPointer.new()
 	new_point.position = drawing_position
 	new_point.color = color
 	new_point.resolution = resolution
 	$sub_viewport.add_child(new_point)
-	pointer[color].push_back(new_point)
+	pointer[type].push_back(new_point)
 
-func clear_pointer(color:Color) -> void:
-	if !pointer.has(color):
+func clear_pointer(type:String) -> void:
+	if !pointer.has(type):
 		return
-	for iter:Node2D in pointer[color]:
+	for iter:Node2D in pointer[type]:
 		iter.queue_free()
-	pointer.erase(color)
+	pointer.erase(type)
 
 func convert_name_to_position(_name:String) -> Vector2:
 	var ascii:PackedByteArray = _name.to_ascii_buffer()

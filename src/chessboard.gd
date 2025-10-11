@@ -4,10 +4,10 @@ class_name Chessboard
 signal move_played()
 signal ready_to_move(by:int)
 
-@export var POINTER_LAST_MOVE:Color = Color(0.3, 0.3, 0.6, 1)
-@export var POINTER_PREMOVE:Color = Color(0.6, 0.3, 0.3, 1)
-@export var POINTER_MOVE:Color = Color(0, 0, 0.6, 1)
-@export var POINTER_POINTER:Color = Color(0, 0.6, 0, 1)
+@export var COLOR_LAST_MOVE:Color = Color(0.3, 0.3, 0.3, 1)
+@export var COLOR_PREMOVE:Color = Color(0.3, 0.3, 0.3, 1)
+@export var COLOR_MOVE:Color = Color(0.3, 0.3, 0.3, 1)
+@export var COLOR_POINTER:Color = Color(0.3, 0.3, 0.3, 1)
 
 @onready var fallback_piece:Actor = load("res://scene/piece_shrub.tscn").instantiate()
 var backup_piece:Array = []
@@ -160,8 +160,8 @@ func input(_from:Node3D, _to:Area3D, _event:InputEvent, _event_position:Vector3,
 		finger_on_position(position_name)
 
 func set_state(_state:State) -> void:
-	$canvas.clear_pointer(POINTER_LAST_MOVE)
-	$canvas.clear_pointer(POINTER_MOVE)
+	$canvas.clear_pointer("last_move")
+	$canvas.clear_pointer("move")
 	state = _state.duplicate()
 	var keys:Array = chessboard_piece.keys()
 	for key:int in keys:
@@ -181,8 +181,8 @@ func convert_name_to_position(_position_name:String) -> Vector3:
 	return get_node(_position_name).position
 
 func tap_position(position_name:String) -> void:
-	$canvas.clear_pointer(POINTER_MOVE)
-	$canvas.clear_pointer(POINTER_PREMOVE)
+	$canvas.clear_pointer("move")
+	$canvas.clear_pointer("premove")
 	premove = -1
 	var by:int = Chess.to_position_int(position_name)
 	if !is_instance_valid(state):
@@ -197,21 +197,21 @@ func tap_position(position_name:String) -> void:
 	if valid_move.has(by):
 		ready_to_move.emit(by)
 		for iter:int in valid_move[by]:
-			$canvas.draw_pointer(POINTER_MOVE, $canvas.convert_name_to_position(Chess.to_position_name(Chess.to(iter))))
+			$canvas.draw_pointer("move", COLOR_MOVE, $canvas.convert_name_to_position(Chess.to_position_name(Chess.to(iter))))
 	if valid_premove.has(by):
 		ready_to_move.emit(by)
 		for iter:int in valid_premove[by]:
-			$canvas.draw_pointer(POINTER_PREMOVE, $canvas.convert_name_to_position(Chess.to_position_name(Chess.to(iter))))
+			$canvas.draw_pointer("premove", COLOR_PREMOVE, $canvas.convert_name_to_position(Chess.to_position_name(Chess.to(iter))))
 	selected = by
 
 func finger_on_position(position_name:String) -> void:
-	$canvas.clear_pointer(POINTER_POINTER)
+	$canvas.clear_pointer("pointer")
 	if !position_name:
 		return
-	$canvas.draw_pointer(POINTER_POINTER, $canvas.convert_name_to_position(position_name))
+	$canvas.draw_pointer("pointer", COLOR_POINTER, $canvas.convert_name_to_position(position_name))
 
 func finger_up() -> void:
-	$canvas.clear_pointer(POINTER_POINTER)
+	$canvas.clear_pointer("pointer")
 
 func check_premove(from:int, to:int) -> void:
 	if from & 0x88 || to & 0x88 || !valid_premove.has(from):
@@ -231,10 +231,10 @@ func check_premove(from:int, to:int) -> void:
 		premove = move_list[decision_instance.selected_index]
 	else:
 		premove = move_list[0]
-	$canvas.clear_pointer(POINTER_MOVE)
-	$canvas.clear_pointer(POINTER_PREMOVE)
-	$canvas.draw_pointer(POINTER_PREMOVE, $canvas.convert_name_to_position(Chess.to_position_name(from)))
-	$canvas.draw_pointer(POINTER_PREMOVE, $canvas.convert_name_to_position(Chess.to_position_name(to)))
+	$canvas.clear_pointer("move")
+	$canvas.clear_pointer("premove")
+	$canvas.draw_pointer("premove", COLOR_PREMOVE, $canvas.convert_name_to_position(Chess.to_position_name(from)))
+	$canvas.draw_pointer("premove", COLOR_PREMOVE, $canvas.convert_name_to_position(Chess.to_position_name(to)))
 
 func check_move(from:int, to:int) -> void:
 	if from & 0x88 || to & 0x88 || !valid_move.has(from):
@@ -254,18 +254,18 @@ func check_move(from:int, to:int) -> void:
 		execute_move(move_list[decision_instance.selected_index])
 	else:
 		execute_move(move_list[0])
-	$canvas.clear_pointer(POINTER_MOVE)
+	$canvas.clear_pointer("move")
 
 func execute_move(move:int) -> void:
 	confirm_move = move
 	var event:Dictionary = RuleStandard.apply_move_custom(state, move)
 	receive_event(event)
 	RuleStandard.apply_move(state, move)
-	$canvas.clear_pointer(POINTER_MOVE)
-	$canvas.clear_pointer(POINTER_PREMOVE)
-	$canvas.clear_pointer(POINTER_LAST_MOVE)
-	$canvas.draw_pointer(POINTER_LAST_MOVE, $canvas.convert_name_to_position(Chess.to_position_name(Chess.from(move))))
-	$canvas.draw_pointer(POINTER_LAST_MOVE, $canvas.convert_name_to_position(Chess.to_position_name(Chess.to(move))))
+	$canvas.clear_pointer("move")
+	$canvas.clear_pointer("premove")
+	$canvas.clear_pointer("last_move")
+	$canvas.draw_pointer("last_move", COLOR_LAST_MOVE, $canvas.convert_name_to_position(Chess.to_position_name(Chess.from(move))))
+	$canvas.draw_pointer("last_move", COLOR_LAST_MOVE, $canvas.convert_name_to_position(Chess.to_position_name(Chess.to(move))))
 	#king_instance[0].set_warning(RuleStandard.is_check(state, 1))
 	#king_instance[1].set_warning(RuleStandard.is_check(state, 0))
 	selected = -1
@@ -381,7 +381,14 @@ func move_piece_instance_to_backup(by:int) -> void:
 func set_enabled(enabled:bool) -> void:
 	super.set_enabled(enabled)
 	if !enabled:
-		$canvas.clear_pointer(POINTER_MOVE)
-		$canvas.clear_pointer(POINTER_PREMOVE)
-		$canvas.clear_pointer(POINTER_POINTER)
+		$canvas.clear_pointer("move")
+		$canvas.clear_pointer("premove")
+		$canvas.clear_pointer("pointer")
 		selected = -1
+
+func move_piece_instance_to_other_chessboard(from:int, to:int, other:Chessboard) -> void:
+	var instance_from:Actor = chessboard_piece[from]
+	chessboard_piece.erase(from)
+	other.add_piece_instance(instance_from)
+	other.state.add_piece(to, state.get_piece(from))
+	state.capture_piece(from)
