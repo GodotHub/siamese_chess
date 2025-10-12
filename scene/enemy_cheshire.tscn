@@ -1,29 +1,18 @@
-[gd_scene load_steps=42 format=3 uid="uid://b3f1o547exhk0"]
+[gd_scene load_steps=34 format=3 uid="uid://b3f1o547exhk0"]
 
 [ext_resource type="PackedScene" uid="uid://s1v4ec45m2i5" path="res://assets/model/cheshire.glb" id="1_gqvfc"]
 [ext_resource type="Script" uid="uid://ckqop5jjivbg0" path="res://src/cheshire.gd" id="2_i4qp0"]
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_gqvfc"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_a2gjj"]
+cull_mode = 1
+albedo_color = Color(0, 0, 0, 1)
+grow = true
+grow_amount = 0.02
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_i4qp0"]
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_k1beu"]
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_xj0a2"]
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_bj61b"]
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_15geq"]
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_a4sxh"]
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_g1xjb"]
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_6olrt"]
+next_pass = SubResource("StandardMaterial3D_a2gjj")
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_q7635"]
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ivdye"]
 
 [sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_3kauh"]
 animation = &"battle_attack"
@@ -163,29 +152,29 @@ script = ExtResource("2_i4qp0")
 piece_type = [75]
 
 [node name="body" parent="skeleton/Skeleton3D" index="0"]
-surface_material_override/0 = SubResource("StandardMaterial3D_gqvfc")
+surface_material_override/0 = SubResource("StandardMaterial3D_i4qp0")
 surface_material_override/1 = SubResource("StandardMaterial3D_i4qp0")
-surface_material_override/2 = SubResource("StandardMaterial3D_k1beu")
-surface_material_override/3 = SubResource("StandardMaterial3D_xj0a2")
+surface_material_override/2 = SubResource("StandardMaterial3D_i4qp0")
+surface_material_override/3 = SubResource("StandardMaterial3D_i4qp0")
 
 [node name="clothes" parent="skeleton/Skeleton3D" index="1"]
-surface_material_override/0 = SubResource("StandardMaterial3D_bj61b")
+surface_material_override/0 = SubResource("StandardMaterial3D_i4qp0")
 
 [node name="coat" parent="skeleton/Skeleton3D" index="2"]
-surface_material_override/0 = SubResource("StandardMaterial3D_15geq")
+surface_material_override/0 = SubResource("StandardMaterial3D_i4qp0")
 
 [node name="pants" parent="skeleton/Skeleton3D" index="3"]
-surface_material_override/0 = SubResource("StandardMaterial3D_a4sxh")
+surface_material_override/0 = SubResource("StandardMaterial3D_i4qp0")
 
 [node name="shoes" parent="skeleton/Skeleton3D" index="4"]
-surface_material_override/0 = SubResource("StandardMaterial3D_g1xjb")
+surface_material_override/0 = SubResource("StandardMaterial3D_i4qp0")
 
 [node name="sword" parent="skeleton/Skeleton3D" index="5"]
-surface_material_override/0 = SubResource("StandardMaterial3D_6olrt")
+surface_material_override/0 = SubResource("StandardMaterial3D_i4qp0")
 surface_material_override/1 = SubResource("StandardMaterial3D_q7635")
 
 [node name="sword_cover" parent="skeleton/Skeleton3D" index="6"]
-surface_material_override/0 = SubResource("StandardMaterial3D_ivdye")
+surface_material_override/0 = SubResource("StandardMaterial3D_i4qp0")
 
 [node name="animation_tree" type="AnimationTree" parent="." index="2"]
 tree_root = SubResource("AnimationNodeStateMachine_pjgvl")
