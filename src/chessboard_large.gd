@@ -17,6 +17,8 @@ func tap_position(position_name:String) -> void:
 		iter.other_tap_position(self, position_name)
 
 func other_tap_position(chessboard:ChessboardLarge, position_name:String) -> void:
+	$canvas.clear_pointer("move")
+	$canvas.clear_pointer("premove")
 	var to:int = Chess.to_position_int(position_name)
 	if selected != -1 && !chessboard.state.has_piece(to):
 		move_piece_instance_to_other_chessboard(selected, to, chessboard)
