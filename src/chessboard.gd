@@ -153,6 +153,7 @@ func input(_from:Node3D, _to:Area3D, _event:InputEvent, _event_position:Vector3,
 		elif !_event.pressed && mouse_moved && _event.button_index == MOUSE_BUTTON_LEFT:
 			tap_position(_to.get_name())
 			finger_up()
+			mouse_start_position_name = ""
 	if _event is InputEventMouseMotion:
 		var position_name:String = _to.get_name()
 		if mouse_start_position_name != position_name:
@@ -385,10 +386,3 @@ func set_enabled(enabled:bool) -> void:
 		$canvas.clear_pointer("premove")
 		$canvas.clear_pointer("pointer")
 		selected = -1
-
-func move_piece_instance_to_other_chessboard(from:int, to:int, other:Chessboard) -> void:
-	var instance_from:Actor = chessboard_piece[from]
-	chessboard_piece.erase(from)
-	other.add_piece_instance(instance_from)
-	other.state.add_piece(to, state.get_piece(from))
-	state.capture_piece(from)

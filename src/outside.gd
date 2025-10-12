@@ -8,7 +8,10 @@ func _ready() -> void:
 	ai = PastorAI.new()
 	ai.set_max_depth(100)
 	ai.set_think_time(3)
-	
+	var next_chessboard:ChessboardLarge = $chessboard_blank.create_next_chessboard()
+	add_child(next_chessboard)
+	next_chessboard.position += Vector3(0, 0, -16)
+	$interact.inspectable_item.push_back(next_chessboard)
 	var fallback_piece:Actor = load("res://scene/piece_shrub.tscn").instantiate().set_show_on_backup(false).set_larger_scale()
 	state = RuleStandard.create_random_state(10)
 	$chessboard_blank.fallback_piece = fallback_piece

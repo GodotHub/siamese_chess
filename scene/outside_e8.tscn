@@ -1,7 +1,7 @@
 [gd_scene load_steps=8 format=3 uid="uid://tyl1cok6fyde"]
 
 [ext_resource type="Script" uid="uid://cfg37y81wy25o" path="res://src/outside_e8.gd" id="1_i0aj0"]
-[ext_resource type="PackedScene" uid="uid://dwvyc2qlcdag0" path="res://scene/chessboard_blank.tscn" id="2_gs86d"]
+[ext_resource type="PackedScene" uid="uid://dwvyc2qlcdag0" path="res://scene/chessboard_large.tscn" id="2_gs86d"]
 [ext_resource type="Script" uid="uid://dg85frcnjlauy" path="res://src/interact.gd" id="3_jvdjh"]
 [ext_resource type="PackedScene" uid="uid://b3ml34bssywkr" path="res://scene/player.tscn" id="4_i0aj0"]
 

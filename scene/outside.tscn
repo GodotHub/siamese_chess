@@ -1,7 +1,7 @@
 [gd_scene load_steps=9 format=3 uid="uid://dnut8pn3hxg8"]
 
 [ext_resource type="Script" uid="uid://cjddqgsgfo4hw" path="res://src/outside.gd" id="1_arvm7"]
-[ext_resource type="PackedScene" uid="uid://dwvyc2qlcdag0" path="res://scene/chessboard_blank.tscn" id="1_m2ffg"]
+[ext_resource type="PackedScene" uid="uid://dwvyc2qlcdag0" path="res://scene/chessboard_large.tscn" id="1_m2ffg"]
 [ext_resource type="Script" uid="uid://dg85frcnjlauy" path="res://src/interact.gd" id="4_gs8dr"]
 [ext_resource type="PackedScene" uid="uid://b3ml34bssywkr" path="res://scene/player.tscn" id="4_w3jsn"]
 [ext_resource type="PackedScene" uid="uid://kqoc0aycgs35" path="res://scene/dialog.tscn" id="5_w3jsn"]
@@ -19,7 +19,7 @@ sky_material = SubResource("ProceduralSkyMaterial_gs8dr")
 background_mode = 2
 sky = SubResource("Sky_cdevh")
 ssr_enabled = true
-ssr_max_steps = 128
+ssr_max_steps = 32
 fog_enabled = true
 fog_light_color = Color(1, 1, 1, 1)
 volumetric_fog_albedo = Color(0.88, 0.79816, 0.6072, 1)
