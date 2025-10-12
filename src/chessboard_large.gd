@@ -26,5 +26,7 @@ func move_piece_instance_to_other_chessboard(from:int, to:int, other:ChessboardL
 	instance_from.get_parent().remove_child(instance_from)
 	chessboard_piece.erase(from)
 	other.add_piece_instance(instance_from)
+	instance_from.visible = true
+	instance_from.global_position = other.get_node(Chess.to_position_name(to)).global_position
 	other.state.add_piece(to, state.get_piece(from))
 	state.capture_piece(from)
