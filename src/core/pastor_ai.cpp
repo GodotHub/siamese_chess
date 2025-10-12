@@ -272,7 +272,7 @@ godot::PackedInt32Array PastorAI::generate_good_capture_move(godot::Ref<State>_s
 			int front = from_piece == 'P' ? -16 : 16;
 			bool on_start = (_from >> 4) == (from_piece == 'P' ? 6 : 1);
 			bool on_end = (_from >> 4) == (from_piece == 'P' ? 1 : 6);
-			if (_state->has_piece(_from + front + 1) && !Chess::is_same_group(from_piece, _state->get_piece(_from + front + 1))
+			if (_state->has_piece(_from + front + 1) && (_state->get_piece(_from + front + 1) & 95) != 'W' && (_state->get_piece(_from + front + 1) & 95) != 'Y' && !Chess::is_same_group(from_piece, _state->get_piece(_from + front + 1))
 			|| ((_from >> 4) == 3 || (_from >> 4) == 4) && _state->get_en_passant() == _from + front + 1
 			|| !((_from + front + 1) & 0x88) && on_end && _state->get_king_passant() != -1 && abs(_state->get_king_passant() - (_from + front + 1)) <= 1)
 			{
@@ -288,7 +288,7 @@ godot::PackedInt32Array PastorAI::generate_good_capture_move(godot::Ref<State>_s
 					output.push_back(Chess::create(_from, _from + front + 1, 0));
 				}
 			}
-			if (_state->has_piece(_from + front - 1) && !Chess::is_same_group(from_piece, _state->get_piece(_from + front - 1))
+			if (_state->has_piece(_from + front - 1) && (_state->get_piece(_from + front - 1) & 95) != 'W' && (_state->get_piece(_from + front - 1) & 95) != 'Y' && !Chess::is_same_group(from_piece, _state->get_piece(_from + front - 1))
 			|| ((_from >> 4) == 3 || (_from >> 4) == 4) && _state->get_en_passant() == _from + front - 1
 			|| !((_from + front - 1) & 0x88) && on_end && _state->get_king_passant() != -1 && abs(_state->get_king_passant() - (_from + front - 1)) <= 1)
 			{

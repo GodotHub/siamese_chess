@@ -545,7 +545,7 @@ godot::PackedInt32Array RuleStandard::generate_move(godot::Ref<State>_state, int
 					}
 				}
 			}
-			if (_state->has_piece(_from + front + 1) && (_state->get_piece(_from + front + 1) & 95) != 'W' && !Chess::is_same_group(from_piece, _state->get_piece(_from + front + 1)) || ((_from >> 4) == 3 || (_from >> 4) == 4) && _state->get_en_passant() == _from + front + 1)
+			if (_state->has_piece(_from + front + 1) && (_state->get_piece(_from + front + 1) & 95) != 'W' && (_state->get_piece(_from + front + 1) & 95) != 'Y' && !Chess::is_same_group(from_piece, _state->get_piece(_from + front + 1)) || ((_from >> 4) == 3 || (_from >> 4) == 4) && _state->get_en_passant() == _from + front + 1)
 			{
 				if (on_end)
 				{
@@ -559,7 +559,7 @@ godot::PackedInt32Array RuleStandard::generate_move(godot::Ref<State>_state, int
 					output.push_back(Chess::create(_from, _from + front + 1, 0));
 				}
 			}
-			if (_state->has_piece(_from + front - 1) && (_state->get_piece(_from + front - 1) & 95) != 'W' && !Chess::is_same_group(from_piece, _state->get_piece(_from + front - 1)) || ((_from >> 4) == 3 || (_from >> 4) == 4) && _state->get_en_passant() == _from + front - 1)
+			if (_state->has_piece(_from + front - 1) && (_state->get_piece(_from + front - 1) & 95) != 'W' && (_state->get_piece(_from + front - 1) & 95) != 'Y' && !Chess::is_same_group(from_piece, _state->get_piece(_from + front - 1)) || ((_from >> 4) == 3 || (_from >> 4) == 4) && _state->get_en_passant() == _from + front - 1)
 			{
 				if (on_end)
 				{
