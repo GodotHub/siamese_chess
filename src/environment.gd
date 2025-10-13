@@ -14,8 +14,6 @@ var friend_state:String = "idle"
 var telephone_2025_first_time:bool = false
 
 func _ready() -> void:
-	$chessboard_pastor.add_default_piece_set()
-	$chessboard_friend.add_default_piece_set()
 	$history.set_document(pastor_history_chart)
 	$player.set_initial_interact($interact/area_passthrough)
 	$clock_pastor.connect("timeout", pastor_game_timeout)
@@ -142,6 +140,7 @@ func dialog_pastor_game_start() -> void:
 		if $dialog.selected in [0, 1, 2]:
 			pastor_game_state = RuleStandard.parse("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
 			$chessboard_pastor.set_state(pastor_game_state)
+			$chessboard_pastor.add_default_piece_set()
 			pastor_history_chart.set_state(pastor_game_state)
 			pastor_history_chart.set_filename("history." + String.num_int64(Time.get_unix_time_from_system()) + ".json")
 			if $dialog.selected == 0:
@@ -168,6 +167,7 @@ func dialog_pastor_game_start() -> void:
 			ai.set_think_time(1)
 			pastor_game_state = RuleStandard.create_random_state(15)
 			$chessboard_pastor.set_state(pastor_game_state)
+			$chessboard_pastor.add_default_piece_set()
 			pastor_history_chart.set_state(pastor_game_state)
 			pastor_history_chart.set_filename("history." + String.num_int64(Time.get_unix_time_from_system()) + ".json")
 			$clock_pastor.set_time(180, 1, 0)
@@ -189,6 +189,7 @@ func dialog_pastor_game_start() -> void:
 			if is_instance_valid(pastor_game_state):
 				$clock_pastor.set_time(1800, 1, 0)
 				$chessboard_pastor.set_state(pastor_game_state)
+				$chessboard_pastor.add_default_piece_set()
 				pastor_history_chart.set_state(pastor_game_state)
 				pastor_history_chart.set_filename("history." + String.num_int64(Time.get_unix_time_from_system()) + ".json")
 				$dialog.push_dialog("现在棋盘已经准备好了。", true, true)
@@ -295,6 +296,7 @@ func dialog_friend_start_game() -> void:
 		if $dialog.selected in [0, 1, 2]:
 			friend_game_state = RuleStandard.parse("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
 			$chessboard_friend.set_state(friend_game_state)
+			$chessboard_friend.add_default_piece_set()
 			if $dialog.selected == 0:
 				$clock_friend.set_time(1800, 1, 0)
 			elif $dialog.selected == 1:
@@ -312,6 +314,7 @@ func dialog_friend_start_game() -> void:
 			friend_game_state = RuleStandard.parse(text_input_instance.text)
 			if is_instance_valid(friend_game_state):
 				$chessboard_friend.set_state(friend_game_state)
+				$chessboard_friend.add_default_piece_set()
 				call_deferred("game_with_friend")
 				friend_state = "in_game"
 				break
