@@ -139,6 +139,64 @@ godot::Ref<State> RuleStandard::create_random_state(int piece_count)
 	return nullptr;
 }
 
+godot::Ref<State> RuleStandard::mirror_state(godot::Ref<State> _state)
+{
+	godot::Ref<State> output = memnew(State);
+	for (State::PieceIterator iter = _state->piece_iterator_begin(); !iter.end(); iter.next())
+	{
+		int _from = iter.pos();
+		int from_mirrored = (_from >> 4 << 4) + (7 - _from & 0xF);
+		int from_piece = iter.piece();
+		output->add_piece(from_mirrored, from_piece);
+	}
+	output->set_turn(_state->get_turn());
+	output->set_castle(_state->get_castle());
+	output->set_en_passant(_state->get_en_passant());
+	output->set_step_to_draw(_state->get_step_to_draw());
+	output->set_round(_state->get_round());
+	output->set_king_passant(_state->get_king_passant());
+	return output;
+}
+
+godot::Ref<State> RuleStandard::rotate_state(godot::Ref<State> _state)
+{
+	godot::Ref<State> output = memnew(State);
+	for (State::PieceIterator iter = _state->piece_iterator_begin(); !iter.end(); iter.next())
+	{
+		int _from = iter.pos();
+		int from_rotated = Chess::to_x88(63 - Chess::to_64(_from));
+		int from_piece = iter.piece();
+		output->add_piece(from_rotated, from_piece);
+	}
+	output->set_turn(_state->get_turn());
+	output->set_castle(_state->get_castle());
+	output->set_en_passant(_state->get_en_passant());
+	output->set_step_to_draw(_state->get_step_to_draw());
+	output->set_round(_state->get_round());
+	output->set_king_passant(_state->get_king_passant());
+	return output;
+}
+
+godot::Ref<State> RuleStandard::swap_group(godot::Ref<State> _state)
+{
+	
+	godot::Ref<State> output = memnew(State);
+	for (State::PieceIterator iter = _state->piece_iterator_begin(); !iter.end(); iter.next())
+	{
+		int _from = iter.pos();
+		int from_piece = iter.piece();
+		int from_piece_fliped = Chess::group(from_piece) == 0 ? from_piece + 32 : from_piece - 32;
+		output->add_piece(_from, from_piece);
+	}
+	output->set_turn(_state->get_turn());
+	output->set_castle(_state->get_castle());
+	output->set_en_passant(_state->get_en_passant());
+	output->set_step_to_draw(_state->get_step_to_draw());
+	output->set_round(_state->get_round());
+	output->set_king_passant(_state->get_king_passant());
+	return output;
+}
+
 godot::String RuleStandard::stringify(godot::Ref<State>_state)
 {
 	int null_counter = 0;
