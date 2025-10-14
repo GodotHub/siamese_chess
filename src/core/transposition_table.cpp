@@ -84,6 +84,11 @@ void TranspositionTable::record_hash(int64_t checksum, int8_t depth, int value, 
 	table[index].best_move = best_move;
 }
 
+void TranspositionTable::clear()
+{
+	table.resize(table_size, {0});
+}
+
 void TranspositionTable::_bind_methods()
 {
 	godot::ClassDB::bind_method(godot::D_METHOD("reserve"), &TranspositionTable::reserve);
@@ -92,4 +97,5 @@ void TranspositionTable::_bind_methods()
 	godot::ClassDB::bind_method(godot::D_METHOD("probe_hash"), &TranspositionTable::probe_hash);
 	godot::ClassDB::bind_method(godot::D_METHOD("best_move"), &TranspositionTable::best_move);
 	godot::ClassDB::bind_method(godot::D_METHOD("record_hash"), &TranspositionTable::record_hash);
+	godot::ClassDB::bind_method(godot::D_METHOD("clear"), &TranspositionTable::clear);
 }
