@@ -45,6 +45,7 @@ class State : public godot::RefCounted
 		int get_king_passant();
 		void set_king_passant(int _king_passant);
 		int64_t get_zobrist();
+		godot::String print_board();
 		static void _bind_methods();
 	private:
 		int pieces[128];

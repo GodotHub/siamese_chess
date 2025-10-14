@@ -219,6 +219,28 @@ int64_t State::get_zobrist()
 	return zobrist;
 }
 
+godot::String State::print_board()
+{
+	godot::String output;
+	for (int i = 0; i < 64; i++)
+	{
+		int by = Chess::to_x88(i);
+		if (has_piece(by))
+		{
+			output += char(get_piece(by));
+		}
+		else
+		{
+			output += '.';
+		}
+		if (i % 8 == 7)
+		{
+			output += '\n';
+		}
+	}
+	return output;
+}
+
 void State::_bind_methods()
 {
 	godot::ClassDB::bind_method(godot::D_METHOD("duplicate"), &State::duplicate);
@@ -243,4 +265,5 @@ void State::_bind_methods()
 	godot::ClassDB::bind_method(godot::D_METHOD("get_king_passant"), &State::get_king_passant);
 	godot::ClassDB::bind_method(godot::D_METHOD("set_king_passant"), &State::set_king_passant);
 	godot::ClassDB::bind_method(godot::D_METHOD("get_zobrist"), &State::get_zobrist);
+	godot::ClassDB::bind_method(godot::D_METHOD("print_board"), &State::print_board);
 }
