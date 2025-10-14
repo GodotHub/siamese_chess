@@ -8,43 +8,52 @@ func _ready() -> void:
 	ai = PastorAI.new()
 	ai.set_max_depth(100)
 	ai.set_think_time(3)
-	var next_chessboard:ChessboardLarge = $chessboard_blank.create_next_chessboard()
-	add_child(next_chessboard)
-	next_chessboard.position += Vector3(0, 0, -16)
-	$interact.inspectable_item.push_back(next_chessboard)
 	var fallback_piece:Actor = load("res://scene/piece_shrub.tscn").instantiate().set_show_on_backup(false).set_larger_scale()
 	state = RuleStandard.create_random_state(10)
+	$chessboard_blank.set_state(state)
 	$chessboard_blank.fallback_piece = fallback_piece
-	for i:int in 10:
-		$chessboard_blank.add_piece_instance(load("res://scene/flower.tscn").instantiate())
-	for i:int in 10:
-		$chessboard_blank.add_piece_instance(load("res://scene/shrub.tscn").instantiate())
-	for i:int in 10:
-		$chessboard_blank.add_piece_instance(load("res://scene/tree.tscn").instantiate())
-	$chessboard_blank.add_piece_instance(load("res://scene/piece_rook_white.tscn").instantiate().set_show_on_backup(false).set_larger_scale())
-	$chessboard_blank.add_piece_instance(load("res://scene/piece_rook_white.tscn").instantiate().set_show_on_backup(false).set_larger_scale())
-	$chessboard_blank.add_piece_instance(load("res://scene/piece_knight_white.tscn").instantiate().set_show_on_backup(false).set_larger_scale())
-	$chessboard_blank.add_piece_instance(load("res://scene/piece_knight_white.tscn").instantiate().set_show_on_backup(false).set_larger_scale())
-	$chessboard_blank.add_piece_instance(load("res://scene/piece_bishop_white.tscn").instantiate().set_show_on_backup(false).set_larger_scale())
-	$chessboard_blank.add_piece_instance(load("res://scene/piece_bishop_white.tscn").instantiate().set_show_on_backup(false).set_larger_scale())
-	$chessboard_blank.add_piece_instance(load("res://scene/piece_queen_white.tscn").instantiate().set_show_on_backup(false).set_larger_scale())
-	$chessboard_blank.add_piece_instance(load("res://scene/piece_queen_white.tscn").instantiate().set_show_on_backup(false).set_larger_scale())
-	for i:int in 8:
-		$chessboard_blank.add_piece_instance(load("res://scene/piece_pawn_white.tscn").instantiate().set_show_on_backup(false).set_larger_scale())
-	$chessboard_blank.add_piece_instance(load("res://scene/piece_rook_black.tscn").instantiate().set_show_on_backup(false).set_larger_scale())
-	$chessboard_blank.add_piece_instance(load("res://scene/piece_rook_black.tscn").instantiate().set_show_on_backup(false).set_larger_scale())
-	$chessboard_blank.add_piece_instance(load("res://scene/piece_knight_black.tscn").instantiate().set_show_on_backup(false).set_larger_scale())
-	$chessboard_blank.add_piece_instance(load("res://scene/piece_knight_black.tscn").instantiate().set_show_on_backup(false).set_larger_scale())
-	$chessboard_blank.add_piece_instance(load("res://scene/piece_bishop_black.tscn").instantiate().set_show_on_backup(false).set_larger_scale())
-	$chessboard_blank.add_piece_instance(load("res://scene/piece_bishop_black.tscn").instantiate().set_show_on_backup(false).set_larger_scale())
-	$chessboard_blank.add_piece_instance(load("res://scene/piece_queen_black.tscn").instantiate().set_show_on_backup(false).set_larger_scale())
-	$chessboard_blank.add_piece_instance(load("res://scene/piece_queen_black.tscn").instantiate().set_show_on_backup(false).set_larger_scale())
-	for i:int in 8:
-		$chessboard_blank.add_piece_instance(load("res://scene/piece_pawn_black.tscn").instantiate().set_show_on_backup(false).set_larger_scale())
-	var cheshire:Actor = load("res://scene/cheshire.tscn").instantiate()
-	$chessboard_blank.add_piece_instance(cheshire)
-	$chessboard_blank.add_piece_instance(load("res://scene/enemy_cheshire.tscn").instantiate())
-	$chessboard_blank.set_state(state.duplicate())
+	for i:int in 128:
+		match String.chr(state.get_piece(i)):
+			"K":
+				$chessboard_blank.add_piece_instance(load("res://scene/enemy_cheshire.tscn").instantiate(), i)
+			"Q":
+				$chessboard_blank.add_piece_instance(load("res://scene/piece_queen_white.tscn").instantiate().set_show_on_backup(false).set_larger_scale(), i)
+			"R":
+				$chessboard_blank.add_piece_instance(load("res://scene/piece_rook_white.tscn").instantiate().set_show_on_backup(false).set_larger_scale(), i)
+			"B":
+				$chessboard_blank.add_piece_instance(load("res://scene/piece_bishop_white.tscn").instantiate().set_show_on_backup(false).set_larger_scale(), i)
+			"N":
+				$chessboard_blank.add_piece_instance(load("res://scene/piece_knight_white.tscn").instantiate().set_show_on_backup(false).set_larger_scale(), i)
+			"P":
+				$chessboard_blank.add_piece_instance(load("res://scene/piece_pawn_white.tscn").instantiate().set_show_on_backup(false).set_larger_scale(), i)
+			"W":
+				$chessboard_blank.add_piece_instance(load("res://scene/flower.tscn").instantiate(), i)
+			"X":
+				$chessboard_blank.add_piece_instance(load("res://scene/shrub.tscn").instantiate(), i)
+			"Y":
+				$chessboard_blank.add_piece_instance(load("res://scene/tree.tscn").instantiate(), i)
+			"Z":
+				$chessboard_blank.add_piece_instance(load("res://scene/piece_checker_1_white.tscn").instantiate().set_show_on_backup(false).set_larger_scale(), i)
+			"k":
+				$chessboard_blank.add_piece_instance(load("res://scene/cheshire.tscn").instantiate(), i)
+			"q":
+				$chessboard_blank.add_piece_instance(load("res://scene/piece_queen_black.tscn").instantiate().set_show_on_backup(false).set_larger_scale(), i)
+			"r":
+				$chessboard_blank.add_piece_instance(load("res://scene/piece_rook_black.tscn").instantiate().set_show_on_backup(false).set_larger_scale(), i)
+			"b":
+				$chessboard_blank.add_piece_instance(load("res://scene/piece_bishop_black.tscn").instantiate().set_show_on_backup(false).set_larger_scale(), i)
+			"n":
+				$chessboard_blank.add_piece_instance(load("res://scene/piece_knight_black.tscn").instantiate().set_show_on_backup(false).set_larger_scale(), i)
+			"p":
+				$chessboard_blank.add_piece_instance(load("res://scene/piece_pawn_black.tscn").instantiate().set_show_on_backup(false).set_larger_scale(), i)
+			"w":
+				$chessboard_blank.add_piece_instance(load("res://scene/flower.tscn").instantiate(), i)
+			"x":
+				$chessboard_blank.add_piece_instance(load("res://scene/shrub.tscn").instantiate(), i)
+			"y":
+				$chessboard_blank.add_piece_instance(load("res://scene/tree.tscn").instantiate(), i)
+			"z":
+				$chessboard_blank.add_piece_instance(load("res://scene/piece_checker_1_black.tscn").instantiate().set_show_on_backup(false).set_larger_scale(), i)
 	$player.set_initial_interact($interact)
 	play()
 
