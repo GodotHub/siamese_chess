@@ -145,7 +145,7 @@ godot::Ref<State> RuleStandard::mirror_state(godot::Ref<State> _state)
 	for (State::PieceIterator iter = _state->piece_iterator_begin(); !iter.end(); iter.next())
 	{
 		int _from = iter.pos();
-		int from_mirrored = (_from >> 4 << 4) + (7 - _from & 0xF);
+		int from_mirrored = (_from >> 4 << 4) | (7 - (_from & 0xF));
 		int from_piece = iter.piece();
 		output->add_piece(from_mirrored, from_piece);
 	}
@@ -186,7 +186,7 @@ godot::Ref<State> RuleStandard::swap_group(godot::Ref<State> _state)
 		int _from = iter.pos();
 		int from_piece = iter.piece();
 		int from_piece_fliped = Chess::group(from_piece) == 0 ? from_piece + 32 : from_piece - 32;
-		output->add_piece(_from, from_piece);
+		output->add_piece(_from, from_piece_fliped);
 	}
 	output->set_turn(_state->get_turn());
 	output->set_castle(_state->get_castle());
@@ -1092,6 +1092,9 @@ void RuleStandard::_bind_methods()
 	godot::ClassDB::bind_method(godot::D_METHOD("parse"), &RuleStandard::parse);
 	godot::ClassDB::bind_method(godot::D_METHOD("create_initial_state"), &RuleStandard::create_initial_state);
 	godot::ClassDB::bind_method(godot::D_METHOD("create_random_state"), &RuleStandard::create_random_state);
+	godot::ClassDB::bind_method(godot::D_METHOD("mirror_state"), &RuleStandard::mirror_state);
+	godot::ClassDB::bind_method(godot::D_METHOD("rotate_state"), &RuleStandard::rotate_state);
+	godot::ClassDB::bind_method(godot::D_METHOD("swap_group"), &RuleStandard::swap_group);
 	godot::ClassDB::bind_method(godot::D_METHOD("stringify"), &RuleStandard::stringify);
 	godot::ClassDB::bind_method(godot::D_METHOD("is_check"), &RuleStandard::is_check);
 	godot::ClassDB::bind_method(godot::D_METHOD("is_move_valid"), &RuleStandard::is_move_valid);
