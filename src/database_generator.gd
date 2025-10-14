@@ -72,7 +72,7 @@ func perft_test() -> void:
 func score_test() -> void:
 	ai.set_think_time(INF)
 	ai.set_max_depth(6)
-	chess_state = RuleStandard.parse("8/2p5/3p4/KP5r/1R3p1k/8/4P1P1/8 w - - 0 1")
+	chess_state = RuleStandard.parse("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
 	print(chess_state.print_board())
 	ai.get_transposition_table().clear()
 	ai.start_search(chess_state, 0, [], debug_output)
