@@ -12,7 +12,7 @@ func _ready() -> void:
 	ai.set_think_time(INF)
 	ai.set_max_depth(8)
 	var thread:Thread = Thread.new()
-	thread.start(make_database)
+	thread.start(score_test)
 
 func performance_test() -> float:
 	chess_state = RuleStandard.parse("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
@@ -68,8 +68,37 @@ func perft_test() -> void:
 	for i:int in range(node_count.size()):
 		var result:int = RuleStandard.perft(chess_state, i, 0)
 		print("perft_test_7 depth:%d expect:%d actual:%d" % [i, node_count[i], result])
-	
-func _physics_process(_delta:float):
+
+func score_test() -> void:
+	ai.set_think_time(INF)
+	ai.set_max_depth(8)
+	chess_state = RuleStandard.parse("8/2p5/3p4/KP5r/1R3p1k/8/4P1P1/8 w - - 0 1")
+	print(chess_state.print_board())
+	ai.get_transposition_table().clear()
+	ai.start_search(chess_state, 0, [], debug_output)
+	await ai.search_finished
+	var original_score:int = ai.get_score()
+	var mirrored_state:State = RuleStandard.mirror_state(chess_state)
+	print(mirrored_state.print_board())
+	ai.get_transposition_table().clear()
+	ai.start_search(mirrored_state, 0, [], debug_output)
+	await ai.search_finished
+	var mirrored_score:int = ai.get_score()
+	var rotated_state:State = RuleStandard.rotate_state(chess_state)
+	print(rotated_state.print_board())
+	ai.get_transposition_table().clear()
+	ai.start_search(rotated_state, 0, [], debug_output)
+	await ai.search_finished
+	var rotated_score:int = ai.get_score()
+	var swap_group_state:State = RuleStandard.swap_group(chess_state)
+	print(swap_group_state.print_board())
+	ai.get_transposition_table().clear()
+	ai.start_search(swap_group_state, 0, [], debug_output)
+	await ai.search_finished
+	var swap_group_score:int = ai.get_score()
+	print("%d %d %d %d" % [original_score, mirrored_score, rotated_score, swap_group_score])
+
+func _physics_process(_delta:float) -> void:
 	while progress_bar_data.size() > progress_bar.size():
 		add_progress_bar()
 	for i:int in range(progress_bar_data.size()):
