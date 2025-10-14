@@ -93,7 +93,7 @@ func score_test() -> void:
 	var swap_group_state:State = RuleStandard.swap_group(chess_state)
 	print(swap_group_state.print_board())
 	ai.get_transposition_table().clear()
-	ai.start_search(swap_group_state, 0, [], debug_output)
+	ai.start_search(swap_group_state, 1, [], debug_output)
 	await ai.search_finished
 	var swap_group_score:int = ai.get_score()
 	print("%d %d %d %d" % [original_score, mirrored_score, rotated_score, swap_group_score])
