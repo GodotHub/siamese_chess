@@ -1,10 +1,18 @@
 extends Node3D
 
+
+var state_1:State = null
+var state_2:State = null
+var state_3:State = null
+
 var state:State = null
 var ai:AI = null
 var history_state:PackedInt32Array = []
 
 func _ready() -> void:
+	state_1 = RuleStandard.parse("1Y2k1Y1/1X4X1/1X4X1/1Y4Y1/1X4X1/1X4X1/1Y4Y1/1X4X1 w - - 0 1")
+	state_2 = RuleStandard.parse("1Y4Y1/1X4X1/1X4X1/1Y4Y1/1X4X1/1X4X1/1Y4Y1/1X4X1 w - - 0 1")
+	state_3 = RuleStandard.parse("1Y4Y1/1X4X1/1X4X1/1Y4Y1/1X4X1/1X4X1/1Y4Y1/1X4X1 w - - 0 1")
 	ai = PastorAI.new()
 	ai.set_max_depth(100)
 	ai.set_think_time(3)
@@ -55,9 +63,30 @@ func _ready() -> void:
 			"z":
 				$chessboard_blank.add_piece_instance(load("res://scene/piece_checker_1_black.tscn").instantiate().set_show_on_backup(false).set_larger_scale(), i)
 	$player.set_initial_interact($interact)
-	play()
+	versus()
 
-func play() -> void:
+func create_chessboard(_state:State, pos:Vector3) -> void:
+	var new_chessboard:Chessboard = load("res://scene/chessboard_large.tscn").instantiate()
+	add_child(new_chessboard)
+	new_chessboard.global_position = pos
+	new_chessboard.set_state(_state)
+	for i:int in 128:
+		match String.chr(state.get_piece(i)):
+			"k":
+				new_chessboard.add_piece_instance(load("res://scene/cheshire.tscn").instantiate(), i)
+			"X":
+				new_chessboard.add_piece_instance(load("res://scene/shrub.tscn").instantiate(), i)
+			"Y":
+				new_chessboard.add_piece_instance(load("res://scene/tree.tscn").instantiate(), i)
+
+func explore(_chessboard:Chessboard, _state:State) -> void:
+	while true:
+		_chessboard.set_valid_move(RuleStandard.generate_valid_move(_state, 1))
+		_chessboard.set_valid_premove([])
+		await _chessboard.move_played
+		RuleStandard.apply_move(_state, _chessboard.confirm_move)
+
+func versus() -> void:
 	while RuleStandard.get_end_type(state) == "":
 		$chessboard_blank.set_valid_move([])
 		$chessboard_blank.set_valid_premove(RuleStandard.generate_premove(state, 1))
