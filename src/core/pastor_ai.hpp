@@ -32,6 +32,7 @@ class PastorAI : public AI {
 		int max_depth;
 		int WIN = 50000;
 		int THRESHOLD = 60000;
+		int MAX_PLY = 50;
 		int best_move;
 		double think_time;
 		godot::PackedInt32Array principal_variation;
