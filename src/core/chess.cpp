@@ -13,9 +13,14 @@ int64_t Chess::mask(int n)
 	return 1LL << n;
 }
 
-int Chess::x88_to_64(int n)
+int Chess::to_64(int n)
 {
 	return (n >> 4 << 3) | (n & 0xF);
+}
+
+int Chess::to_x88(int n)
+{
+	return (n >> 3 << 4) | (n & 7);
 }
 
 int Chess::group(int piece)
@@ -69,6 +74,8 @@ Chess *Chess::get_singleton()
 
 void Chess::_bind_methods()
 {
+	godot::ClassDB::bind_static_method(get_class_static(), godot::D_METHOD("to_64"), &Chess::to_64);
+	godot::ClassDB::bind_static_method(get_class_static(), godot::D_METHOD("to_x88"), &Chess::to_x88);
 	godot::ClassDB::bind_static_method(get_class_static(), godot::D_METHOD("mask"), &Chess::mask);
 	godot::ClassDB::bind_static_method(get_class_static(), godot::D_METHOD("group"), &Chess::group);
 	godot::ClassDB::bind_static_method(get_class_static(), godot::D_METHOD("is_same_group"), &Chess::is_same_group);

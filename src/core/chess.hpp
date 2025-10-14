@@ -10,7 +10,8 @@ class Chess : public godot::Object
 	public:
 		Chess();
 		static int64_t mask(int n);
-		static int x88_to_64(int n);
+		static int to_64(int n);
+		static int to_x88(int n);
 		static int group(int piece);
 		static bool is_same_group(int piece_1, int piece_2);
 		static int to_position_int(godot::String _position_name);

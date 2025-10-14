@@ -108,7 +108,7 @@ int State::has_piece(int _by)
 
 void State::add_piece(int _by, int _piece)
 {
-	int64_t by_mask = Chess::mask(Chess::x88_to_64(_by));
+	int64_t by_mask = Chess::mask(Chess::to_64(_by));
 	pieces[_by] = _piece;
 	bit[_piece] |= by_mask;
 	bit[Chess::group(_piece) == 0 ? 'A' : 'a'] |= by_mask;
@@ -120,7 +120,7 @@ void State::capture_piece(int _by)
 	if (has_piece(_by))
 	{
 		int piece = pieces[_by];
-		int64_t by_mask = Chess::mask(Chess::x88_to_64(_by));
+		int64_t by_mask = Chess::mask(Chess::to_64(_by));
 		zobrist ^= ZobristHash::get_singleton()->hash_piece(piece, _by);
 		bit[piece] &= ~by_mask;
 		bit[Chess::group(piece) == 0 ? 'A' : 'a'] &= ~by_mask;
@@ -132,8 +132,8 @@ void State::capture_piece(int _by)
 void State::move_piece(int _from, int _to)
 {
 	int piece = get_piece(_from);
-	int64_t from_mask = Chess::mask(Chess::x88_to_64(_from));
-	int64_t to_mask = Chess::mask(Chess::x88_to_64(_to));
+	int64_t from_mask = Chess::mask(Chess::to_64(_from));
+	int64_t to_mask = Chess::mask(Chess::to_64(_to));
 	zobrist ^= ZobristHash::get_singleton()->hash_piece(piece, _from);
 	zobrist ^= ZobristHash::get_singleton()->hash_piece(piece, _to);
 	bit[piece] &= ~from_mask;
