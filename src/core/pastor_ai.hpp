@@ -21,6 +21,7 @@ class PastorAI : public AI {
 		void search(const godot::Ref<State> &_state, int _group, const godot::PackedInt32Array &history_state, const godot::Callable &_debug_output) override;
 		int get_search_result() override;
 		godot::PackedInt32Array get_principal_variation();
+		int get_score();
 		void set_max_depth(int _max_depth);
 		void set_think_time(double _think_time);
 		void set_transposition_table(const godot::Ref<TranspositionTable> &transposition_table);
@@ -33,8 +34,9 @@ class PastorAI : public AI {
 		int WIN = 50000;
 		int THRESHOLD = 60000;
 		int MAX_PLY = 50;
-		int best_move;
 		double think_time;
+		int best_move;
+		int best_score;
 		godot::PackedInt32Array principal_variation;
 		std::unordered_map<int, int> piece_value;
 		godot::PackedInt32Array directions_diagonal;

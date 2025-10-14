@@ -701,6 +701,7 @@ void PastorAI::search(const godot::Ref<State> &_state, int _group, const godot::
 		}
 	}
 	best_move = transposition_table->best_move(_state->get_zobrist());
+	best_score = transposition_table->probe_hash(_state->get_zobrist(), 1, -THRESHOLD, THRESHOLD);
 	principal_variation.clear();
 	godot::Ref<State> test_state = _state->duplicate();
 	while (transposition_table->probe_hash(test_state->get_zobrist(), 1, -THRESHOLD, THRESHOLD) != 65535)
@@ -721,9 +722,14 @@ godot::PackedInt32Array PastorAI::get_principal_variation()
 	return principal_variation;
 }
 
+int PastorAI::get_score()
+{
+	return best_score;
+}
+
 void PastorAI::set_max_depth(int _max_depth)
 {
-	max_depth = max_depth;
+	max_depth = _max_depth;
 }
 
 void PastorAI::set_transposition_table(const godot::Ref<TranspositionTable> &_transposition_table)
@@ -746,6 +752,7 @@ void PastorAI::_bind_methods()
 	ADD_SIGNAL(godot::MethodInfo("search_finished"));
 	godot::ClassDB::bind_method(godot::D_METHOD("search"), &PastorAI::search);
 	godot::ClassDB::bind_method(godot::D_METHOD("get_search_result"), &PastorAI::get_search_result);
+	godot::ClassDB::bind_method(godot::D_METHOD("get_score"), &PastorAI::get_score);
 	godot::ClassDB::bind_method(godot::D_METHOD("get_principal_variation"), &PastorAI::get_principal_variation);
 	godot::ClassDB::bind_method(godot::D_METHOD("set_max_depth"), &PastorAI::set_max_depth);
 	godot::ClassDB::bind_method(godot::D_METHOD("set_think_time"), &PastorAI::set_think_time);
