@@ -188,7 +188,7 @@ godot::Ref<State> RuleStandard::swap_group(godot::Ref<State> _state)
 		int from_piece_fliped = Chess::group(from_piece) == 0 ? from_piece + 32 : from_piece - 32;
 		output->add_piece(_from, from_piece_fliped);
 	}
-	output->set_turn(_state->get_turn());
+	output->set_turn(1 - _state->get_turn());
 	output->set_castle(_state->get_castle());
 	output->set_en_passant(_state->get_en_passant());
 	output->set_step_to_draw(_state->get_step_to_draw());
