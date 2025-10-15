@@ -21,6 +21,7 @@ func capturing(_pos:Vector3, _captured:Actor) -> void:	# 攻击
 	if has_node("animation_tree"):
 		tween.tween_callback($animation_tree.get("parameters/playback").travel.bind("battle_attack"))
 	tween.tween_property(self, "global_rotation:y", target_angle, 0.1).set_trans(Tween.TRANS_SINE)
+	tween.tween_callback(animation_finished.emit)
 
 func fast_move() -> void:
 	var tween:Tween = create_tween()
@@ -36,6 +37,7 @@ func captured(_capturing:Actor = null) -> void:	# 被攻击
 		var target_angle:float = -current_position_2d.angle_to_point(target_position_2d) + PI / 2
 		var tween:Tween = create_tween()
 		tween.tween_property(self, "global_rotation:y", target_angle, 0.1).set_trans(Tween.TRANS_SINE)
+		tween.tween_callback(animation_finished.emit)
 	$animation_tree.get("parameters/playback").travel("battle_died")
 
 func promote() -> void:	# 升变，不过对于Cheshire而言不太可能，先留空
@@ -54,13 +56,16 @@ func move(_pos:Vector3) -> void:	# 单纯的移动
 	tween.tween_property(self, "global_position", _pos, global_position.distance_to(_pos) / 5)
 	if has_node("animation_tree"):
 		tween.tween_callback($animation_tree.get("parameters/playback").travel.bind("battle_idle"))
+	tween.tween_callback(animation_finished.emit)
 
 func target() -> void:	# 作为轻子威胁重子，或牵制对手的棋子时将会面向目标准备攻击，包括将军
 	var tween:Tween = create_tween()
 	if has_node("animation_tree"):
 		tween.tween_callback($animation_tree.get("parameters/playback").travel.bind("battle_target"))
+	tween.tween_callback(animation_finished.emit)
 
 func defend() -> void:  # 被轻子威胁，或被牵制时采取防御姿态
 	var tween:Tween = create_tween()
 	if has_node("animation_tree"):
 		tween.tween_callback($animation_tree.get("parameters/playback").travel.bind("battle_defend"))
+	tween.tween_callback(animation_finished.emit)

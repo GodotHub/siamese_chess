@@ -3,6 +3,7 @@ class_name Chessboard
 
 signal move_played()
 signal ready_to_move(by:int)
+signal animation_finished()
 
 @export var COLOR_LAST_MOVE:Color = Color(0.3, 0.3, 0.3, 1)
 @export var COLOR_PREMOVE:Color = Color(0.3, 0.3, 0.3, 1)
@@ -220,8 +221,7 @@ func receive_event(event:Dictionary) -> void:
 		"move":
 			move_piece_instance(event["from"], event["to"])
 		"castle":
-			move_piece_instance(event["from_king"], event["to_king"])
-			move_piece_instance(event["from_rook"], event["to_rook"])
+			castle_piece_instance(event["from_king"], event["to_king"], event["from_rook"], event["to_rook"])
 		"en_passant":
 			en_passant_piece_instance(event["from"], event["to"], event["captured"])
 		"grafting":
@@ -240,6 +240,12 @@ func add_piece_instance(instance:Actor, by:int) -> void:	# 注意根据state摆�
 		if state.get_piece(by) == "k".unicode_at(0):
 			king_instance[1] = instance
 		instance.introduce(get_node(Chess.to_position_name(by)).global_position)
+
+func pop_piece_instance(by:int) -> Actor:
+	var instance:Actor = chessboard_piece[by]
+	chessboard_piece.erase(by)
+	instance.get_parent().remove_child(instance)
+	return instance
 
 func move_piece_instance_from_backup(by:int, piece:int) -> void:
 	var target_piece_instance:Actor = null
@@ -271,6 +277,20 @@ func move_piece_instance(from:int, to:int) -> void:
 	instance.move(get_node(Chess.to_position_name(to)).global_position)
 	chessboard_piece.erase(from)
 	chessboard_piece[to] = instance
+	await instance.animation_finished
+	animation_finished.emit.call_deferred()
+
+func castle_piece_instance(from_1:int, to_1:int, from_2:int, to_2:int) -> void:
+	var instance_1:Actor = chessboard_piece[from_1]
+	instance_1.move(get_node(Chess.to_position_name(to_1)).global_position)
+	chessboard_piece.erase(from_1)
+	chessboard_piece[to_1] = instance_1
+	var instance_2:Actor = chessboard_piece[from_2]
+	instance_2.move(get_node(Chess.to_position_name(to_2)).global_position)
+	chessboard_piece.erase(from_2)
+	chessboard_piece[to_2] = instance_2
+	await instance_1.animation_finished
+	animation_finished.emit.call_deferred()
 
 func capture_piece_instance(from:int, to:int) -> void:
 	var instance_from:Actor = chessboard_piece[from]
@@ -279,6 +299,8 @@ func capture_piece_instance(from:int, to:int) -> void:
 	move_piece_instance_to_backup(to)
 	chessboard_piece.erase(from)
 	chessboard_piece[to] = instance_from
+	await instance_from.animation_finished
+	animation_finished.emit.call_deferred()
 
 func graft_piece_instance(from:int, to:int) -> void:
 	var instance_1:Actor = chessboard_piece[from]
@@ -289,11 +311,14 @@ func graft_piece_instance(from:int, to:int) -> void:
 	instance_2.move(get_node(Chess.to_position_name(from)).global_position)
 	chessboard_piece[from] = instance_2
 	chessboard_piece[to] = instance_1
+	await instance_1.animation_finished
+	animation_finished.emit.call_deferred()
 
 func promote_piece_instance(from:int, to:int, piece:int) -> void:
 	chessboard_piece[from].promote()
 	move_piece_instance_to_backup(from)
 	move_piece_instance_from_backup(to, piece)
+	animation_finished.emit.call_deferred()
 
 func en_passant_piece_instance(from:int, to:int, captured:int) -> void:
 	var instance_from:Actor = chessboard_piece[from]
@@ -301,6 +326,8 @@ func en_passant_piece_instance(from:int, to:int, captured:int) -> void:
 	move_piece_instance_to_backup(captured)
 	chessboard_piece.erase(from)
 	chessboard_piece[to] = instance_from
+	await instance_from.animation_finished
+	animation_finished.emit.call_deferred()
 
 func move_piece_instance_to_backup(by:int) -> void:
 	var instance:Actor = chessboard_piece[by]
@@ -308,6 +335,13 @@ func move_piece_instance_to_backup(by:int) -> void:
 	backup_piece.push_back(instance)
 	#instance.visible = !pieces[instance]["hide_piece"]
 	#instance.move(to_global(pieces[instance]["initial_position"]))
+
+func exit_piece_instance(by:int, pos:Vector3) -> void:
+	var instance:Actor = chessboard_piece[by]
+	chessboard_piece.erase(by)
+	instance.move(pos)
+	await instance.animation_finished
+	animation_finished.emit.call_deferred()
 
 func set_enabled(enabled:bool) -> void:
 	super.set_enabled(enabled)
