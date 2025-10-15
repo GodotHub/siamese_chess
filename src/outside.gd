@@ -4,8 +4,14 @@ class Level:
 	var state:State = null
 	var chessboard:Chessboard = null
 	var in_battle:bool = false
-	var process:Callable = Callable()
-
+	func process() -> void:
+		for from:int in meta["teleport"]:
+			if state.has_piece(from):
+				meta["teleport"][from]["level"].state.add_piece(meta["teleport"][from]["to"], state.get_piece(from))
+				state.capture_piece(from)
+				chessboard.move_piece_instance_to_other(from, meta["teleport"][from]["to"], meta["teleport"][from]["level"].chessboard)
+				meta["teleport"][from]["level"].chessboard.set_valid_move(RuleStandard.generate_valid_move(meta["teleport"][from]["level"].state, 1))
+	var meta:Dictionary = {}
 
 var level_1:Level = Level.new()
 var level_2:Level = Level.new()
@@ -17,52 +23,54 @@ var history_state:PackedInt32Array = []
 func _ready() -> void:
 	level_1.state = RuleStandard.parse("1Y2k1Y1/1X4X1/1X4X1/1Y4Y1/1X4X1/1X4X1/1Y4Y1/1X4X1 w - - 0 1")
 	level_1.chessboard = create_chessboard(level_1.state, Vector3(0, 0, 0))
-	level_1.process = func() -> void:
-		var exit_1 = Chess.to_x88(59)
-		var entry_1 = Chess.to_x88(3)
-		var exit_2 = Chess.to_x88(60)
-		var entry_2 = Chess.to_x88(4)
-		if level_1.state.has_piece(exit_1):
-			level_2.state.add_piece(entry_1, level_1.state.get_piece(exit_1))
-			level_1.state.capture_piece(exit_1)
-			level_1.chessboard.move_piece_instance_to_other(exit_1, entry_1, level_2.chessboard)
-			level_2.chessboard.set_valid_move(RuleStandard.generate_valid_move(level_2.state, 1))
-		if level_1.state.has_piece(exit_2):
-			level_2.state.add_piece(entry_2, level_1.state.get_piece(exit_2))
-			level_1.state.capture_piece(exit_2)
-			level_1.chessboard.move_piece_instance_to_other(exit_2, entry_2, level_2.chessboard)
-			level_2.chessboard.set_valid_move(RuleStandard.generate_valid_move(level_2.state, 1))
+	level_1.meta = {
+		"teleport": {
+			Chess.to_x88(59): {
+				"level": level_2,
+				"to": Chess.to_x88(3)
+			},
+			Chess.to_x88(60): {
+				"level": level_2,
+				"to": Chess.to_x88(4)
+			},
+		}
+	}
 	level_2.state = RuleStandard.parse("1Y4Y1/1X4X1/1X4X1/1Y4Y1/1X4X1/1X4X1/1Y4Y1/1X4X1 w - - 0 1")
 	level_2.chessboard = create_chessboard(level_2.state, Vector3(0, 0, 18))
-	level_2.process = func() -> void:
-		var exit_1 = Chess.to_x88(3)
-		var entry_1 = Chess.to_x88(59)
-		var exit_2 = Chess.to_x88(4)
-		var entry_2 = Chess.to_x88(60)
-		var exit_3 = Chess.to_x88(59)
-		var entry_3 = Chess.to_x88(3)
-		var exit_4 = Chess.to_x88(60)
-		var entry_4 = Chess.to_x88(4)
-		if level_2.state.has_piece(exit_1):
-			level_1.state.add_piece(entry_1, level_2.get_piece(exit_1))
-		if level_2.state.has_piece(exit_2):
-			level_1.state.add_piece(entry_2, level_2.get_piece(exit_2))
-		if level_2.state.has_piece(exit_3):
-			level_3.state.add_piece(entry_3, level_2.get_piece(exit_3))
-		if level_2.state.has_piece(exit_4):
-			level_3.state.add_piece(entry_4, level_2.get_piece(exit_4))
+	level_2.meta = {
+		"teleport": {
+			Chess.to_x88(3): {
+				"level": level_1,
+				"to": Chess.to_x88(59)
+			},
+			Chess.to_x88(4): {
+				"level": level_1,
+				"to": Chess.to_x88(60)
+			},
+			Chess.to_x88(59): {
+				"level": level_3,
+				"to": Chess.to_x88(3)
+			},
+			Chess.to_x88(60): {
+				"level": level_3,
+				"to": Chess.to_x88(4)
+			}
+		}
+	}
 	level_3.state = RuleStandard.parse("1Y4Y1/1X4X1/1X4X1/1Y4Y1/1X4X1/1X4X1/1Y4Y1/1X4X1 w - - 0 1")
 	level_3.chessboard = create_chessboard(level_3.state, Vector3(0, 0, 36))
-	level_3.process = func() -> void:
-		var exit_1 = Chess.to_x88(3)
-		var entry_1 = Chess.to_x88(59)
-		var exit_2 = Chess.to_x88(4)
-		var entry_2 = Chess.to_x88(60)
-		if level_3.state.has_piece(exit_1):
-			level_2.state.add_piece(entry_1, level_3.get_piece(exit_1))
-		if level_3.state.has_piece(exit_2):
-			level_2.state.add_piece(entry_2, level_3.get_piece(exit_2))
-
+	level_3.meta = {
+		"teleport": {
+			Chess.to_x88(3): {
+				"level": level_2,
+				"to": Chess.to_x88(59)
+			},
+			Chess.to_x88(4): {
+				"level": level_2,
+				"to": Chess.to_x88(60)
+			}
+		}
+	}
 	ai = PastorAI.new()
 	ai.set_max_depth(100)
 	ai.set_think_time(3)
