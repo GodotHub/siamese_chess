@@ -3,7 +3,7 @@ extends Node3D
 class Level:
 	var state:State = null
 	var chessboard:Chessboard = null
-	var ready:Callable = Callable()
+	var in_battle:bool = false
 	var process:Callable = Callable()
 
 
@@ -77,6 +77,7 @@ func create_chessboard(_state:State, pos:Vector3) -> Chessboard:
 	$interact.inspectable_item.push_back(new_chessboard)
 	new_chessboard.global_position = pos
 	new_chessboard.set_state(_state)
+	new_chessboard.connect("clicked", move_player.bind(pos))
 	for i:int in 128:
 		match String.chr(_state.get_piece(i)):
 			"k":
@@ -88,13 +89,20 @@ func create_chessboard(_state:State, pos:Vector3) -> Chessboard:
 	return new_chessboard
 
 func explore(level:Level) -> void:
-	while level.state.get_bit("a".unicode_at(0)):	# 有棋子再说
-		level.chessboard.set_valid_move(RuleStandard.generate_valid_move(level.state, 1))
-		level.chessboard.set_valid_premove([])
-		await level.chessboard.move_played
-		RuleStandard.apply_move(level.state, level.chessboard.confirm_move)
-		await level.chessboard.animation_finished
-		level.process.call()
+	while true:	# 有棋子再说
+		if level.state.get_bit("a".unicode_at(0)):
+			level.chessboard.set_valid_move(RuleStandard.generate_valid_move(level.state, 1))
+			level.chessboard.set_valid_premove([])
+			await level.chessboard.move_played
+			RuleStandard.apply_move(level.state, level.chessboard.confirm_move)
+			await level.chessboard.animation_finished
+			level.process.call()
+		else:
+			await level.chessboard.clicked
+
+func move_player(pos:Vector3) -> void:
+	var tween:Tween = create_tween()
+	tween.tween_property($player, "global_position", pos, 0.3).set_trans(Tween.TRANS_SINE)
 
 func versus(level:Level) -> void:
 	while RuleStandard.get_end_type(level.state) == "":

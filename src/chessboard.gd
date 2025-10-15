@@ -1,6 +1,7 @@
 extends InspectableItem
 class_name Chessboard
 
+signal clicked()
 signal move_played()
 signal ready_to_move(by:int)
 signal animation_finished()
@@ -79,6 +80,7 @@ func input(_from:Node3D, _to:Area3D, _event:InputEvent, _event_position:Vector3,
 			tap_position(_to.get_name())
 			mouse_moved = false
 			mouse_start_position_name = _to.get_name()
+			clicked.emit.call_deferred()
 		elif !_event.pressed && mouse_moved && _event.button_index == MOUSE_BUTTON_LEFT:
 			tap_position(_to.get_name())
 			finger_up()
