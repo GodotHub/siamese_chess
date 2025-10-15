@@ -1,7 +1,6 @@
-[gd_scene load_steps=9 format=3 uid="uid://dnut8pn3hxg8"]
+[gd_scene load_steps=8 format=3 uid="uid://dnut8pn3hxg8"]
 
 [ext_resource type="Script" uid="uid://cjddqgsgfo4hw" path="res://src/outside.gd" id="1_arvm7"]
-[ext_resource type="PackedScene" uid="uid://dwvyc2qlcdag0" path="res://scene/chessboard_large.tscn" id="1_m2ffg"]
 [ext_resource type="Script" uid="uid://dg85frcnjlauy" path="res://src/interact.gd" id="4_gs8dr"]
 [ext_resource type="PackedScene" uid="uid://b3ml34bssywkr" path="res://scene/player.tscn" id="4_w3jsn"]
 [ext_resource type="PackedScene" uid="uid://kqoc0aycgs35" path="res://scene/dialog.tscn" id="5_w3jsn"]
@@ -37,14 +36,9 @@ transform = Transform3D(-0.866024, -0.433016, 0.250001, 0, 0.499998, 0.866026, -
 light_color = Color(0.419813, 0.419813, 0.419813, 1)
 shadow_enabled = true
 
-[node name="chessboard_blank" parent="." instance=ExtResource("1_m2ffg")]
-COLOR_LAST_MOVE = Color(0.56, 0.2296, 0.2296, 1)
-COLOR_MOVE = Color(0.56, 0.2296, 0.2296, 1)
-
-[node name="interact" type="Area3D" parent="." node_paths=PackedStringArray("camera", "inspectable_item")]
+[node name="interact" type="Area3D" parent="." node_paths=PackedStringArray("camera")]
 script = ExtResource("4_gs8dr")
 camera = NodePath("../camera_3d")
-inspectable_item = [NodePath("../chessboard_blank")]
 metadata/_custom_type_script = "uid://dg85frcnjlauy"
 
 [node name="camera_3d" type="Camera3D" parent="."]
