@@ -241,10 +241,13 @@ func add_piece_instance(instance:Actor, by:int) -> void:	# 注意根据state摆�
 			king_instance[1] = instance
 		instance.introduce(get_node(Chess.to_position_name(by)).global_position)
 
-func pop_piece_instance(by:int) -> Actor:
-	var instance:Actor = chessboard_piece[by]
-	chessboard_piece.erase(by)
+func move_piece_instance_to_other(from:int, to:int, other:Chessboard) -> Actor:
+	var instance:Actor = chessboard_piece[from]
+	chessboard_piece.erase(from)
 	instance.get_parent().remove_child(instance)
+	other.state.add_piece(to, state.get_piece(from))
+	state.capture_piece(from)
+	other.add_piece_instance(instance, to)
 	return instance
 
 func move_piece_instance_from_backup(by:int, piece:int) -> void:
