@@ -16,6 +16,8 @@ class Level:
 var level_1:Level = Level.new()
 var level_2:Level = Level.new()
 var level_3:Level = Level.new()
+var level_4:Level = Level.new()
+var level_5:Level = Level.new()
 
 var ai:AI = null
 var history_state:PackedInt32Array = []
@@ -33,7 +35,7 @@ func _ready() -> void:
 				"level": level_2,
 				"to": Chess.to_x88(4)
 			},
-		}
+		},
 	}
 	level_2.state = RuleStandard.parse("1Y4Y1/1X4X1/1X4X1/1Y4Y1/1X4X1/1X4X1/1Y4Y1/1X4X1 w - - 0 1")
 	level_2.chessboard = create_chessboard(level_2.state, Vector3(0, 0, 18))
@@ -57,7 +59,7 @@ func _ready() -> void:
 			}
 		}
 	}
-	level_3.state = RuleStandard.parse("1Y4Y1/1X4X1/1X4X1/1Y4Y1/1X4X1/1X4X1/1Y4Y1/1X4X1 w - - 0 1")
+	level_3.state = RuleStandard.parse("1X4X1/XY4YX/8/8/8/8/YYYYYYYY/8 w - - 0 1")
 	level_3.chessboard = create_chessboard(level_3.state, Vector3(0, 0, 36))
 	level_3.meta = {
 		"teleport": {
@@ -68,6 +70,50 @@ func _ready() -> void:
 			Chess.to_x88(4): {
 				"level": level_2,
 				"to": Chess.to_x88(60)
+			},
+			Chess.to_x88(31): {
+				"level": level_4,
+				"to": Chess.to_x88(24)
+			},
+			Chess.to_x88(39): {
+				"level": level_4,
+				"to": Chess.to_x88(32)
+			},
+			Chess.to_x88(24): {
+				"level": level_5,
+				"to": Chess.to_x88(31)
+			},
+			Chess.to_x88(32): {
+				"level": level_5,
+				"to": Chess.to_x88(39)
+			}
+		}
+	}
+	level_4.state = RuleStandard.parse("8/8/8/8/8/8/8/8 w - - 0 1")
+	level_4.chessboard = create_chessboard(level_4.state, Vector3(18, 0, 36))
+	level_4.meta = {
+		"teleport": {
+			Chess.to_x88(31): {
+				"level": level_3,
+				"to": Chess.to_x88(24)
+			},
+			Chess.to_x88(39): {
+				"level": level_3,
+				"to": Chess.to_x88(32)
+			}
+		}
+	}
+	level_5.state = RuleStandard.parse("8/8/8/8/8/8/8/8 w - - 0 1")
+	level_5.chessboard = create_chessboard(level_5.state, Vector3(-18, 0, 36))
+	level_5.meta = {
+		"teleport": {
+			Chess.to_x88(31): {
+				"level": level_3,
+				"to": Chess.to_x88(24)
+			},
+			Chess.to_x88(39): {
+				"level": level_3,
+				"to": Chess.to_x88(32)
 			}
 		}
 	}
@@ -78,6 +124,8 @@ func _ready() -> void:
 	explore(level_1)
 	explore(level_2)
 	explore(level_3)
+	explore(level_4)
+	explore(level_5)
 
 func create_chessboard(_state:State, pos:Vector3) -> Chessboard:
 	var new_chessboard:Chessboard = load("res://scene/chessboard_large.tscn").instantiate()
