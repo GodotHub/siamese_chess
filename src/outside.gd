@@ -4,13 +4,27 @@ class Level:
 	var state:State = null
 	var chessboard:Chessboard = null
 	var in_battle:bool = false
+	func ready() -> void:
+		if meta.has("actor"):
+			for by:int in meta["actor"]:
+				chessboard.add_piece_instance(meta["actor"][by], by)
+		for i:int in 128:
+			if !state.has_piece(i) || chessboard.chessboard_piece.has(i):
+				continue
+			match String.chr(state.get_piece(i)):
+				"X":
+					chessboard.add_piece_instance(load("res://scene/shrub.tscn").instantiate(), i)
+				"Y":
+					chessboard.add_piece_instance(load("res://scene/tree.tscn").instantiate(), i)
+
 	func process() -> void:
-		for from:int in meta["teleport"]:
-			if state.has_piece(from):
-				meta["teleport"][from]["level"].state.add_piece(meta["teleport"][from]["to"], state.get_piece(from))
-				state.capture_piece(from)
-				chessboard.move_piece_instance_to_other(from, meta["teleport"][from]["to"], meta["teleport"][from]["level"].chessboard)
-				meta["teleport"][from]["level"].chessboard.set_valid_move(RuleStandard.generate_valid_move(meta["teleport"][from]["level"].state, 1))
+		if meta.has("teleport"):
+			for from:int in meta["teleport"]:
+				if state.has_piece(from):
+					meta["teleport"][from]["level"].state.add_piece(meta["teleport"][from]["to"], state.get_piece(from))
+					state.capture_piece(from)
+					chessboard.move_piece_instance_to_other(from, meta["teleport"][from]["to"], meta["teleport"][from]["level"].chessboard)
+					meta["teleport"][from]["level"].chessboard.set_valid_move(RuleStandard.generate_valid_move(meta["teleport"][from]["level"].state, 1))
 	var meta:Dictionary = {}
 
 var level_1:Level = Level.new()
@@ -36,8 +50,11 @@ func _ready() -> void:
 				"to": Chess.to_x88(4)
 			},
 		},
+		"actor": {
+			Chess.to_x88(4):  load("res://scene/cheshire.tscn").instantiate(),
+		}
 	}
-	level_2.state = RuleStandard.parse("1Y4Y1/1X4X1/1X4X1/1Y4Y1/1X4X1/1X4X1/1Y4Y1/1X4X1 w - - 0 1")
+	level_2.state = RuleStandard.parse("1Y4Y1/1X4X1/1X4X1/1Yz3Y1/1X4X1/1X4X1/1Y4Y1/1X4X1 w - - 0 1")
 	level_2.chessboard = create_chessboard(level_2.state, Vector3(0, 0, 18))
 	level_2.meta = {
 		"teleport": {
@@ -57,6 +74,9 @@ func _ready() -> void:
 				"level": level_3,
 				"to": Chess.to_x88(4)
 			}
+		},
+		"actor": {
+			Chess.to_x88(26): load("res://scene/carnation.tscn").instantiate().set_direction(PI / 2)
 		}
 	}
 	level_3.state = RuleStandard.parse("1X4X1/XY4YX/8/8/8/8/YYYYYYYY/8 w - - 0 1")
@@ -121,6 +141,11 @@ func _ready() -> void:
 	ai.set_max_depth(100)
 	ai.set_think_time(3)
 	$player.set_initial_interact($interact)
+	level_1.ready()
+	level_2.ready()
+	level_3.ready()
+	level_4.ready()
+	level_5.ready()
 	explore(level_1)
 	explore(level_2)
 	explore(level_3)
@@ -134,14 +159,6 @@ func create_chessboard(_state:State, pos:Vector3) -> Chessboard:
 	new_chessboard.global_position = pos
 	new_chessboard.set_state(_state)
 	new_chessboard.connect("clicked", move_player.bind(pos))
-	for i:int in 128:
-		match String.chr(_state.get_piece(i)):
-			"k":
-				new_chessboard.add_piece_instance(load("res://scene/cheshire.tscn").instantiate(), i)
-			"X":
-				new_chessboard.add_piece_instance(load("res://scene/shrub.tscn").instantiate(), i)
-			"Y":
-				new_chessboard.add_piece_instance(load("res://scene/tree.tscn").instantiate(), i)
 	return new_chessboard
 
 func explore(level:Level) -> void:

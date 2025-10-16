@@ -42,7 +42,7 @@ camera = NodePath("../camera_3d")
 metadata/_custom_type_script = "uid://dg85frcnjlauy"
 
 [node name="camera_3d" type="Camera3D" parent="."]
-transform = Transform3D(-0.959844, 0.190498, -0.205935, 7.5738e-09, 0.734086, 0.679057, 0.280533, 0.651789, -0.704608, -3.09205, 6.60401, -11.3314)
+transform = Transform3D(-0.97201, 0.159537, -0.172465, 2.18766e-08, 0.734086, 0.679057, 0.234939, 0.66005, -0.713539, -3.09205, 6.60401, -13.1685)
 
 [node name="player" parent="." instance=ExtResource("4_w3jsn")]
 
