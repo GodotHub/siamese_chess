@@ -5,7 +5,7 @@ var pastor_history_state:PackedInt32Array = []
 var friend_game_state:State = null
 var pastor_history:Array[State] = []
 var opening_book:OpeningBook = OpeningBook.new()
-var ai: PastorAI = PastorAI.new()
+var engine: PastorEngine = PastorEngine.new()
 @onready var pastor_history_chart:Document = load("res://scene/history.tscn").instantiate()
 
 var pastor_state:String = "idle"
@@ -65,12 +65,12 @@ func dialog_telephone_2025() -> void:
 			$dialog.push_dialog("这样啊……", true, true)
 			await $dialog.on_next
 			$dialog.push_dialog("容我稍作思考。", true, true, true)
-			var telephone_ai:PastorAI = PastorAI.new()
-			telephone_ai.set_max_depth(6)
-			telephone_ai.start_search(test_state, 1, pastor_history_state, Callable())
-			if telephone_ai.is_searching():
-				await telephone_ai.search_finished
-			var best_move:int = telephone_ai.get_search_result()
+			var telephone_engine:PastorEngine = PastorEngine.new()
+			telephone_engine.set_max_depth(6)
+			telephone_engine.start_search(test_state, 1, pastor_history_state, Callable())
+			if telephone_engine.is_searching():
+				await telephone_engine.search_finished
+			var best_move:int = telephone_engine.get_search_result()
 			$dialog.next()
 			$dialog.push_dialog("我认为您应当下" + RuleStandard.get_move_name(test_state, best_move), true, true)
 			await $dialog.on_next
@@ -118,13 +118,13 @@ func dialog_pastor_in_game() -> void:
 		if pastor_history.back().get_turn() == 0:
 			pastor_history.pop_back()
 			pastor_history_state.resize(pastor_history_state.size() - 1)
-			ai.stop_search()
+			engine.stop_search()
 		pastor_game_state = pastor_history.back().duplicate()
 		$chessboard_pastor.set_state(pastor_game_state)
 		$chessboard_pastor.set_valid_move(RuleStandard.generate_valid_move(pastor_game_state, 1))
 		$chessboard_pastor.set_valid_premove([])
 	elif $dialog.selected == 1:
-		ai.stop_search()
+		engine.stop_search()
 		$clock_pastor.stop()
 		$chessboard_pastor.set_valid_move([])
 		$chessboard_pastor.set_valid_premove([])
@@ -145,13 +145,13 @@ func dialog_pastor_game_start() -> void:
 			pastor_history_chart.set_filename("history." + String.num_int64(Time.get_unix_time_from_system()) + ".json")
 			if $dialog.selected == 0:
 				$clock_pastor.set_time(1800, 1, 0)
-				ai.set_think_time(5)
+				engine.set_think_time(5)
 			elif $dialog.selected == 1:
 				$clock_pastor.set_time(600, 1, 5)
-				ai.set_think_time(3)
+				engine.set_think_time(3)
 			elif $dialog.selected == 2:
 				$clock_pastor.set_time(300, 1, 3)
-				ai.set_think_time(2)
+				engine.set_think_time(2)
 			$dialog.push_dialog("现在棋盘已经准备好了。", true, true)
 			$player.force_set_camera($camera/camera_pastor_chessboard)
 			await $dialog.on_next
@@ -164,7 +164,7 @@ func dialog_pastor_game_start() -> void:
 			call_deferred("game_with_pastor")
 			break
 		elif $dialog.selected == 3:
-			ai.set_think_time(1)
+			engine.set_think_time(1)
 			pastor_game_state = RuleStandard.create_random_state(15)
 			$chessboard_pastor.set_state(pastor_game_state)
 			$chessboard_pastor.add_default_piece_set()
@@ -213,10 +213,10 @@ func game_with_pastor() -> void:
 	while RuleStandard.get_end_type(pastor_game_state) == "":
 		$chessboard_pastor.set_valid_move([])
 		$chessboard_pastor.set_valid_premove(RuleStandard.generate_premove(pastor_game_state, 1))
-		ai.start_search(pastor_game_state, 0, pastor_history_state, Callable())
-		if ai.is_searching():
-			await ai.search_finished
-		var move:int = ai.get_search_result()
+		engine.start_search(pastor_game_state, 0, pastor_history_state, Callable())
+		if engine.is_searching():
+			await engine.search_finished
+		var move:int = engine.get_search_result()
 		pastor_history_state.push_back(pastor_game_state.get_zobrist())
 		RuleStandard.apply_move(pastor_game_state, move)
 		$chessboard_pastor.execute_move(move)
@@ -227,16 +227,16 @@ func game_with_pastor() -> void:
 		$chessboard_pastor.set_valid_move(RuleStandard.generate_valid_move(pastor_game_state, 1))
 		$chessboard_pastor.set_valid_premove([])
 		$clock_pastor.next()
-		ai.start_search(pastor_game_state, 1, pastor_history_state, Callable())
+		engine.start_search(pastor_game_state, 1, pastor_history_state, Callable())
 		await $chessboard_pastor.move_played
 		pastor_history_state.push_back(pastor_game_state.get_zobrist())
 		RuleStandard.apply_move(pastor_game_state, $chessboard_pastor.confirm_move)
 		pastor_history_chart.push_move($chessboard_pastor.confirm_move)
 		pastor_history.push_back(pastor_game_state.duplicate())
 		$clock_pastor.next()
-		ai.stop_search()
-		if ai.is_searching():
-			await ai.search_finished
+		engine.stop_search()
+		if engine.is_searching():
+			await engine.search_finished
 	pastor_game_end(RuleStandard.get_end_type(pastor_game_state))
 
 func pastor_game_timeout(group:int) -> void:

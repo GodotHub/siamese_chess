@@ -1,4 +1,4 @@
-#include "pastor_ai.hpp"
+#include "pastor_engine.hpp"
 #include "rule_standard.hpp"
 #include "chess.hpp"
 #include <godot_cpp/core/error_macros.hpp>
@@ -7,7 +7,7 @@
 #include <algorithm>
 #include <functional>
 
-PastorAI::PastorAI()
+PastorEngine::PastorEngine()
 {
 	transposition_table.instantiate();
 	opening_book.instantiate();
@@ -255,7 +255,7 @@ PastorAI::PastorAI()
 	};
 }
 
-godot::PackedInt32Array PastorAI::generate_good_capture_move(godot::Ref<State>_state, int _group)
+godot::PackedInt32Array PastorEngine::generate_good_capture_move(godot::Ref<State>_state, int _group)
 {
 	godot::PackedInt32Array output;
 	for (State::PieceIterator iter = _state->piece_iterator_begin(); !iter.end(); iter.next())
@@ -367,7 +367,7 @@ godot::PackedInt32Array PastorAI::generate_good_capture_move(godot::Ref<State>_s
 }
 
 
-int PastorAI::get_piece_score(int _by, int _piece)
+int PastorEngine::get_piece_score(int _by, int _piece)
 {
 	godot::Vector2i piece_position = godot::Vector2i(_by % 16, _by / 16);
 	if (piece_value.count(_piece))
@@ -377,7 +377,7 @@ int PastorAI::get_piece_score(int _by, int _piece)
 	return 0;
 }
 
-int PastorAI::evaluate_all(godot::Ref<State> _state)
+int PastorEngine::evaluate_all(godot::Ref<State> _state)
 {
 	int score = 0;
 	for (State::PieceIterator iter = _state->piece_iterator_begin(); !iter.end(); iter.next())
@@ -389,7 +389,7 @@ int PastorAI::evaluate_all(godot::Ref<State> _state)
 	return score;
 }
 
-int PastorAI::evaluate(godot::Ref<State> _state, int _move)
+int PastorEngine::evaluate(godot::Ref<State> _state, int _move)
 {
 	int from = Chess::from(_move);
 	int from_piece = _state->get_piece(from);
@@ -432,7 +432,7 @@ int PastorAI::evaluate(godot::Ref<State> _state, int _move)
 	return score;
 }
 
-int PastorAI::compare_move(int a, int b, int best_move, int killer_1, int killer_2, const godot::Ref<State> &state, std::array<int, 65536> *history_table)
+int PastorEngine::compare_move(int a, int b, int best_move, int killer_1, int killer_2, const godot::Ref<State> &state, std::array<int, 65536> *history_table)
 {
 	if (best_move == a)
 		return true;
@@ -463,7 +463,7 @@ int PastorAI::compare_move(int a, int b, int best_move, int killer_1, int killer
 	return a > b;
 }
 
-int PastorAI::quies(godot::Ref<State> _state, int score, int _alpha, int _beta, int _group)
+int PastorEngine::quies(godot::Ref<State> _state, int score, int _alpha, int _beta, int _group)
 {
 	int score_relative = _group == 0 ? score : -score;
 	if (score_relative >= _beta)
@@ -493,7 +493,7 @@ int PastorAI::quies(godot::Ref<State> _state, int score, int _alpha, int _beta, 
 	return _alpha;
 }
 
-int PastorAI::alphabeta(const godot::Ref<State> &_state, int score, int _alpha, int _beta, int _depth, int _group, int _ply, bool _can_null, std::unordered_map<int, int> *_history_state, std::array<int, 65536> *_history_table, int *killer_1, int *killer_2, const godot::Callable &_debug_output)
+int PastorEngine::alphabeta(const godot::Ref<State> &_state, int score, int _alpha, int _beta, int _depth, int _group, int _ply, bool _can_null, std::unordered_map<int, int> *_history_state, std::array<int, 65536> *_history_table, int *killer_1, int *killer_2, const godot::Callable &_debug_output)
 {
 	bool found_pv = false;
 	int transposition_table_score = transposition_table->probe_hash(_state->get_zobrist(), _depth, _alpha, _beta);
@@ -674,7 +674,7 @@ int PastorAI::alphabeta(const godot::Ref<State> &_state, int score, int _alpha, 
 	return _alpha;
 }
 
-void PastorAI::search(const godot::Ref<State> &_state, int _group, const godot::PackedInt32Array &history_state, const godot::Callable &_debug_output)
+void PastorEngine::search(const godot::Ref<State> &_state, int _group, const godot::PackedInt32Array &history_state, const godot::Callable &_debug_output)
 {
 	if (opening_book->has_record(_state))
 	{
@@ -712,58 +712,58 @@ void PastorAI::search(const godot::Ref<State> &_state, int _group, const godot::
 	}
 }
 
-int PastorAI::get_search_result()
+int PastorEngine::get_search_result()
 {
 	return best_move;
 }
 
-godot::PackedInt32Array PastorAI::get_principal_variation()
+godot::PackedInt32Array PastorEngine::get_principal_variation()
 {
 	return principal_variation;
 }
 
-int PastorAI::get_score()
+int PastorEngine::get_score()
 {
 	return best_score;
 }
 
-void PastorAI::set_max_depth(int _max_depth)
+void PastorEngine::set_max_depth(int _max_depth)
 {
 	max_depth = _max_depth;
 }
 
-void PastorAI::set_despise_factor(int _despise_factor)
+void PastorEngine::set_despise_factor(int _despise_factor)
 {
 	despise_factor = _despise_factor;
 }
 
-void PastorAI::set_transposition_table(const godot::Ref<TranspositionTable> &_transposition_table)
+void PastorEngine::set_transposition_table(const godot::Ref<TranspositionTable> &_transposition_table)
 {
 	transposition_table = _transposition_table;
 }
 
-void PastorAI::set_think_time(double _think_time)
+void PastorEngine::set_think_time(double _think_time)
 {
 	think_time = _think_time;
 }
 
-godot::Ref<TranspositionTable> PastorAI::get_transposition_table() const
+godot::Ref<TranspositionTable> PastorEngine::get_transposition_table() const
 {
 	return this->transposition_table;
 }
 
-void PastorAI::_bind_methods()
+void PastorEngine::_bind_methods()
 {
 	ADD_SIGNAL(godot::MethodInfo("search_finished"));
-	godot::ClassDB::bind_method(godot::D_METHOD("search"), &PastorAI::search);
-	godot::ClassDB::bind_method(godot::D_METHOD("get_search_result"), &PastorAI::get_search_result);
-	godot::ClassDB::bind_method(godot::D_METHOD("get_score"), &PastorAI::get_score);
-	godot::ClassDB::bind_method(godot::D_METHOD("get_principal_variation"), &PastorAI::get_principal_variation);
-	godot::ClassDB::bind_method(godot::D_METHOD("set_max_depth"), &PastorAI::set_max_depth);
-	godot::ClassDB::bind_method(godot::D_METHOD("set_despise_factor"), &PastorAI::set_despise_factor);
-	godot::ClassDB::bind_method(godot::D_METHOD("set_think_time"), &PastorAI::set_think_time);
-	// godot::ClassDB::bind_method(godot::D_METHOD("set_transposition_table", "transposition_table"), &PastorAI::set_transposition_table);
-	godot::ClassDB::bind_method(godot::D_METHOD("get_transposition_table"), &PastorAI::get_transposition_table);
+	godot::ClassDB::bind_method(godot::D_METHOD("search"), &PastorEngine::search);
+	godot::ClassDB::bind_method(godot::D_METHOD("get_search_result"), &PastorEngine::get_search_result);
+	godot::ClassDB::bind_method(godot::D_METHOD("get_score"), &PastorEngine::get_score);
+	godot::ClassDB::bind_method(godot::D_METHOD("get_principal_variation"), &PastorEngine::get_principal_variation);
+	godot::ClassDB::bind_method(godot::D_METHOD("set_max_depth"), &PastorEngine::set_max_depth);
+	godot::ClassDB::bind_method(godot::D_METHOD("set_despise_factor"), &PastorEngine::set_despise_factor);
+	godot::ClassDB::bind_method(godot::D_METHOD("set_think_time"), &PastorEngine::set_think_time);
+	// godot::ClassDB::bind_method(godot::D_METHOD("set_transposition_table", "transposition_table"), &PastorEngine::set_transposition_table);
+	godot::ClassDB::bind_method(godot::D_METHOD("get_transposition_table"), &PastorEngine::get_transposition_table);
 	// ADD_PROPERTY(PropertyInfo(Variant::INT, "max_depth"), "set_max_depth", "get_max_depth");
 	// ADD_PROPERTY(PropertyInfo(Variant::OBJECT, "transposition_table"), "set_transposition_table", "get_transposition_table");
 }

@@ -1,16 +1,16 @@
-#ifndef _PASTOR_AI_H_
-#define _PASTOR_AI_H_
+#ifndef _PASTOR_ENGINE_H_
+#define _PASTOR_ENGINE_H_
 
-#include "ai.hpp"
+#include "engine.hpp"
 #include "transposition_table.hpp"
 #include "opening_book.hpp"
 #include <unordered_map>
 
-class PastorAI : public AI {
-	GDCLASS(PastorAI, AI)
-
+class PastorEngine : public Engine
+{
+	GDCLASS(PastorEngine, Engine)
 	public:
-		PastorAI();
+		PastorEngine();
 		int get_piece_score(int _by, int _piece);
 		int evaluate_all(godot::Ref<State> _state);
 		int evaluate(godot::Ref<State> _state, int _move);

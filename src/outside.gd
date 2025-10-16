@@ -33,7 +33,7 @@ var level_3:Level = Level.new()
 var level_4:Level = Level.new()
 var level_5:Level = Level.new()
 
-var ai:AI = null
+var engine:Engine = null
 var history_state:PackedInt32Array = []
 
 func _ready() -> void:
@@ -137,9 +137,9 @@ func _ready() -> void:
 			}
 		}
 	}
-	ai = PastorAI.new()
-	ai.set_max_depth(100)
-	ai.set_think_time(3)
+	engine = PastorEngine.new()
+	engine.set_max_depth(100)
+	engine.set_think_time(3)
 	$player.set_initial_interact($interact)
 	level_1.ready()
 	level_2.ready()
@@ -181,14 +181,14 @@ func versus(level:Level) -> void:
 	while RuleStandard.get_end_type(level.state) == "":
 		level.chessboard.set_valid_move([])
 		level.chessboard.set_valid_premove(RuleStandard.generate_premove(level.state, 1))
-		ai.set_think_time(3)
-		ai.start_search(level.state, 0, history_state, Callable())
-		if ai.is_searching():
-			await ai.search_finished
-		var move:int = ai.get_search_result()
+		engine.set_think_time(3)
+		engine.start_search(level.state, 0, history_state, Callable())
+		if engine.is_searching():
+			await engine.search_finished
+		var move:int = engine.get_search_result()
 		
 		var test_state:State = level.state.duplicate()
-		var variation:PackedInt32Array = ai.get_principal_variation()
+		var variation:PackedInt32Array = engine.get_principal_variation()
 		var text:String = ""
 		for iter:int in variation:
 			var move_name:String = RuleStandard.get_move_name(test_state, iter)
@@ -203,14 +203,14 @@ func versus(level:Level) -> void:
 			break
 		level.chessboard.set_valid_move(RuleStandard.generate_valid_move(level.state, 1))
 		level.chessboard.set_valid_premove([])
-		ai.set_think_time(INF)
-		ai.start_search(level.state, 1, history_state, Callable())
+		engine.set_think_time(INF)
+		engine.start_search(level.state, 1, history_state, Callable())
 		await level.chessboard.move_played
 		history_state.push_back(level.state.get_zobrist())
 		RuleStandard.apply_move(level.state, level.chessboard.confirm_move)
-		ai.stop_search()
-		if ai.is_searching():
-			await ai.search_finished
+		engine.stop_search()
+		if engine.is_searching():
+			await engine.search_finished
 	match RuleStandard.get_end_type(level.state):
 		"checkmate_black":
 			for by:int in 128:

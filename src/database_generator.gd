@@ -5,12 +5,12 @@ var progress_bar_data:PackedFloat32Array = []
 var zobrist:PackedInt64Array = []
 var main_variation:PackedInt32Array = []
 var chess_state:State = null
-var ai: PastorAI = PastorAI.new()
+var engine: PastorEngine = PastorEngine.new()
 
 func _ready() -> void:
 	chess_state = RuleStandard.parse("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
-	ai.set_think_time(INF)
-	ai.set_max_depth(8)
+	engine.set_think_time(INF)
+	engine.set_max_depth(8)
 	var thread:Thread = Thread.new()
 	thread.start(score_test)
 
@@ -18,11 +18,11 @@ func performance_test() -> float:
 	chess_state = RuleStandard.parse("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
 	var time_start:float = Time.get_ticks_usec()
 	# RuleStandard.search(chess_state, 0, transposition_table, Callable(), 6, debug_output)
-	ai.start_search(chess_state, 0, [], debug_output)
-	await ai.search_finished
+	engine.start_search(chess_state, 0, [], debug_output)
+	await engine.search_finished
 	var time_end:float = Time.get_ticks_usec()
 	var test_state:State = chess_state.duplicate()
-	var variation:PackedInt32Array = ai.get_principal_variation()
+	var variation:PackedInt32Array = engine.get_principal_variation()
 	var text:String = ""
 	for iter:int in variation:
 		var move_name:String = RuleStandard.get_move_name(test_state, iter)
@@ -70,27 +70,27 @@ func perft_test() -> void:
 		print("perft_test_7 depth:%d expect:%d actual:%d" % [i, node_count[i], result])
 
 func score_test() -> void:
-	ai.set_think_time(INF)
-	ai.set_max_depth(6)
+	engine.set_think_time(INF)
+	engine.set_max_depth(6)
 	chess_state = RuleStandard.parse("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
 	print(chess_state.print_board())
-	ai.get_transposition_table().clear()
-	ai.start_search(chess_state, 0, [], debug_output)
-	await ai.search_finished
-	var original_score:int = ai.get_score()
+	engine.get_transposition_table().clear()
+	engine.start_search(chess_state, 0, [], debug_output)
+	await engine.search_finished
+	var original_score:int = engine.get_score()
 	var mirrored_state:State = RuleStandard.mirror_state(chess_state)
 	print(mirrored_state.print_board())
-	ai.get_transposition_table().clear()
-	ai.start_search(mirrored_state, 0, [], debug_output)
-	await ai.search_finished
-	var mirrored_score:int = ai.get_score()
+	engine.get_transposition_table().clear()
+	engine.start_search(mirrored_state, 0, [], debug_output)
+	await engine.search_finished
+	var mirrored_score:int = engine.get_score()
 	var rotated_state:State = RuleStandard.rotate_state(chess_state)
 	rotated_state = RuleStandard.swap_group(rotated_state)
 	print(rotated_state.print_board())
-	ai.get_transposition_table().clear()
-	ai.start_search(rotated_state, 0, [], debug_output)
-	await ai.search_finished
-	var rotated_score:int = ai.get_score()
+	engine.get_transposition_table().clear()
+	engine.start_search(rotated_state, 0, [], debug_output)
+	await engine.search_finished
+	var rotated_score:int = engine.get_score()
 	print("%d %d %d" % [original_score, mirrored_score, rotated_score])
 
 func _physics_process(_delta:float) -> void:
@@ -104,13 +104,13 @@ func make_database() -> void:
 	print("before: %dms" % await performance_test())
 	chess_state = RuleStandard.parse("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
 	# RuleStandard.search(chess_state, 0, transposition_table, Callable(), 10, debug_output)
-	ai.set_max_depth(20)
-	ai.start_search(chess_state, 0, [], debug_output)
-	await ai.search_finished
-	main_variation = ai.get_principal_variation()
+	engine.set_max_depth(20)
+	engine.start_search(chess_state, 0, [], debug_output)
+	await engine.search_finished
+	main_variation = engine.get_principal_variation()
 	print(main_variation)
 	#$pastor.transposition_table = transposition_table
-	ai.get_transposition_table().save_file("user://standard_opening.fa")
+	engine.get_transposition_table().save_file("user://standard_opening.fa")
 	print("after: %dms" % await performance_test())
 
 func debug_output(_zobrist:int, depth:int, cur:int, total:int) -> void:
