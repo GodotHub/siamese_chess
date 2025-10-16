@@ -512,7 +512,7 @@ int PastorAI::alphabeta(const godot::Ref<State> &_state, int score, int _alpha, 
 	}
 	if (_history_state && _history_state->count(_state->get_zobrist()))
 	{
-		return 0; // 视作平局，如果局面不太好，也不会选择负分的下法
+		return despise_factor; // 视作平局，如果局面不太好，也不会选择负分的下法
 	}
 
 	if (time_passed() >= think_time || interrupted)
@@ -602,7 +602,7 @@ int PastorAI::alphabeta(const godot::Ref<State> &_state, int score, int _alpha, 
 		{
 			return -WIN + _ply;
 		} else {
-			return 0;
+			return despise_factor;
 		}
 	}
 	std::sort(move_list.ptrw(), move_list.ptrw() + move_list.size(), std::bind(compare_move, this, std::placeholders::_1, std::placeholders::_2, best_move, killer_1 ? *killer_1 : 0, killer_2 ? *killer_2 : 0, _state, _history_table));
@@ -732,6 +732,11 @@ void PastorAI::set_max_depth(int _max_depth)
 	max_depth = _max_depth;
 }
 
+void PastorAI::set_despise_factor(int _despise_factor)
+{
+	despise_factor = _despise_factor;
+}
+
 void PastorAI::set_transposition_table(const godot::Ref<TranspositionTable> &_transposition_table)
 {
 	transposition_table = _transposition_table;
@@ -755,6 +760,7 @@ void PastorAI::_bind_methods()
 	godot::ClassDB::bind_method(godot::D_METHOD("get_score"), &PastorAI::get_score);
 	godot::ClassDB::bind_method(godot::D_METHOD("get_principal_variation"), &PastorAI::get_principal_variation);
 	godot::ClassDB::bind_method(godot::D_METHOD("set_max_depth"), &PastorAI::set_max_depth);
+	godot::ClassDB::bind_method(godot::D_METHOD("set_despise_factor"), &PastorAI::set_despise_factor);
 	godot::ClassDB::bind_method(godot::D_METHOD("set_think_time"), &PastorAI::set_think_time);
 	// godot::ClassDB::bind_method(godot::D_METHOD("set_transposition_table", "transposition_table"), &PastorAI::set_transposition_table);
 	godot::ClassDB::bind_method(godot::D_METHOD("get_transposition_table"), &PastorAI::get_transposition_table);

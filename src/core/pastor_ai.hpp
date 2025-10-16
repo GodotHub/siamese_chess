@@ -23,6 +23,7 @@ class PastorAI : public AI {
 		godot::PackedInt32Array get_principal_variation();
 		int get_score();
 		void set_max_depth(int _max_depth);
+		void set_despise_factor(int _despise_factor);
 		void set_think_time(double _think_time);
 		void set_transposition_table(const godot::Ref<TranspositionTable> &transposition_table);
 		godot::Ref<TranspositionTable> get_transposition_table() const;
@@ -34,6 +35,7 @@ class PastorAI : public AI {
 		int WIN = 50000;
 		int THRESHOLD = 60000;
 		int MAX_PLY = 50;
+		int despise_factor = -100;
 		double think_time;
 		int best_move;
 		int best_score;
