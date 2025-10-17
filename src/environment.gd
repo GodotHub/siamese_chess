@@ -341,4 +341,4 @@ func game_with_friend() -> void:
 		$clock_friend.next()
 
 func go_outside() -> void:
-	get_tree().change_scene_to_file.call_deferred("res://scene/outside_e8.tscn")
+	get_tree().change_scene_to_file.call_deferred("res://scene/outside.tscn")
