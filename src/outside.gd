@@ -17,14 +17,21 @@ class Level:
 				"Y":
 					chessboard.add_piece_instance(load("res://scene/tree.tscn").instantiate(), i)
 
-	func process() -> void:
+	func process(move:int) -> void:
 		if meta.has("teleport"):
 			for from:int in meta["teleport"]:
-				if state.has_piece(from):
-					meta["teleport"][from]["level"].state.add_piece(meta["teleport"][from]["to"], state.get_piece(from))
+				var to:int = meta["teleport"][from]["to"]
+				var next_level:Level = meta["teleport"][from]["level"]
+				if Chess.to(move) == from && !next_level.state.has_piece(to):
+					next_level.state.add_piece(to, state.get_piece(from))
 					state.capture_piece(from)
-					chessboard.move_piece_instance_to_other(from, meta["teleport"][from]["to"], meta["teleport"][from]["level"].chessboard)
-					meta["teleport"][from]["level"].chessboard.set_valid_move(RuleStandard.generate_valid_move(meta["teleport"][from]["level"].state, 1))
+					chessboard.move_piece_instance_to_other(from, to, next_level.chessboard)
+					next_level.chessboard.set_valid_move(RuleStandard.generate_valid_move(next_level.state, 1))
+				elif Chess.from(move) == from && next_level.state.has_piece(to):
+					state.add_piece(from, next_level.state.get_piece(to))
+					next_level.state.capture_piece(to)
+					next_level.chessboard.move_piece_instance_to_other(to, from, chessboard)
+					chessboard.set_valid_move(RuleStandard.generate_valid_move(state, 1))
 	var meta:Dictionary = {}
 
 var level_1:Level = Level.new()
@@ -54,7 +61,7 @@ func _ready() -> void:
 			Chess.to_x88(4):  load("res://scene/cheshire.tscn").instantiate(),
 		}
 	}
-	level_2.state = RuleStandard.parse("1Y4Y1/1X4X1/1X4X1/1Yz3Y1/1X4X1/1X4X1/1Y4Y1/1X4X1 w - - 0 1")
+	level_2.state = RuleStandard.parse("1Y4Y1/1X4X1/1X3pX1/1Yz3Y1/1X4X1/1X4X1/1Y4Y1/1X4X1 w - - 0 1")
 	level_2.chessboard = create_chessboard(level_2.state, Vector3(0, 0, 18))
 	level_2.meta = {
 		"teleport": {
@@ -76,7 +83,8 @@ func _ready() -> void:
 			}
 		},
 		"actor": {
-			Chess.to_x88(26): load("res://scene/carnation.tscn").instantiate().set_direction(PI / 2)
+			Chess.to_x88(26): load("res://scene/carnation.tscn").instantiate().set_direction(PI / 2),
+			Chess.to_x88(21): load("res://scene/piece_pawn_black.tscn").instantiate().set_larger_scale().set_show_on_backup(false)
 		}
 	}
 	level_3.state = RuleStandard.parse("1X4X1/XY4YX/8/8/8/8/YYYYYYYY/8 w - - 0 1")
@@ -168,8 +176,7 @@ func explore(level:Level) -> void:
 			level.chessboard.set_valid_premove([])
 			await level.chessboard.move_played
 			RuleStandard.apply_move(level.state, level.chessboard.confirm_move)
-			await level.chessboard.animation_finished
-			level.process.call()
+			level.process(level.chessboard.confirm_move)
 		else:
 			await level.chessboard.clicked
 
