@@ -33,7 +33,7 @@ var level_3:Level = Level.new()
 var level_4:Level = Level.new()
 var level_5:Level = Level.new()
 
-var engine:Engine = null
+var engine:ChessEngine = null
 var history_state:PackedInt32Array = []
 
 func _ready() -> void:

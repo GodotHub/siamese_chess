@@ -6,9 +6,9 @@
 #include "opening_book.hpp"
 #include <unordered_map>
 
-class PastorEngine : public Engine
+class PastorEngine : public ChessEngine
 {
-	GDCLASS(PastorEngine, Engine)
+	GDCLASS(PastorEngine, ChessEngine)
 	public:
 		PastorEngine();
 		int get_piece_score(int _by, int _piece);

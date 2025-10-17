@@ -28,7 +28,7 @@ void initialize_siamese_module(godot::ModuleInitializationLevel p_level)
 	godot::ClassDB::register_class<OpeningBook>();
 	godot::ClassDB::register_class<TranspositionTable>();
 	godot::ClassDB::register_class<ZobristHash>();
-	godot::ClassDB::register_abstract_class<Engine>();
+	godot::ClassDB::register_abstract_class<ChessEngine>();
 	godot::ClassDB::register_class<PastorEngine>();
 	
 	godot::Engine::get_singleton()->register_singleton("Chess", Chess::get_singleton());

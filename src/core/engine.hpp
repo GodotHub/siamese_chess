@@ -8,9 +8,9 @@
 #include <godot_cpp/variant/dictionary.hpp>
 #include <thread>
 
-class Engine : public godot::RefCounted
+class ChessEngine : public godot::RefCounted
 {
-	GDCLASS(Engine, godot::RefCounted)
+	GDCLASS(ChessEngine, godot::RefCounted)
 	public:
 		void start_search(const godot::Ref<State> &_state, int _group, const godot::PackedInt32Array &history_state, const godot::Callable &_debug_output);
 		void search_thread(const godot::Ref<State> &_state, int _group, const godot::PackedInt32Array &history_state, const godot::Callable &_debug_output);
@@ -19,8 +19,8 @@ class Engine : public godot::RefCounted
 		double time_passed();
 		virtual void search(const godot::Ref<State> &_state, int _group, const godot::PackedInt32Array &history_state, const godot::Callable &_debug_output) = 0;
 		virtual int get_search_result() = 0;
-	protected:
 		static void _bind_methods();
+	protected:
 		double start_thinking;
 		bool interrupted;
 		bool searching;
