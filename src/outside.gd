@@ -117,18 +117,22 @@ func _ready() -> void:
 			}
 		}
 	}
-	level_4.state = RuleStandard.parse("8/8/8/8/8/8/8/8 w - - 0 1")
+	level_4.state = RuleStandard.parse("Y6Y/1XXXXXX1/1X1X2X1/1X1KY1X1/1X1XQ1X1/1X2X1X1/1XXXXXX1/Y6Y w - - 0 1")
 	level_4.chessboard = create_chessboard(level_4.state, Vector3(18, 0, 36))
 	level_4.meta = {
 		"teleport": {
-			Chess.to_x88(31): {
+			Chess.to_x88(24): {
 				"level": level_3,
-				"to": Chess.to_x88(24)
+				"to": Chess.to_x88(31)
 			},
-			Chess.to_x88(39): {
+			Chess.to_x88(32): {
 				"level": level_3,
-				"to": Chess.to_x88(32)
+				"to": Chess.to_x88(39)
 			}
+		},
+		"actor": {
+			Chess.to_x88(27): load("res://scene/enemy_cheshire.tscn").instantiate(),
+			Chess.to_x88(36): load("res://scene/piece_queen_white.tscn").instantiate().set_larger_scale().set_show_on_backup(false)
 		}
 	}
 	level_5.state = RuleStandard.parse("8/8/8/8/8/8/8/8 w - - 0 1")
