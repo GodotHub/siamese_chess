@@ -181,6 +181,15 @@ func explore(level:Level) -> void:
 			await level.chessboard.move_played
 			RuleStandard.apply_move(level.state, level.chessboard.confirm_move)
 			level.process(level.chessboard.confirm_move)
+			
+			# TODO: 这是不准确的攻击范围判定，拓展RuleStandard功能以改写成标准的攻击范围
+			var white_move_list:PackedInt32Array = RuleStandard.generate_valid_move(level.state, 0)
+			var attack:int = 0
+			for move:int in white_move_list:
+				attack |= Chess.mask(Chess.to_64(Chess.to(move)))
+			if level.state.get_bit("a".unicode_at(0)) & attack:
+				versus.call_deferred(level)
+				break
 		else:
 			await level.chessboard.clicked
 
@@ -228,6 +237,7 @@ func versus(level:Level) -> void:
 				if level.state.has_piece(by) && Chess.group(level.state.get_piece(by)) == 0:
 					level.state.capture_piece(by)
 					level.chessboard.chessboard_piece[by].captured()
+			explore(level)
 		"checkmate_white":
 			for by:int in 128:
 				if level.state.has_piece(by) && Chess.group(level.state.get_piece(by)) == 1:
