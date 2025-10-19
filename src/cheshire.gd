@@ -57,7 +57,7 @@ func captured(_capturing:Actor = null) -> void:	# 被攻击
 		tween.tween_callback(animation_finished.emit)
 	$animation_tree.get("parameters/playback").travel("battle_died")
 
-func promote() -> void:	# 升变，不过对于Cheshire而言不太可能，先留空
+func promote(_pos:Vector3) -> void:	# 升变，不过对于Cheshire而言不太可能，先留空
 	pass
 	
 func move(_pos:Vector3) -> void:	# 单纯的移动

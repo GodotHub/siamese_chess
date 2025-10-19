@@ -8,6 +8,7 @@ var backup_position:Vector3 = Vector3(0, 0, 0)
 
 func _ready() -> void:
 	super._ready()
+	top_level = true
 	visible = show_on_backup
 	global_position = backup_position
 	group = Chess.group(piece_type[0])
@@ -66,12 +67,9 @@ func captured(_capturing:Actor = null) -> void:	# 被攻击
 	var tween:Tween = create_tween()
 	tween.tween_property(self, "global_position", backup_position, 0.3).set_trans(Tween.TRANS_SINE)
 
-func promote() -> void:
-	if !show_on_backup:
-		visible = false
-		return
+func promote(_pos:Vector3) -> void:
 	var tween:Tween = create_tween()
-	tween.tween_property(self, "global_position", backup_position, 0.3).set_trans(Tween.TRANS_SINE)
+	tween.tween_property(self, "global_position", _pos, 0.3).set_trans(Tween.TRANS_SINE)
 
 func set_warning(enabled:bool) -> void:
 	if enabled:

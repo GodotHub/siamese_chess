@@ -320,9 +320,10 @@ func graft_piece_instance(from:int, to:int) -> void:
 	animation_finished.emit.call_deferred()
 
 func promote_piece_instance(from:int, to:int, piece:int) -> void:
-	chessboard_piece[from].promote()
-	move_piece_instance_to_backup(from)
-	move_piece_instance_from_backup(to, piece)
+	var instance:Actor = chessboard_piece[from]
+	instance.promote(get_node(Chess.to_position_name(to)).global_position)
+	chessboard_piece.erase(from)
+	chessboard_piece[to] = instance
 	animation_finished.emit.call_deferred()
 
 func en_passant_piece_instance(from:int, to:int, captured:int) -> void:
