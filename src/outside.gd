@@ -61,7 +61,7 @@ func _ready() -> void:
 			Chess.to_x88(4):  load("res://scene/cheshire.tscn").instantiate(),
 		}
 	}
-	level_2.state = RuleStandard.parse("1Y4Y1/1X4X1/1X3pX1/1Yz3Y1/1X4X1/1X4X1/1Y4Y1/1X4X1 w - - 0 1")
+	level_2.state = RuleStandard.parse("1Y4Y1/1X4X1/1X2ppX1/1Yz3Y1/1X4X1/1X4X1/1Y4Y1/1X4X1 w - - 0 1")
 	level_2.chessboard = create_chessboard(level_2.state, Vector3(0, 0, 18))
 	level_2.meta = {
 		"teleport": {
@@ -84,6 +84,7 @@ func _ready() -> void:
 		},
 		"actor": {
 			Chess.to_x88(26): load("res://scene/carnation.tscn").instantiate().set_direction(PI / 2),
+			Chess.to_x88(20): load("res://scene/piece_pawn_black.tscn").instantiate().set_larger_scale().set_show_on_backup(false),
 			Chess.to_x88(21): load("res://scene/piece_pawn_black.tscn").instantiate().set_larger_scale().set_show_on_backup(false)
 		}
 	}
