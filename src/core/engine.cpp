@@ -14,8 +14,8 @@ void ChessEngine::start_search(const godot::Ref<State> &_state, int _group, cons
 void ChessEngine::search_thread(const godot::Ref<State> &_state, int _group, const godot::PackedInt32Array &history_state, const godot::Callable &_debug_output)
 {
 	search(_state, _group, history_state, _debug_output);
-	call_deferred("emit_signal", "search_finished");
 	searching = false;
+	call_deferred("emit_signal", "search_finished");
 }
 
 void ChessEngine::stop_search()
