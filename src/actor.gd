@@ -6,7 +6,7 @@ signal animation_finished()
 # SiameseChess中100%的人都会参与到战斗中。
 
 # 由于棋子总量有限，SiameseChess中部分人会兼有其他定位
-@export var piece_type:PackedInt32Array = []
+@export var piece_type:int = 0
 
 func _ready() -> void:
 	super._ready()

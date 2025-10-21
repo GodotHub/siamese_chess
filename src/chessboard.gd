@@ -99,8 +99,13 @@ func set_state(_state:State) -> void:
 	#king_instance[1].set_warning(RuleStandard.is_check(state, 0))
 
 func get_position_name(_position:Vector3) -> String:
-	var chess_pos:Vector2i = Vector2i(int(_position.x + 4) / 1, int(_position.z + 4) / 1)
-	return "%c%d" % [chess_pos.x + 97, chess_pos.y + 1]
+	var nearest:Area3D = null
+	for i:int in 8:
+		for j:int in 8:
+			var position_name:String = "%c%d" % [i + 97, j + 1]
+			if !nearest || _position.distance_squared_to(get_node(position_name).global_position) < _position.distance_squared_to(nearest.global_position):
+				nearest = get_node(position_name)
+	return nearest.name
 
 func convert_name_to_position(_position_name:String) -> Vector3:
 	return get_node(_position_name).position
@@ -255,19 +260,9 @@ func move_piece_instance_to_other(from:int, to:int, other:Chessboard) -> Actor:
 func move_piece_instance_from_backup(by:int, piece:int) -> void:
 	var target_piece_instance:Actor = null
 	for iter:Actor in backup_piece:
-		if iter.piece_type[0] == piece:
+		if iter.piece_type == piece:
 			target_piece_instance = iter
 			break
-	if !target_piece_instance:
-		for iter:Actor in backup_piece:
-			if iter.piece_type.has(piece):
-				target_piece_instance = iter
-				break
-	if !target_piece_instance:
-		var new_instance:Actor = fallback_piece.duplicate(DuplicateFlags.DUPLICATE_SCRIPTS)
-		new_instance.piece_type = [piece]
-		add_piece_instance(new_instance, by)
-		target_piece_instance = new_instance
 	if target_piece_instance:
 		backup_piece.erase(target_piece_instance)
 		chessboard_piece[by] = target_piece_instance

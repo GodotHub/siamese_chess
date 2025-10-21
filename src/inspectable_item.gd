@@ -8,7 +8,7 @@ func _ready() -> void:
 		button_list.push_back(iter)
 		iter.add_user_signal("input")
 		iter.connect("input", input)
-	set_enabled(false)
+	set_enabled(true)
 
 func set_enabled(enabled:bool) -> void:
 	for iter:Area3D in button_list:

@@ -1,9 +1,13 @@
-[gd_scene load_steps=8 format=3 uid="uid://dnut8pn3hxg8"]
+[gd_scene load_steps=13 format=3 uid="uid://dnut8pn3hxg8"]
 
 [ext_resource type="Script" uid="uid://cjddqgsgfo4hw" path="res://src/outside.gd" id="1_arvm7"]
 [ext_resource type="Script" uid="uid://dg85frcnjlauy" path="res://src/interact.gd" id="4_gs8dr"]
 [ext_resource type="PackedScene" uid="uid://b3ml34bssywkr" path="res://scene/player.tscn" id="4_w3jsn"]
+[ext_resource type="PackedScene" uid="uid://bmv2xhfws616g" path="res://scene/level.tscn" id="5_asp05"]
+[ext_resource type="PackedScene" uid="uid://dwvyc2qlcdag0" path="res://scene/chessboard_large.tscn" id="5_dfs0n"]
 [ext_resource type="PackedScene" uid="uid://kqoc0aycgs35" path="res://scene/dialog.tscn" id="5_w3jsn"]
+[ext_resource type="PackedScene" uid="uid://bjdbj6ulswxgl" path="res://scene/cheshire.tscn" id="6_r6x65"]
+[ext_resource type="Script" uid="uid://bbi6kjxerg3hk" path="res://src/marker_teleport.gd" id="8_r6x65"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_gs8dr"]
 sky_top_color = Color(1, 1, 1, 1)
@@ -24,6 +28,13 @@ fog_light_color = Color(1, 1, 1, 1)
 volumetric_fog_albedo = Color(0.88, 0.79816, 0.6072, 1)
 volumetric_fog_emission = Color(1, 1, 1, 1)
 adjustment_enabled = true
+
+[sub_resource type="Curve3D" id="Curve3D_dfs0n"]
+_data = {
+"points": PackedVector3Array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -0.8, 0, 0, 0.8, 0, 1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 4),
+"tilts": PackedFloat32Array(0, 0, 0)
+}
+point_count = 3
 
 [node name="outside" type="Node3D"]
 script = ExtResource("1_arvm7")
@@ -47,3 +58,75 @@ transform = Transform3D(-0.97201, 0.159537, -0.172465, 2.18766e-08, 0.734086, 0.
 [node name="player" parent="." instance=ExtResource("4_w3jsn")]
 
 [node name="dialog" parent="." instance=ExtResource("5_w3jsn")]
+
+[node name="level_1" parent="." instance=ExtResource("5_asp05")]
+
+[node name="chessboard" parent="level_1" instance=ExtResource("5_dfs0n")]
+
+[node name="cheshire" parent="level_1" instance=ExtResource("6_r6x65")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, -7)
+piece_type = 107
+
+[node name="level_2" parent="." instance=ExtResource("5_asp05")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 18)
+
+[node name="chessboard" parent="level_2" instance=ExtResource("5_dfs0n")]
+
+[node name="path_3d_1" type="Path3D" parent="." node_paths=PackedStringArray("from_level", "to_level")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7, 0, 7)
+curve = SubResource("Curve3D_dfs0n")
+script = ExtResource("8_r6x65")
+from_level = NodePath("../level_1")
+to_level = NodePath("../level_2")
+
+[node name="path_3d_2" type="Path3D" parent="." node_paths=PackedStringArray("from_level", "to_level")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 0, 7)
+curve = SubResource("Curve3D_dfs0n")
+script = ExtResource("8_r6x65")
+from_level = NodePath("../level_1")
+to_level = NodePath("../level_2")
+
+[node name="path_3d_3" type="Path3D" parent="." node_paths=PackedStringArray("from_level", "to_level")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0, 7)
+curve = SubResource("Curve3D_dfs0n")
+script = ExtResource("8_r6x65")
+from_level = NodePath("../level_1")
+to_level = NodePath("../level_2")
+
+[node name="path_3d_4" type="Path3D" parent="." node_paths=PackedStringArray("from_level", "to_level")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 7)
+curve = SubResource("Curve3D_dfs0n")
+script = ExtResource("8_r6x65")
+from_level = NodePath("../level_1")
+to_level = NodePath("../level_2")
+
+[node name="path_3d_5" type="Path3D" parent="." node_paths=PackedStringArray("from_level", "to_level")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0, 7)
+curve = SubResource("Curve3D_dfs0n")
+script = ExtResource("8_r6x65")
+from_level = NodePath("../level_1")
+to_level = NodePath("../level_2")
+
+[node name="path_3d_6" type="Path3D" parent="." node_paths=PackedStringArray("from_level", "to_level")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 0, 7)
+curve = SubResource("Curve3D_dfs0n")
+script = ExtResource("8_r6x65")
+from_level = NodePath("../level_1")
+to_level = NodePath("../level_2")
+
+[node name="path_3d_7" type="Path3D" parent="." node_paths=PackedStringArray("from_level", "to_level")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 0, 7)
+curve = SubResource("Curve3D_dfs0n")
+script = ExtResource("8_r6x65")
+from_level = NodePath("../level_1")
+to_level = NodePath("../level_2")
+
+[node name="path_3d_8" type="Path3D" parent="." node_paths=PackedStringArray("from_level", "to_level")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7, 0, 7)
+curve = SubResource("Curve3D_dfs0n")
+script = ExtResource("8_r6x65")
+from_level = NodePath("../level_1")
+to_level = NodePath("../level_2")
+
+[editable path="level_1"]
+[editable path="level_2"]
