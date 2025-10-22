@@ -6,4 +6,5 @@ var history_state:PackedInt32Array = []
 func _ready() -> void:
 	$level_1.connect("move_camera", $player.move_camera)
 	$level_2.connect("move_camera", $player.move_camera)
+	$level_3.connect("move_camera", $player.move_camera)
 	$player.move_camera($level_1/camera)

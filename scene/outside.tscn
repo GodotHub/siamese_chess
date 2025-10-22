@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=3 uid="uid://dnut8pn3hxg8"]
+[gd_scene load_steps=17 format=3 uid="uid://dnut8pn3hxg8"]
 
 [ext_resource type="Script" uid="uid://cjddqgsgfo4hw" path="res://src/outside.gd" id="1_arvm7"]
 [ext_resource type="Script" uid="uid://dg85frcnjlauy" path="res://src/interact.gd" id="4_gs8dr"]
@@ -10,6 +10,8 @@
 [ext_resource type="PackedScene" uid="uid://bfl3bn4u2am21" path="res://scene/tree.tscn" id="8_odj2w"]
 [ext_resource type="Script" uid="uid://bbi6kjxerg3hk" path="res://src/marker_teleport.gd" id="8_r6x65"]
 [ext_resource type="PackedScene" uid="uid://rlos56ckp02d" path="res://scene/shrub.tscn" id="9_0ib3i"]
+[ext_resource type="PackedScene" uid="uid://ekjtt81nkr2f" path="res://scene/flower.tscn" id="11_0ib3i"]
+[ext_resource type="PackedScene" uid="uid://d1orpuo40iup6" path="res://scene/carnation.tscn" id="11_5qrb1"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_gs8dr"]
 sky_top_color = Color(1, 1, 1, 1)
@@ -165,13 +167,325 @@ piece_type = 89
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 0, -3)
 piece_type = 89
 
+[node name="tree_10" parent="level_1" instance=ExtResource("8_odj2w")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7, 0, -1)
+piece_type = 89
+
+[node name="flower" parent="level_1" instance=ExtResource("11_0ib3i")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0, -3)
+piece_type = 119
+
+[node name="flower_2" parent="level_1" instance=ExtResource("11_0ib3i")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 1)
+piece_type = 119
+
+[node name="flower_3" parent="level_1" instance=ExtResource("11_0ib3i")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 0, -1)
+piece_type = 119
+
+[node name="flower_4" parent="level_1" instance=ExtResource("11_0ib3i")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0, 3)
+piece_type = 119
+
+[node name="flower_5" parent="level_1" instance=ExtResource("11_0ib3i")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, -5)
+piece_type = 119
+
+[node name="flower_6" parent="level_1" instance=ExtResource("11_0ib3i")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0, -5)
+piece_type = 119
+
+[node name="flower_7" parent="level_1" instance=ExtResource("11_0ib3i")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 0, 1)
+piece_type = 119
+
+[node name="flower_8" parent="level_1" instance=ExtResource("11_0ib3i")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 0, 3)
+piece_type = 119
+
+[node name="flower_9" parent="level_1" instance=ExtResource("11_0ib3i")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 0, 3)
+piece_type = 119
+
+[node name="flower_10" parent="level_1" instance=ExtResource("11_0ib3i")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 0, 1)
+piece_type = 119
+
+[node name="flower_11" parent="level_1" instance=ExtResource("11_0ib3i")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0, 5)
+piece_type = 119
+
+[node name="flower_12" parent="level_1" instance=ExtResource("11_0ib3i")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0, 5)
+piece_type = 119
+
+[node name="flower_13" parent="level_1" instance=ExtResource("11_0ib3i")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 0, -7)
+piece_type = 119
+
 [node name="level_2" parent="." instance=ExtResource("5_asp05")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 18)
 
 [node name="chessboard" parent="level_2" instance=ExtResource("5_dfs0n")]
 
 [node name="camera" type="Camera3D" parent="level_2"]
-transform = Transform3D(-0.81532, -0.393181, 0.425043, 4.6825e-08, 0.734086, 0.679057, -0.57901, 0.553649, -0.598515, 6.94267, 6.60401, -11.8687)
+transform = Transform3D(-0.81532, -0.393181, 0.425043, 4.6825e-08, 0.734086, 0.679057, -0.57901, 0.553649, -0.598515, 6.94267, 6.60401, -9.89791)
+
+[node name="shrub" parent="level_2" instance=ExtResource("9_0ib3i")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0, -1)
+piece_type = 88
+
+[node name="shrub_2" parent="level_2" instance=ExtResource("9_0ib3i")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 0, -5)
+piece_type = 88
+
+[node name="shrub_3" parent="level_2" instance=ExtResource("9_0ib3i")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 0, -5)
+piece_type = 88
+
+[node name="shrub_4" parent="level_2" instance=ExtResource("9_0ib3i")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0, -3)
+piece_type = 88
+
+[node name="shrub_5" parent="level_2" instance=ExtResource("9_0ib3i")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7, 0, 3)
+piece_type = 88
+
+[node name="shrub_6" parent="level_2" instance=ExtResource("9_0ib3i")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7, 0, -3)
+piece_type = 88
+
+[node name="shrub_7" parent="level_2" instance=ExtResource("9_0ib3i")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 0, -1)
+piece_type = 88
+
+[node name="shrub_8" parent="level_2" instance=ExtResource("9_0ib3i")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7, 0, -3)
+piece_type = 88
+
+[node name="shrub_9" parent="level_2" instance=ExtResource("9_0ib3i")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 0, 3)
+piece_type = 88
+
+[node name="shrub_10" parent="level_2" instance=ExtResource("9_0ib3i")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 0, 5)
+piece_type = 88
+
+[node name="shrub_11" parent="level_2" instance=ExtResource("9_0ib3i")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0, 7)
+piece_type = 88
+
+[node name="shrub_12" parent="level_2" instance=ExtResource("9_0ib3i")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0, -7)
+piece_type = 88
+
+[node name="shrub_13" parent="level_2" instance=ExtResource("9_0ib3i")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 7)
+piece_type = 88
+
+[node name="shrub_14" parent="level_2" instance=ExtResource("9_0ib3i")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 0, 7)
+piece_type = 88
+
+[node name="shrub_15" parent="level_2" instance=ExtResource("9_0ib3i")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 0, 7)
+piece_type = 88
+
+[node name="tree" parent="level_2" instance=ExtResource("8_odj2w")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7, 0, 7)
+piece_type = 89
+
+[node name="tree_2" parent="level_2" instance=ExtResource("8_odj2w")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0, 7)
+piece_type = 89
+
+[node name="tree_3" parent="level_2" instance=ExtResource("8_odj2w")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 0, -3)
+piece_type = 89
+
+[node name="tree_4" parent="level_2" instance=ExtResource("8_odj2w")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 0, 5)
+piece_type = 89
+
+[node name="tree_5" parent="level_2" instance=ExtResource("8_odj2w")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 0, 5)
+piece_type = 89
+
+[node name="tree_6" parent="level_2" instance=ExtResource("8_odj2w")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7, 0, -5)
+piece_type = 89
+
+[node name="tree_7" parent="level_2" instance=ExtResource("8_odj2w")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7, 0, -5)
+piece_type = 89
+
+[node name="tree_8" parent="level_2" instance=ExtResource("8_odj2w")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 0, 1)
+piece_type = 89
+
+[node name="tree_9" parent="level_2" instance=ExtResource("8_odj2w")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 0, -3)
+piece_type = 89
+
+[node name="tree_10" parent="level_2" instance=ExtResource("8_odj2w")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7, 0, -1)
+piece_type = 89
+
+[node name="flower" parent="level_2" instance=ExtResource("11_0ib3i")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0, -3)
+piece_type = 119
+
+[node name="flower_2" parent="level_2" instance=ExtResource("11_0ib3i")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 1)
+piece_type = 119
+
+[node name="flower_3" parent="level_2" instance=ExtResource("11_0ib3i")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 0, -1)
+piece_type = 119
+
+[node name="flower_4" parent="level_2" instance=ExtResource("11_0ib3i")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0, 3)
+piece_type = 119
+
+[node name="flower_5" parent="level_2" instance=ExtResource("11_0ib3i")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, -5)
+piece_type = 119
+
+[node name="flower_6" parent="level_2" instance=ExtResource("11_0ib3i")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0, -5)
+piece_type = 119
+
+[node name="flower_7" parent="level_2" instance=ExtResource("11_0ib3i")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 0, 1)
+piece_type = 119
+
+[node name="flower_8" parent="level_2" instance=ExtResource("11_0ib3i")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 0, 3)
+piece_type = 119
+
+[node name="flower_9" parent="level_2" instance=ExtResource("11_0ib3i")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 0, 3)
+piece_type = 119
+
+[node name="flower_10" parent="level_2" instance=ExtResource("11_0ib3i")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 0, 1)
+piece_type = 119
+
+[node name="flower_11" parent="level_2" instance=ExtResource("11_0ib3i")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0, 5)
+piece_type = 119
+
+[node name="flower_12" parent="level_2" instance=ExtResource("11_0ib3i")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0, 5)
+piece_type = 119
+
+[node name="flower_13" parent="level_2" instance=ExtResource("11_0ib3i")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 0, -7)
+piece_type = 119
+
+[node name="carnation" parent="level_2" instance=ExtResource("11_5qrb1")]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -3, 0, -3)
+piece_type = 122
+
+[node name="level_3" parent="." instance=ExtResource("5_asp05")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18, 0, 18)
+
+[node name="chessboard" parent="level_3" instance=ExtResource("5_dfs0n")]
+
+[node name="camera" type="Camera3D" parent="level_3"]
+transform = Transform3D(-0.81532, -0.393181, 0.425043, 4.6825e-08, 0.734086, 0.679057, -0.57901, 0.553649, -0.598515, 6.94267, 6.60401, -9.89791)
+
+[node name="flower" parent="level_3" instance=ExtResource("11_0ib3i")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0, -3)
+piece_type = 119
+
+[node name="tree" parent="level_3" instance=ExtResource("8_odj2w")]
+transform = Transform3D(0.258819, 0, 0.965926, 0, 1, 0, -0.965926, 0, 0.258819, 5, 0, 7)
+piece_type = 89
+
+[node name="tree_2" parent="level_3" instance=ExtResource("8_odj2w")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7, 0, 7)
+piece_type = 89
+
+[node name="tree_3" parent="level_3" instance=ExtResource("8_odj2w")]
+transform = Transform3D(0.965926, 0, 0.258819, 0, 1, 0, -0.258819, 0, 0.965926, 1, 0, 7)
+piece_type = 89
+
+[node name="tree_4" parent="level_3" instance=ExtResource("8_odj2w")]
+transform = Transform3D(0.5, 0, -0.866025, 0, 1, 0, 0.866025, 0, 0.5, 3, 0, 7)
+piece_type = 89
+
+[node name="tree_5" parent="level_3" instance=ExtResource("8_odj2w")]
+transform = Transform3D(0.258819, 0, 0.965926, 0, 1, 0, -0.965926, 0, 0.258819, -3, 0, 7)
+piece_type = 89
+
+[node name="tree_6" parent="level_3" instance=ExtResource("8_odj2w")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0, 7)
+piece_type = 89
+
+[node name="tree_7" parent="level_3" instance=ExtResource("8_odj2w")]
+transform = Transform3D(0.965926, 0, 0.258819, 0, 1, 0, -0.258819, 0, 0.965926, -7, 0, 7)
+piece_type = 89
+
+[node name="tree_8" parent="level_3" instance=ExtResource("8_odj2w")]
+transform = Transform3D(0.5, 0, -0.866025, 0, 1, 0, 0.866025, 0, 0.5, -5, 0, 7)
+piece_type = 89
+
+[node name="shrub" parent="level_3" instance=ExtResource("9_0ib3i")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0, -1)
+piece_type = 88
+
+[node name="shrub_2" parent="level_3" instance=ExtResource("9_0ib3i")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7, 0, 3)
+piece_type = 88
+
+[node name="shrub_3" parent="level_3" instance=ExtResource("9_0ib3i")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 0, 3)
+piece_type = 88
+
+[node name="shrub_4" parent="level_3" instance=ExtResource("9_0ib3i")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 0, 3)
+piece_type = 88
+
+[node name="shrub_5" parent="level_3" instance=ExtResource("9_0ib3i")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0, 3)
+piece_type = 88
+
+[node name="shrub_6" parent="level_3" instance=ExtResource("9_0ib3i")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 3)
+piece_type = 88
+
+[node name="shrub_7" parent="level_3" instance=ExtResource("9_0ib3i")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0, 3)
+piece_type = 88
+
+[node name="shrub_8" parent="level_3" instance=ExtResource("9_0ib3i")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 0, 3)
+piece_type = 88
+
+[node name="shrub_9" parent="level_3" instance=ExtResource("9_0ib3i")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7, 0, 3)
+piece_type = 88
+
+[node name="shrub_10" parent="level_3" instance=ExtResource("9_0ib3i")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7, 0, 1)
+piece_type = 88
+
+[node name="shrub_11" parent="level_3" instance=ExtResource("9_0ib3i")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7, 0, -1)
+piece_type = 88
+
+[node name="shrub_12" parent="level_3" instance=ExtResource("9_0ib3i")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7, 0, -3)
+piece_type = 88
+
+[node name="shrub_13" parent="level_3" instance=ExtResource("9_0ib3i")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7, 0, -5)
+piece_type = 88
+
+[node name="shrub_14" parent="level_3" instance=ExtResource("9_0ib3i")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7, 0, -7)
+piece_type = 88
 
 [node name="path_3d_1" type="Path3D" parent="." node_paths=PackedStringArray("from_level", "to_level")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7, 0, 7)
@@ -229,9 +543,41 @@ script = ExtResource("8_r6x65")
 from_level = NodePath("../level_1")
 to_level = NodePath("../level_2")
 
-[node name="tree" parent="." instance=ExtResource("8_odj2w")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7, 0, -1)
-piece_type = 0
+[node name="path_3d_9" type="Path3D" parent="." node_paths=PackedStringArray("from_level", "to_level")]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 7, 0, 15)
+curve = SubResource("Curve3D_dfs0n")
+script = ExtResource("8_r6x65")
+from_level = NodePath("../level_2")
+to_level = NodePath("../level_3")
+
+[node name="path_3d_10" type="Path3D" parent="." node_paths=PackedStringArray("from_level", "to_level")]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 7, 0, 17)
+curve = SubResource("Curve3D_dfs0n")
+script = ExtResource("8_r6x65")
+from_level = NodePath("../level_2")
+to_level = NodePath("../level_3")
+
+[node name="path_3d_11" type="Path3D" parent="." node_paths=PackedStringArray("from_level", "to_level")]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 7, 0, 19)
+curve = SubResource("Curve3D_dfs0n")
+script = ExtResource("8_r6x65")
+from_level = NodePath("../level_2")
+to_level = NodePath("../level_3")
+
+[node name="path_3d_12" type="Path3D" parent="." node_paths=PackedStringArray("from_level", "to_level")]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 7, 0, 21)
+curve = SubResource("Curve3D_dfs0n")
+script = ExtResource("8_r6x65")
+from_level = NodePath("../level_2")
+to_level = NodePath("../level_3")
+
+[node name="path_3d_13" type="Path3D" parent="." node_paths=PackedStringArray("from_level", "to_level")]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 7, 0, 23)
+curve = SubResource("Curve3D_dfs0n")
+script = ExtResource("8_r6x65")
+from_level = NodePath("../level_2")
+to_level = NodePath("../level_3")
 
 [editable path="level_1"]
 [editable path="level_2"]
+[editable path="level_3"]
