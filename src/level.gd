@@ -37,7 +37,7 @@ func step(move:int) -> void:
 			state.capture_piece(from)
 			chessboard.move_piece_instance_to_other(from, to, next_level.chessboard)
 			next_level.chessboard.set_valid_move(RuleStandard.generate_valid_move(next_level.state, 1))
-		elif Chess.from(move) == from && next_level.state.has_piece(to):
+		elif Chess.from(move) == from && next_level.state.has_piece(to) && !(char(next_level.state.get_piece(to)) in ["X", "x", "Y", "y", "Z", "z"]):
 			state.add_piece(from, next_level.state.get_piece(to))
 			next_level.state.capture_piece(to)
 			next_level.chessboard.move_piece_instance_to_other(to, from, chessboard)
