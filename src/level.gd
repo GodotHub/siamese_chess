@@ -32,6 +32,8 @@ func step(move:int) -> void:
 	for from:int in teleport:
 		var to:int = teleport[from]["to"]
 		var next_level:Level = teleport[from]["level"]
+		if next_level.in_battle:
+			continue
 		if Chess.to(move) == from && !next_level.state.has_piece(to):
 			next_level.state.add_piece(to, state.get_piece(from))
 			state.capture_piece(from)
@@ -64,6 +66,7 @@ func explore() -> void:
 			await chessboard.clicked
 
 func versus() -> void:
+	in_battle = true
 	while RuleStandard.get_end_type(state) == "":
 		chessboard.set_valid_move([])
 		chessboard.set_valid_premove(RuleStandard.generate_premove(state, 1))
@@ -103,9 +106,11 @@ func versus() -> void:
 				if state.has_piece(by) && Chess.group(state.get_piece(by)) == 0:
 					state.capture_piece(by)
 					chessboard.chessboard_piece[by].captured()
-			explore()
+			explore.call_deferred()
 		"checkmate_white":
 			for by:int in 128:
 				if state.has_piece(by) && Chess.group(state.get_piece(by)) == 1:
 					state.capture_piece(by)
 					chessboard.chessboard_piece[by].captured()
+			# 死了
+	in_battle = false
