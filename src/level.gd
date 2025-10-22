@@ -1,6 +1,8 @@
 extends Node3D
 class_name Level
 
+signal move_camera(camera:Camera3D)
+
 var engine:ChessEngine = null	# 有可能会出现多线作战，共用同一个引擎显然不好
 var state:State = null
 var chessboard:Chessboard = null
@@ -22,6 +24,8 @@ func _ready() -> void:
 			var by:int = Chess.to_position_int(chessboard.get_position_name(node.global_position))
 			node.get_parent().remove_child(node)
 			chessboard.add_piece_instance(node, by)
+	if has_node("camera"):
+		chessboard.connect("clicked", move_camera.emit.call_deferred.bind($camera))
 	explore()
 
 func step(move:int) -> void:

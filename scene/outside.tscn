@@ -49,11 +49,8 @@ shadow_enabled = true
 
 [node name="interact" type="Area3D" parent="." node_paths=PackedStringArray("camera")]
 script = ExtResource("4_gs8dr")
-camera = NodePath("../camera_3d")
+camera = NodePath("../level_1/camera")
 metadata/_custom_type_script = "uid://dg85frcnjlauy"
-
-[node name="camera_3d" type="Camera3D" parent="."]
-transform = Transform3D(-0.97201, 0.159537, -0.172465, 2.18766e-08, 0.734086, 0.679057, 0.234939, 0.66005, -0.713539, -3.09205, 6.60401, -13.1685)
 
 [node name="player" parent="." instance=ExtResource("4_w3jsn")]
 
@@ -67,10 +64,16 @@ transform = Transform3D(-0.97201, 0.159537, -0.172465, 2.18766e-08, 0.734086, 0.
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, -7)
 piece_type = 107
 
+[node name="camera" type="Camera3D" parent="level_1"]
+transform = Transform3D(-0.995709, 0.0628432, -0.0679359, 2.21169e-08, 0.734086, 0.679057, 0.0925449, 0.676142, -0.730936, -0.621102, 6.60401, -11.1437)
+
 [node name="level_2" parent="." instance=ExtResource("5_asp05")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 18)
 
 [node name="chessboard" parent="level_2" instance=ExtResource("5_dfs0n")]
+
+[node name="camera" type="Camera3D" parent="level_2"]
+transform = Transform3D(-0.81532, -0.393181, 0.425043, 4.6825e-08, 0.734086, 0.679057, -0.57901, 0.553649, -0.598515, 6.94267, 6.60401, -11.8687)
 
 [node name="path_3d_1" type="Path3D" parent="." node_paths=PackedStringArray("from_level", "to_level")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7, 0, 7)

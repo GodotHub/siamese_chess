@@ -3,7 +3,6 @@ extends Node3D
 
 var mouse_moved:bool = false
 var mouse_start_position_name:String = ""
-var interact_stack:Array[Interact] = []
 var can_move:bool = true
 
 func _ready() -> void:
@@ -14,11 +13,6 @@ func _physics_process(_delta:float) -> void:
 	#$head/camera.set_rotation(Vector3(0, deg_to_rad(sin(Time.get_unix_time_from_system() + 5)) * 0.5, 0))
 	#$head/camera.set_rotation(Vector3(0, 0, deg_to_rad(sin(Time.get_unix_time_from_system()) * 0.5)))
 
-func set_initial_interact(interact:Interact) -> void:
-	interact.enter()
-	interact_stack.push_back(interact)
-	force_set_camera(interact.get_camera())
-
 func _unhandled_input(event:InputEvent) -> void:
 	if !can_move:
 		return
@@ -27,25 +21,8 @@ func _unhandled_input(event:InputEvent) -> void:
 		if is_instance_valid(area):
 			area.emit_signal("input", self, area, event, $ray_cast.get_collision_point(), $ray_cast.get_collision_normal())
 		get_viewport().set_input_as_handled()
-	if event is InputEventScreenPinch:
-		#cancel_drawing_move.emit()
-		if event.relative < 1 && interact_stack.size() >= 2:
-			pop_stack()
-		get_viewport().set_input_as_handled()
 	if event is InputEventMultiScreenDrag:
 		$archive.open()
-
-func add_stack(interact:Interact) -> void:
-	interact_stack[-1].leave()
-	interact.enter()
-	interact_stack.push_back(interact)
-	move_camera(interact_stack[-1].get_camera())
-
-func pop_stack() -> void:
-	interact_stack[-1].leave()
-	interact_stack.pop_back()
-	interact_stack[-1].enter()
-	move_camera(interact_stack[-1].get_camera())
 
 func click_area(screen_position:Vector2) -> Area3D:
 	var from:Vector3 = $head/camera.project_ray_origin(screen_position)
@@ -63,12 +40,10 @@ func move_camera(other:Camera3D) -> void:
 		return
 	var tween:Tween = create_tween()
 	tween.tween_callback($audio_stream_player.play)
-	tween.tween_property(self, "can_move", false, 0)
 	tween.tween_property($head, "global_transform", other.global_transform, 1).set_trans(Tween.TRANS_SINE)
 	tween.set_parallel(true)
 	tween.tween_property($head/camera, "fov", other.fov, 1).set_trans(Tween.TRANS_SINE)
 	tween.set_parallel(false)
-	tween.tween_property(self, "can_move", true, 0)
 
 func force_set_camera(other:Camera3D) -> void:
 	$head.global_transform = other.global_transform
