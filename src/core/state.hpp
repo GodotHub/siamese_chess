@@ -48,8 +48,8 @@ class State : public godot::RefCounted
 		godot::String print_board();
 		static void _bind_methods();
 	private:
-		int pieces[128];
-		int64_t bit[128];
+		int pieces[128] = {0};
+		int64_t bit[128] = {0};
 		//'*'表示所有棋子
 		int turn;
 		int castle;
