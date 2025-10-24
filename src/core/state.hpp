@@ -51,12 +51,15 @@ class State : public godot::RefCounted
 		int pieces[128] = {0};
 		int64_t bit[128] = {0};
 		//'*'表示所有棋子
+		//'^'表示高处的格子
+		//'v'表示低处的格子	不能够从低到高地走棋
 		int turn;
 		int castle;
 		int en_passant;
 		int step_to_draw;
 		int round;
 		int king_passant;
+		int front;	//兵的前进方向，前八位为白方，后八位为黑方
 		int64_t zobrist = 0;
 };
 

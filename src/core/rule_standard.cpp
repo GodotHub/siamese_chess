@@ -82,12 +82,18 @@ godot::Ref<State>RuleStandard::parse(godot::String _str)
 	state->set_en_passant(Chess::to_position_int(fen_splited[3]));
 	state->set_step_to_draw(fen_splited[4].to_int());
 	state->set_round(fen_splited[5].to_int());
+	for (int i = 6; i < fen_splited.size(); i++)
+	{
+		int type = fen_splited[i][0];
+		int64_t bit = fen_splited[i].substr(1).hex_to_int();
+		state->set_bit(type, bit);
+	}
 	return state;
 }
 
 godot::Ref<State> RuleStandard::create_initial_state()
 {
-	return parse("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
+	return parse("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1 ^0 v0");
 }
 
 godot::Ref<State> RuleStandard::create_random_state(int piece_count)
@@ -242,6 +248,14 @@ godot::String RuleStandard::stringify(godot::Ref<State>_state)
 	output.push_back(godot::String::num(_state->get_step_to_draw(), 0));
 	output.push_back(godot::String::num(_state->get_round(), 0));
 	// king_passant是为了判定是否违规走子，临时记录的，这里不做转换
+	if (_state->get_bit('^'))
+	{
+		output.push_back("^" + godot::String::num(_state->get_bit('^')));
+	}
+	if (_state->get_bit('v'))
+	{
+		output.push_back("v" + godot::String::num(_state->get_bit('v')));
+	}
 	return godot::String(" ").join(output);
 }
 
@@ -585,50 +599,55 @@ godot::PackedInt32Array RuleStandard::generate_move(godot::Ref<State>_state, int
 			int front = from_piece == 'P' ? -16 : 16;
 			bool on_start = (_from >> 4) == (from_piece == 'P' ? 6 : 1);
 			bool on_end = (_from >> 4) == (from_piece == 'P' ? 1 : 6);
-			if (!_state->has_piece(_from + front) || (_state->get_piece(_from + front) & 95) == 'W')
+			int to_1 = _from + front;
+			int to_2 = _from + front + 1;
+			int to_3 = _from + front - 1;
+			bool on_low = _state->get_bit('v') & Chess::mask(Chess::to_64(_from));
+			
+			if ((!_state->has_piece(to_1) || (_state->get_piece(to_1) & 95) == 'W') && !(on_low && (_state->get_bit('^') & Chess::mask(Chess::to_64(to_1)))))
 			{
 				if (on_end)
 				{
-					output.push_back(Chess::create(_from, _from + front, _group == 0 ? 'Q' : 'q'));
-					output.push_back(Chess::create(_from, _from + front, _group == 0 ? 'R' : 'r'));
-					output.push_back(Chess::create(_from, _from + front, _group == 0 ? 'N' : 'n'));
-					output.push_back(Chess::create(_from, _from + front, _group == 0 ? 'B' : 'b'));
+					output.push_back(Chess::create(_from, to_1, _group == 0 ? 'Q' : 'q'));
+					output.push_back(Chess::create(_from, to_1, _group == 0 ? 'R' : 'r'));
+					output.push_back(Chess::create(_from, to_1, _group == 0 ? 'N' : 'n'));
+					output.push_back(Chess::create(_from, to_1, _group == 0 ? 'B' : 'b'));
 				}
 				else
 				{
-					output.push_back(Chess::create(_from, _from + front, 0));
-					if (!_state->has_piece(_from + front + front) && on_start)
+					output.push_back(Chess::create(_from, to_1, 0));
+					if (!_state->has_piece(to_1 + front) && on_start)
 					{
-						output.push_back(Chess::create(_from, _from + front + front, 0));
+						output.push_back(Chess::create(_from, to_1 + front, 0));
 					}
 				}
 			}
-			if (_state->has_piece(_from + front + 1) && (_state->get_piece(_from + front + 1) & 95) != 'W' && (_state->get_piece(_from + front + 1) & 95) != 'Y' && !Chess::is_same_group(from_piece, _state->get_piece(_from + front + 1)) || ((_from >> 4) == 3 || (_from >> 4) == 4) && _state->get_en_passant() == _from + front + 1)
+			if ((_state->has_piece(to_2) && (_state->get_piece(to_2) & 95) != 'W' && (_state->get_piece(to_2) & 95) != 'Y' && !Chess::is_same_group(from_piece, _state->get_piece(to_2)) || ((_from >> 4) == 3 || (_from >> 4) == 4) && _state->get_en_passant() == to_2) && !(on_low && (_state->get_bit('^') & Chess::mask(Chess::to_64(to_2)))))
 			{
 				if (on_end)
 				{
-					output.push_back(Chess::create(_from, _from + front + 1, _group == 0 ? 'Q' : 'q'));
-					output.push_back(Chess::create(_from, _from + front + 1, _group == 0 ? 'R' : 'r'));
-					output.push_back(Chess::create(_from, _from + front + 1, _group == 0 ? 'N' : 'n'));
-					output.push_back(Chess::create(_from, _from + front + 1, _group == 0 ? 'B' : 'b'));
+					output.push_back(Chess::create(_from, to_2, _group == 0 ? 'Q' : 'q'));
+					output.push_back(Chess::create(_from, to_2, _group == 0 ? 'R' : 'r'));
+					output.push_back(Chess::create(_from, to_2, _group == 0 ? 'N' : 'n'));
+					output.push_back(Chess::create(_from, to_2, _group == 0 ? 'B' : 'b'));
 				}
 				else
 				{
-					output.push_back(Chess::create(_from, _from + front + 1, 0));
+					output.push_back(Chess::create(_from, to_2, 0));
 				}
 			}
-			if (_state->has_piece(_from + front - 1) && (_state->get_piece(_from + front - 1) & 95) != 'W' && (_state->get_piece(_from + front - 1) & 95) != 'Y' && !Chess::is_same_group(from_piece, _state->get_piece(_from + front - 1)) || ((_from >> 4) == 3 || (_from >> 4) == 4) && _state->get_en_passant() == _from + front - 1)
+			if ((_state->has_piece(to_3) && (_state->get_piece(to_3) & 95) != 'W' && (_state->get_piece(to_3) & 95) != 'Y' && !Chess::is_same_group(from_piece, _state->get_piece(to_3)) || ((_from >> 4) == 3 || (_from >> 4) == 4) && _state->get_en_passant() == to_3) && !(on_low && (_state->get_bit('^') & Chess::mask(Chess::to_64(to_3)))))
 			{
 				if (on_end)
 				{
-					output.push_back(Chess::create(_from, _from + front - 1, _group == 0 ? 'Q' : 'q'));
-					output.push_back(Chess::create(_from, _from + front - 1, _group == 0 ? 'R' : 'r'));
-					output.push_back(Chess::create(_from, _from + front - 1, _group == 0 ? 'N' : 'n'));
-					output.push_back(Chess::create(_from, _from + front - 1, _group == 0 ? 'B' : 'b'));
+					output.push_back(Chess::create(_from, to_3, _group == 0 ? 'Q' : 'q'));
+					output.push_back(Chess::create(_from, to_3, _group == 0 ? 'R' : 'r'));
+					output.push_back(Chess::create(_from, to_3, _group == 0 ? 'N' : 'n'));
+					output.push_back(Chess::create(_from, to_3, _group == 0 ? 'B' : 'b'));
 				}
 				else
 				{
-					output.push_back(Chess::create(_from, _from + front - 1, 0));
+					output.push_back(Chess::create(_from, to_3, 0));
 				}
 			}
 			continue;
@@ -657,13 +676,15 @@ godot::PackedInt32Array RuleStandard::generate_move(godot::Ref<State>_state, int
 		{
 			int to = _from;
 			int to_piece = _state->get_piece(to);
+			bool on_low =_state->get_bit('v') & Chess::mask(Chess::to_64(to));
 			while (true)
 			{
 				to += (*directions)[i];
-				if ((to & 0x88))
+				if ((to & 0x88) || (on_low && (_state->get_bit('^') & Chess::mask(Chess::to_64(to)))))
 				{
 					break;
 				}
+				on_low = _state->get_bit('^') & Chess::mask(Chess::to_64(to));
 				to_piece = _state->get_piece(to);
 				if ((to_piece & 95) == 'Y')
 				{
