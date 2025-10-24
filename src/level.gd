@@ -56,12 +56,13 @@ func explore() -> void:
 			
 			# TODO: 这是不准确的攻击范围判定，拓展RuleStandard功能以改写成标准的攻击范围
 			var white_move_list:PackedInt32Array = RuleStandard.generate_valid_move(state, 0)
-			var attack:int = 0
 			for move:int in white_move_list:
-				attack |= Chess.mask(Chess.to_64(Chess.to(move)))
-			if state.get_bit("a".unicode_at(0)) & attack:
-				versus.call_deferred()
-				break
+				var to:int = Chess.to(move)
+				if state.has_piece(to):
+					continue
+				if char(state.get_piece(to)) in ["k", "q", "r", "b", "n", "p"]:
+					versus.call_deferred()
+					return
 		else:
 			await chessboard.clicked
 
