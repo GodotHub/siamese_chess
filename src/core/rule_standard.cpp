@@ -407,12 +407,12 @@ bool RuleStandard::is_check(godot::Ref<State> _state, int _group)
 			int front = from_piece == 'P' ? -16 : 16;
 			bool on_start = (_from >> 4) == (from_piece == 'P' ? 6 : 1);
 			bool on_end = (_from >> 4) == (from_piece == 'P' ? 1 : 6);
-			if (_state->has_piece(_from + front + 1) && !Chess::is_same_group(from_piece, _state->get_piece(_from + front + 1)) && (_state->get_piece(_from + front + 1) & 95) == 'K'
+			if (is_enemy(_state, _from, _from + front + 1) && (_state->get_piece(_from + front + 1) & 95) == 'K'
 			|| !((_from + front + 1) & 0x88) && on_end && _state->get_king_passant() != -1 && abs(_state->get_king_passant() - (_from + front + 1)) <= 1)
 			{
 				return true;
 			}
-			if (_state->has_piece(_from + front - 1) && !Chess::is_same_group(from_piece, _state->get_piece(_from + front - 1)) && (_state->get_piece(_from + front - 1) & 95) == 'K'
+			if (is_enemy(_state, _from, _from + front - 1) && (_state->get_piece(_from + front - 1) & 95) == 'K'
 			|| !((_from + front - 1) & 0x88) && on_end && _state->get_king_passant() != -1 && abs(_state->get_king_passant() - (_from + front - 1)) <= 1)
 			{
 				return true;
@@ -473,7 +473,40 @@ bool RuleStandard::is_check(godot::Ref<State> _state, int _group)
 	return false;
 }
 
-godot::PackedInt32Array RuleStandard::generate_premove(godot::Ref<State>_state, int _group)
+bool RuleStandard::is_blocked(godot::Ref<State> _state, int _from, int _to)
+{
+	if (_to & 0x88)
+	{
+		return true;
+	}
+	int from_piece = _state->get_piece(_from);
+	int from_group = Chess::group(from_piece);
+	if ((_state->get_piece(_to) & 95) == 'W' || (_state->get_piece(_to) & 95) == 'X')
+	{
+		return false;
+	}
+	if (_state->has_piece(_to) && Chess::is_same_group(from_piece, _state->get_piece(_to)))
+	{
+		return true;
+	}
+	if ((_state->get_piece(_to) & 95) == 'Y')
+	{
+		return true;
+	}
+	return false;
+}
+
+bool RuleStandard::is_enemy(godot::Ref<State> _state, int _from, int _to)
+{
+	return _state->has_piece(_to) && (_state->get_piece(_to) & 95) != 'W' && (!Chess::is_same_group(_state->get_piece(_from), _state->get_piece(_to)) || (_state->get_piece(_to) & 95) != 'X');
+}
+
+bool RuleStandard::is_en_passant(godot::Ref<State> _state, int _from, int _to)
+{
+	return ((_from >> 4) == 3 || (_from >> 4) == 4) && _state->get_en_passant() == _to;
+}
+
+godot::PackedInt32Array RuleStandard::generate_premove(godot::Ref<State> _state, int _group)
 {
 	godot::PackedInt32Array output;
 	for (State::PieceIterator iter = _state->piece_iterator_begin(); !iter.end(); iter.next())
@@ -582,7 +615,7 @@ godot::PackedInt32Array RuleStandard::generate_premove(godot::Ref<State>_state, 
 	return output;
 }
 
-godot::PackedInt32Array RuleStandard::generate_move(godot::Ref<State>_state, int _group)
+godot::PackedInt32Array RuleStandard::generate_move(godot::Ref<State> _state, int _group)
 {
 	godot::PackedInt32Array output;
 	for (State::PieceIterator iter = _state->piece_iterator_begin(); !iter.end(); iter.next())
@@ -604,7 +637,7 @@ godot::PackedInt32Array RuleStandard::generate_move(godot::Ref<State>_state, int
 			int to_3 = _from + front - 1;
 			bool on_low = _state->get_bit('v') & Chess::mask(Chess::to_64(_from));
 			
-			if ((!_state->has_piece(to_1) || (_state->get_piece(to_1) & 95) == 'W') && !(on_low && (_state->get_bit('^') & Chess::mask(Chess::to_64(to_1)))))
+			if (!is_blocked(_state, _from, to_1) && !is_enemy(_state, _from, to_1))
 			{
 				if (on_end)
 				{
@@ -622,7 +655,7 @@ godot::PackedInt32Array RuleStandard::generate_move(godot::Ref<State>_state, int
 					}
 				}
 			}
-			if ((_state->has_piece(to_2) && (_state->get_piece(to_2) & 95) != 'W' && (_state->get_piece(to_2) & 95) != 'Y' && !Chess::is_same_group(from_piece, _state->get_piece(to_2)) || ((_from >> 4) == 3 || (_from >> 4) == 4) && _state->get_en_passant() == to_2) && !(on_low && (_state->get_bit('^') & Chess::mask(Chess::to_64(to_2)))))
+			if (!is_blocked(_state, _from, to_2) && (is_enemy(_state, _from, to_2) || is_en_passant(_state, _from, to_2)))
 			{
 				if (on_end)
 				{
@@ -636,7 +669,7 @@ godot::PackedInt32Array RuleStandard::generate_move(godot::Ref<State>_state, int
 					output.push_back(Chess::create(_from, to_2, 0));
 				}
 			}
-			if ((_state->has_piece(to_3) && (_state->get_piece(to_3) & 95) != 'W' && (_state->get_piece(to_3) & 95) != 'Y' && !Chess::is_same_group(from_piece, _state->get_piece(to_3)) || ((_from >> 4) == 3 || (_from >> 4) == 4) && _state->get_en_passant() == to_3) && !(on_low && (_state->get_bit('^') & Chess::mask(Chess::to_64(to_3)))))
+			if (!is_blocked(_state, _from, to_3) && (is_enemy(_state, _from, to_3) || is_en_passant(_state, _from, to_3)))
 			{
 				if (on_end)
 				{
@@ -676,21 +709,19 @@ godot::PackedInt32Array RuleStandard::generate_move(godot::Ref<State>_state, int
 		{
 			int to = _from;
 			int to_piece = _state->get_piece(to);
-			bool on_low =_state->get_bit('v') & Chess::mask(Chess::to_64(to));
-			while (true)
+						while (true)
 			{
 				to += (*directions)[i];
-				if ((to & 0x88) || (on_low && (_state->get_bit('^') & Chess::mask(Chess::to_64(to)))))
+				if (to & 0x88)
 				{
 					break;
 				}
-				on_low = _state->get_bit('^') & Chess::mask(Chess::to_64(to));
-				to_piece = _state->get_piece(to);
+								to_piece = _state->get_piece(to);
 				if ((to_piece & 95) == 'Y')
 				{
 					break;
 				}
-				if (to_piece && Chess::is_same_group(from_piece, to_piece) && (to_piece & 95) != 'W' && (to_piece & 95) != 'X')
+				if (is_blocked(_state, _from, to))
 				{
 					if ((from_piece & 95) == 'R' && (to_piece & 95) == 'K')
 					{

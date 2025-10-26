@@ -22,6 +22,9 @@ class RuleStandard : public godot::Object
 		godot::String stringify(godot::Ref<State> _state);
 		bool is_move_valid(godot::Ref<State> _state, int _group, int _move);
 		bool is_check(godot::Ref<State> _state, int _group);
+		bool is_blocked(godot::Ref<State> _state, int _from, int _to);
+		bool is_enemy(godot::Ref<State> _state, int _from, int _to);
+		bool is_en_passant(godot::Ref<State> _state, int _from, int _to);
 		godot::PackedInt32Array generate_premove(godot::Ref<State> _state, int _group);
 		godot::PackedInt32Array generate_move(godot::Ref<State> _state, int _group);
 		godot::PackedInt32Array generate_valid_move(godot::Ref<State> _state, int _group);
