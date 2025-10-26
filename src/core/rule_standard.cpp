@@ -2,6 +2,8 @@
 #include <godot_cpp/classes/resource_loader.hpp>
 #include <godot_cpp/classes/packed_scene.hpp>
 #include <random>
+#include <queue>
+#include <unordered_set>
 #include "state.hpp"
 #include "chess.hpp"
 #include "transposition_table.hpp"
@@ -709,14 +711,14 @@ godot::PackedInt32Array RuleStandard::generate_move(godot::Ref<State> _state, in
 		{
 			int to = _from;
 			int to_piece = _state->get_piece(to);
-						while (true)
+			while (true)
 			{
 				to += (*directions)[i];
 				if (to & 0x88)
 				{
 					break;
 				}
-								to_piece = _state->get_piece(to);
+				to_piece = _state->get_piece(to);
 				if ((to_piece & 95) == 'Y')
 				{
 					break;
@@ -761,6 +763,37 @@ godot::PackedInt32Array RuleStandard::generate_valid_move(godot::Ref<State>_stat
 		}
 	}
 	return output;
+}
+
+godot::PackedInt32Array	RuleStandard::generate_king_path(godot::Ref<State> _state, int _from, int _to)
+{
+	std::queue<std::pair<int, godot::PackedInt32Array>> q;
+	std::unordered_set<int> closed;
+	godot::PackedInt32Array *direction = &directions_eight_way;
+	godot::PackedInt32Array start_path;
+	start_path.push_back(_from);
+	q.push(std::make_pair(_from, start_path));
+	while (!q.empty())
+	{
+		std::pair<int, godot::PackedInt32Array> cur = q.front();
+		q.pop();
+		if (cur.first == _to)
+		{
+			return cur.second;
+		}
+		for (int i = 0; i < direction->size(); i++)
+		{
+			int next = cur.first + (*direction)[i];
+			if (!closed.count(next) && !is_blocked(_state, _from, _to))
+			{
+				closed.insert(next);
+				godot::PackedInt32Array next_path = cur.second;
+				next_path.push_back(next);
+				q.push(std::make_pair(next, next_path));
+			}
+		}
+	}
+	return godot::PackedInt32Array();
 }
 
 godot::String RuleStandard::get_move_name(godot::Ref<State> _state, int move)
