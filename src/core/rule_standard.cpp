@@ -771,6 +771,7 @@ godot::PackedInt32Array	RuleStandard::generate_king_path(godot::Ref<State> _stat
 	std::unordered_set<int> closed;
 	godot::PackedInt32Array *direction = &directions_eight_way;
 	godot::PackedInt32Array start_path;
+	closed.insert(_from);
 	start_path.push_back(_from);
 	q.push(std::make_pair(_from, start_path));
 	while (!q.empty())
@@ -784,10 +785,10 @@ godot::PackedInt32Array	RuleStandard::generate_king_path(godot::Ref<State> _stat
 		for (int i = 0; i < direction->size(); i++)
 		{
 			int next = cur.first + (*direction)[i];
-			if (!closed.count(next) && !is_blocked(_state, _from, _to))
+			if (!closed.count(next) && !is_blocked(_state, cur.first, next))
 			{
 				closed.insert(next);
-				godot::PackedInt32Array next_path = cur.second;
+				godot::PackedInt32Array next_path = cur.second.duplicate();
 				next_path.push_back(next);
 				q.push(std::make_pair(next, next_path));
 			}
@@ -1116,6 +1117,13 @@ godot::Dictionary RuleStandard::apply_move_custom(godot::Ref<State> _state, int 
 				return output;
 			}
 		}
+		if (to % 16 < from % 16 - 1 || to % 16 > from % 16 + 1 || to / 16 < from / 16 - 1 || to / 16 > from / 16 + 1)
+		{
+			output["type"] = "king_explore";
+			output["from"] = from;
+			output["path"] = generate_king_path(_state, from, to);
+			return output;
+		}
 	}
 	if ((from_piece & 95) == 'P')
 	{
@@ -1186,6 +1194,7 @@ void RuleStandard::_bind_methods()
 	godot::ClassDB::bind_method(godot::D_METHOD("generate_premove"), &RuleStandard::generate_premove);
 	godot::ClassDB::bind_method(godot::D_METHOD("generate_move"), &RuleStandard::generate_move);
 	godot::ClassDB::bind_method(godot::D_METHOD("generate_valid_move"), &RuleStandard::generate_valid_move);
+	godot::ClassDB::bind_method(godot::D_METHOD("generate_king_path"), &RuleStandard::generate_king_path);
 	godot::ClassDB::bind_method(godot::D_METHOD("get_move_name"), &RuleStandard::get_move_name);
 	godot::ClassDB::bind_method(godot::D_METHOD("name_to_move"), &RuleStandard::name_to_move);
 	godot::ClassDB::bind_method(godot::D_METHOD("apply_move"), &RuleStandard::apply_move);

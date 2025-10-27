@@ -233,6 +233,8 @@ func receive_event(event:Dictionary) -> void:
 			en_passant_piece_instance(event["from"], event["to"], event["captured"])
 		"grafting":
 			graft_piece_instance(event["from"], event["to"])
+		"king_explore":
+			king_explore_instance(event["from"], event["path"])
 
 func add_piece_instance(instance:Actor, by:int) -> void:	# 注意根据state摆放棋盘
 	$pieces.add_child(instance)
@@ -343,6 +345,15 @@ func exit_piece_instance(by:int, pos:Vector3) -> void:
 	instance.move(pos)
 	await instance.animation_finished
 	animation_finished.emit.call_deferred()
+
+func king_explore_instance(from:int, path:PackedInt32Array) -> void:
+	var instance:Actor = chessboard_piece[from]
+	chessboard_piece.erase(from)
+	chessboard_piece[path[-1]] = instance
+	for to:int in path:
+		instance.move(get_node(Chess.to_position_name(to)).global_position)
+		await instance.animation_finished
+		animation_finished.emit.call_deferred()
 
 func set_enabled(enabled:bool) -> void:
 	super.set_enabled(enabled)
