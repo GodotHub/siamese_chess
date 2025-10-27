@@ -347,6 +347,8 @@ func exit_piece_instance(by:int, pos:Vector3) -> void:
 	animation_finished.emit.call_deferred()
 
 func king_explore_instance(from:int, path:PackedInt32Array) -> void:
+	if path.is_empty():
+		return
 	var instance:Actor = chessboard_piece[from]
 	chessboard_piece.erase(from)
 	chessboard_piece[path[-1]] = instance

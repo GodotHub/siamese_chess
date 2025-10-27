@@ -500,7 +500,7 @@ bool RuleStandard::is_blocked(godot::Ref<State> _state, int _from, int _to)
 
 bool RuleStandard::is_enemy(godot::Ref<State> _state, int _from, int _to)
 {
-	return _state->has_piece(_to) && (_state->get_piece(_to) & 95) != 'W' && (!Chess::is_same_group(_state->get_piece(_from), _state->get_piece(_to)) || (_state->get_piece(_to) & 95) != 'X');
+	return _state->has_piece(_to) && (_state->get_piece(_to) & 95) != 'W' && (!Chess::is_same_group(_state->get_piece(_from), _state->get_piece(_to)) || (_state->get_piece(_to) & 95) == 'X');
 }
 
 bool RuleStandard::is_en_passant(godot::Ref<State> _state, int _from, int _to)
@@ -785,7 +785,7 @@ godot::PackedInt32Array	RuleStandard::generate_king_path(godot::Ref<State> _stat
 		for (int i = 0; i < direction->size(); i++)
 		{
 			int next = cur.first + (*direction)[i];
-			if (!closed.count(next) && !is_blocked(_state, cur.first, next))
+			if (!closed.count(next) && !is_blocked(_state, cur.first, next) && !is_enemy(_state, cur.first, next))
 			{
 				closed.insert(next);
 				godot::PackedInt32Array next_path = cur.second.duplicate();
