@@ -28,6 +28,7 @@ class RuleStandard : public godot::Object
 		godot::PackedInt32Array generate_premove(godot::Ref<State> _state, int _group);
 		godot::PackedInt32Array generate_move(godot::Ref<State> _state, int _group);
 		godot::PackedInt32Array generate_valid_move(godot::Ref<State> _state, int _group);
+		godot::PackedInt32Array generate_explore_move(godot::Ref<State> _state, int _group);
 		godot::PackedInt32Array	generate_king_path(godot::Ref<State> _state, int _from, int _to);
 		godot::String get_move_name(godot::Ref<State> _state, int move);
 		int name_to_move(godot::Ref<State> _state, godot::String name);

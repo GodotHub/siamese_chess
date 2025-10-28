@@ -48,22 +48,7 @@ func step(move:int) -> void:
 func explore() -> void:
 	while true:	# 有棋子再说
 		if state.get_bit("a".unicode_at(0)):
-			var move_list:PackedInt32Array = RuleStandard.generate_valid_move(state, 1)
-			if state.get_bit("k".unicode_at(0)):
-				var from_bit:int = state.get_bit("k".unicode_at(0))
-				var from:int = 0
-				while from_bit != 1:
-					from_bit >>= 1
-					from += 1
-				from = from % 8 + from / 8 * 16
-				var king_move:PackedInt32Array = []
-				for i:int in 64:
-					var to:int = i % 8 + i / 8 * 16
-					if from == to || state.has_piece(to) || move_list.has(Chess.create(from, to, 0)):
-						continue
-					king_move.push_back(Chess.create(from, to, 0))
-				move_list.append_array(king_move)
-			chessboard.set_valid_move(move_list)
+			chessboard.set_valid_move(RuleStandard.generate_explore_move(state, 1))
 			chessboard.set_valid_premove([])
 			await chessboard.move_played
 			RuleStandard.apply_move(state, chessboard.confirm_move)

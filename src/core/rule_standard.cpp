@@ -765,6 +765,55 @@ godot::PackedInt32Array RuleStandard::generate_valid_move(godot::Ref<State>_stat
 	return output;
 }
 
+godot::PackedInt32Array RuleStandard::generate_explore_move(godot::Ref<State> _state, int _group)
+{
+	godot::PackedInt32Array move_list = generate_valid_move(_state, _group);
+	if (_state->get_bit(_group == 0 ? 'K' : 'k'))
+	{
+		int64_t from_bit = _state->get_bit(_group == 0 ? 'K' : 'k');
+		int from = 0;
+		while (from_bit != 1 && from_bit != 0)
+		{
+			from_bit >>= 1;
+			from += 1;
+		}
+		from = from % 8 + from / 8 * 16;
+		godot::PackedInt32Array king_move;
+
+		std::queue<int> q;
+		std::unordered_set<int> closed;
+		godot::PackedInt32Array *direction = &directions_eight_way;
+		closed.insert(from);
+		q.push(from);
+		while (!q.empty())
+		{
+			int cur = q.front();
+			q.pop();
+			for (int i = 0; i < direction->size(); i++)
+			{
+				int next = cur + (*direction)[i];
+				int move = Chess::create(from, next, 0);
+				if (!closed.count(next) && !is_blocked(_state, cur, next) && !is_enemy(_state, cur, next))
+				{
+					godot::Ref<State>test_state = _state->duplicate();
+					apply_move(test_state, move);
+					if (!is_check(test_state, 1 - _group))
+					{
+						if (!move_list.has(move))
+						{
+							king_move.push_back(move);
+						}
+						q.push(next);
+					}
+				}
+				closed.insert(next);
+			}
+		}
+		move_list.append_array(king_move);
+	}
+	return move_list;
+}
+
 godot::PackedInt32Array	RuleStandard::generate_king_path(godot::Ref<State> _state, int _from, int _to)
 {
 	std::queue<std::pair<int, godot::PackedInt32Array>> q;
@@ -1194,10 +1243,11 @@ void RuleStandard::_bind_methods()
 	godot::ClassDB::bind_method(godot::D_METHOD("generate_premove"), &RuleStandard::generate_premove);
 	godot::ClassDB::bind_method(godot::D_METHOD("generate_move"), &RuleStandard::generate_move);
 	godot::ClassDB::bind_method(godot::D_METHOD("generate_valid_move"), &RuleStandard::generate_valid_move);
+	godot::ClassDB::bind_method(godot::D_METHOD("generate_explore_move"), &RuleStandard::generate_explore_move);
 	godot::ClassDB::bind_method(godot::D_METHOD("generate_king_path"), &RuleStandard::generate_king_path);
 	godot::ClassDB::bind_method(godot::D_METHOD("get_move_name"), &RuleStandard::get_move_name);
 	godot::ClassDB::bind_method(godot::D_METHOD("name_to_move"), &RuleStandard::name_to_move);
-	godot::ClassDB::bind_method(godot::D_METHOD("apply_move"), &RuleStandard::apply_move);
+	godot::ClassDB::bind_method(godot::D_METHOD("apply_move"), &RuleStandard::apply_move); 
 	godot::ClassDB::bind_method(godot::D_METHOD("apply_move_custom"), &RuleStandard::apply_move_custom);
 	godot::ClassDB::bind_method(godot::D_METHOD("perft"), &RuleStandard::perft);
 }
