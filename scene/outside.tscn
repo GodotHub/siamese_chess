@@ -1,7 +1,6 @@
-[gd_scene load_steps=19 format=3 uid="uid://dnut8pn3hxg8"]
+[gd_scene load_steps=18 format=3 uid="uid://dnut8pn3hxg8"]
 
 [ext_resource type="Script" uid="uid://cjddqgsgfo4hw" path="res://src/outside.gd" id="1_arvm7"]
-[ext_resource type="Script" uid="uid://dg85frcnjlauy" path="res://src/interact.gd" id="4_gs8dr"]
 [ext_resource type="PackedScene" uid="uid://b3ml34bssywkr" path="res://scene/player.tscn" id="4_w3jsn"]
 [ext_resource type="PackedScene" uid="uid://bmv2xhfws616g" path="res://scene/level.tscn" id="5_asp05"]
 [ext_resource type="PackedScene" uid="uid://dwvyc2qlcdag0" path="res://scene/chessboard_large.tscn" id="5_dfs0n"]
@@ -52,11 +51,6 @@ environment = SubResource("Environment_w3jsn")
 transform = Transform3D(-0.866024, -0.433016, 0.250001, 0, 0.499998, 0.866026, -0.500003, 0.749999, -0.43301, 0, 0, 0)
 light_color = Color(0.419813, 0.419813, 0.419813, 1)
 shadow_enabled = true
-
-[node name="interact" type="Area3D" parent="." node_paths=PackedStringArray("camera")]
-script = ExtResource("4_gs8dr")
-camera = NodePath("../level_1/camera")
-metadata/_custom_type_script = "uid://dg85frcnjlauy"
 
 [node name="player" parent="." instance=ExtResource("4_w3jsn")]
 
