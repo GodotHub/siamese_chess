@@ -72,10 +72,12 @@ func move(_pos:Vector3) -> void:	# 单纯的移动
 	if has_node("animation_tree"):
 		tween.tween_callback($animation_tree.get("parameters/playback").travel.bind("battle_move"))
 	tween.tween_property(self, "global_rotation:y", target_angle, 0.1).set_trans(Tween.TRANS_SINE)
+	tween.set_parallel(true)
 	tween.tween_property(self, "global_position", _pos, global_position.distance_to(_pos) / 5)
+	tween.set_parallel(false)
+	tween.tween_callback(animation_finished.emit)
 	if has_node("animation_tree"):
 		tween.tween_callback($animation_tree.get("parameters/playback").travel.bind("battle_idle"))
-	tween.tween_callback(animation_finished.emit)
 
 func target() -> void:	# 作为轻子威胁重子，或牵制对手的棋子时将会面向目标准备攻击，包括将军
 	if tween && tween.is_running():

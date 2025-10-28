@@ -48,7 +48,7 @@ func step(move:int) -> void:
 func explore() -> void:
 	while true:	# 有棋子再说
 		if state.get_bit("a".unicode_at(0)):
-			chessboard.set_valid_move(RuleStandard.generate_explore_move(state, 1))
+			chessboard.set_valid_move(RuleStandard.generate_explore_move(state, 1))	# TODO: 由于移花接木机制，这个情况下Cheshire不会进行寻路。
 			chessboard.set_valid_premove([])
 			await chessboard.move_played
 			RuleStandard.apply_move(state, chessboard.confirm_move)
