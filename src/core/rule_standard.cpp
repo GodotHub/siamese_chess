@@ -843,6 +843,12 @@ godot::PackedInt32Array	RuleStandard::generate_king_path(godot::Ref<State> _stat
 			{
 				continue;
 			}
+			godot::Ref<State>test_state = _state->duplicate();
+			apply_move(test_state, Chess::create(Chess::to_x88(min_node), next_x88, 0));
+			if (is_check(test_state, 1 - Chess::group(_state->get_piece(_from))))
+			{
+				continue;
+			}
 			int next = Chess::to_64(next_x88);
 			if (!shortest[next])
 			{
