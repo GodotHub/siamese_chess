@@ -13,6 +13,7 @@ var document_list:PackedStringArray = []
 var button_list:Array[Button] = []
 
 func _ready() -> void:
+	visible = false
 	$texture_rect/button_close.connect("button_up", close)
 	$texture_rect/h_box_container/button_rename.connect("button_up", rename_pressed)
 	$texture_rect/h_box_container/button_add_empty.connect("button_up", add_empty_pressed)

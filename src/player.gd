@@ -22,7 +22,7 @@ func _unhandled_input(event:InputEvent) -> void:
 			area.emit_signal("input", self, area, event, $ray_cast.get_collision_point(), $ray_cast.get_collision_normal())
 		get_viewport().set_input_as_handled()
 	if event is InputEventMultiScreenDrag:
-		$archive.open()
+		Archive.open()
 
 func click_area(screen_position:Vector2) -> Area3D:
 	var from:Vector3 = $head/camera.project_ray_origin(screen_position)
