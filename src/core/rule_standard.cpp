@@ -816,34 +816,46 @@ godot::PackedInt32Array RuleStandard::generate_explore_move(godot::Ref<State> _s
 
 godot::PackedInt32Array	RuleStandard::generate_king_path(godot::Ref<State> _state, int _from, int _to)
 {
-	std::queue<std::pair<int, godot::PackedInt32Array>> q;
-	std::unordered_set<int> closed;
+	std::vector<std::pair<int, godot::PackedInt32Array>> dp(64, std::make_pair(0x7FFFFFFF, godot::PackedInt32Array()));
+	std::vector<bool> shortest(64, false);
+	dp[Chess::to_64(_from)].first = 0;
 	godot::PackedInt32Array *direction = &directions_eight_way;
-	godot::PackedInt32Array start_path;
-	closed.insert(_from);
-	start_path.push_back(_from);
-	q.push(std::make_pair(_from, start_path));
-	while (!q.empty())
+	for (int i = 0; i < 64; i++)
 	{
-		std::pair<int, godot::PackedInt32Array> cur = q.front();
-		q.pop();
-		if (cur.first == _to)
+		int min_node = 0;
+		int min_step = 0x7FFFFFFF;
+		for (int j = 0; j < 64; j++)
 		{
-			return cur.second;
-		}
-		for (int i = 0; i < direction->size(); i++)
-		{
-			int next = cur.first + (*direction)[i];
-			if (!closed.count(next) && !is_blocked(_state, cur.first, next) && !is_enemy(_state, cur.first, next))
+			if (dp[j].first < min_step && !shortest[j])
 			{
-				closed.insert(next);
-				godot::PackedInt32Array next_path = cur.second.duplicate();
-				next_path.push_back(next);
-				q.push(std::make_pair(next, next_path));
+				min_node = j;
+				min_step = dp[j].first;
+			}
+		}
+		shortest[min_node] = true;
+		for (int j = 0; j < direction->size(); j++)
+		{
+			bool is_diagonal = abs((*direction)[j]) != 1 && abs((*direction)[j]) != 16;
+			int step = is_diagonal ? 11 : 10;
+			int next_x88 = Chess::to_x88(min_node) + (*direction)[j];
+
+			if ((next_x88 & 0x88) || is_blocked(_state, Chess::to_x88(min_node), next_x88) || is_enemy(_state, Chess::to_x88(min_node), next_x88))
+			{
+				continue;
+			}
+			int next = Chess::to_64(next_x88);
+			if (!shortest[next])
+			{
+				if (min_step + step < dp[next].first)
+				{
+					dp[next].first = min_step + step;
+					dp[next].second = dp[min_node].second.duplicate();
+					dp[next].second.push_back(Chess::to_x88(next));
+				}
 			}
 		}
 	}
-	return godot::PackedInt32Array();
+	return dp[Chess::to_64(_to)].second;
 }
 
 godot::String RuleStandard::get_move_name(godot::Ref<State> _state, int move)
