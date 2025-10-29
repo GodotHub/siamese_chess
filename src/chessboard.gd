@@ -355,7 +355,7 @@ func king_explore_instance(from:int, path:PackedInt32Array) -> void:
 	for to:int in path:
 		instance.move(get_node(Chess.to_position_name(to)).global_position)
 		await instance.animation_finished
-		animation_finished.emit.call_deferred()
+	animation_finished.emit.call_deferred()
 
 func set_enabled(enabled:bool) -> void:
 	super.set_enabled(enabled)

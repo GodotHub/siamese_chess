@@ -38,7 +38,7 @@ func step(move:int) -> void:
 			next_level.state.add_piece(to, state.get_piece(from))
 			state.capture_piece(from)
 			chessboard.move_piece_instance_to_other(from, to, next_level.chessboard)
-			next_level.chessboard.set_valid_move(RuleStandard.generate_valid_move(next_level.state, 1))
+			next_level.chessboard.set_valid_move(RuleStandard.generate_explore_move(next_level.state, 1))
 		elif Chess.from(move) == from && next_level.state.has_piece(to) && !(char(next_level.state.get_piece(to)) in ["W", "w", "X", "x", "Y", "y", "Z", "z"]):
 			state.add_piece(from, next_level.state.get_piece(to))
 			next_level.state.capture_piece(to)
@@ -52,6 +52,7 @@ func explore() -> void:
 			chessboard.set_valid_premove([])
 			await chessboard.move_played
 			RuleStandard.apply_move(state, chessboard.confirm_move)
+			await chessboard.animation_finished
 			step(chessboard.confirm_move)
 			
 			# TODO: 这是不准确的攻击范围判定，拓展RuleStandard功能以改写成标准的攻击范围
