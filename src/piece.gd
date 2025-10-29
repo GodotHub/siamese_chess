@@ -66,9 +66,30 @@ func captured(_capturing:Actor = null) -> void:	# 被攻击
 	var tween:Tween = create_tween()
 	tween.tween_property(self, "global_position", backup_position, 0.3).set_trans(Tween.TRANS_SINE)
 
-func promote(_pos:Vector3) -> void:
+func promote(_pos:Vector3, _piece:int) -> void:
 	var tween:Tween = create_tween()
 	tween.tween_property(self, "global_position", _pos, 0.3).set_trans(Tween.TRANS_SINE)
+	$piece.visible = false
+	var instance:Actor = null
+	match _piece:
+		81:
+			instance = load("res://scene/piece_queen_black.tscn").instantiate()
+		82:
+			instance = load("res://scene/piece_rook_black.tscn").instantiate()
+		66:
+			instance = load("res://scene/piece_bishop_black.tscn").instantiate()
+		78:
+			instance = load("res://scene/piece_knight_black.tscn").instantiate()
+		113:
+			instance = load("res://scene/piece_queen_black.tscn").instantiate()
+		114:
+			instance = load("res://scene/piece_rook_black.tscn").instantiate()
+		98:
+			instance = load("res://scene/piece_bishop_black.tscn").instantiate()
+		110:
+			instance = load("res://scene/piece_knight_black.tscn").instantiate()
+	add_child(instance)
+
 
 func set_warning(enabled:bool) -> void:
 	if enabled:
