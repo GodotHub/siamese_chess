@@ -770,7 +770,7 @@ godot::PackedInt32Array RuleStandard::generate_explore_move(godot::Ref<State> _s
 	godot::PackedInt32Array move_list = generate_valid_move(_state, _group);
 	if (_state->get_bit(_group == 0 ? 'K' : 'k'))
 	{
-		int64_t from_bit = _state->get_bit(_group == 0 ? 'K' : 'k');
+		uint64_t from_bit = _state->get_bit(_group == 0 ? 'K' : 'k');
 		int from = 0;
 		while (from_bit != 1 && from_bit != 0)
 		{
