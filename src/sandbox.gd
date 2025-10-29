@@ -5,8 +5,7 @@ var initial_state:State = null
 @onready var chessboard = $chessboard
 
 func _ready() -> void:
-	$player.set_initial_interact($interact)
-	chessboard.add_default_piece_set()
+	$player.force_set_camera($camera_3d)
 	chessboard.connect("move_played", receive_move)
 	while !is_instance_valid(state):
 		var text_input_instance:TextInput = TextInput.create_text_input_instance("输入FEN格式的布局：", "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
@@ -15,6 +14,7 @@ func _ready() -> void:
 		state = RuleStandard.parse(text_input_instance.text)
 	initial_state = state.duplicate()
 	chessboard.set_state(state.duplicate())
+	chessboard.add_default_piece_set()
 	update_move()
 
 func _unhandled_input(event:InputEvent) -> void:
