@@ -28,7 +28,7 @@ func _ready() -> void:
 		chessboard.connect("clicked", move_camera.emit.call_deferred.bind($camera))
 	explore()
 
-func step(move:int) -> void:
+func check_teleport(move:int) -> void:
 	for from:int in teleport:
 		var to:int = teleport[from]["to"]
 		var next_level:Level = teleport[from]["level"]
@@ -45,6 +45,17 @@ func step(move:int) -> void:
 			next_level.chessboard.move_piece_instance_to_other(to, from, chessboard)
 			chessboard.set_valid_move(RuleStandard.generate_valid_move(state, 1))
 
+func check_attack() -> bool:
+	# TODO: 这是不准确的攻击范围判定，拓展RuleStandard功能以改写成标准的攻击范围
+	var white_move_list:PackedInt32Array = RuleStandard.generate_valid_move(state, 0)
+	for move:int in white_move_list:
+		var to:int = Chess.to(move)
+		if state.has_piece(to):
+			continue
+		if char(state.get_piece(to)) in ["k", "q", "r", "b", "n", "p"]:
+			return true
+	return false
+
 func explore() -> void:
 	while true:	# 有棋子再说
 		if state.get_bit("a".unicode_at(0)):
@@ -53,17 +64,10 @@ func explore() -> void:
 			await chessboard.move_played
 			RuleStandard.apply_move(state, chessboard.confirm_move)
 			await chessboard.animation_finished
-			step(chessboard.confirm_move)
-			
-			# TODO: 这是不准确的攻击范围判定，拓展RuleStandard功能以改写成标准的攻击范围
-			var white_move_list:PackedInt32Array = RuleStandard.generate_valid_move(state, 0)
-			for move:int in white_move_list:
-				var to:int = Chess.to(move)
-				if state.has_piece(to):
-					continue
-				if char(state.get_piece(to)) in ["k", "q", "r", "b", "n", "p"]:
-					versus.call_deferred()
-					return
+			check_teleport(chessboard.confirm_move)
+			if check_attack():
+				versus.call_deferred()
+				return
 		else:
 			await chessboard.clicked
 
