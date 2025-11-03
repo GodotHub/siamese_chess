@@ -22,7 +22,7 @@ func _unhandled_input(event:InputEvent) -> void:
 			area.emit_signal("input", self, area, event, $ray_cast.get_collision_point(), $ray_cast.get_collision_normal())
 		get_viewport().set_input_as_handled()
 	if event is InputEventMultiScreenDrag:
-		Archive.open()
+		$archive.open()
 
 func click_area(screen_position:Vector2) -> Area3D:
 	var from:Vector3 = $head/camera.project_ray_origin(screen_position)
@@ -39,7 +39,7 @@ func move_camera(other:Camera3D) -> void:
 	if !is_instance_valid(other):
 		return
 	var tween:Tween = create_tween()
-	tween.tween_callback($audio_stream_player.play)
+	#tween.tween_callback($audio_stream_player.play)
 	tween.tween_property($head, "global_transform", other.global_transform, 1).set_trans(Tween.TRANS_SINE)
 	tween.set_parallel(true)
 	tween.tween_property($head/camera, "fov", other.fov, 1).set_trans(Tween.TRANS_SINE)
