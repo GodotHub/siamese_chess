@@ -60,21 +60,21 @@ func explore() -> void:
 		if chessboard.state.get_bit("a".unicode_at(0)):
 			chessboard.set_valid_move(RuleStandard.generate_explore_move(chessboard.state, 1))	# TODO: 由于移花接木机制，这个情况下Cheshire不会进行寻路。
 			await chessboard.clicked_move
-			check_move(Chess.from(chessboard.confirm_move), Chess.to(chessboard.confirm_move), chessboard.valid_move)
-			await chessboard.animation_finished
-			check_teleport(chessboard.confirm_move)
-			if check_attack():
-				versus.call_deferred()
-				return
+			if await check_move(Chess.from(chessboard.confirm_move), Chess.to(chessboard.confirm_move), chessboard.valid_move):
+				await chessboard.animation_finished
+				check_teleport(chessboard.confirm_move)
+				if check_attack():
+					versus.call_deferred()
+					return
 		else:
 			await chessboard.clicked
 
-func check_move(from:int, to:int, valid_move:Dictionary[int, Array]) -> void:
+func check_move(from:int, to:int, valid_move:Dictionary[int, Array]) -> bool:
 	if from & 0x88 || to & 0x88 || !valid_move.has(from):
-		return
+		return false
 	var move_list:PackedInt32Array = valid_move[from].filter(func (move:int) -> bool: return to == Chess.to(move))
 	if move_list.size() == 0:
-		return
+		return false
 	elif move_list.size() > 1:
 		var decision_list:PackedStringArray = []
 		for iter:int in move_list:
@@ -83,10 +83,11 @@ func check_move(from:int, to:int, valid_move:Dictionary[int, Array]) -> void:
 		add_child(decision_instance)
 		await decision_instance.decided
 		if decision_instance.selected_index == -1:
-			return
+			return false
 		chessboard.execute_move(move_list[decision_instance.selected_index])
 	else:
 		chessboard.execute_move(move_list[0])
+	return true
 
 func versus() -> void:
 	in_battle = true
@@ -115,11 +116,14 @@ func versus() -> void:
 		engine.set_think_time(INF)
 		engine.start_search(chessboard.state, 1, history_state, Callable())
 		await chessboard.clicked_move
-		check_move(Chess.from(chessboard.comfirm_move), Chess.to(chessboard.confirm_move), chessboard.valid_move)
-		history_state.push_back(chessboard.state.get_zobrist())
-		engine.stop_search()
-		if engine.is_searching():
-			await engine.search_finished
+		while true:
+			if await check_move(Chess.from(chessboard.comfirm_move), Chess.to(chessboard.confirm_move), chessboard.valid_move):
+				history_state.push_back(chessboard.state.get_zobrist())
+				engine.stop_search()
+				if engine.is_searching():
+					await engine.search_finished
+				break
+			await chessboard.clicked_move
 	match RuleStandard.get_end_type(chessboard.state):
 		"checkmate_black":
 			for by:int in 128:
