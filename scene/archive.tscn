@@ -20,6 +20,7 @@ gradient = SubResource("Gradient_j3y3i")
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_uibjj"]
 
 [node name="archive" type="CanvasLayer"]
+layer = 3
 script = ExtResource("1_550ee")
 
 [node name="texture_rect" type="TextureRect" parent="."]

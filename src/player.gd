@@ -4,6 +4,7 @@ extends Node3D
 var mouse_moved:bool = false
 var mouse_start_position_name:String = ""
 var can_move:bool = true
+var card:Card = null
 
 func _ready() -> void:
 	pass
@@ -48,3 +49,6 @@ func move_camera(other:Camera3D) -> void:
 func force_set_camera(other:Camera3D) -> void:
 	$head.global_transform = other.global_transform
 	$head/camera.fov = other.fov
+
+func on_card_selected(_card:Card) -> void:
+	card = _card
