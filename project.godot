@@ -16,6 +16,11 @@ run/main_scene="uid://dnut8pn3hxg8"
 config/features=PackedStringArray("4.4", "GL Compatibility")
 config/icon="uid://gdemlmk1r3x4"
 
+[autoload]
+
+Archive="*res://scene/archive.tscn"
+HoldCard="*res://scene/hold_card.tscn"
+
 [debug]
 
 gdscript/warnings/integer_division=0
