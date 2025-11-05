@@ -7,7 +7,7 @@ extends CanvasLayer
 # 4、但是摆放棋子需要和Level互动，而非Chessboard
 # 5、Means that Chessboard还需要额外的解构，尤其是对棋盘的控制上
 
-signal selected(card:Card)
+signal selected()
 
 var card_list:Array[Card] = []
 var selected_card:Card = null
@@ -51,6 +51,6 @@ func select_card(card_instance:TextureRect) -> void:
 	else:
 		selected_card = null
 		tween.tween_property(card_instance, "position:y", -800, 0.3).set_trans(Tween.TRANS_SINE)
-	selected.emit(selected_card)
+	selected.emit()
 	for iter:TextureRect in $card_list.get_children():
 		iter.position.y = -800
