@@ -7,27 +7,50 @@ extends CanvasLayer
 # 4、但是摆放棋子需要和Level互动，而非Chessboard
 # 5、Means that Chessboard还需要额外的解构，尤其是对棋盘的控制上
 
-signal selected(type:String)
+signal selected(card:Card)
 
 var card_list:Array[Card] = []
+var selected_card:Card = null
 
 func _ready() -> void:
-	pass
+	init_card()
+	var i:int = 0
+	for iter:Card in card_list:
+		var card_instance:TextureRect = TextureRect.new()
+		card_instance.texture = iter.cover
+		card_instance.set_meta("card", iter)
+		$card_list.add_child(card_instance)
+		card_instance.connect("gui_input", card_input.bind(card_instance))
+		card_instance.position.y = -800
+		card_instance.position.x = i * 200
+		i += 1
 
-func _unhandled_input(_event:InputEvent) -> void:
-	# 好像只要点下左键点到卡牌之后，剩下的处理就和卡牌无关了
+func init_card() -> void:
+	var card_1:CardTarot = CardTarot.new()
+	card_1.cover = load("res://assets/texture/tarot_2.svg")
+	card_1.piece = "q".unicode_at(0)
+	card_1.actor = load("res://scene/pastor.tscn").instantiate()
+	card_list.push_back(card_1)
+
+func card_input(_event:InputEvent, card_instance:TextureRect) -> void:
 	if _event is InputEventMouseButton:
 		if _event.pressed && _event.button_index == MOUSE_BUTTON_LEFT:
-			for iter:Sprite2D in $card_list.get_children():
-				if iter.get_rect().has_point(iter.to_local(_event.position)):
-					select_card(iter)
-					get_viewport().set_input_as_handled()
-					break
+			select_card(card_instance)
+
+func deselect() -> void:
+	selected_card = null
+	for iter:TextureRect in $card_list.get_children():
+		iter.position.y = -800
 
 # 这里需要切实地让player感知到自己选了这张牌
-func select_card(card:Sprite2D) -> void:
-	selected.emit()
-	for iter:Sprite2D in $card_list.get_children():
-		iter.position.y = 0
+func select_card(card_instance:TextureRect) -> void:
 	var tween:Tween = create_tween()
-	tween.tween_property(card, "position:y", -100, 0.3).set_trans(Tween.TRANS_SINE)
+	if selected_card != card_instance.get_meta("card"):
+		selected_card = card_instance.get_meta("card")
+		tween.tween_property(card_instance, "position:y", -1000, 0.3).set_trans(Tween.TRANS_SINE)
+	else:
+		selected_card = null
+		tween.tween_property(card_instance, "position:y", -800, 0.3).set_trans(Tween.TRANS_SINE)
+	selected.emit(selected_card)
+	for iter:TextureRect in $card_list.get_children():
+		iter.position.y = -800

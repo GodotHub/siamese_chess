@@ -1,26 +1,15 @@
-[gd_scene load_steps=5 format=3 uid="uid://oyog0g8p65cj"]
+[gd_scene load_steps=2 format=3 uid="uid://oyog0g8p65cj"]
 
 [ext_resource type="Script" uid="uid://dshl854mfrege" path="res://src/hold_card.gd" id="1_wpu43"]
-[ext_resource type="Texture2D" uid="uid://crnlnjsdjkb1m" path="res://assets/texture/tarot_0.svg" id="2_6o6tn"]
-[ext_resource type="Texture2D" uid="uid://clthd234f3216" path="res://assets/texture/tarot_1.svg" id="3_6o6tn"]
-[ext_resource type="Texture2D" uid="uid://btycm04i5gune" path="res://assets/texture/tarot_2.svg" id="4_bo0lf"]
 
 [node name="hold_card" type="CanvasLayer"]
 layer = 2
 script = ExtResource("1_wpu43")
 
-[node name="card_list" type="Node2D" parent="."]
-position = Vector2(41, 571)
-scale = Vector2(0.5, 0.5)
-
-[node name="tarot_0" type="Sprite2D" parent="card_list"]
-position = Vector2(176, 0)
-texture = ExtResource("2_6o6tn")
-
-[node name="tarot_1" type="Sprite2D" parent="card_list"]
-position = Vector2(358, 0)
-texture = ExtResource("3_6o6tn")
-
-[node name="tarot_2" type="Sprite2D" parent="card_list"]
-position = Vector2(574, -2)
-texture = ExtResource("4_bo0lf")
+[node name="card_list" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+grow_vertical = 0
+scale = Vector2(0.25, 0.25)
