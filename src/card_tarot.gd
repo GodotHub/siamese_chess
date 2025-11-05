@@ -12,5 +12,5 @@ func parse(text:String):
 	actor = load(dict["actor"]).instantiate()
 
 func use_card(chessboard:Chessboard, by:int) -> void:	# 单纯加人就是了，按道理也应当算作一步棋（非战斗时）
-	chessboard.state.add_piece(piece, by)
+	chessboard.state.add_piece(by, piece)
 	chessboard.add_piece_instance(actor, by)
