@@ -1,0 +1,4 @@
+extends Actor
+
+func _ready() -> void:
+	$animation_tree.get("parameters/playback").start("battle_idle")
