@@ -4,7 +4,6 @@ extends Node3D
 var mouse_moved:bool = false
 var mouse_start_position_name:String = ""
 var can_move:bool = true
-var card:Card = null
 
 func _ready() -> void:
 	pass
@@ -23,7 +22,7 @@ func _unhandled_input(event:InputEvent) -> void:
 			area.emit_signal("input", self, area, event, $ray_cast.get_collision_point(), $ray_cast.get_collision_normal())
 		get_viewport().set_input_as_handled()
 	if event is InputEventMultiScreenDrag:
-		$archive.open()
+		Archive.open()
 
 func click_area(screen_position:Vector2) -> Area3D:
 	var from:Vector3 = $head/camera.project_ray_origin(screen_position)
@@ -50,5 +49,3 @@ func force_set_camera(other:Camera3D) -> void:
 	$head.global_transform = other.global_transform
 	$head/camera.fov = other.fov
 
-func on_card_selected(_card:Card) -> void:
-	card = _card
