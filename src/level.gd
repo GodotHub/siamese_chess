@@ -60,7 +60,10 @@ func explore() -> void:
 		if chessboard.state.get_bit("a".unicode_at(0)):
 			chessboard.set_valid_move(RuleStandard.generate_explore_move(chessboard.state, 1))	# TODO: 由于移花接木机制，这个情况下Cheshire不会进行寻路。
 			await chessboard.clicked_move
-			if await check_move(Chess.from(chessboard.confirm_move), Chess.to(chessboard.confirm_move), chessboard.valid_move):
+			if HoldCard.selected_card:
+				HoldCard.selected_card.use_card(chessboard, Chess.to(chessboard.confirm_move))
+				HoldCard.deselect()
+			elif await check_move(Chess.from(chessboard.confirm_move), Chess.to(chessboard.confirm_move), chessboard.valid_move):
 				await chessboard.animation_finished
 				check_teleport(chessboard.confirm_move)
 				if check_attack():
