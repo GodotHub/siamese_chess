@@ -3,7 +3,8 @@ class_name Chessboard
 
 signal clicked()
 signal clicked_move()
-signal ready_to_move(by:int)
+signal ready_to_move()
+signal canceled()
 signal animation_finished()
 
 @export var COLOR_LAST_MOVE:Color = Color(0.3, 0.3, 0.3, 1)
@@ -118,10 +119,11 @@ func tap_position(position_name:String) -> void:
 		selected = -1
 		return
 	if !state.has_piece(by) || !valid_move.has(by):
+		canceled.emit.call_deferred()
 		return
 	if valid_move.has(by):
 		show_move(by)
-		ready_to_move.emit.call_deferred(by)
+		ready_to_move.emit.call_deferred()
 	selected = by
 
 func finger_on_position(position_name:String) -> void:

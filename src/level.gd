@@ -8,6 +8,8 @@ var chessboard:Chessboard = null
 var in_battle:bool = false
 var teleport:Dictionary = {}
 var history_state:PackedInt32Array = []
+var level_state:String = ""
+var mutex:Mutex = Mutex.new()
 
 func _ready() -> void:
 	engine = PastorEngine.new()
@@ -25,7 +27,96 @@ func _ready() -> void:
 			chessboard.add_piece_instance(node, by)
 	if has_node("camera"):
 		chessboard.connect("clicked", move_camera.emit.call_deferred.bind($camera))
-	explore()
+	change_state("explore_idle")
+
+func change_state(next_state:String, arg:Dictionary = {}) -> void:
+	mutex.lock()
+	if has_method("state_exit_" + level_state):
+		call_deferred("state_exit_" + level_state)
+	level_state = next_state
+	call_deferred("state_ready_" + level_state, arg)
+	mutex.unlock()
+
+func state_ready_explore_idle(_arg:Dictionary) -> void:
+	chessboard.connect("ready_to_move", change_state.bind("explore_ready_to_move"))
+	chessboard.set_valid_move(RuleStandard.generate_explore_move(chessboard.state, 1))	# TODO: 由于移花接木机制，这个情况下Cheshire不会进行寻路。
+
+func state_exit_explore_idle() -> void:
+	chessboard.disconnect("ready_to_move", change_state.bind("explore_move"))
+
+func state_ready_explore_ready_to_move(_arg:Dictionary) -> void:
+	HoldCard.show_card()
+	chessboard.connect("clicked_move", change_state.bind("explore_check_move"))
+	chessboard.connect("canceled", change_state.bind("explore_idle"))
+	HoldCard.connect("selected", change_state.bind("explore_use_card"))
+
+func state_exit_explore_ready_to_move() -> void:
+	HoldCard.hide_card()
+	chessboard.disconnect("clicked_move", change_state.bind("explore_check_move"))
+	chessboard.disconnect("canceled", change_state.bind("explore_idle"))
+	HoldCard.disconnect("selected", change_state.bind("explore_use_card"))
+
+func state_ready_explore_check_move(_arg:Dictionary) -> void:
+	var from:int = Chess.from(chessboard.confirm_move)
+	var to:int = Chess.to(chessboard.confirm_move)
+	var valid_move:Dictionary = chessboard.valid_move
+	if from & 0x88 || to & 0x88 || !valid_move.has(from):
+		change_state("explore_idle", {})
+		return
+	var move_list:PackedInt32Array = valid_move[from].filter(func (move:int) -> bool: return to == Chess.to(move))
+	if move_list.size() == 0:
+		change_state("explore_idle", {})
+		return
+	elif move_list.size() > 1:
+		change_state("explore_extra_move", {"move_list": move_list})
+
+	else:
+		change_state("explore_move", {"move": move_list[0]})
+
+func state_ready_explore_extra_move(_arg:Dictionary) -> void:
+	var decision_list:PackedStringArray = []
+	for iter:int in _arg["move_list"]:
+		decision_list.push_back("%c" % Chess.extra(iter))
+	decision_list.push_back("cancel")
+	Dialog.connect("on_next", func () -> void:
+		if Dialog.selected == decision_list.size():
+			change_state.bind("explore_idle")
+		else:
+			change_state.bind("explore_move", {"move": _arg["move_list"][Dialog.selected]}), ConnectFlags.CONNECT_ONE_SHOT)
+	Dialog.push_selection(decision_list, true, true)
+
+func state_ready_explore_move(_arg:Dictionary) -> void:
+	chessboard.connect("animation_finished", change_state.bind("explore_check_attack"), ConnectFlags.CONNECT_ONE_SHOT)
+	chessboard.execute_move(_arg["move"])
+
+func state_ready_explore_check_attack(_arg:Dictionary) -> void:
+	var white_move_list:PackedInt32Array = RuleStandard.generate_valid_move(chessboard.state, 0)
+	for move:int in white_move_list:
+		var to:int = Chess.to(move)
+		if chessboard.state.has_piece(to):
+			continue
+		if char(chessboard.state.get_piece(to)) in ["k", "q", "r", "b", "n", "p"]:
+			change_state("versus_enemy")
+			return
+	change_state("explore_idle")
+
+func state_ready_explore_use_card(_arg:Dictionary) -> void:
+	if !HoldCard.selected:
+		change_state("explore_ready_to_move")
+		return
+	chessboard.connect("canceled", change_state.bind("explore_idle"))
+	chessboard.connect("clicked_move", change_state.bind("explore_using_card"))
+	HoldCard.connect("selected", change_state.bind("explore_use_card"))
+
+func state_exit_explore_use_card() -> void:
+	chessboard.disconnect("canceled", change_state.bind("explore_idle"))
+	chessboard.disconnect("clicked_move", change_state.bind("explore_using_card"))
+	HoldCard.disconnect("selected", change_state.bind("explore_use_card"))
+
+func state_ready_explore_using_card(_arg:Dictionary) -> void:
+	var card:Card = HoldCard.selected_card
+	card.use_card(chessboard, Chess.to(chessboard.confirm_move))
+	change_state("explore_check_attack")
 
 func check_teleport(move:int) -> void:
 	for from:int in teleport:
@@ -43,101 +134,3 @@ func check_teleport(move:int) -> void:
 			next_level.chessboard.state.capture_piece(to)
 			next_level.chessboard.move_piece_instance_to_other(to, from, chessboard)
 			chessboard.set_valid_move(RuleStandard.generate_valid_move(chessboard.state, 1))
-
-func check_attack() -> bool:
-	# TODO: 这是不准确的攻击范围判定，拓展RuleStandard功能以改写成标准的攻击范围
-	var white_move_list:PackedInt32Array = RuleStandard.generate_valid_move(chessboard.state, 0)
-	for move:int in white_move_list:
-		var to:int = Chess.to(move)
-		if chessboard.state.has_piece(to):
-			continue
-		if char(chessboard.state.get_piece(to)) in ["k", "q", "r", "b", "n", "p"]:
-			return true
-	return false
-
-func explore() -> void:
-	while true:	# 有棋子再说
-		if chessboard.state.get_bit("a".unicode_at(0)):
-			chessboard.set_valid_move(RuleStandard.generate_explore_move(chessboard.state, 1))	# TODO: 由于移花接木机制，这个情况下Cheshire不会进行寻路。
-			await chessboard.clicked_move
-			if HoldCard.selected_card:
-				HoldCard.selected_card.use_card(chessboard, Chess.to(chessboard.confirm_move))
-				HoldCard.deselect()
-			elif await check_move(Chess.from(chessboard.confirm_move), Chess.to(chessboard.confirm_move), chessboard.valid_move):
-				await chessboard.animation_finished
-				check_teleport(chessboard.confirm_move)
-				if check_attack():
-					versus.call_deferred()
-					return
-		else:
-			await chessboard.clicked
-
-func check_move(from:int, to:int, valid_move:Dictionary[int, Array]) -> bool:
-	if from & 0x88 || to & 0x88 || !valid_move.has(from):
-		return false
-	var move_list:PackedInt32Array = valid_move[from].filter(func (move:int) -> bool: return to == Chess.to(move))
-	if move_list.size() == 0:
-		return false
-	elif move_list.size() > 1:
-		var decision_list:PackedStringArray = []
-		for iter:int in move_list:
-			decision_list.push_back("%c" % Chess.extra(iter))
-		var decision_instance:Decision = Decision.create_decision_instance(decision_list, true)
-		add_child(decision_instance)
-		await decision_instance.decided
-		if decision_instance.selected_index == -1:
-			return false
-		chessboard.execute_move(move_list[decision_instance.selected_index])
-	else:
-		chessboard.execute_move(move_list[0])
-	return true
-
-func versus() -> void:
-	in_battle = true
-	while RuleStandard.get_end_type(chessboard.state) == "":
-		chessboard.set_valid_move([])
-		engine.set_think_time(3)
-		engine.start_search(chessboard.state, 0, history_state, Callable())
-		if engine.is_searching():
-			await engine.search_finished
-		var move:int = engine.get_search_result()
-		
-		var test_state:State = chessboard.state.duplicate()
-		var variation:PackedInt32Array = engine.get_principal_variation()
-		var text:String = ""
-		for iter:int in variation:
-			var move_name:String = RuleStandard.get_move_name(test_state, iter)
-			text += move_name + " "
-			RuleStandard.apply_move(test_state, iter)
-		print(text)
-		
-		history_state.push_back(chessboard.state.get_zobrist())
-		chessboard.execute_move(move)
-		if RuleStandard.get_end_type(chessboard.state) != "":
-			break
-		chessboard.set_valid_move(RuleStandard.generate_valid_move(chessboard.state, 1))
-		engine.set_think_time(INF)
-		engine.start_search(chessboard.state, 1, history_state, Callable())
-		await chessboard.clicked_move
-		while true:
-			if await check_move(Chess.from(chessboard.comfirm_move), Chess.to(chessboard.confirm_move), chessboard.valid_move):
-				history_state.push_back(chessboard.state.get_zobrist())
-				engine.stop_search()
-				if engine.is_searching():
-					await engine.search_finished
-				break
-			await chessboard.clicked_move
-	match RuleStandard.get_end_type(chessboard.state):
-		"checkmate_black":
-			for by:int in 128:
-				if chessboard.state.has_piece(by) && Chess.group(chessboard.state.get_piece(by)) == 0:
-					chessboard.state.capture_piece(by)
-					chessboard.chessboard_piece[by].captured()
-			explore.call_deferred()
-		"checkmate_white":
-			for by:int in 128:
-				if chessboard.state.has_piece(by) && Chess.group(chessboard.state.get_piece(by)) == 1:
-					chessboard.state.capture_piece(by)
-					chessboard.chessboard_piece[by].captured()
-			# 死了
-	in_battle = false

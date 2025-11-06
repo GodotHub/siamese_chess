@@ -14,6 +14,7 @@ var selected_card:Card = null
 
 func _ready() -> void:
 	init_card()
+	hide_card()
 	var i:int = 0
 	for iter:Card in card_list:
 		var card_instance:TextureRect = TextureRect.new()
@@ -54,3 +55,9 @@ func select_card(card_instance:TextureRect) -> void:
 	selected.emit()
 	for iter:TextureRect in $card_list.get_children():
 		iter.position.y = -800
+
+func show_card() -> void:
+	visible = true
+
+func hide_card() -> void:
+	visible = false
