@@ -20,6 +20,7 @@ config/icon="uid://gdemlmk1r3x4"
 
 Archive="*res://scene/archive.tscn"
 HoldCard="*res://scene/hold_card.tscn"
+Dialog="*res://scene/dialog.tscn"
 
 [debug]
 

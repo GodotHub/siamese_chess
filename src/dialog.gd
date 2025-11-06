@@ -1,5 +1,4 @@
 extends CanvasLayer
-class_name Dialog
 
 signal on_next()
 
