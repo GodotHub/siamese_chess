@@ -118,19 +118,61 @@ func state_ready_explore_using_card(_arg:Dictionary) -> void:
 	card.use_card(chessboard, Chess.to(chessboard.confirm_move))
 	change_state("explore_check_attack")
 
-func check_teleport(move:int) -> void:
-	for from:int in teleport:
-		var to:int = teleport[from]["to"]
-		var next_level:Level = teleport[from]["level"]
-		if next_level.in_battle:
-			continue
-		if Chess.to(move) == from && !next_level.chessboard.state.has_piece(to):
-			next_level.chessboard.state.add_piece(to, chessboard.state.get_piece(from))
-			chessboard.state.capture_piece(from)
-			chessboard.move_piece_instance_to_other(from, to, next_level.chessboard)
-			next_level.chessboard.set_valid_move(RuleStandard.generate_explore_move(next_level.chessboard.state, 1))
-		elif Chess.from(move) == from && next_level.chessboard.state.has_piece(to) && !(char(next_level.chessboard.state.get_piece(to)) in ["W", "w", "X", "x", "Y", "y", "Z", "z"]):
-			chessboard.state.add_piece(from, next_level.chessboard.state.get_piece(to))
-			next_level.chessboard.state.capture_piece(to)
-			next_level.chessboard.move_piece_instance_to_other(to, from, chessboard)
-			chessboard.set_valid_move(RuleStandard.generate_valid_move(chessboard.state, 1))
+func state_ready_versus_enemy(_arg:Dictionary) -> void:
+	chessboard.set_valid_movd([])
+	engine.connect("search_finished", func() -> void:
+		change_state("versus_move", {"move": engine.get_search_result()})
+		, ConnectFlags.CONNECT_ONE_SHOT)
+	engine.set_think_time(3)
+	engine.start_search(chessboard.state, 0, history_state, Callable())
+
+func state_ready_versus_waiting() -> void:
+	engine.connect("search_finished", change_state.bind("versus_enemy"))
+
+func state_ready_versus_move(_arg:Dictionary) -> void:
+	history_state.push_back(chessboard.state.get_zobrist())
+	chessboard.connect("animation_finished", func() -> void:
+		if chessboard.state.get_turn() == 0:
+			if engine.is_searching():
+				change_state("versus_waiting")
+			else:
+				change_state("versus_enemy")
+		else:
+			change_state("versus_player")
+	, ConnectFlags.CONNECT_ONE_SHOT)
+	chessboard.execute_move(_arg["move"])
+
+func state_ready_versus_player(_arg:Dictionary) -> void:
+	chessboard.connect("clicked_move", change_state.bind("versus_check_move"))
+	chessboard.set_valid_move(RuleStandard.generate_valid_move(chessboard.state, 1))
+	engine.set_think_time(INF)
+	engine.start_search(chessboard.state, 1, history_state, Callable())
+
+func state_ready_versus_check_move(_arg:Dictionary) -> void:
+	var from:int = Chess.from(chessboard.confirm_move)
+	var to:int = Chess.to(chessboard.confirm_move)
+	var valid_move:Dictionary = chessboard.valid_move
+	if from & 0x88 || to & 0x88 || !valid_move.has(from):
+		change_state("versus_player", {})
+		return
+	var move_list:PackedInt32Array = valid_move[from].filter(func (move:int) -> bool: return to == Chess.to(move))
+	if move_list.size() == 0:
+		change_state("versus_player", {})
+		return
+	elif move_list.size() > 1:
+		change_state("versus_extra_move", {"move_list": move_list})
+
+	else:
+		change_state("versus_move", {"move": move_list[0]})
+
+func state_ready_versus_extra_move(_arg:Dictionary) -> void:
+	var decision_list:PackedStringArray = []
+	for iter:int in _arg["move_list"]:
+		decision_list.push_back("%c" % Chess.extra(iter))
+	decision_list.push_back("cancel")
+	Dialog.connect("on_next", func () -> void:
+		if Dialog.selected == decision_list.size():
+			change_state.bind("versus_player")
+		else:
+			change_state.bind("versus_move", {"move": _arg["move_list"][Dialog.selected]}), ConnectFlags.CONNECT_ONE_SHOT)
+	Dialog.push_selection(decision_list, true, true)
