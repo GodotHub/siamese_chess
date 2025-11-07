@@ -101,7 +101,8 @@ func state_ready_explore_check_attack(_arg:Dictionary) -> void:
 	change_state("explore_idle")
 
 func state_ready_explore_use_card(_arg:Dictionary) -> void:
-	if !HoldCard.selected:
+	HoldCard.show_card()
+	if !is_instance_valid(HoldCard.selected_card):
 		change_state("explore_ready_to_move")
 		return
 	chessboard.connect("canceled", change_state.bind("explore_idle"))
@@ -109,6 +110,7 @@ func state_ready_explore_use_card(_arg:Dictionary) -> void:
 	HoldCard.connect("selected", change_state.bind("explore_use_card"))
 
 func state_exit_explore_use_card() -> void:
+	HoldCard.hide_card()
 	chessboard.disconnect("canceled", change_state.bind("explore_idle"))
 	chessboard.disconnect("clicked_move", change_state.bind("explore_using_card"))
 	HoldCard.disconnect("selected", change_state.bind("explore_use_card"))
@@ -116,6 +118,7 @@ func state_exit_explore_use_card() -> void:
 func state_ready_explore_using_card(_arg:Dictionary) -> void:
 	var card:Card = HoldCard.selected_card
 	card.use_card(chessboard, Chess.to(chessboard.confirm_move))
+	HoldCard.deselect()
 	change_state("explore_check_attack")
 
 func state_ready_versus_enemy(_arg:Dictionary) -> void:

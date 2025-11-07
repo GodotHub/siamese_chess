@@ -48,4 +48,3 @@ func move_camera(other:Camera3D) -> void:
 func force_set_camera(other:Camera3D) -> void:
 	$head.global_transform = other.global_transform
 	$head/camera.fov = other.fov
-

@@ -30,7 +30,7 @@ func init_card() -> void:
 	var card_1:CardTarot = CardTarot.new()
 	card_1.cover = load("res://assets/texture/tarot_2.svg")
 	card_1.piece = "q".unicode_at(0)
-	card_1.actor = load("res://scene/pastor.tscn").instantiate()
+	card_1.actor = load("res://scene/pastor.tscn")
 	card_list.push_back(card_1)
 
 func card_input(_event:InputEvent, card_instance:TextureRect) -> void:
