@@ -1,4 +1,4 @@
-[gd_scene load_steps=27 format=3 uid="uid://co6urdc5oyrbh"]
+[gd_scene load_steps=30 format=3 uid="uid://co6urdc5oyrbh"]
 
 [ext_resource type="Script" uid="uid://cln6ksgl3ll6o" path="res://src/cafe.gd" id="1_e1edc"]
 [ext_resource type="Script" uid="uid://rhdq34na2j5m" path="res://src/level.gd" id="1_mr20p"]
@@ -16,6 +16,9 @@
 [ext_resource type="PackedScene" uid="uid://bw127d1iawnv3" path="res://assets/model/radermachera_sinica.glb" id="13_fsnob"]
 [ext_resource type="PackedScene" uid="uid://ppw81bokufcf" path="res://assets/model/chair_high.glb" id="15_n3pbh"]
 [ext_resource type="Script" uid="uid://chtqhpiu556i1" path="res://src/marker_bit.gd" id="16_0icrd"]
+[ext_resource type="PackedScene" uid="uid://cingkxj4uodjo" path="res://assets/model/window.glb" id="17_q5uxw"]
+[ext_resource type="PackedScene" uid="uid://cefxs7grh28rs" path="res://assets/model/door.glb" id="18_e7kou"]
+[ext_resource type="PackedScene" uid="uid://dtu3l0xkrwcvx" path="res://assets/model/bookshelf.glb" id="19_lw61d"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_e1edc"]
 sky_top_color = Color(1, 1, 1, 1)
@@ -119,7 +122,7 @@ script = ExtResource("1_e1edc")
 environment = SubResource("Environment_ve7rb")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
-transform = Transform3D(0.404683, -0.752914, 0.518992, 0.493407, 0.657617, 0.569288, -0.769923, 0.0256928, 0.63762, 4.61496, 2.82427, 0)
+transform = Transform3D(0.840762, 0.239459, -0.485571, 0.242345, 0.635549, 0.733039, 0.484137, -0.733987, 0.476313, 4.61496, 2.82427, 0)
 shadow_enabled = true
 
 [node name="player" parent="." instance=ExtResource("1_ps8i8")]
@@ -131,14 +134,15 @@ metadata/_custom_type_script = "uid://rhdq34na2j5m"
 [node name="chessboard" parent="level" instance=ExtResource("1_o611t")]
 
 [node name="camera" type="Camera3D" parent="level"]
-transform = Transform3D(-0.995709, 0.0628432, -0.0679359, 2.21169e-08, 0.734086, 0.679057, 0.0925449, 0.676142, -0.730936, -0.621102, 6.60401, -11.1437)
+transform = Transform3D(-0.995709, 0.0628432, -0.0679359, 2.21169e-08, 0.734086, 0.679056, 0.0925449, 0.676142, -0.730936, -0.621102, 6.60401, -7.33297)
+fov = 58.5874
 
 [node name="cheshire" parent="level" instance=ExtResource("5_kgksa")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 0, -3)
 piece_type = 107
 
 [node name="table_0" parent="level" instance=ExtResource("6_ecjec")]
-transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 0, 0.0249235, 5)
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 2, 0.0249235, 5)
 
 [node name="table_000" parent="level/table_0" index="0"]
 surface_material_override/0 = SubResource("ShaderMaterial_n3pbh")
@@ -147,6 +151,7 @@ surface_material_override/0 = SubResource("ShaderMaterial_n3pbh")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.045349, 0, -0.90022)
 
 [node name="sofa" parent="level/table_0/sofa_0" index="0"]
+transform = Transform3D(1.78814e-07, 0, -1, 0, 1, 0, 1, 0, 1.78814e-07, 0, 0, -0.116446)
 surface_material_override/0 = SubResource("ShaderMaterial_0icrd")
 surface_material_override/1 = SubResource("ShaderMaterial_q5uxw")
 surface_material_override/2 = SubResource("ShaderMaterial_q5uxw")
@@ -163,11 +168,11 @@ surface_material_override/2 = SubResource("ShaderMaterial_lw61d")
 transform = Transform3D(-0.425, 0, 3.71547e-08, 0, 0.425, 0, -3.71547e-08, 0, -0.425, -0.128607, 0.85944, -0.00441312)
 
 [node name="pastor" parent="level" instance=ExtResource("11_ogoy6")]
-transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 1, 0, 5)
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 3, 0, 5)
 piece_type = 122
 
 [node name="radermachera_sinica_2" parent="level" instance=ExtResource("13_fsnob")]
-transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 1.69088, 0, 4.28252)
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 3.73073, 0, 4.28252)
 
 [node name="table_high_0" parent="level" instance=ExtResource("2_jb28s")]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0, 0, 1)
@@ -280,6 +285,79 @@ script = ExtResource("16_0icrd")
 piece = 35
 metadata/_custom_type_script = "uid://chtqhpiu556i1"
 
+[node name="table_high_2" parent="level" instance=ExtResource("2_jb28s")]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -2, 0, 1)
+
+[node name="table_001" parent="level/table_high_2" index="0"]
+surface_material_override/0 = SubResource("ShaderMaterial_km6g5")
+
+[node name="chair_high_0" parent="level/table_high_2" instance=ExtResource("15_n3pbh")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.716291, 0, -0.518619)
+
+[node name="chair" parent="level/table_high_2/chair_high_0" index="0"]
+surface_material_override/0 = SubResource("ShaderMaterial_annak")
+
+[node name="chair_high_1" parent="level/table_high_2" instance=ExtResource("15_n3pbh")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0418291, 0, -0.518619)
+
+[node name="chair" parent="level/table_high_2/chair_high_1" index="0"]
+surface_material_override/0 = SubResource("ShaderMaterial_annak")
+
+[node name="chair_high_2" parent="level/table_high_2" instance=ExtResource("15_n3pbh")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.689076, 0, -0.518619)
+
+[node name="chair" parent="level/table_high_2/chair_high_2" index="0"]
+surface_material_override/0 = SubResource("ShaderMaterial_annak")
+
+[node name="chair_high_3" parent="level/table_high_2" instance=ExtResource("15_n3pbh")]
+transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, -0.716291, 0, 0.481381)
+
+[node name="chair" parent="level/table_high_2/chair_high_3" index="0"]
+surface_material_override/0 = SubResource("ShaderMaterial_annak")
+
+[node name="chair_high_4" parent="level/table_high_2" instance=ExtResource("15_n3pbh")]
+transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, -0.0174162, 0, 0.481381)
+
+[node name="chair" parent="level/table_high_2/chair_high_4" index="0"]
+surface_material_override/0 = SubResource("ShaderMaterial_annak")
+
+[node name="chair_high_5" parent="level/table_high_2" instance=ExtResource("15_n3pbh")]
+transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 0.661157, 0, 0.481381)
+
+[node name="chair" parent="level/table_high_2/chair_high_5" index="0"]
+surface_material_override/0 = SubResource("ShaderMaterial_annak")
+
+[node name="marker_bit_5" type="Marker3D" parent="level"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 0, 1)
+script = ExtResource("16_0icrd")
+piece = 35
+metadata/_custom_type_script = "uid://chtqhpiu556i1"
+
+[node name="window" parent="level" instance=ExtResource("17_q5uxw")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0, 6)
+
+[node name="window_2" parent="level" instance=ExtResource("17_q5uxw")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 0, 6)
+
+[node name="door" parent="level" instance=ExtResource("18_e7kou")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0, -4)
+
+[node name="bookshelf" parent="level" instance=ExtResource("19_lw61d")]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 6, 0, 3)
+
+[node name="window_3" parent="level" instance=ExtResource("17_q5uxw")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -4)
+
+[node name="bookshelf_2" parent="level" instance=ExtResource("19_lw61d")]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 6, 0, 1)
+
+[node name="radermachera_sinica_4" parent="level" instance=ExtResource("13_fsnob")]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 5.90683, 0, -0.247615)
+
+[node name="camera_3d" type="Camera3D" parent="level"]
+transform = Transform3D(-0.84129, 0.265096, -0.471121, -0.00495441, 0.867686, 0.497088, 0.540561, 0.420529, -0.728663, 1.25572, 2.46423, 3.04269)
+fov = 51.3432
+
 [editable path="level/table_0"]
 [editable path="level/table_0/sofa_0"]
 [editable path="level/table_0/sofa_1"]
@@ -297,3 +375,10 @@ metadata/_custom_type_script = "uid://chtqhpiu556i1"
 [editable path="level/table_high_1/chair_high_3"]
 [editable path="level/table_high_1/chair_high_4"]
 [editable path="level/table_high_1/chair_high_5"]
+[editable path="level/table_high_2"]
+[editable path="level/table_high_2/chair_high_0"]
+[editable path="level/table_high_2/chair_high_1"]
+[editable path="level/table_high_2/chair_high_2"]
+[editable path="level/table_high_2/chair_high_3"]
+[editable path="level/table_high_2/chair_high_4"]
+[editable path="level/table_high_2/chair_high_5"]
