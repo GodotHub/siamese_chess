@@ -5,6 +5,7 @@ signal clicked()
 signal clicked_move()
 signal ready_to_move()
 signal canceled()
+signal clicked_interact()
 signal animation_finished()
 
 @export var COLOR_LAST_MOVE:Color = Color(0.3, 0.3, 0.3, 1)
@@ -117,6 +118,9 @@ func tap_position(position_name:String) -> void:
 		confirm_move = Chess.create(selected, by, 0)
 		clicked_move.emit.call_deferred()
 		selected = -1
+		return
+	if (state.get_piece(by) & 95) == "Z".unicode_at(0):
+		clicked_interact.emit.call_deferred()
 		return
 	if !state.has_piece(by) || !valid_move.has(by):
 		canceled.emit.call_deferred()
