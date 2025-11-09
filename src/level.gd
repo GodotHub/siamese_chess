@@ -19,6 +19,9 @@ func _ready() -> void:
 		if node is Actor:
 			var by:int = Chess.to_position_int(chessboard.get_position_name(node.global_position))
 			state.add_piece(by, node.piece_type)
+		if node is MarkerBit:
+			var by:int = Chess.to_position_int(chessboard.get_position_name(node.global_position))
+			state.set_bit(node.piece, state.get_bit(node.piece) | Chess.mask(Chess.to_64(by)))
 	chessboard.set_state(state)
 	for node:Node in get_children():
 		if node is Actor:
@@ -39,6 +42,7 @@ func change_state(next_state:String, arg:Dictionary = {}) -> void:
 
 func state_ready_explore_idle(_arg:Dictionary) -> void:
 	chessboard.connect("ready_to_move", change_state.bind("explore_ready_to_move"))
+	chessboard.connect("clicked_interact", change_state.bind("interact"))
 	chessboard.set_valid_move(RuleStandard.generate_explore_move(chessboard.state, 1))	# TODO: 由于移花接木机制，这个情况下Cheshire不会进行寻路。
 
 func state_exit_explore_idle() -> void:
