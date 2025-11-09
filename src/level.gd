@@ -10,6 +10,7 @@ var teleport:Dictionary = {}
 var history_state:PackedInt32Array = []
 var level_state:String = ""
 var mutex:Mutex = Mutex.new()
+var interact_list:Dictionary[int, Callable] = {}
 
 func _ready() -> void:
 	engine = PastorEngine.new()
@@ -193,4 +194,5 @@ func state_ready_versus_extra_move(_arg:Dictionary) -> void:
 
 func state_ready_interact(_arg:Dictionary) -> void:
 	var by:int = Chess.to(chessboard.confirm_move)
-	
+	await interact_list[by].call()
+	change_state("explore_idle")
