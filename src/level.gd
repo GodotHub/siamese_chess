@@ -47,6 +47,7 @@ func state_ready_explore_idle(_arg:Dictionary) -> void:
 
 func state_exit_explore_idle() -> void:
 	chessboard.disconnect("ready_to_move", change_state.bind("explore_move"))
+	chessboard.disconnect("clicked_interact", change_state.bind("interact"))
 
 func state_ready_explore_ready_to_move(_arg:Dictionary) -> void:
 	HoldCard.show_card()
@@ -189,3 +190,7 @@ func state_ready_versus_extra_move(_arg:Dictionary) -> void:
 		else:
 			change_state.bind("versus_move", {"move": _arg["move_list"][Dialog.selected]}), ConnectFlags.CONNECT_ONE_SHOT)
 	Dialog.push_selection(decision_list, true, true)
+
+func state_ready_interact(_arg:Dictionary) -> void:
+	var by:int = Chess.to(chessboard.confirm_move)
+	

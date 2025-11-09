@@ -120,6 +120,7 @@ func tap_position(position_name:String) -> void:
 		selected = -1
 		return
 	if (state.get_piece(by) & 95) == "Z".unicode_at(0):
+		confirm_move = Chess.create(0, by, 0)
 		clicked_interact.emit.call_deferred()
 		return
 	if !state.has_piece(by) || !valid_move.has(by):
