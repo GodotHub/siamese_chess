@@ -495,6 +495,10 @@ bool RuleStandard::is_blocked(godot::Ref<State> _state, int _from, int _to)
 	{
 		return true;
 	}
+	if (_state->get_bit('#') & Chess::mask(Chess::to_64(_to)))
+	{
+		return true;
+	}
 	return false;
 }
 
