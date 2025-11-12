@@ -493,7 +493,7 @@ int PastorEngine::quies(godot::Ref<State> _state, int score, int _alpha, int _be
 	return _alpha;
 }
 
-int PastorEngine::alphabeta(const godot::Ref<State> &_state, int score, int _alpha, int _beta, int _depth, int _group, int _ply, bool _can_null, std::unordered_map<int, int> *_history_state, std::array<int, 65536> *_history_table, int *killer_1, int *killer_2, const godot::Callable &_debug_output)
+int PastorEngine::alphabeta(const godot::Ref<State> &_state, int score, int _alpha, int _beta, int _depth, int _group, int _ply, bool _can_null, std::unordered_map<int64_t, int> *_history_state, std::array<int, 65536> *_history_table, int *killer_1, int *killer_2, const godot::Callable &_debug_output)
 {
 	bool found_pv = false;
 	int transposition_table_score = transposition_table->probe_hash(_state->get_zobrist(), _depth, _alpha, _beta);
@@ -674,7 +674,7 @@ int PastorEngine::alphabeta(const godot::Ref<State> &_state, int score, int _alp
 	return _alpha;
 }
 
-void PastorEngine::search(const godot::Ref<State> &_state, int _group, const godot::PackedInt32Array &history_state, const godot::Callable &_debug_output)
+void PastorEngine::search(const godot::Ref<State> &_state, int _group, const godot::PackedInt64Array &history_state, const godot::Callable &_debug_output)
 {
 	if (opening_book->has_record(_state))
 	{
@@ -687,7 +687,7 @@ void PastorEngine::search(const godot::Ref<State> &_state, int _group, const god
 		}
 	}
 	std::array<int, 65536> history_table;
-	std::unordered_map<int, int> map_history_state;
+	std::unordered_map<int64_t, int> map_history_state;
 	for (int i = 0; i < history_state.size(); i++)
 	{
 		map_history_state[history_state[i]]++;

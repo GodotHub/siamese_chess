@@ -2,7 +2,7 @@
 #include <godot_cpp/classes/time.hpp>
 #include <thread>
 
-void ChessEngine::start_search(const godot::Ref<State> &_state, int _group, const godot::PackedInt32Array &history_state, const godot::Callable &_debug_output)
+void ChessEngine::start_search(const godot::Ref<State> &_state, int _group, const godot::PackedInt64Array &history_state, const godot::Callable &_debug_output)
 {
 	searching = true;
 	interrupted = false;
@@ -11,7 +11,7 @@ void ChessEngine::start_search(const godot::Ref<State> &_state, int _group, cons
 	thread.detach();
 }
 
-void ChessEngine::search_thread(const godot::Ref<State> &_state, int _group, const godot::PackedInt32Array &history_state, const godot::Callable &_debug_output)
+void ChessEngine::search_thread(const godot::Ref<State> &_state, int _group, const godot::PackedInt64Array &history_state, const godot::Callable &_debug_output)
 {
 	search(_state, _group, history_state, _debug_output);
 	searching = false;
