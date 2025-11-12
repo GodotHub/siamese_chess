@@ -165,7 +165,7 @@ surface_material_override/1 = SubResource("ShaderMaterial_lw61d")
 surface_material_override/2 = SubResource("ShaderMaterial_lw61d")
 
 [node name="chessboard_standard" parent="level/table_0" instance=ExtResource("12_yx65i")]
-transform = Transform3D(-0.425, 0, 3.71547e-08, 0, 0.425, 0, -3.71547e-08, 0, -0.425, -0.128607, 0.85944, -0.00441312)
+transform = Transform3D(-0.425, 0, 3.71547e-08, 0, 0.425, 0, -3.71547e-08, 0, -0.425, 0.0284882, 0.85944, -0.00441313)
 
 [node name="pastor" parent="level" instance=ExtResource("11_ogoy6")]
 transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 3, 0, 5)
@@ -354,9 +354,13 @@ transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 6, 0, 
 [node name="radermachera_sinica_4" parent="level" instance=ExtResource("13_fsnob")]
 transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 5.90683, 0, -0.247615)
 
-[node name="camera_3d" type="Camera3D" parent="level"]
+[node name="camera_pastor" type="Camera3D" parent="level"]
 transform = Transform3D(-0.84129, 0.265096, -0.471121, -0.00495441, 0.867686, 0.497088, 0.540561, 0.420529, -0.728663, 1.25572, 2.46423, 3.04269)
 fov = 51.3432
+
+[node name="camera_chessboard" type="Camera3D" parent="level"]
+transform = Transform3D(-4.21108e-08, 0.71145, -0.702737, 1.17203e-08, 0.702737, 0.71145, 1, 2.17234e-08, -3.79312e-08, 1.60037, 1.24647, 5.02685)
+fov = 63.9549
 
 [editable path="level/table_0"]
 [editable path="level/table_0/sofa_0"]

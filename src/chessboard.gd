@@ -115,16 +115,23 @@ func tap_position(position_name:String) -> void:
 	if !is_instance_valid(state):
 		return
 	if selected != -1:
+		var move_list:PackedInt32Array = valid_move[selected].filter(func (move:int) -> bool: return by == Chess.to(move))
+		if move_list.size() == 0:
+			selected = -1
+			canceled.emit.call_deferred()
+			return
 		confirm_move = Chess.create(selected, by, 0)
 		clicked_move.emit.call_deferred()
 		selected = -1
 		return
 	if (state.get_piece(by) & 95) == "Z".unicode_at(0):
+		selected = -1
 		confirm_move = Chess.create(0, by, 0)
 		clicked_interact.emit.call_deferred()
 		return
 	if !state.has_piece(by) || !valid_move.has(by):
 		canceled.emit.call_deferred()
+		selected = -1
 		return
 	if valid_move.has(by):
 		show_move(by)

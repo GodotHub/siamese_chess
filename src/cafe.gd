@@ -1,18 +1,49 @@
 extends Node3D
 
+var history_state:PackedInt64Array = []
+var engine:ChessEngine = PastorEngine.new()
+
 func _ready() -> void:
+	engine.connect("search_finished", in_game_black)
+	$level/table_0/chessboard_standard.connect("clicked_move", in_game_white)
+
+	engine.set_max_depth(6)
+	engine.set_think_time(INF)
 	$player.move_camera($level/camera)
 	$level/table_0/chessboard_standard.set_enabled(false)
 	$level/chessboard/pieces/pastor.play_animation("thinking")
 	$level.interact_list[0x65] = interact_pastor
 
 func interact_pastor() -> void:
-	$player.force_set_camera($level/camera_3d)
 	$level/chessboard.set_enabled(false)
 	$level/table_0/chessboard_standard.set_enabled(true)
 	$level/chessboard/pieces/cheshire.set_position($level/chessboard.convert_name_to_position("e2"))
 	$level/chessboard/pieces/cheshire.play_animation("thinking")
-	await get_tree().create_timer(3).timeout
+	$player.force_set_camera($level/camera_chessboard)
+	in_game()
+
+func in_game() -> void:
+	$level/table_0/chessboard_standard.state = RuleStandard.create_initial_state()
+	print($level/table_0/chessboard_standard.state.print_board())
+	$level/table_0/chessboard_standard.add_default_piece_set()
+	in_game_white.call_deferred()
+
+func in_game_white() -> void:
+	if $level/table_0/chessboard_standard.confirm_move != 0:
+		history_state.push_back($level/table_0/chessboard_standard.state.get_zobrist())
+		$level/table_0/chessboard_standard.execute_move($level/table_0/chessboard_standard.confirm_move)
+	$level/table_0/chessboard_standard.set_valid_move([])
+	engine.start_search($level/table_0/chessboard_standard.state, 0, history_state, Callable())
+
+func in_game_black() -> void:
+	history_state.push_back($level/table_0/chessboard_standard.state.get_zobrist())
+	$level/table_0/chessboard_standard.execute_move(engine.get_search_result())
+	if RuleStandard.get_end_type($level/table_0/chessboard_standard.state) != "":
+		game_end.call_deferred()
+		return
+	$level/table_0/chessboard_standard.set_valid_move(RuleStandard.generate_valid_move($level/table_0/chessboard_standard.state, 1))
+
+func game_end() -> void:
 	$player.force_set_camera($level/camera)
 	$level/chessboard/pieces/cheshire.play_animation("battle_idle")
 	$level/chessboard.set_enabled(true)
