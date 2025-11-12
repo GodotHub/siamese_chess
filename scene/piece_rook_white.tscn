@@ -1,13 +1,23 @@
-[gd_scene load_steps=4 format=3 uid="uid://bbfelit1kiw6s"]
+[gd_scene load_steps=6 format=3 uid="uid://bbfelit1kiw6s"]
 
 [ext_resource type="PackedScene" uid="uid://b6l1w8csg7tim" path="res://assets/model/piece_rook.glb" id="1_uakjl"]
 [ext_resource type="Script" uid="uid://pofjvdbbj3iy" path="res://src/piece.gd" id="2_jewd1"]
+[ext_resource type="Shader" uid="uid://dd7xsr1eeq6mo" path="res://src/unmoving_plaid.gdshader" id="3_oyuxo"]
+[ext_resource type="Texture2D" uid="uid://c41qgg7cur57o" path="res://assets/texture/Texturelabs_Stone_131S.jpg" id="4_emdfv"]
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_n2rvg"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ee11h"]
+render_priority = 0
+shader = ExtResource("3_oyuxo")
+shader_parameter/texture_albedo = ExtResource("4_emdfv")
+shader_parameter/scale = 1.0
+shader_parameter/hue_shift = 0.0
+shader_parameter/saturation_mult = 0.421
+shader_parameter/value_mult = 0.932
+shader_parameter/brightness_add = 0.251
+shader_parameter/contrast_mult = 0.792
 
 [node name="piece_rook" instance=ExtResource("1_uakjl")]
 script = ExtResource("2_jewd1")
-piece_type = [82, 81]
 
 [node name="piece" parent="." index="0"]
-surface_material_override/0 = SubResource("StandardMaterial3D_n2rvg")
+surface_material_override/0 = SubResource("ShaderMaterial_ee11h")

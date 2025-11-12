@@ -1,8 +1,23 @@
-[gd_scene load_steps=3 format=3 uid="uid://dadbbopm5hcen"]
+[gd_scene load_steps=6 format=3 uid="uid://dadbbopm5hcen"]
 
 [ext_resource type="PackedScene" uid="uid://bxkjv5s5sxkbk" path="res://assets/model/piece_pawn.glb" id="1_vidub"]
 [ext_resource type="Script" uid="uid://pofjvdbbj3iy" path="res://src/piece.gd" id="2_d1f2g"]
+[ext_resource type="Shader" uid="uid://dd7xsr1eeq6mo" path="res://src/unmoving_plaid.gdshader" id="3_qik7u"]
+[ext_resource type="Texture2D" uid="uid://c41qgg7cur57o" path="res://assets/texture/Texturelabs_Stone_131S.jpg" id="4_odaa4"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_cikr3"]
+render_priority = 0
+shader = ExtResource("3_qik7u")
+shader_parameter/texture_albedo = ExtResource("4_odaa4")
+shader_parameter/scale = 1.0
+shader_parameter/hue_shift = 0.0
+shader_parameter/saturation_mult = 0.421
+shader_parameter/value_mult = 0.932
+shader_parameter/brightness_add = 0.251
+shader_parameter/contrast_mult = 0.792
 
 [node name="piece_pawn" instance=ExtResource("1_vidub")]
 script = ExtResource("2_d1f2g")
-piece_type = [80]
+
+[node name="piece" parent="." index="0"]
+surface_material_override/0 = SubResource("ShaderMaterial_cikr3")

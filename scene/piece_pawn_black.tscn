@@ -1,8 +1,23 @@
-[gd_scene load_steps=3 format=3 uid="uid://dmwl65mg7565u"]
+[gd_scene load_steps=6 format=3 uid="uid://dmwl65mg7565u"]
 
 [ext_resource type="PackedScene" uid="uid://bxkjv5s5sxkbk" path="res://assets/model/piece_pawn.glb" id="1_wvvgf"]
 [ext_resource type="Script" uid="uid://pofjvdbbj3iy" path="res://src/piece.gd" id="2_p51lj"]
+[ext_resource type="Shader" uid="uid://dd7xsr1eeq6mo" path="res://src/unmoving_plaid.gdshader" id="3_dn2y4"]
+[ext_resource type="Texture2D" uid="uid://dc1bupw2qibgu" path="res://assets/texture/Texturelabs_Paper_374S.jpg" id="4_nunr4"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_s3eqc"]
+render_priority = 0
+shader = ExtResource("3_dn2y4")
+shader_parameter/texture_albedo = ExtResource("4_nunr4")
+shader_parameter/scale = 1.0
+shader_parameter/hue_shift = 0.0
+shader_parameter/saturation_mult = 1.0
+shader_parameter/value_mult = 1.0
+shader_parameter/brightness_add = -0.055
+shader_parameter/contrast_mult = 1.0
 
 [node name="piece_pawn" instance=ExtResource("1_wvvgf")]
 script = ExtResource("2_p51lj")
-piece_type = [112]
+
+[node name="piece" parent="." index="0"]
+surface_material_override/0 = SubResource("ShaderMaterial_s3eqc")

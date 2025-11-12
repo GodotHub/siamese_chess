@@ -1,13 +1,23 @@
-[gd_scene load_steps=4 format=3 uid="uid://8fh667jl5ppl"]
+[gd_scene load_steps=6 format=3 uid="uid://8fh667jl5ppl"]
 
 [ext_resource type="PackedScene" uid="uid://biryspvlw2sv7" path="res://assets/model/piece_bishop.glb" id="1_0yd1k"]
 [ext_resource type="Script" uid="uid://pofjvdbbj3iy" path="res://src/piece.gd" id="2_g7twr"]
+[ext_resource type="Shader" uid="uid://dd7xsr1eeq6mo" path="res://src/unmoving_plaid.gdshader" id="3_jdrpt"]
+[ext_resource type="Texture2D" uid="uid://dc1bupw2qibgu" path="res://assets/texture/Texturelabs_Paper_374S.jpg" id="4_jw2ng"]
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_tb7mb"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_frws6"]
+render_priority = 0
+shader = ExtResource("3_jdrpt")
+shader_parameter/texture_albedo = ExtResource("4_jw2ng")
+shader_parameter/scale = 1.0
+shader_parameter/hue_shift = 0.0
+shader_parameter/saturation_mult = 1.0
+shader_parameter/value_mult = 1.0
+shader_parameter/brightness_add = -0.055
+shader_parameter/contrast_mult = 1.0
 
 [node name="piece_bishop" instance=ExtResource("1_0yd1k")]
 script = ExtResource("2_g7twr")
-piece_type = [98]
 
 [node name="piece" parent="." index="0"]
-surface_material_override/0 = SubResource("StandardMaterial3D_tb7mb")
+surface_material_override/0 = SubResource("ShaderMaterial_frws6")

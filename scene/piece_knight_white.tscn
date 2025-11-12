@@ -1,8 +1,23 @@
-[gd_scene load_steps=3 format=3 uid="uid://bg76sf8la38xa"]
+[gd_scene load_steps=6 format=3 uid="uid://bg76sf8la38xa"]
 
 [ext_resource type="PackedScene" uid="uid://d3hqei5f4weey" path="res://assets/model/piece_knight.glb" id="1_fmedb"]
 [ext_resource type="Script" uid="uid://pofjvdbbj3iy" path="res://src/piece.gd" id="2_qe16t"]
+[ext_resource type="Shader" uid="uid://dd7xsr1eeq6mo" path="res://src/unmoving_plaid.gdshader" id="3_bsvyp"]
+[ext_resource type="Texture2D" uid="uid://c41qgg7cur57o" path="res://assets/texture/Texturelabs_Stone_131S.jpg" id="4_ndixf"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_qqt0l"]
+render_priority = 0
+shader = ExtResource("3_bsvyp")
+shader_parameter/texture_albedo = ExtResource("4_ndixf")
+shader_parameter/scale = 1.0
+shader_parameter/hue_shift = 0.0
+shader_parameter/saturation_mult = 0.421
+shader_parameter/value_mult = 0.932
+shader_parameter/brightness_add = 0.251
+shader_parameter/contrast_mult = 0.792
 
 [node name="piece_knight" instance=ExtResource("1_fmedb")]
 script = ExtResource("2_qe16t")
-piece_type = [78]
+
+[node name="piece" parent="." index="0"]
+surface_material_override/0 = SubResource("ShaderMaterial_qqt0l")

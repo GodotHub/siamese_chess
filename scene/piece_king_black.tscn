@@ -1,13 +1,23 @@
-[gd_scene load_steps=4 format=3 uid="uid://bxsyg5lji0s5g"]
+[gd_scene load_steps=6 format=3 uid="uid://bxsyg5lji0s5g"]
 
 [ext_resource type="PackedScene" uid="uid://bopgdgv46gefh" path="res://assets/model/piece_king.glb" id="1_o5l3u"]
 [ext_resource type="Script" uid="uid://pofjvdbbj3iy" path="res://src/piece.gd" id="2_j4cai"]
+[ext_resource type="Shader" uid="uid://dd7xsr1eeq6mo" path="res://src/unmoving_plaid.gdshader" id="3_ng4b7"]
+[ext_resource type="Texture2D" uid="uid://dc1bupw2qibgu" path="res://assets/texture/Texturelabs_Paper_374S.jpg" id="4_ng4b7"]
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_bjoa2"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_pq4fm"]
+render_priority = 0
+shader = ExtResource("3_ng4b7")
+shader_parameter/texture_albedo = ExtResource("4_ng4b7")
+shader_parameter/scale = 1.0
+shader_parameter/hue_shift = 0.0
+shader_parameter/saturation_mult = 1.0
+shader_parameter/value_mult = 1.0
+shader_parameter/brightness_add = -0.055
+shader_parameter/contrast_mult = 1.0
 
 [node name="chess_king" instance=ExtResource("1_o5l3u")]
 script = ExtResource("2_j4cai")
-piece_type = [107]
 
 [node name="piece" parent="." index="0"]
-surface_material_override/0 = SubResource("StandardMaterial3D_bjoa2")
+surface_material_override/0 = SubResource("ShaderMaterial_pq4fm")

@@ -27,7 +27,7 @@ shader_parameter/scale = 1.0
 shader_parameter/hue_shift = 0.0
 shader_parameter/saturation_mult = 1.0
 shader_parameter/value_mult = 1.0
-shader_parameter/brightness_add = -0.055
+shader_parameter/brightness_add = -0.126
 shader_parameter/contrast_mult = 1.0
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_07eby"]
@@ -38,7 +38,7 @@ shader_parameter/scale = 1.0
 shader_parameter/hue_shift = 0.0
 shader_parameter/saturation_mult = 0.421
 shader_parameter/value_mult = 0.932
-shader_parameter/brightness_add = 0.251
+shader_parameter/brightness_add = -0.035
 shader_parameter/contrast_mult = 0.792
 
 [node name="chessboard" instance=ExtResource("1_tntyj")]
