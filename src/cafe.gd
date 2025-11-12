@@ -13,6 +13,7 @@ func _ready() -> void:
 	$level/table_0/chessboard_standard.set_enabled(false)
 	$level/chessboard/pieces/pastor.play_animation("thinking")
 	$level.interact_list[0x65] = interact_pastor
+	$level.interact_list[0x25] = change_scene
 
 func interact_pastor() -> void:
 	$level/chessboard.set_enabled(false)
@@ -24,7 +25,6 @@ func interact_pastor() -> void:
 
 func in_game() -> void:
 	$level/table_0/chessboard_standard.state = RuleStandard.create_initial_state()
-	print($level/table_0/chessboard_standard.state.print_board())
 	$level/table_0/chessboard_standard.add_default_piece_set()
 	in_game_white.call_deferred()
 

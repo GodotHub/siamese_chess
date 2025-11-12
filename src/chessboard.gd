@@ -124,7 +124,7 @@ func tap_position(position_name:String) -> void:
 		clicked_move.emit.call_deferred()
 		selected = -1
 		return
-	if (state.get_piece(by) & 95) == "Z".unicode_at(0):
+	if (state.get_bit("Z".unicode_at(0)) & Chess.mask(Chess.to_64(by))) || (state.get_bit("z".unicode_at(0)) & Chess.mask(Chess.to_64(by))):
 		selected = -1
 		confirm_move = Chess.create(0, by, 0)
 		clicked_interact.emit.call_deferred()

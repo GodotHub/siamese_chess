@@ -362,6 +362,12 @@ fov = 51.3432
 transform = Transform3D(-4.21108e-08, 0.71145, -0.702737, 1.17203e-08, 0.702737, 0.71145, 1, 2.17234e-08, -3.79312e-08, 1.60037, 1.24647, 5.02685)
 fov = 63.9549
 
+[node name="marker_bit_6" type="Marker3D" parent="level"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0, -3)
+script = ExtResource("16_0icrd")
+piece = 122
+metadata/_custom_type_script = "uid://chtqhpiu556i1"
+
 [editable path="level/table_0"]
 [editable path="level/table_0/sofa_0"]
 [editable path="level/table_0/sofa_1"]
