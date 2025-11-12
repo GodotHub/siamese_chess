@@ -48,3 +48,6 @@ func game_end() -> void:
 	$level/chessboard/pieces/cheshire.play_animation("battle_idle")
 	$level/chessboard.set_enabled(true)
 	$level/table_0/chessboard_standard.set_enabled(false)
+
+func change_scene() -> void:
+	Loading.change_scene("res://scene/outside.tscn", {})
