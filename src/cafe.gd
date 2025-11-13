@@ -9,7 +9,7 @@ func _ready() -> void:
 
 	engine.set_max_depth(6)
 	engine.set_think_time(INF)
-	$player.move_camera($level/camera)
+	$player.force_set_camera($level/camera)
 	$level/table_0/chessboard_standard.set_enabled(false)
 	$level/chessboard/pieces/pastor.play_animation("thinking")
 	$level.interact_list[0x65] = interact_pastor
@@ -62,4 +62,4 @@ func change_scene() -> void:
 	from = Chess.to_x88(from)
 	$level/chessboard.execute_move(Chess.create(from, 0x25, 0))
 	await $level/chessboard.animation_finished
-	Loading.change_scene("res://scene/outside.tscn", {})
+	Loading.change_scene("res://scene/outside_0.tscn", {})
