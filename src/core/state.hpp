@@ -32,6 +32,7 @@ class State : public godot::RefCounted
 		void move_piece(int _from, int _to);
 		int64_t get_bit(int _piece);
 		void set_bit(int _piece, int64_t _bit);
+		godot::PackedInt32Array bit_index(int _piece);
 		int get_turn();
 		void set_turn(int _turn);
 		int get_castle();

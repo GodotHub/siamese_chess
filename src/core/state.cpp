@@ -154,6 +154,21 @@ void State::set_bit(int _piece, int64_t _bit)
 	bit[_piece] = _bit;
 }
 
+godot::PackedInt32Array State::bit_index(int _piece)
+{
+	godot::PackedInt32Array output;
+	for (int i = 0; i < 64; i++)
+	{
+		int64_t mask = 1;
+		mask <<= i;
+		if (bit[_piece] & mask)
+		{
+			output.push_back(i);
+		}
+	}
+	return output;
+}
+
 int State::get_turn()
 {
 	return turn;
@@ -252,6 +267,7 @@ void State::_bind_methods()
 	godot::ClassDB::bind_method(godot::D_METHOD("move_piece"), &State::move_piece);
 	godot::ClassDB::bind_method(godot::D_METHOD("get_bit"), &State::get_bit);
 	godot::ClassDB::bind_method(godot::D_METHOD("set_bit"), &State::set_bit);
+	godot::ClassDB::bind_method(godot::D_METHOD("bit_index"), &State::bit_index);
 	godot::ClassDB::bind_method(godot::D_METHOD("get_turn"), &State::get_turn);
 	godot::ClassDB::bind_method(godot::D_METHOD("set_turn"), &State::set_turn);
 	godot::ClassDB::bind_method(godot::D_METHOD("get_castle"), &State::get_castle);
