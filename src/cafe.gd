@@ -62,4 +62,4 @@ func change_scene() -> void:
 	from = Chess.to_x88(from)
 	$level/chessboard.execute_move(Chess.create(from, 0x25, 0))
 	await $level/chessboard.animation_finished
-	Loading.change_scene("res://scene/outside_0.tscn", {})
+	Loading.change_scene("res://scene/outside_0.tscn", {"by": 0x04})

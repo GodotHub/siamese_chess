@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3 uid="uid://b7rmoq7bm7h7x"]
+[gd_scene load_steps=15 format=3 uid="uid://cykcx1exlkx7v"]
 
 [ext_resource type="Script" uid="uid://cjddqgsgfo4hw" path="res://src/outside.gd" id="1_mi7h5"]
 [ext_resource type="PackedScene" uid="uid://b3ml34bssywkr" path="res://scene/player.tscn" id="2_4jhsc"]
@@ -9,6 +9,7 @@
 [ext_resource type="PackedScene" uid="uid://bfl3bn4u2am21" path="res://scene/tree.tscn" id="8_c5uoo"]
 [ext_resource type="PackedScene" uid="uid://ekjtt81nkr2f" path="res://scene/flower.tscn" id="9_w5d3f"]
 [ext_resource type="PackedScene" uid="uid://b3f1o547exhk0" path="res://scene/enemy_cheshire.tscn" id="11_mbv38"]
+[ext_resource type="Script" uid="uid://bbi6kjxerg3hk" path="res://src/marker_teleport.gd" id="11_ogq1s"]
 [ext_resource type="PackedScene" uid="uid://nq1aruu4nqyv" path="res://scene/piece_queen_white.tscn" id="12_ddpgm"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_gs8dr"]
@@ -152,5 +153,14 @@ piece_type = 75
 [node name="piece_queen" parent="level" instance=ExtResource("12_ddpgm")]
 transform = Transform3D(8, 0, 0, 0, 8, 0, 0, 0, 8, 3, 0, 1)
 piece_type = 81
+
+[node name="marker_teleport" type="Marker3D" parent="level"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7, 0, 5)
+script = ExtResource("11_ogq1s")
+to = "res://scene/outside_1.tscn"
+args = {
+"by": 103
+}
+metadata/_custom_type_script = "uid://bbi6kjxerg3hk"
 
 [editable path="level"]
