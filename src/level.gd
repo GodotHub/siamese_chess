@@ -90,7 +90,7 @@ func state_ready_explore_extra_move(_arg:Dictionary) -> void:
 	Dialog.push_selection(decision_list, true, true)
 
 func state_ready_explore_move(_arg:Dictionary) -> void:
-	chessboard.connect("animation_finished", change_state.bind("explore_check_attack"), ConnectFlags.CONNECT_ONE_SHOT)
+	chessboard.connect("animation_finished", change_state.bind("explore_check_attack", _arg), ConnectFlags.CONNECT_ONE_SHOT)
 	chessboard.execute_move(_arg["move"])
 
 func state_ready_explore_check_attack(_arg:Dictionary) -> void:
@@ -102,13 +102,12 @@ func state_ready_explore_check_attack(_arg:Dictionary) -> void:
 		if char(chessboard.state.get_piece(to)) in ["k", "q", "r", "b", "n", "p"]:
 			change_state("versus_enemy")
 			return
-	change_state("explore_check_interact")
+	change_state("explore_check_interact", _arg)
 
 func state_ready_explore_check_interact(_arg:Dictionary) -> void:
-	for key:int in interact_list:
-		if chessboard.state.has_piece(key):
-			change_state("interact", {"by": key})
-			return
+	if _arg.has("move") && (chessboard.state.get_bit("z".unicode_at(0)) & Chess.mask(Chess.to_64(Chess.to(_arg["move"])))):
+		change_state("interact", {"by": Chess.to(_arg["move"])})
+		return
 	change_state("explore_idle")
 
 func state_ready_explore_use_card(_arg:Dictionary) -> void:
