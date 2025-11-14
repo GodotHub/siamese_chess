@@ -57,7 +57,7 @@ transform = Transform3D(-0.81532, -0.393181, 0.425043, 4.6825e-08, 0.734086, 0.6
 
 [node name="flower" parent="level" instance=ExtResource("9_w5d3f")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0, -3)
-piece_type = 119
+piece_type = 0
 
 [node name="tree" parent="level" instance=ExtResource("8_c5uoo")]
 transform = Transform3D(0.258819, 0, 0.965926, 0, 1, 0, -0.965926, 0, 0.258819, 5, 0, 7)

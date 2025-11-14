@@ -18,15 +18,15 @@ func _ready() -> void:
 	chessboard = $chessboard
 	for node:Node in get_children():
 		if node is Actor:
-			var by:int = Chess.to_position_int(chessboard.get_position_name(node.global_position))
+			var by:int = Chess.to_position_int(chessboard.get_position_name(node.position))
 			state.add_piece(by, node.piece_type)
 		if node is MarkerBit:
-			var by:int = Chess.to_position_int(chessboard.get_position_name(node.global_position))
+			var by:int = Chess.to_position_int(chessboard.get_position_name(node.position))
 			state.set_bit(node.piece, state.get_bit(node.piece) | Chess.mask(Chess.to_64(by)))
 	chessboard.set_state(state)
 	for node:Node in get_children():
 		if node is Actor:
-			var by:int = Chess.to_position_int(chessboard.get_position_name(node.global_position))
+			var by:int = Chess.to_position_int(chessboard.get_position_name(node.position))
 			node.get_parent().remove_child(node)
 			chessboard.add_piece_instance(node, by)
 	if has_node("camera"):
@@ -107,7 +107,7 @@ func state_ready_explore_check_attack(_arg:Dictionary) -> void:
 func state_ready_explore_check_interact(_arg:Dictionary) -> void:
 	for key:int in interact_list:
 		if chessboard.state.has_piece(key):
-			change_state("interact")
+			change_state("interact", {"by": key})
 			return
 	change_state("explore_idle")
 
@@ -198,6 +198,5 @@ func state_ready_versus_extra_move(_arg:Dictionary) -> void:
 	Dialog.push_selection(decision_list, true, true)
 
 func state_ready_interact(_arg:Dictionary) -> void:
-	var by:int = Chess.to(chessboard.confirm_move)
-	await interact_list[by].call()
+	await interact_list[_arg["by"]].call()
 	change_state("explore_idle")

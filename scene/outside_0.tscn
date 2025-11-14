@@ -147,55 +147,55 @@ piece_type = 89
 
 [node name="flower" parent="level" instance=ExtResource("9_3g7ix")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0, -3)
-piece_type = 119
+piece_type = 0
 
 [node name="flower_2" parent="level" instance=ExtResource("9_3g7ix")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 1)
-piece_type = 119
+piece_type = 0
 
 [node name="flower_3" parent="level" instance=ExtResource("9_3g7ix")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 0, -1)
-piece_type = 119
+piece_type = 0
 
 [node name="flower_4" parent="level" instance=ExtResource("9_3g7ix")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0, 3)
-piece_type = 119
+piece_type = 0
 
 [node name="flower_5" parent="level" instance=ExtResource("9_3g7ix")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, -5)
-piece_type = 119
+piece_type = 0
 
 [node name="flower_6" parent="level" instance=ExtResource("9_3g7ix")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0, -5)
-piece_type = 119
+piece_type = 0
 
 [node name="flower_7" parent="level" instance=ExtResource("9_3g7ix")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 0, 1)
-piece_type = 119
+piece_type = 0
 
 [node name="flower_8" parent="level" instance=ExtResource("9_3g7ix")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 0, 3)
-piece_type = 119
+piece_type = 0
 
 [node name="flower_9" parent="level" instance=ExtResource("9_3g7ix")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 0, 3)
-piece_type = 119
+piece_type = 0
 
 [node name="flower_10" parent="level" instance=ExtResource("9_3g7ix")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 0, 1)
-piece_type = 119
+piece_type = 0
 
 [node name="flower_11" parent="level" instance=ExtResource("9_3g7ix")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0, 5)
-piece_type = 119
+piece_type = 0
 
 [node name="flower_12" parent="level" instance=ExtResource("9_3g7ix")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0, 5)
-piece_type = 119
+piece_type = 0
 
 [node name="flower_13" parent="level" instance=ExtResource("9_3g7ix")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 0, -7)
-piece_type = 119
+piece_type = 0
 
 [node name="marker_teleport_1" type="Marker3D" parent="level"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 7)

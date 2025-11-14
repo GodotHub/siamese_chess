@@ -8,4 +8,7 @@ func _init() -> void:
 	piece = "z".unicode_at(0)
 
 func change_scene() -> void:
-	Loading.change_scene(to, args)
+	var level:Level = get_parent()
+	var from:int = Chess.to_position_int(level.chessboard.get_position_name(position))
+	if level.chessboard.state.get_piece(from) == "k".unicode_at(0):
+		Loading.change_scene(to, args)
