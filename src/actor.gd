@@ -23,7 +23,6 @@ func capturing(_pos:Vector3, _captured:Actor) -> void:	# 攻击
 
 func captured(_capturing:Actor = null) -> void:	# 被攻击
 	visible = false
-	animation_finished.emit.call_deferred()
 
 func promote(_pos:Vector3, _piece:int) -> void:	# 升变
 	visible = false

@@ -97,7 +97,7 @@ func state_ready_explore_check_attack(_arg:Dictionary) -> void:
 	var white_move_list:PackedInt32Array = RuleStandard.generate_valid_move(chessboard.state, 0)
 	for move:int in white_move_list:
 		var to:int = Chess.to(move)
-		if chessboard.state.has_piece(to):
+		if !chessboard.state.has_piece(to):
 			continue
 		if char(chessboard.state.get_piece(to)) in ["k", "q", "r", "b", "n", "p"]:
 			change_state("versus_enemy")
@@ -139,34 +139,31 @@ func state_ready_explore_using_card(_arg:Dictionary) -> void:
 	change_state("explore_check_attack")
 
 func state_ready_versus_enemy(_arg:Dictionary) -> void:
-	chessboard.set_valid_movd([])
+	chessboard.set_valid_move([])
 	engine.connect("search_finished", func() -> void:
 		change_state("versus_move", {"move": engine.get_search_result()})
 		, ConnectFlags.CONNECT_ONE_SHOT)
 	engine.set_think_time(3)
+	engine.set_max_depth(20)
 	engine.start_search(chessboard.state, 0, history_state, Callable())
 
 func state_ready_versus_waiting() -> void:
-	engine.connect("search_finished", change_state.bind("versus_enemy"))
+	engine.connect("search_finished", change_state.bind("versus_enemy"), ConnectFlags.CONNECT_ONE_SHOT)
+	engine.stop_search()
 
 func state_ready_versus_move(_arg:Dictionary) -> void:
 	history_state.push_back(chessboard.state.get_zobrist())
 	chessboard.connect("animation_finished", func() -> void:
 		if chessboard.state.get_turn() == 0:
-			if engine.is_searching():
-				change_state("versus_waiting")
-			else:
-				change_state("versus_enemy")
+			change_state("versus_enemy")
 		else:
 			change_state("versus_player")
 	, ConnectFlags.CONNECT_ONE_SHOT)
 	chessboard.execute_move(_arg["move"])
 
 func state_ready_versus_player(_arg:Dictionary) -> void:
-	chessboard.connect("clicked_move", change_state.bind("versus_check_move"))
+	chessboard.connect("clicked_move", change_state.bind("versus_check_move"), ConnectFlags.CONNECT_ONE_SHOT)
 	chessboard.set_valid_move(RuleStandard.generate_valid_move(chessboard.state, 1))
-	engine.set_think_time(INF)
-	engine.start_search(chessboard.state, 1, history_state, Callable())
 
 func state_ready_versus_check_move(_arg:Dictionary) -> void:
 	var from:int = Chess.from(chessboard.confirm_move)

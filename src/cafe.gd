@@ -12,7 +12,8 @@ func _ready() -> void:
 	$player.force_set_camera($level/camera)
 	$level/table_0/chessboard_standard.set_enabled(false)
 	$level/chessboard/pieces/pastor.play_animation("thinking")
-	$level.interact_list[0x65] = interact_pastor
+	$level.interact_list[0x54] = interact_pastor
+	$level.interact_list[0x55] = interact_pastor
 	$level.interact_list[0x25] = change_scene
 
 func interact_pastor() -> void:
