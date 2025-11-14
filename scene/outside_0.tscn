@@ -211,7 +211,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0, 7)
 script = ExtResource("10_tlhmt")
 to = "res://scene/outside_1.tscn"
 args = {
-"by": 5
+"by": 3
 }
 metadata/_custom_type_script = "uid://bbi6kjxerg3hk"
 

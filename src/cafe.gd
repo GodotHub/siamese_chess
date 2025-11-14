@@ -58,8 +58,4 @@ func game_end() -> void:
 	$level/table_0/chessboard_standard.set_enabled(false)
 
 func change_scene() -> void:
-	var from:int = $level/chessboard.state.bit_index("k".unicode_at(0))[0]
-	from = Chess.to_x88(from)
-	$level/chessboard.execute_move(Chess.create(from, 0x25, 0))
-	await $level/chessboard.animation_finished
 	Loading.change_scene("res://scene/outside_0.tscn", {"by": 0x04})

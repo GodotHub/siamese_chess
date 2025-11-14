@@ -43,12 +43,10 @@ func change_state(next_state:String, arg:Dictionary = {}) -> void:
 
 func state_ready_explore_idle(_arg:Dictionary) -> void:
 	chessboard.connect("ready_to_move", change_state.bind("explore_ready_to_move"))
-	chessboard.connect("clicked_interact", change_state.bind("interact"))
 	chessboard.set_valid_move(RuleStandard.generate_explore_move(chessboard.state, 1))	# TODO: 由于移花接木机制，这个情况下Cheshire不会进行寻路。
 
 func state_exit_explore_idle() -> void:
 	chessboard.disconnect("ready_to_move", change_state.bind("explore_move"))
-	chessboard.disconnect("clicked_interact", change_state.bind("interact"))
 
 func state_ready_explore_ready_to_move(_arg:Dictionary) -> void:
 	HoldCard.show_card()
@@ -103,6 +101,13 @@ func state_ready_explore_check_attack(_arg:Dictionary) -> void:
 			continue
 		if char(chessboard.state.get_piece(to)) in ["k", "q", "r", "b", "n", "p"]:
 			change_state("versus_enemy")
+			return
+	change_state("explore_check_interact")
+
+func state_ready_explore_check_interact(_arg:Dictionary) -> void:
+	for key:int in interact_list:
+		if chessboard.state.has_piece(key):
+			change_state("interact")
 			return
 	change_state("explore_idle")
 

@@ -33,6 +33,7 @@ adjustment_enabled = true
 
 [node name="outside" type="Node3D"]
 script = ExtResource("1_83jv4")
+metadata/by = 4
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_w3jsn")
@@ -223,7 +224,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, -7)
 script = ExtResource("10_6ytrl")
 to = "res://scene/outside_0.tscn"
 args = {
-"by": 117
+"by": 116
 }
 metadata/_custom_type_script = "uid://bbi6kjxerg3hk"
 
@@ -232,7 +233,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0, -7)
 script = ExtResource("10_6ytrl")
 to = "res://scene/outside_0.tscn"
 args = {
-"by": 116
+"by": 115
 }
 metadata/_custom_type_script = "uid://bbi6kjxerg3hk"
 
