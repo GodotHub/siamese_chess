@@ -13,4 +13,4 @@ func _ready() -> void:
 	for node:Node in $level.get_children():
 		if node is MarkerTeleport:
 			var by:int = Chess.to_position_int($level/chessboard.get_position_name(node.global_position))
-			$level.interact_list[by] = node.change_scene
+			$level.interact_list[by] = {"": node.change_scene}
