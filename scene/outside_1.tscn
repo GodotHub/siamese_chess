@@ -1,6 +1,6 @@
-[gd_scene load_steps=14 format=3 uid="uid://5jb1sys8w4to"]
+[gd_scene load_steps=15 format=3 uid="uid://5jb1sys8w4to"]
 
-[ext_resource type="Script" uid="uid://cjddqgsgfo4hw" path="res://src/outside.gd" id="1_83jv4"]
+[ext_resource type="Script" uid="uid://c733mdh8qpsk2" path="res://src/outside_1.gd" id="1_ychsu"]
 [ext_resource type="PackedScene" uid="uid://b3ml34bssywkr" path="res://scene/player.tscn" id="2_4c3sk"]
 [ext_resource type="PackedScene" uid="uid://kqoc0aycgs35" path="res://scene/dialog.tscn" id="3_j0exy"]
 [ext_resource type="PackedScene" uid="uid://bmv2xhfws616g" path="res://scene/level.tscn" id="4_1oyei"]
@@ -10,6 +10,7 @@
 [ext_resource type="PackedScene" uid="uid://ekjtt81nkr2f" path="res://scene/flower.tscn" id="9_gqr3t"]
 [ext_resource type="Script" uid="uid://bbi6kjxerg3hk" path="res://src/marker_teleport.gd" id="10_6ytrl"]
 [ext_resource type="PackedScene" uid="uid://d1orpuo40iup6" path="res://scene/carnation.tscn" id="10_fmso8"]
+[ext_resource type="Script" uid="uid://chtqhpiu556i1" path="res://src/marker_bit.gd" id="11_ychsu"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_gs8dr"]
 sky_top_color = Color(1, 1, 1, 1)
@@ -32,7 +33,7 @@ volumetric_fog_emission = Color(1, 1, 1, 1)
 adjustment_enabled = true
 
 [node name="outside" type="Node3D"]
-script = ExtResource("1_83jv4")
+script = ExtResource("1_ychsu")
 metadata/by = 4
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
@@ -236,5 +237,35 @@ args = {
 "by": 115
 }
 metadata/_custom_type_script = "uid://bbi6kjxerg3hk"
+
+[node name="marker_bit" type="Marker3D" parent="level"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 0, -1)
+script = ExtResource("11_ychsu")
+piece = 122
+metadata/_custom_type_script = "uid://chtqhpiu556i1"
+
+[node name="marker_bit_2" type="Marker3D" parent="level"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0, -3)
+script = ExtResource("11_ychsu")
+piece = 122
+metadata/_custom_type_script = "uid://chtqhpiu556i1"
+
+[node name="marker_bit_3" type="Marker3D" parent="level"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 0, -5)
+script = ExtResource("11_ychsu")
+piece = 122
+metadata/_custom_type_script = "uid://chtqhpiu556i1"
+
+[node name="marker_bit_4" type="Marker3D" parent="level"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0, -5)
+script = ExtResource("11_ychsu")
+piece = 122
+metadata/_custom_type_script = "uid://chtqhpiu556i1"
+
+[node name="marker_bit_5" type="Marker3D" parent="level"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0, -1)
+script = ExtResource("11_ychsu")
+piece = 122
+metadata/_custom_type_script = "uid://chtqhpiu556i1"
 
 [editable path="level"]
