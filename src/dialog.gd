@@ -3,7 +3,8 @@ extends CanvasLayer
 signal on_next()
 
 const packed_scene:PackedScene = preload("res://scene/dialog.tscn")
-var selected:int = 0
+var selection:PackedStringArray = []
+var selected:String = ""
 var waiting:bool = false
 var click_anywhere:bool = false
 var force_selection:bool = false
@@ -48,18 +49,24 @@ func push_dialog(text:String, blackscreen:bool = false, _click_anywhere:bool = f
 	tween.tween_property($texture_rect_bottom/label, "text", tr(text), 0)
 	tween.tween_property($texture_rect_full, "visible", false, 0)
 
-func push_selection(selection:PackedStringArray, _force_selection:bool = true, blackscreen:bool = false) -> void:
+func push_selection(_selection:PackedStringArray, _force_selection:bool = true, blackscreen:bool = false) -> void:
 	var text = ""
 	click_anywhere = false
 	force_selection = _force_selection
-	for i:int in selection.size():
-		text += "[url=\"" + ("%d" % i) + "\"]" + tr(selection[i]) + "[/url]  "
+	selection = _selection
+	for iter:String in selection:
+		text += "[url=\"" + iter + "\"]" + tr(iter) + "[/url]  "
 	var tween:Tween = create_tween()
 	if blackscreen:
 		tween.tween_property($texture_rect_full, "visible", true, 0)
 	tween.tween_interval(0.3)
 	tween.tween_property($texture_rect_bottom/label, "text", text, 0)
 	tween.tween_property($texture_rect_full, "visible", false, 0)
+
+func clear() -> void:
+	$texture_rect_bottom/label.text = ""
+	click_anywhere = false
+	force_selection = false
 
 func next() -> void:
 	$texture_rect_bottom/label.text = ""
@@ -69,5 +76,5 @@ func next() -> void:
 	on_next.emit.call_deferred()
 
 func clicked_selection(_selected:String) -> void:
-	selected = _selected.to_int()
+	selected = _selected
 	next()
