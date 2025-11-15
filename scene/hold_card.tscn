@@ -3,7 +3,7 @@
 [ext_resource type="Script" uid="uid://dshl854mfrege" path="res://src/hold_card.gd" id="1_wpu43"]
 
 [node name="hold_card" type="CanvasLayer"]
-layer = 2
+layer = 3
 script = ExtResource("1_wpu43")
 
 [node name="card_list" type="Control" parent="."]

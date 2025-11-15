@@ -18,6 +18,7 @@ colors = PackedColorArray(0, 0, 0, 1)
 gradient = SubResource("Gradient_j3y3i")
 
 [node name="dialog" type="CanvasLayer"]
+layer = 2
 script = ExtResource("1_up5xw")
 
 [node name="texture_rect_top" type="TextureRect" parent="."]
