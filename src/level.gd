@@ -10,7 +10,7 @@ var teleport:Dictionary = {}
 var history_state:PackedInt64Array = []
 var level_state:String = ""
 var mutex:Mutex = Mutex.new()
-var interact_list:Dictionary[int, Callable] = {}
+var interact_list:Dictionary[int, Dictionary] = {}
 
 func _ready() -> void:
 	engine = PastorEngine.new()
@@ -42,10 +42,18 @@ func change_state(next_state:String, arg:Dictionary = {}) -> void:
 	mutex.unlock()
 
 func state_ready_explore_idle(_arg:Dictionary) -> void:
+	var by:int = Chess.to_x88(chessboard.state.bit_index("k".unicode_at(0))[0])
+	var selection:PackedStringArray = []
+	if chessboard.state.get_bit("z".unicode_at(0)) & Chess.mask(Chess.to_64(by)):
+		selection = interact_list[by].keys()
+		Dialog.push_selection(selection, false, false)
+	Dialog.connect("on_next", change_state.bind("dialog"))
 	chessboard.connect("ready_to_move", change_state.bind("explore_ready_to_move"))
 	chessboard.set_valid_move(RuleStandard.generate_explore_move(chessboard.state, 1))	# TODO: 由于移花接木机制，这个情况下Cheshire不会进行寻路。
 
 func state_exit_explore_idle() -> void:
+	Dialog.disconnect("on_next", change_state.bind("dialog"))
+	Dialog.clear()
 	chessboard.disconnect("ready_to_move", change_state.bind("explore_move"))
 
 func state_ready_explore_ready_to_move(_arg:Dictionary) -> void:
@@ -79,14 +87,16 @@ func state_ready_explore_check_move(_arg:Dictionary) -> void:
 
 func state_ready_explore_extra_move(_arg:Dictionary) -> void:
 	var decision_list:PackedStringArray = []
+	var decision_to_move:Dictionary = {}
 	for iter:int in _arg["move_list"]:
 		decision_list.push_back("%c" % Chess.extra(iter))
+		decision_to_move[decision_list[-1]] = iter
 	decision_list.push_back("cancel")
 	Dialog.connect("on_next", func () -> void:
-		if Dialog.selected == decision_list.size():
+		if Dialog.selected == "cancel":
 			change_state.bind("explore_idle")
 		else:
-			change_state.bind("explore_move", {"move": _arg["move_list"][Dialog.selected]}), ConnectFlags.CONNECT_ONE_SHOT)
+			change_state.bind("explore_move", {"move": decision_to_move[Dialog.selected]}), ConnectFlags.CONNECT_ONE_SHOT)
 	Dialog.push_selection(decision_list, true, true)
 
 func state_ready_explore_move(_arg:Dictionary) -> void:
@@ -105,8 +115,9 @@ func state_ready_explore_check_attack(_arg:Dictionary) -> void:
 	change_state("explore_check_interact", _arg)
 
 func state_ready_explore_check_interact(_arg:Dictionary) -> void:
-	if _arg.has("move") && (chessboard.state.get_bit("z".unicode_at(0)) & Chess.mask(Chess.to_64(Chess.to(_arg["move"])))):
-		change_state("interact", {"by": Chess.to(_arg["move"])})
+	var by:int = Chess.to_x88(chessboard.state.bit_index("k".unicode_at(0))[0])
+	if Chess.to(_arg["move"]) == by && chessboard.state.get_bit("Z".unicode_at(0)) & Chess.mask(Chess.to_64(by)):
+		change_state("interact", {"callback": interact_list[by][""]})
 		return
 	change_state("explore_idle")
 
@@ -183,16 +194,22 @@ func state_ready_versus_check_move(_arg:Dictionary) -> void:
 
 func state_ready_versus_extra_move(_arg:Dictionary) -> void:
 	var decision_list:PackedStringArray = []
+	var decision_to_move:Dictionary = {}
 	for iter:int in _arg["move_list"]:
 		decision_list.push_back("%c" % Chess.extra(iter))
+		decision_to_move[decision_list[-1]] = iter
 	decision_list.push_back("cancel")
 	Dialog.connect("on_next", func () -> void:
-		if Dialog.selected == decision_list.size():
+		if Dialog.selected == "cancel":
 			change_state.bind("versus_player")
 		else:
-			change_state.bind("versus_move", {"move": _arg["move_list"][Dialog.selected]}), ConnectFlags.CONNECT_ONE_SHOT)
+			change_state.bind("versus_move", {"move": decision_to_move[Dialog.selected]}), ConnectFlags.CONNECT_ONE_SHOT)
 	Dialog.push_selection(decision_list, true, true)
 
+func state_ready_dialog(_arg:Dictionary) -> void:
+	var by:int = Chess.to_x88(chessboard.state.bit_index("k".unicode_at(0))[0])
+	change_state("interact", {"callback": interact_list[by][Dialog.selected]})
+
 func state_ready_interact(_arg:Dictionary) -> void:
-	await interact_list[_arg["by"]].call()
+	await _arg["callback"].call()
 	change_state("explore_idle")

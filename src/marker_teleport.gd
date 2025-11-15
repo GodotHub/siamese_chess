@@ -5,7 +5,7 @@ class_name MarkerTeleport
 @export var args:Dictionary = {}
 
 func _init() -> void:
-	piece = "z".unicode_at(0)
+	piece = "Z".unicode_at(0)
 
 func change_scene() -> void:
 	var level:Level = get_parent()
