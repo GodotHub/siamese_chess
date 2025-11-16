@@ -28,8 +28,7 @@ func test() -> void:
 	await on_next
 	push_selection(["选项4", "选项5", "选项6"], true, true)
 
-
-func _unhandled_input(event:InputEvent) -> void:
+func _input(event:InputEvent) -> void:
 	if click_anywhere && !waiting:
 		if event is InputEventMouseButton && event.button_index == MOUSE_BUTTON_LEFT && event.pressed && Time.get_unix_time_from_system() - click_cooldown >= 0.3:
 			next()
