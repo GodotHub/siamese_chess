@@ -62,13 +62,18 @@ func push_selection(_selection:PackedStringArray, _force_selection:bool = true, 
 	tween.tween_property($texture_rect_bottom/label, "text", text, 0)
 	tween.tween_property($texture_rect_full, "visible", false, 0)
 
+func set_title(text:String) -> void:
+	$texture_rect_top/label.text = text
+
 func clear() -> void:
 	$texture_rect_bottom/label.text = ""
+	$texture_rect_top/label.text = ""
 	click_anywhere = false
 	force_selection = false
 
 func next() -> void:
 	$texture_rect_bottom/label.text = ""
+	$texture_rect_top/label.text = ""
 	click_anywhere = false
 	waiting = false
 	force_selection = false
