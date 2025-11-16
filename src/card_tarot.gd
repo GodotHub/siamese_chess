@@ -13,7 +13,13 @@ func parse(text:String):
 	piece = dict["piece"]
 	actor = load(dict["actor"]).instantiate()
 
-func use_card_on_chessboard(_chessboard:Chessboard, _by:int) -> void:	# 单纯加人就是了，按道理也应当算作一步棋（非战斗时）
+func reset() -> void:
+	use_directly = false
+	if is_instance_valid(chessboard):
+		chessboard.remove_piece_instance(actor)
+		chessboard = null
+
+func use_card_on_chessboard(_chessboard:Chessboard, _by:int) -> void:
 	_chessboard.state.add_piece(_by, piece)
 	_chessboard.add_piece_instance(actor, _by)
 	by = _by
@@ -23,4 +29,5 @@ func use_card_on_chessboard(_chessboard:Chessboard, _by:int) -> void:	# 单纯�
 func use_card_directly() -> void:
 	chessboard.remove_piece_instance(actor)
 	chessboard.state.capture_piece(by)
+	chessboard = null
 	use_directly = false

@@ -15,6 +15,9 @@ var use_directly:bool = false
 func parse(_str:String):
 	pass
 
+func reset() -> void:
+	pass
+
 func use_card_on_chessboard(_chessboard:Chessboard, _by:int) -> void:
 	pass
 

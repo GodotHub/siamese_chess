@@ -63,4 +63,5 @@ func game_end() -> void:
 	game_ended.emit()
 
 func change_scene() -> void:
+	HoldCard.reset()
 	Loading.change_scene("res://scene/outside_0.tscn", {"by": 0x04})
