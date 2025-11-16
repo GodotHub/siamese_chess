@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://bpxhvxnph5us"]
+[gd_scene load_steps=13 format=3 uid="uid://bpxhvxnph5us"]
 
 [ext_resource type="Script" uid="uid://cjddqgsgfo4hw" path="res://src/outside.gd" id="1_tlhmt"]
 [ext_resource type="PackedScene" uid="uid://b3ml34bssywkr" path="res://scene/player.tscn" id="2_a6ui3"]
@@ -7,6 +7,7 @@
 [ext_resource type="PackedScene" uid="uid://rlos56ckp02d" path="res://scene/shrub.tscn" id="7_6yoeu"]
 [ext_resource type="PackedScene" uid="uid://bfl3bn4u2am21" path="res://scene/tree.tscn" id="8_kcqwh"]
 [ext_resource type="PackedScene" uid="uid://ekjtt81nkr2f" path="res://scene/flower.tscn" id="9_3g7ix"]
+[ext_resource type="PackedScene" uid="uid://cefxs7grh28rs" path="res://assets/model/door.glb" id="9_nnfx6"]
 [ext_resource type="Script" uid="uid://bbi6kjxerg3hk" path="res://src/marker_teleport.gd" id="10_tlhmt"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_gs8dr"]
@@ -209,6 +210,18 @@ script = ExtResource("10_tlhmt")
 to = "res://scene/outside_1.tscn"
 args = {
 "by": 3
+}
+metadata/_custom_type_script = "uid://bbi6kjxerg3hk"
+
+[node name="door" parent="level" instance=ExtResource("9_nnfx6")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, -8)
+
+[node name="marker_teleport_3" type="Marker3D" parent="level"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, -7)
+script = ExtResource("10_tlhmt")
+to = "res://scene/cafe.tscn"
+args = {
+"by": 37
 }
 metadata/_custom_type_script = "uid://bbi6kjxerg3hk"
 

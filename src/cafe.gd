@@ -6,6 +6,12 @@ var history_state:PackedInt64Array = []
 var engine:ChessEngine = PastorEngine.new()
 
 func _ready() -> void:
+	var cheshire_by:int = get_meta("by")
+	var cheshire_instance:Actor = load("res://scene/cheshire.tscn").instantiate()
+	cheshire_instance.position = $level/chessboard.convert_name_to_position(Chess.to_position_name(cheshire_by))
+	$level/chessboard.state.add_piece(cheshire_by, "k".unicode_at(0))
+	$level/chessboard.add_piece_instance(cheshire_instance, cheshire_by)
+	
 	engine.connect("search_finished", in_game_black)
 	$level/table_0/chessboard_standard.connect("clicked_move", in_game_white)
 
