@@ -11,6 +11,7 @@ var history_state:PackedInt64Array = []
 var level_state:String = ""
 var mutex:Mutex = Mutex.new()
 var interact_list:Dictionary[int, Dictionary] = {}
+var title:Dictionary[int, String] = {}
 
 func _ready() -> void:
 	engine = PastorEngine.new()
@@ -47,6 +48,7 @@ func state_ready_explore_idle(_arg:Dictionary) -> void:
 	if chessboard.state.get_bit("z".unicode_at(0)) & Chess.mask(Chess.to_64(by)):
 		selection = interact_list[by].keys()
 		Dialog.push_selection(selection, false, false)
+		Dialog.set_title(title[by])
 	Dialog.connect("on_next", change_state.bind("dialog"))
 	chessboard.connect("ready_to_move", change_state.bind("explore_ready_to_move"))
 	chessboard.set_valid_move(RuleStandard.generate_explore_move(chessboard.state, 1))	# TODO: 由于移花接木机制，这个情况下Cheshire不会进行寻路。

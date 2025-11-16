@@ -15,7 +15,9 @@ func _ready() -> void:
 	$level/table_0/chessboard_standard.set_enabled(false)
 	$level/chessboard/pieces/pastor.play_animation("thinking")
 	$level.interact_list[0x54] = {"下棋": interact_pastor}
+	$level.title[0x54] = "玉兰"
 	$level.interact_list[0x55] = {"下棋": interact_pastor}
+	$level.title[0x55] = "玉兰"
 	$level.interact_list[0x25] = {"": change_scene}
 
 func interact_pastor() -> void:
