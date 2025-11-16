@@ -1,5 +1,7 @@
 extends Node3D
 
+signal game_ended
+
 var history_state:PackedInt64Array = []
 var engine:ChessEngine = PastorEngine.new()
 
@@ -27,6 +29,7 @@ func interact_pastor() -> void:
 	$level/chessboard/pieces/cheshire.play_animation("thinking")
 	$player.force_set_camera($level/camera_chessboard)
 	in_game()
+	await game_ended
 
 func in_game() -> void:
 	$level/table_0/chessboard_standard.state = RuleStandard.create_initial_state()
@@ -57,6 +60,7 @@ func game_end() -> void:
 	$level/chessboard/pieces/cheshire.set_position($level/chessboard.convert_name_to_position("e3"))
 	$level/chessboard.set_enabled(true)
 	$level/table_0/chessboard_standard.set_enabled(false)
+	game_ended.emit()
 
 func change_scene() -> void:
 	Loading.change_scene("res://scene/outside_0.tscn", {"by": 0x04})
