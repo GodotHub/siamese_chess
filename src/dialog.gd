@@ -63,7 +63,9 @@ func push_selection(_selection:PackedStringArray, _force_selection:bool = true, 
 	tween.tween_property($texture_rect_full, "visible", false, 0)
 
 func set_title(text:String) -> void:
-	$texture_rect_top/label.text = text
+	var tween:Tween = create_tween()
+	tween.tween_interval(0.3)
+	tween.tween_property($texture_rect_top/label, "text", text, 0)
 
 func clear() -> void:
 	$texture_rect_bottom/label.text = ""
