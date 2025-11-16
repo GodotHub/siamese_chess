@@ -116,7 +116,7 @@ func state_ready_explore_check_attack(_arg:Dictionary) -> void:
 
 func state_ready_explore_check_interact(_arg:Dictionary) -> void:
 	var by:int = Chess.to_x88(chessboard.state.bit_index("k".unicode_at(0))[0])
-	if Chess.to(_arg["move"]) == by && chessboard.state.get_bit("Z".unicode_at(0)) & Chess.mask(Chess.to_64(by)):
+	if _arg.has("move") && Chess.to(_arg["move"]) == by && chessboard.state.get_bit("Z".unicode_at(0)) & Chess.mask(Chess.to_64(by)):
 		change_state("interact", {"callback": interact_list[by][""]})
 		return
 	change_state("explore_idle")
