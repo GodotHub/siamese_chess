@@ -1,8 +1,7 @@
-[gd_scene load_steps=15 format=3 uid="uid://5jb1sys8w4to"]
+[gd_scene load_steps=14 format=3 uid="uid://5jb1sys8w4to"]
 
 [ext_resource type="Script" uid="uid://c733mdh8qpsk2" path="res://src/outside_1.gd" id="1_ychsu"]
 [ext_resource type="PackedScene" uid="uid://b3ml34bssywkr" path="res://scene/player.tscn" id="2_4c3sk"]
-[ext_resource type="PackedScene" uid="uid://kqoc0aycgs35" path="res://scene/dialog.tscn" id="3_j0exy"]
 [ext_resource type="PackedScene" uid="uid://bmv2xhfws616g" path="res://scene/level.tscn" id="4_1oyei"]
 [ext_resource type="PackedScene" uid="uid://dwvyc2qlcdag0" path="res://scene/chessboard_large.tscn" id="5_6ehyn"]
 [ext_resource type="PackedScene" uid="uid://rlos56ckp02d" path="res://scene/shrub.tscn" id="7_olkv4"]
@@ -46,14 +45,12 @@ shadow_enabled = true
 
 [node name="player" parent="." instance=ExtResource("2_4c3sk")]
 
-[node name="dialog" parent="." instance=ExtResource("3_j0exy")]
-
 [node name="level" parent="." instance=ExtResource("4_1oyei")]
 
 [node name="chessboard" parent="level" instance=ExtResource("5_6ehyn")]
 
 [node name="camera" type="Camera3D" parent="level"]
-transform = Transform3D(-0.81532, -0.393181, 0.425043, 4.6825e-08, 0.734086, 0.679057, -0.57901, 0.553649, -0.598515, 6.94267, 6.60401, -9.89791)
+transform = Transform3D(-0.930877, 0.248082, -0.268185, 6.34992e-08, 0.734086, 0.679057, 0.365332, 0.632118, -0.683344, -3.98332, 6.60401, -11.035)
 
 [node name="shrub" parent="level" instance=ExtResource("7_olkv4")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7, 0, -1)
@@ -267,5 +264,9 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0, -1)
 script = ExtResource("11_ychsu")
 piece = 122
 metadata/_custom_type_script = "uid://chtqhpiu556i1"
+
+[node name="camera_carnation" type="Camera3D" parent="level"]
+transform = Transform3D(0.494867, 0.279881, 0.822662, 3.59728e-08, 0.946711, -0.322084, -0.868969, 0.159389, 0.468496, -1.48604, 0.829229, -2.09742)
+fov = 51.0187
 
 [editable path="level"]

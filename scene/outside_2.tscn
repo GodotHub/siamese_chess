@@ -1,8 +1,7 @@
-[gd_scene load_steps=15 format=3 uid="uid://cykcx1exlkx7v"]
+[gd_scene load_steps=14 format=3 uid="uid://cykcx1exlkx7v"]
 
 [ext_resource type="Script" uid="uid://cjddqgsgfo4hw" path="res://src/outside.gd" id="1_mi7h5"]
 [ext_resource type="PackedScene" uid="uid://b3ml34bssywkr" path="res://scene/player.tscn" id="2_4jhsc"]
-[ext_resource type="PackedScene" uid="uid://kqoc0aycgs35" path="res://scene/dialog.tscn" id="3_qs46h"]
 [ext_resource type="PackedScene" uid="uid://bmv2xhfws616g" path="res://scene/level.tscn" id="4_ijp1v"]
 [ext_resource type="PackedScene" uid="uid://dwvyc2qlcdag0" path="res://scene/chessboard_large.tscn" id="5_h4n7q"]
 [ext_resource type="PackedScene" uid="uid://rlos56ckp02d" path="res://scene/shrub.tscn" id="7_nqfyu"]
@@ -45,8 +44,6 @@ light_color = Color(0.419813, 0.419813, 0.419813, 1)
 shadow_enabled = true
 
 [node name="player" parent="." instance=ExtResource("2_4jhsc")]
-
-[node name="dialog" parent="." instance=ExtResource("3_qs46h")]
 
 [node name="level" parent="." instance=ExtResource("4_ijp1v")]
 
@@ -161,6 +158,15 @@ script = ExtResource("11_ogq1s")
 to = "res://scene/outside_1.tscn"
 args = {
 "by": 103
+}
+metadata/_custom_type_script = "uid://bbi6kjxerg3hk"
+
+[node name="marker_teleport_2" type="Marker3D" parent="level"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7, 0, 5)
+script = ExtResource("11_ogq1s")
+to = "res://scene/outside_3.tscn"
+args = {
+"by": 96
 }
 metadata/_custom_type_script = "uid://bbi6kjxerg3hk"
 

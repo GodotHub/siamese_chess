@@ -1,8 +1,7 @@
-[gd_scene load_steps=13 format=3 uid="uid://bpxhvxnph5us"]
+[gd_scene load_steps=12 format=3 uid="uid://bpxhvxnph5us"]
 
 [ext_resource type="Script" uid="uid://cjddqgsgfo4hw" path="res://src/outside.gd" id="1_tlhmt"]
 [ext_resource type="PackedScene" uid="uid://b3ml34bssywkr" path="res://scene/player.tscn" id="2_a6ui3"]
-[ext_resource type="PackedScene" uid="uid://kqoc0aycgs35" path="res://scene/dialog.tscn" id="3_agd6e"]
 [ext_resource type="PackedScene" uid="uid://bmv2xhfws616g" path="res://scene/level.tscn" id="4_w3qr7"]
 [ext_resource type="PackedScene" uid="uid://dwvyc2qlcdag0" path="res://scene/chessboard_large.tscn" id="5_up75d"]
 [ext_resource type="PackedScene" uid="uid://rlos56ckp02d" path="res://scene/shrub.tscn" id="7_6yoeu"]
@@ -43,8 +42,6 @@ light_color = Color(0.419813, 0.419813, 0.419813, 1)
 shadow_enabled = true
 
 [node name="player" parent="." instance=ExtResource("2_a6ui3")]
-
-[node name="dialog" parent="." instance=ExtResource("3_agd6e")]
 
 [node name="level" parent="." instance=ExtResource("4_w3qr7")]
 

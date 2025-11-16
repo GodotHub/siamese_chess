@@ -10,4 +10,6 @@ func _ready() -> void:
 
 func interact_with_carnation() -> void:
 	Dialog.push_dialog("……", true, true)
+	$player.force_set_camera($level/camera_carnation)
 	await Dialog.on_next
+	$player.force_set_camera($level/camera)
