@@ -5,7 +5,6 @@ signal clicked()
 signal clicked_move()
 signal ready_to_move()
 signal canceled()
-signal clicked_interact()
 signal animation_finished()
 
 @export var COLOR_LAST_MOVE:Color = Color(0.3, 0.3, 0.3, 1)
@@ -173,22 +172,44 @@ func set_valid_move(move_list:PackedInt32Array) -> void:
 			valid_move[Chess.from(move)] = []
 		valid_move[Chess.from(move)].push_back(move)
 
-func receive_event(event:Dictionary) -> void:
-	match event["type"]:	# 暂时的做法
+# 由引擎通过字典传入事件、并通过字典返回撤销事件。
+func receive_event(event:Dictionary) -> Dictionary:
+	match event["type"]:
 		"capture":
-			capture_piece_instance(event["from"], event["to"])
+			return await capture_piece_instance(event["from"], event["to"])
 		"promotion":
-			promote_piece_instance(event["from"], event["to"], event["piece"])
+			return await promote_piece_instance(event["from"], event["to"], event["piece"])
 		"move":
-			move_piece_instance(event["from"], event["to"])
+			return await move_piece_instance(event["from"], event["to"])
 		"castle":
-			castle_piece_instance(event["from_king"], event["to_king"], event["from_rook"], event["to_rook"])
+			return await castle_piece_instance(event["from_king"], event["to_king"], event["from_rook"], event["to_rook"])
 		"en_passant":
-			en_passant_piece_instance(event["from"], event["to"], event["captured"])
+			return await en_passant_piece_instance(event["from"], event["to"], event["captured"])
 		"grafting":
-			graft_piece_instance(event["from"], event["to"])
+			return await graft_piece_instance(event["from"], event["to"])
 		"king_explore":
-			king_explore_instance(event["from"], event["path"])
+			return await king_explore_instance(event["from"], event["path"])
+	return {}
+
+func receive_rollback_event(event:Dictionary) -> void:
+	match event["type"]:
+		"capture":
+			move_piece_instance(event["to"], event["from"])
+			move_piece_instance_from_backup(event["to"], event["captured_instance"])
+		"promotion":
+			move_piece_instance(event["to"], event["from"])
+		"move":
+			move_piece_instance(event["to"], event["from"])
+		"castle":
+			move_piece_instance(event["to_king"], event["from_king"])
+			move_piece_instance(event["to_rook"], event["from_rook"])
+		"en_passant":
+			move_piece_instance(event["to"], event["from"])
+			move_piece_instance_from_backup(event["captured"], event["captured_instance"])
+		"grafting":
+			graft_piece_instance(event["to"], event["from"])
+		"king_explore":
+			move_piece_instance(event["to"], event["from"])
 
 func add_piece_instance(instance:Actor, by:int) -> void:	# 注意根据state摆放棋盘
 	$pieces.add_child(instance)
@@ -217,30 +238,24 @@ func move_piece_instance_to_other(from:int, to:int, other:Chessboard) -> Actor:
 	other.add_piece_instance(instance, to)
 	return instance
 
-func move_piece_instance_from_backup(by:int, piece:int) -> void:
-	var target_piece_instance:Actor = null
-	for iter:Actor in backup_piece:
-		if iter.piece_type == piece:
-			target_piece_instance = iter
-			break
-	if target_piece_instance:
-		backup_piece.erase(target_piece_instance)
-		chessboard_piece[by] = target_piece_instance
-		if piece == "K".unicode_at(0):
-			king_instance[0] = target_piece_instance
-		if piece == "k".unicode_at(0):
-			king_instance[1] = target_piece_instance
-		target_piece_instance.introduce(get_node(Chess.to_position_name(by)).global_position)
+func move_piece_instance_from_backup(by:int, piece_instance:Actor) -> void:
+	chessboard_piece[by] = piece_instance
+	backup_piece.erase(piece_instance)
 
-func move_piece_instance(from:int, to:int) -> void:
+func move_piece_instance(from:int, to:int) -> Dictionary:
 	var instance:Actor = chessboard_piece[from]
 	instance.move(get_node(Chess.to_position_name(to)).global_position)
 	chessboard_piece.erase(from)
 	chessboard_piece[to] = instance
 	await instance.animation_finished
 	animation_finished.emit.call_deferred()
+	return {
+		"type": "move",
+		"from": from,
+		"to": to
+	}
 
-func castle_piece_instance(from_1:int, to_1:int, from_2:int, to_2:int) -> void:
+func castle_piece_instance(from_1:int, to_1:int, from_2:int, to_2:int) -> Dictionary:
 	var instance_1:Actor = chessboard_piece[from_1]
 	instance_1.move(get_node(Chess.to_position_name(to_1)).global_position)
 	chessboard_piece.erase(from_1)
@@ -251,8 +266,15 @@ func castle_piece_instance(from_1:int, to_1:int, from_2:int, to_2:int) -> void:
 	chessboard_piece[to_2] = instance_2
 	await instance_1.animation_finished
 	animation_finished.emit.call_deferred()
+	return {
+		"type": "castle",
+		"from_king": from_1,
+		"to_king": to_1,
+		"from_rook": from_2,
+		"to_rook": to_2
+	}
 
-func capture_piece_instance(from:int, to:int) -> void:
+func capture_piece_instance(from:int, to:int) -> Dictionary:
 	var instance_from:Actor = chessboard_piece[from]
 	var instance_to:Actor = chessboard_piece[to]
 	instance_from.capturing(get_node(Chess.to_position_name(to)).global_position, instance_to)
@@ -261,8 +283,14 @@ func capture_piece_instance(from:int, to:int) -> void:
 	chessboard_piece[to] = instance_from
 	await instance_from.animation_finished
 	animation_finished.emit.call_deferred()
+	return {
+		"type": "capture",
+		"captured_instance": instance_to,
+		"from": from,
+		"to": to
+	}
 
-func graft_piece_instance(from:int, to:int) -> void:
+func graft_piece_instance(from:int, to:int) -> Dictionary:
 	var instance_1:Actor = chessboard_piece[from]
 	var instance_2:Actor = chessboard_piece[to]
 	chessboard_piece.erase(from)
@@ -273,22 +301,40 @@ func graft_piece_instance(from:int, to:int) -> void:
 	chessboard_piece[to] = instance_1
 	await instance_1.animation_finished
 	animation_finished.emit.call_deferred()
+	return {
+		"type": "grafting",
+		"from": from,
+		"to": to
+	}
 
-func promote_piece_instance(from:int, to:int, piece:int) -> void:
+func promote_piece_instance(from:int, to:int, piece:int) -> Dictionary:
 	var instance:Actor = chessboard_piece[from]
-	instance.promote(get_node(Chess.to_position_name(to)).global_position, piece)
+	await instance.promote(get_node(Chess.to_position_name(to)).global_position, piece)
 	chessboard_piece.erase(from)
 	chessboard_piece[to] = instance
 	animation_finished.emit.call_deferred()
+	return {
+		"type": "promote",
+		"from": from,
+		"to": to
+	}
 
-func en_passant_piece_instance(from:int, to:int, captured:int) -> void:
+func en_passant_piece_instance(from:int, to:int, captured:int) -> Dictionary:
 	var instance_from:Actor = chessboard_piece[from]
+	var instance_captured:Actor = chessboard_piece[captured]
 	chessboard_piece[from].capturing(get_node(Chess.to_position_name(to)).global_position, chessboard_piece[captured])
 	move_piece_instance_to_backup(captured)
 	chessboard_piece.erase(from)
 	chessboard_piece[to] = instance_from
 	await instance_from.animation_finished
 	animation_finished.emit.call_deferred()
+	return {
+		"type": "en_passant",
+		"captured_instance": instance_captured,
+		"captured": captured,
+		"from": from,
+		"to": to
+	}
 
 func move_piece_instance_to_backup(by:int) -> void:
 	var instance:Actor = chessboard_piece[by]
@@ -304,9 +350,9 @@ func exit_piece_instance(by:int, pos:Vector3) -> void:
 	await instance.animation_finished
 	animation_finished.emit.call_deferred()
 
-func king_explore_instance(from:int, path:PackedInt32Array) -> void:
+func king_explore_instance(from:int, path:PackedInt32Array) -> Dictionary:
 	if path.is_empty():
-		return
+		return {}
 	var instance:Actor = chessboard_piece[from]
 	chessboard_piece.erase(from)
 	chessboard_piece[path[-1]] = instance
@@ -314,6 +360,11 @@ func king_explore_instance(from:int, path:PackedInt32Array) -> void:
 		instance.move(get_node(Chess.to_position_name(to)).global_position)
 		await instance.animation_finished
 	animation_finished.emit.call_deferred()
+	return {
+		"type": "king_explore",
+		"from": from,
+		"to": path[-1]
+	}
 
 func set_enabled(enabled:bool) -> void:
 	super.set_enabled(enabled)
