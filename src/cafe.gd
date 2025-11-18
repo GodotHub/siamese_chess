@@ -46,8 +46,6 @@ func in_game() -> void:
 	in_game_white.call_deferred()
 
 func in_game_white() -> void:
-	Dialog.clear()
-	Dialog.disconnect("on_next", on_select_dialog)
 	if $level/table_0/chessboard_standard.confirm_move != 0:
 		history_state.push_back($level/table_0/chessboard_standard.state.get_zobrist())
 		$level/table_0/chessboard_standard.execute_move($level/table_0/chessboard_standard.confirm_move)
@@ -68,6 +66,8 @@ func in_game_black() -> void:
 	$level/table_0/chessboard_standard.set_valid_move(RuleStandard.generate_valid_move($level/table_0/chessboard_standard.state, 1))
 
 func in_game_black_check_move() -> void:
+	Dialog.clear()
+	Dialog.disconnect("on_next", on_select_dialog)
 	var chessboard:Chessboard = $level/table_0/chessboard_standard
 	var from:int = Chess.from(chessboard.confirm_move)
 	var to:int = Chess.to(chessboard.confirm_move)
@@ -86,10 +86,9 @@ func in_game_black_check_move() -> void:
 		in_game_white.call_deferred()
 
 func in_game_black_extra_move(move_list:PackedInt32Array) -> void:
-	Dialog.clear()
-	Dialog.disconnect("on_next", on_select_dialog)
 	var decision_list:PackedStringArray = []
 	var decision_to_move:Dictionary = {}
+	var chessboard:Chessboard = $level/table_0/chessboard_standard
 	for iter:int in move_list:
 		decision_list.push_back("%c" % Chess.extra(iter))
 		decision_to_move[decision_list[-1]] = iter
@@ -98,6 +97,7 @@ func in_game_black_extra_move(move_list:PackedInt32Array) -> void:
 		if Dialog.selected == "cancel":
 			in_game_black.call_deferred()
 		else:
+			chessboard.confirm_move = decision_to_move[Dialog.selected]
 			in_game_white.call_deferred()
 	)
 	Dialog.push_selection(decision_list, true, true)
