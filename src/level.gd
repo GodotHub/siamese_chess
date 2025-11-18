@@ -190,7 +190,6 @@ func state_ready_versus_check_move(_arg:Dictionary) -> void:
 		return
 	elif move_list.size() > 1:
 		change_state("versus_extra_move", {"move_list": move_list})
-
 	else:
 		change_state("versus_move", {"move": move_list[0]})
 

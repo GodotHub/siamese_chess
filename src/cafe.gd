@@ -82,6 +82,7 @@ func in_game_black_check_move() -> void:
 	elif move_list.size() > 1:
 		in_game_black_extra_move.call_deferred(move_list)
 	else:
+		chessboard.confirm_move = move_list[0]
 		in_game_white.call_deferred()
 
 func in_game_black_extra_move(move_list:PackedInt32Array) -> void:
