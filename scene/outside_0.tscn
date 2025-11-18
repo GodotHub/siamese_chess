@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3 uid="uid://bpxhvxnph5us"]
+[gd_scene load_steps=14 format=3 uid="uid://bpxhvxnph5us"]
 
 [ext_resource type="Script" uid="uid://cjddqgsgfo4hw" path="res://src/outside.gd" id="1_tlhmt"]
 [ext_resource type="PackedScene" uid="uid://b3ml34bssywkr" path="res://scene/player.tscn" id="2_a6ui3"]
@@ -8,6 +8,7 @@
 [ext_resource type="PackedScene" uid="uid://bfl3bn4u2am21" path="res://scene/tree.tscn" id="8_kcqwh"]
 [ext_resource type="PackedScene" uid="uid://ekjtt81nkr2f" path="res://scene/flower.tscn" id="9_3g7ix"]
 [ext_resource type="PackedScene" uid="uid://cefxs7grh28rs" path="res://assets/model/door.glb" id="9_nnfx6"]
+[ext_resource type="PackedScene" uid="uid://cingkxj4uodjo" path="res://assets/model/window.glb" id="10_a6ui3"]
 [ext_resource type="Script" uid="uid://bbi6kjxerg3hk" path="res://src/marker_teleport.gd" id="10_tlhmt"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_gs8dr"]
@@ -49,7 +50,7 @@ shadow_enabled = true
 [node name="chessboard" parent="level" instance=ExtResource("5_up75d")]
 
 [node name="camera" type="Camera3D" parent="level"]
-transform = Transform3D(-0.995709, 0.0628432, -0.0679359, 2.21169e-08, 0.734086, 0.679057, 0.0925449, 0.676142, -0.730936, -0.621102, 6.60401, -11.1437)
+transform = Transform3D(-0.883406, -0.318211, 0.343999, 1.93588e-08, 0.734086, 0.679056, -0.468608, 0.599883, -0.648497, 6.0261, 6.60401, -11.1437)
 
 [node name="shrub" parent="level" instance=ExtResource("7_6yoeu")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0, -1)
@@ -216,6 +217,9 @@ metadata/_custom_type_script = "uid://bbi6kjxerg3hk"
 [node name="door" parent="level" instance=ExtResource("9_nnfx6")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, -8)
 
+[node name="face" parent="level/door" index="1"]
+transform = Transform3D(-0.594332, 0, -0.80422, 0, 1, 0, 0.80422, 0, -0.594332, -0.522462, 1.01108, 0.140696)
+
 [node name="marker_teleport_3" type="Marker3D" parent="level"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, -7)
 script = ExtResource("10_tlhmt")
@@ -225,4 +229,8 @@ args = {
 }
 metadata/_custom_type_script = "uid://bbi6kjxerg3hk"
 
+[node name="window_3" parent="." instance=ExtResource("10_a6ui3")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 0, -8)
+
 [editable path="level"]
+[editable path="level/door"]
