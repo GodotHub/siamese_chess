@@ -2,7 +2,7 @@ extends Node3D
 
 signal game_ended
 
-var history_state:PackedInt64Array = []
+var history_zobrist:PackedInt64Array = []
 var engine:ChessEngine = PastorEngine.new()
 
 func _ready() -> void:
@@ -43,22 +43,23 @@ func interact_pastor() -> void:
 func in_game() -> void:
 	$level/table_0/chessboard_standard.state = RuleStandard.create_initial_state()
 	$level/table_0/chessboard_standard.add_default_piece_set()
+	history_zobrist.push_back($level/table_0/chessboard_standard.state.get_zobrist())
 	in_game_white.call_deferred()
 
 func in_game_white() -> void:
 	if $level/table_0/chessboard_standard.confirm_move != 0:
-		history_state.push_back($level/table_0/chessboard_standard.state.get_zobrist())
 		$level/table_0/chessboard_standard.execute_move($level/table_0/chessboard_standard.confirm_move)
+		history_zobrist.push_back($level/table_0/chessboard_standard.state.get_zobrist())
 	if RuleStandard.get_end_type($level/table_0/chessboard_standard.state) != "":
 		game_end.call_deferred()
 		return
 	$level/table_0/chessboard_standard.set_valid_move([])
-	engine.start_search($level/table_0/chessboard_standard.state, 0, history_state, Callable())
+	engine.start_search($level/table_0/chessboard_standard.state, 0, history_zobrist, Callable())
 
 func in_game_black() -> void:
 	Dialog.push_selection(["悔棋", "离开对局"], false, false)
 	Dialog.connect("on_next", on_select_dialog, ConnectFlags.CONNECT_ONE_SHOT)
-	history_state.push_back($level/table_0/chessboard_standard.state.get_zobrist())
+	history_zobrist.push_back($level/table_0/chessboard_standard.state.get_zobrist())
 	$level/table_0/chessboard_standard.execute_move(engine.get_search_result())
 	if RuleStandard.get_end_type($level/table_0/chessboard_standard.state) != "":
 		game_end.call_deferred()
