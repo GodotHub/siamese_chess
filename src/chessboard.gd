@@ -226,8 +226,7 @@ func receive_rollback_event(event:Dictionary) -> void:
 		"move":
 			move_piece_instance(event["to"], event["from"])
 		"castle":
-			move_piece_instance(event["to_king"], event["from_king"])
-			move_piece_instance(event["to_rook"], event["from_rook"])
+			castle_piece_instance(event["to_king"], event["from_king"], event["to_rook"], event["from_rook"])
 		"en_passant":
 			move_piece_instance(event["to"], event["from"])
 			move_piece_instance_from_backup(event["captured"], event["captured_instance"])
@@ -266,6 +265,7 @@ func move_piece_instance_to_other(from:int, to:int, other:Chessboard) -> Actor:
 func move_piece_instance_from_backup(by:int, piece_instance:Actor) -> void:
 	chessboard_piece[by] = piece_instance
 	backup_piece.erase(piece_instance)
+	piece_instance.introduce(get_node(Chess.to_position_name(by)).global_position)
 
 func move_piece_instance(from:int, to:int) -> void:
 	var instance:Actor = chessboard_piece[from]

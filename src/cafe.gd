@@ -122,11 +122,10 @@ func on_select_dialog() -> void:
 			history_zobrist.resize(history_zobrist.size() - 1)
 			history_state.pop_back()
 			history_event.pop_back()
-			await $level/table_0/chessboard_standard.animation_finished
 		if history_event.size() <= 1:
 			Dialog.push_selection(["离开对局"], false, false)
 		else:
-			Dialog.push_selection(["悔棋", "离开对局"])
+			Dialog.push_selection(["悔棋", "离开对局"], false, false)
 		Dialog.connect("on_next", on_select_dialog, ConnectFlags.CONNECT_ONE_SHOT)
 	elif Dialog.selected == "离开对局":
 		game_end.call_deferred()
