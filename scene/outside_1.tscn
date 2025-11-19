@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3 uid="uid://5jb1sys8w4to"]
+[gd_scene load_steps=18 format=3 uid="uid://5jb1sys8w4to"]
 
 [ext_resource type="Script" uid="uid://c733mdh8qpsk2" path="res://src/outside_1.gd" id="1_ychsu"]
 [ext_resource type="PackedScene" uid="uid://b3ml34bssywkr" path="res://scene/player.tscn" id="2_4c3sk"]
@@ -9,7 +9,11 @@
 [ext_resource type="PackedScene" uid="uid://ekjtt81nkr2f" path="res://scene/flower.tscn" id="9_gqr3t"]
 [ext_resource type="Script" uid="uid://bbi6kjxerg3hk" path="res://src/marker_teleport.gd" id="10_6ytrl"]
 [ext_resource type="PackedScene" uid="uid://d1orpuo40iup6" path="res://scene/carnation.tscn" id="10_fmso8"]
+[ext_resource type="PackedScene" uid="uid://c0v6vrq8yafil" path="res://assets/model/stone_0.glb" id="11_acvd5"]
 [ext_resource type="Script" uid="uid://chtqhpiu556i1" path="res://src/marker_bit.gd" id="11_ychsu"]
+[ext_resource type="PackedScene" uid="uid://d201yx1cmkulm" path="res://assets/model/stone_1.glb" id="12_acvd5"]
+[ext_resource type="PackedScene" uid="uid://d13fcqueggvup" path="res://assets/model/fence.glb" id="13_83jv4"]
+[ext_resource type="PackedScene" uid="uid://8kbw64nuq0ai" path="res://assets/model/fence_turn.glb" id="14_4c3sk"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_gs8dr"]
 sky_top_color = Color(1, 1, 1, 1)
@@ -52,28 +56,12 @@ shadow_enabled = true
 [node name="camera" type="Camera3D" parent="level"]
 transform = Transform3D(-0.930877, 0.248082, -0.268185, 6.34992e-08, 0.734086, 0.679057, 0.365332, 0.632118, -0.683344, -3.98332, 6.60401, -11.035)
 
-[node name="shrub" parent="level" instance=ExtResource("7_olkv4")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7, 0, -1)
-piece_type = 88
-
 [node name="shrub_2" parent="level" instance=ExtResource("7_olkv4")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 0, -5)
 piece_type = 88
 
 [node name="shrub_3" parent="level" instance=ExtResource("7_olkv4")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 0, -5)
-piece_type = 88
-
-[node name="shrub_4" parent="level" instance=ExtResource("7_olkv4")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7, 0, 1)
-piece_type = 88
-
-[node name="shrub_5" parent="level" instance=ExtResource("7_olkv4")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7, 0, 3)
-piece_type = 88
-
-[node name="shrub_6" parent="level" instance=ExtResource("7_olkv4")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7, 0, -3)
 piece_type = 88
 
 [node name="shrub_7" parent="level" instance=ExtResource("7_olkv4")]
@@ -92,37 +80,9 @@ piece_type = 88
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 0, 5)
 piece_type = 88
 
-[node name="shrub_11" parent="level" instance=ExtResource("7_olkv4")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0, 7)
-piece_type = 88
-
-[node name="shrub_12" parent="level" instance=ExtResource("7_olkv4")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7, 0, -7)
-piece_type = 88
-
-[node name="shrub_13" parent="level" instance=ExtResource("7_olkv4")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 7)
-piece_type = 88
-
 [node name="shrub_14" parent="level" instance=ExtResource("7_olkv4")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 0, 7)
 piece_type = 88
-
-[node name="shrub_15" parent="level" instance=ExtResource("7_olkv4")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 0, 7)
-piece_type = 88
-
-[node name="tree" parent="level" instance=ExtResource("8_glbyl")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7, 0, 7)
-piece_type = 89
-
-[node name="tree_2" parent="level" instance=ExtResource("8_glbyl")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0, 7)
-piece_type = 89
-
-[node name="tree_3" parent="level" instance=ExtResource("8_glbyl")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 0, -3)
-piece_type = 89
 
 [node name="tree_4" parent="level" instance=ExtResource("8_glbyl")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 0, -1)
@@ -136,16 +96,8 @@ piece_type = 89
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7, 0, -5)
 piece_type = 89
 
-[node name="tree_7" parent="level" instance=ExtResource("8_glbyl")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7, 0, -5)
-piece_type = 89
-
 [node name="tree_8" parent="level" instance=ExtResource("8_glbyl")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 0, 1)
-piece_type = 89
-
-[node name="tree_9" parent="level" instance=ExtResource("8_glbyl")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 0, -3)
 piece_type = 89
 
 [node name="tree_10" parent="level" instance=ExtResource("8_glbyl")]
@@ -265,8 +217,116 @@ script = ExtResource("11_ychsu")
 piece = 122
 metadata/_custom_type_script = "uid://chtqhpiu556i1"
 
+[node name="stone_0" parent="level" instance=ExtResource("11_acvd5")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 0, -3)
+
 [node name="camera_carnation" type="Camera3D" parent="level"]
 transform = Transform3D(0.494867, 0.279881, 0.822662, 3.59728e-08, 0.946711, -0.322084, -0.868969, 0.159389, 0.468496, -1.48604, 0.829229, -2.09742)
 fov = 51.0187
+
+[node name="marker_bit_6" type="Marker3D" parent="level"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 0, -3)
+script = ExtResource("11_ychsu")
+piece = 35
+metadata/_custom_type_script = "uid://chtqhpiu556i1"
+
+[node name="stone_1" parent="level" instance=ExtResource("12_acvd5")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 0, -3)
+
+[node name="marker_bit_7" type="Marker3D" parent="level"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 0, -3)
+script = ExtResource("11_ychsu")
+piece = 35
+metadata/_custom_type_script = "uid://chtqhpiu556i1"
+
+[node name="fence_1" parent="level" instance=ExtResource("13_83jv4")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7, 0, 7)
+
+[node name="marker_bit_1" type="Marker3D" parent="level"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7, 0, 7)
+script = ExtResource("11_ychsu")
+piece = 35
+metadata/_custom_type_script = "uid://chtqhpiu556i1"
+
+[node name="fence_2" parent="level" instance=ExtResource("13_83jv4")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 0, 7)
+
+[node name="marker_bit_8" type="Marker3D" parent="level"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 0, 7)
+script = ExtResource("11_ychsu")
+piece = 35
+metadata/_custom_type_script = "uid://chtqhpiu556i1"
+
+[node name="marker_bit_9" type="Marker3D" parent="level"]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -3, 0, 7)
+script = ExtResource("11_ychsu")
+piece = 35
+metadata/_custom_type_script = "uid://chtqhpiu556i1"
+
+[node name="fence_turn" parent="level" instance=ExtResource("14_4c3sk")]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 3, 0, 7)
+
+[node name="fence_turn_2" parent="level" instance=ExtResource("14_4c3sk")]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -3, 0, 7)
+
+[node name="marker_bit_10" type="Marker3D" parent="level"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0, 7)
+script = ExtResource("11_ychsu")
+piece = 35
+metadata/_custom_type_script = "uid://chtqhpiu556i1"
+
+[node name="fence_turnn_3" parent="level" instance=ExtResource("14_4c3sk")]
+transform = Transform3D(1.31134e-07, 0, -1, 0, 1, 0, 1, 0, 1.31134e-07, 7, 0, 3)
+
+[node name="marker_bit_11" type="Marker3D" parent="level"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7, 0, 3)
+script = ExtResource("11_ychsu")
+piece = 35
+metadata/_custom_type_script = "uid://chtqhpiu556i1"
+
+[node name="fence_3" parent="level" instance=ExtResource("13_83jv4")]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 7, 0, 1)
+
+[node name="marker_bit_12" type="Marker3D" parent="level"]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 7, 0, 1)
+script = ExtResource("11_ychsu")
+piece = 35
+metadata/_custom_type_script = "uid://chtqhpiu556i1"
+
+[node name="marker_bit_13" type="Marker3D" parent="level"]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 7, 0, -1)
+script = ExtResource("11_ychsu")
+piece = 35
+metadata/_custom_type_script = "uid://chtqhpiu556i1"
+
+[node name="fence_5" parent="level" instance=ExtResource("13_83jv4")]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 7, 0, -7)
+
+[node name="marker_bit_14" type="Marker3D" parent="level"]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 7, 0, -7)
+script = ExtResource("11_ychsu")
+piece = 35
+metadata/_custom_type_script = "uid://chtqhpiu556i1"
+
+[node name="marker_bit_15" type="Marker3D" parent="level"]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 7, 0, -5)
+script = ExtResource("11_ychsu")
+piece = 35
+metadata/_custom_type_script = "uid://chtqhpiu556i1"
+
+[node name="fence_turn_3" parent="level" instance=ExtResource("14_4c3sk")]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 7, 0, -1)
+
+[node name="fence_turn_4" parent="level" instance=ExtResource("14_4c3sk")]
+transform = Transform3D(1.31134e-07, 0, -1, 0, 1, 0, 1, 0, 1.31134e-07, 7, 0, -5)
+
+[node name="marker_teleport_4" type="Marker3D" parent="level"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7, 0, -3)
+script = ExtResource("10_6ytrl")
+to = "res://scene/outside_2.tscn"
+args = {
+"by": 32
+}
+metadata/_custom_type_script = "uid://bbi6kjxerg3hk"
 
 [editable path="level"]

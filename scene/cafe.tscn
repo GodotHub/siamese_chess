@@ -376,6 +376,12 @@ script = ExtResource("16_0icrd")
 piece = 122
 metadata/_custom_type_script = "uid://chtqhpiu556i1"
 
+[node name="marker_bit_9" type="Marker3D" parent="level"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0, 5)
+script = ExtResource("16_0icrd")
+piece = 35
+metadata/_custom_type_script = "uid://chtqhpiu556i1"
+
 [editable path="level/table_0"]
 [editable path="level/table_0/sofa_0"]
 [editable path="level/table_0/sofa_1"]
