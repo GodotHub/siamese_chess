@@ -457,7 +457,7 @@ bool RuleStandard::is_check(godot::Ref<State> _state, int _group)
 					return true;
 				}
 				to_piece = _state->get_piece(to);
-				if (to_piece && (to_piece & 95) != 'W')
+				if (is_blocked(_state, _from, to) || is_enemy(_state, _from, to))
 				{
 					if (!Chess::is_same_group(from_piece, to_piece) && (to_piece & 95) == 'K')
 					{
