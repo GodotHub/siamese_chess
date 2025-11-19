@@ -1,12 +1,20 @@
-[gd_scene load_steps=6 format=3 uid="uid://bxsyg5lji0s5g"]
+[gd_scene load_steps=7 format=3 uid="uid://bxsyg5lji0s5g"]
 
 [ext_resource type="PackedScene" uid="uid://bopgdgv46gefh" path="res://assets/model/piece_king.glb" id="1_o5l3u"]
 [ext_resource type="Script" uid="uid://pofjvdbbj3iy" path="res://src/piece.gd" id="2_j4cai"]
 [ext_resource type="Shader" uid="uid://dd7xsr1eeq6mo" path="res://src/unmoving_plaid.gdshader" id="3_ng4b7"]
 [ext_resource type="Texture2D" uid="uid://dc1bupw2qibgu" path="res://assets/texture/Texturelabs_Paper_374S.jpg" id="4_ng4b7"]
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ng4b7"]
+cull_mode = 1
+shading_mode = 0
+albedo_color = Color(0, 0, 0, 1)
+grow = true
+grow_amount = 0.003
+
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_pq4fm"]
 render_priority = 0
+next_pass = SubResource("StandardMaterial3D_ng4b7")
 shader = ExtResource("3_ng4b7")
 shader_parameter/texture_albedo = ExtResource("4_ng4b7")
 shader_parameter/scale = 1.0

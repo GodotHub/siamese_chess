@@ -1,12 +1,20 @@
-[gd_scene load_steps=6 format=3 uid="uid://cyd48dquqk0a0"]
+[gd_scene load_steps=7 format=3 uid="uid://cyd48dquqk0a0"]
 
 [ext_resource type="PackedScene" uid="uid://biryspvlw2sv7" path="res://assets/model/piece_bishop.glb" id="1_emy0k"]
 [ext_resource type="Script" uid="uid://pofjvdbbj3iy" path="res://src/piece.gd" id="2_tb7mb"]
 [ext_resource type="Shader" uid="uid://dd7xsr1eeq6mo" path="res://src/unmoving_plaid.gdshader" id="3_08ke4"]
 [ext_resource type="Texture2D" uid="uid://c41qgg7cur57o" path="res://assets/texture/Texturelabs_Stone_131S.jpg" id="4_hrfj7"]
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_08ke4"]
+cull_mode = 1
+shading_mode = 0
+albedo_color = Color(0, 0, 0, 1)
+grow = true
+grow_amount = 0.003
+
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_j3q77"]
 render_priority = 0
+next_pass = SubResource("StandardMaterial3D_08ke4")
 shader = ExtResource("3_08ke4")
 shader_parameter/texture_albedo = ExtResource("4_hrfj7")
 shader_parameter/scale = 1.0
