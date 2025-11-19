@@ -15,9 +15,19 @@ func _ready() -> void:
 		card_instance.set_meta("card", iter)
 		$card_list.add_child(card_instance)
 		card_instance.connect("gui_input", card_input.bind(card_instance))
-		card_instance.position.y = -800
+		card_instance.position.y = -400
 		card_instance.position.x = i * 200
 		i += 1
+
+func add_card(card:Card) -> void:
+	var card_instance:TextureRect = TextureRect.new()
+	card_instance.position.y = -400
+	card_instance.position.x = card_list.size() * 200
+	card_instance.texture = card.cover
+	card_instance.set_meta("card", card)
+	$card_list.add_child(card_instance)
+	card_instance.connect("gui_input", card_input.bind(card_instance))
+	card_list.push_back(card)
 
 func init_card() -> void:
 	var card_1:CardTarot = CardTarot.new()
@@ -43,20 +53,20 @@ func card_input(_event:InputEvent, card_instance:TextureRect) -> void:
 func deselect() -> void:
 	selected_card = null
 	for iter:TextureRect in $card_list.get_children():
-		iter.position.y = -800
+		iter.position.y = -400
 
 # 这里需要切实地让player感知到自己选了这张牌
 func select_card(card_instance:TextureRect) -> void:
 	var tween:Tween = create_tween()
 	if selected_card != card_instance.get_meta("card"):
 		selected_card = card_instance.get_meta("card")
-		tween.tween_property(card_instance, "position:y", -1000, 0.3).set_trans(Tween.TRANS_SINE)
+		tween.tween_property(card_instance, "position:y", -600, 0.3).set_trans(Tween.TRANS_SINE)
 	else:
 		selected_card = null
-		tween.tween_property(card_instance, "position:y", -800, 0.3).set_trans(Tween.TRANS_SINE)
+		tween.tween_property(card_instance, "position:y", -400, 0.3).set_trans(Tween.TRANS_SINE)
 	selected.emit()
 	for iter:TextureRect in $card_list.get_children():
-		iter.position.y = -800
+		iter.position.y = -400
 
 func show_card() -> void:
 	visible = true
