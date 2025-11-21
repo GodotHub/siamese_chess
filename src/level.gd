@@ -56,7 +56,7 @@ func state_ready_explore_idle(_arg:Dictionary) -> void:
 func state_exit_explore_idle() -> void:
 	Dialog.disconnect("on_next", change_state.bind("dialog"))
 	Dialog.clear()
-	chessboard.disconnect("ready_to_move", change_state.bind("explore_move"))
+	chessboard.disconnect("ready_to_move", change_state.bind("explore_ready_to_move"))
 
 func state_ready_explore_ready_to_move(_arg:Dictionary) -> void:
 	HoldCard.show_card()
