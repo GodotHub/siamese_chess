@@ -150,6 +150,10 @@ func show_move(by:int) -> void:
 func select(by:int) -> void:
 	selected = by
 
+func cancel() -> void:
+	selected = -1
+	hide_move()
+
 func hide_move() -> void:
 	$canvas.clear_pointer("move")
 
