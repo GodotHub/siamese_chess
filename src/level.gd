@@ -62,14 +62,16 @@ func ready_to_move_dialog_selection() -> void:
 	match Dialog.selected:
 		"卡牌":
 			change_state("explore_select_card")
-		"详情":
+		"档案":
+			Archive.open()
+			chessboard.cancel()
 			change_state("explore_idle")
 		"设置":
 			change_state("explore_idle")
 
 func state_ready_explore_ready_to_move(_arg:Dictionary) -> void:
 	#HoldCard.show_card()
-	Dialog.push_selection(["卡牌", "详情", "设置"], false, false)
+	Dialog.push_selection(["卡牌", "档案", "设置"], false, false)
 	Dialog.connect("on_next", ready_to_move_dialog_selection)
 	chessboard.connect("clicked_move", change_state.bind("explore_check_move"))
 	chessboard.connect("canceled", change_state.bind("explore_idle"))
