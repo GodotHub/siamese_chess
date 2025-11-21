@@ -58,17 +58,30 @@ func state_exit_explore_idle() -> void:
 	Dialog.clear()
 	chessboard.disconnect("ready_to_move", change_state.bind("explore_ready_to_move"))
 
+func ready_to_move_dialog_selection() -> void:
+	match Dialog.selected:
+		"卡牌":
+			change_state("explore_select_card")
+		"详情":
+			change_state("explore_idle")
+		"设置":
+			change_state("explore_idle")
+
 func state_ready_explore_ready_to_move(_arg:Dictionary) -> void:
-	HoldCard.show_card()
+	#HoldCard.show_card()
+	Dialog.push_selection(["卡牌", "详情", "设置"], false, false)
+	Dialog.connect("on_next", ready_to_move_dialog_selection)
 	chessboard.connect("clicked_move", change_state.bind("explore_check_move"))
 	chessboard.connect("canceled", change_state.bind("explore_idle"))
-	HoldCard.connect("selected", change_state.bind("explore_use_card"))
+	#HoldCard.connect("selected", change_state.bind("explore_use_card"))
 
 func state_exit_explore_ready_to_move() -> void:
-	HoldCard.hide_card()
+	#HoldCard.hide_card()
+	Dialog.clear()
+	Dialog.disconnect("on_next", ready_to_move_dialog_selection)
 	chessboard.disconnect("clicked_move", change_state.bind("explore_check_move"))
 	chessboard.disconnect("canceled", change_state.bind("explore_idle"))
-	HoldCard.disconnect("selected", change_state.bind("explore_use_card"))
+	#HoldCard.disconnect("selected", change_state.bind("explore_use_card"))
 
 func state_ready_explore_check_move(_arg:Dictionary) -> void:
 	var from:int = Chess.from(chessboard.confirm_move)
@@ -123,23 +136,30 @@ func state_ready_explore_check_interact(_arg:Dictionary) -> void:
 		return
 	change_state("explore_idle")
 
-func state_ready_explore_use_card(_arg:Dictionary) -> void:
+func state_ready_explore_select_card(_arg:Dictionary) -> void:
+	Dialog.set_title("选择一张卡")
 	HoldCard.show_card()
-	if !is_instance_valid(HoldCard.selected_card):
-		change_state("explore_ready_to_move")
-		return
+	HoldCard.connect("selected", change_state.bind("explore_use_card"))
+
+func state_exit_explore_select_card() -> void:
+	Dialog.clear()
+	HoldCard.hide_card()
+	HoldCard.disconnect("selected", change_state.bind("explore_use_card"))
+
+func state_ready_explore_use_card(_arg:Dictionary) -> void:
 	if HoldCard.selected_card.use_directly:
 		change_state("explore_using_card")
 		return
-	chessboard.connect("canceled", change_state.bind("explore_idle"))
+	Dialog.set_title("选择一个位置")
+	Dialog.push_selection(["取消"], false, false)
+	Dialog.connect("on_next", change_state.bind("explore_idle"))
 	chessboard.connect("clicked_move", change_state.bind("explore_using_card"))
-	HoldCard.connect("selected", change_state.bind("explore_use_card"))
 
 func state_exit_explore_use_card() -> void:
-	HoldCard.hide_card()
+	Dialog.clear()
+	Dialog.disconnect("on_next", change_state.bind("explore_idle"))
 	chessboard.disconnect("canceled", change_state.bind("explore_idle"))
 	chessboard.disconnect("clicked_move", change_state.bind("explore_using_card"))
-	HoldCard.disconnect("selected", change_state.bind("explore_use_card"))
 
 func state_ready_explore_using_card(_arg:Dictionary) -> void:
 	var card:Card = HoldCard.selected_card
