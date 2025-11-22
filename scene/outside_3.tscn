@@ -1,8 +1,7 @@
-[gd_scene load_steps=15 format=3 uid="uid://c6ey8gnor627h"]
+[gd_scene load_steps=14 format=3 uid="uid://c6ey8gnor627h"]
 
 [ext_resource type="Script" uid="uid://cjddqgsgfo4hw" path="res://src/outside.gd" id="1_4agfd"]
 [ext_resource type="PackedScene" uid="uid://b3ml34bssywkr" path="res://scene/player.tscn" id="2_x378j"]
-[ext_resource type="PackedScene" uid="uid://bmv2xhfws616g" path="res://scene/level.tscn" id="4_yxhtu"]
 [ext_resource type="PackedScene" uid="uid://dwvyc2qlcdag0" path="res://scene/chessboard_large.tscn" id="5_wlbto"]
 [ext_resource type="PackedScene" uid="uid://ekjtt81nkr2f" path="res://scene/flower.tscn" id="6_7hbya"]
 [ext_resource type="PackedScene" uid="uid://bfl3bn4u2am21" path="res://scene/tree.tscn" id="7_l2gin"]
@@ -46,38 +45,36 @@ shadow_enabled = true
 
 [node name="player" parent="." instance=ExtResource("2_x378j")]
 
-[node name="level" parent="." instance=ExtResource("4_yxhtu")]
+[node name="chessboard" parent="." instance=ExtResource("5_wlbto")]
 
-[node name="chessboard" parent="level" instance=ExtResource("5_wlbto")]
-
-[node name="camera" type="Camera3D" parent="level"]
+[node name="camera" type="Camera3D" parent="."]
 transform = Transform3D(-0.81532, -0.393181, 0.425043, 4.6825e-08, 0.734086, 0.679057, -0.57901, 0.553649, -0.598515, 6.94267, 6.60401, -9.89791)
 
-[node name="flower" parent="level" instance=ExtResource("6_7hbya")]
+[node name="flower" parent="." instance=ExtResource("6_7hbya")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0, -3)
 piece_type = 0
 
-[node name="tree_2" parent="level" instance=ExtResource("7_l2gin")]
+[node name="tree_2" parent="." instance=ExtResource("7_l2gin")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 0, -5)
 piece_type = 89
 
-[node name="shrub_3" parent="level" instance=ExtResource("8_j2blk")]
+[node name="shrub_3" parent="." instance=ExtResource("8_j2blk")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 0, 3)
 piece_type = 88
 
-[node name="shrub_4" parent="level" instance=ExtResource("8_j2blk")]
+[node name="shrub_4" parent="." instance=ExtResource("8_j2blk")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 0, 3)
 piece_type = 88
 
-[node name="shrub_5" parent="level" instance=ExtResource("8_j2blk")]
+[node name="shrub_5" parent="." instance=ExtResource("8_j2blk")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0, 3)
 piece_type = 88
 
-[node name="shrub_6" parent="level" instance=ExtResource("8_j2blk")]
+[node name="shrub_6" parent="." instance=ExtResource("8_j2blk")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 3)
 piece_type = 88
 
-[node name="marker_teleport" type="Marker3D" parent="level"]
+[node name="marker_teleport" type="Marker3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7, 0, 5)
 script = ExtResource("11_ebvva")
 to = "res://scene/outside_2.tscn"
@@ -86,58 +83,57 @@ args = {
 }
 metadata/_custom_type_script = "uid://bbi6kjxerg3hk"
 
-[node name="fence_7" parent="level" instance=ExtResource("9_0c3bi")]
+[node name="fence_7" parent="." instance=ExtResource("9_0c3bi")]
 transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -7, 0, 1)
 
-[node name="marker_bit_7" type="Marker3D" parent="level"]
+[node name="marker_bit_7" type="Marker3D" parent="."]
 transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -7, 0, 1)
 script = ExtResource("10_4agfd")
 piece = 35
 metadata/_custom_type_script = "uid://chtqhpiu556i1"
 
-[node name="fence_8" parent="level" instance=ExtResource("9_0c3bi")]
+[node name="fence_8" parent="." instance=ExtResource("9_0c3bi")]
 transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -7, 0, -1)
 
-[node name="marker_bit_8" type="Marker3D" parent="level"]
+[node name="marker_bit_8" type="Marker3D" parent="."]
 transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -7, 0, -1)
+visible = false
 script = ExtResource("10_4agfd")
 piece = 35
 metadata/_custom_type_script = "uid://chtqhpiu556i1"
 
-[node name="fence_9" parent="level" instance=ExtResource("9_0c3bi")]
+[node name="fence_9" parent="." instance=ExtResource("9_0c3bi")]
 transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -7, 0, -3)
 
-[node name="marker_bit_9" type="Marker3D" parent="level"]
+[node name="marker_bit_9" type="Marker3D" parent="."]
 transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -7, 0, -3)
 script = ExtResource("10_4agfd")
 piece = 35
 metadata/_custom_type_script = "uid://chtqhpiu556i1"
 
-[node name="fence_10" parent="level" instance=ExtResource("9_0c3bi")]
+[node name="fence_10" parent="." instance=ExtResource("9_0c3bi")]
 transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -7, 0, -5)
 
-[node name="marker_bit_10" type="Marker3D" parent="level"]
+[node name="marker_bit_10" type="Marker3D" parent="."]
 transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -7, 0, -5)
 script = ExtResource("10_4agfd")
 piece = 35
 metadata/_custom_type_script = "uid://chtqhpiu556i1"
 
-[node name="fence_11" parent="level" instance=ExtResource("9_0c3bi")]
+[node name="fence_11" parent="." instance=ExtResource("9_0c3bi")]
 transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -7, 0, -7)
 
-[node name="marker_bit_11" type="Marker3D" parent="level"]
+[node name="marker_bit_11" type="Marker3D" parent="."]
 transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -7, 0, -7)
 script = ExtResource("10_4agfd")
 piece = 35
 metadata/_custom_type_script = "uid://chtqhpiu556i1"
 
-[node name="marker_bit_13" type="Marker3D" parent="level"]
+[node name="marker_bit_13" type="Marker3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7, 0, 3)
 script = ExtResource("10_4agfd")
 piece = 35
 metadata/_custom_type_script = "uid://chtqhpiu556i1"
 
-[node name="fence_turn_2" parent="level" instance=ExtResource("11_4agfd")]
+[node name="fence_turn_2" parent="." instance=ExtResource("11_4agfd")]
 transform = Transform3D(1, 0, 1.74846e-07, 0, 1, 0, -1.74846e-07, 0, 1, -7, 0, 3)
-
-[editable path="level"]

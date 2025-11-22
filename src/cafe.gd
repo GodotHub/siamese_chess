@@ -1,85 +1,86 @@
-extends Node3D
+extends Level
 
 signal game_ended
 
-var history_zobrist:PackedInt64Array = []
-var history_state:Array[State] = []
-var history_event:Array[Dictionary] = []
-var engine:ChessEngine = PastorEngine.new()
+var standard_history_zobrist:PackedInt64Array = []
+var standard_history_state:Array[State] = []
+var standard_history_event:Array[Dictionary] = []
+var standard_engine:ChessEngine = PastorEngine.new()
 
 func _ready() -> void:
+	super._ready()
 	var cheshire_by:int = get_meta("by")
 	var cheshire_instance:Actor = load("res://scene/cheshire.tscn").instantiate()
-	cheshire_instance.position = $level/chessboard.convert_name_to_position(Chess.to_position_name(cheshire_by))
-	$level/chessboard.state.add_piece(cheshire_by, "k".unicode_at(0))
-	$level/chessboard.add_piece_instance(cheshire_instance, cheshire_by)
+	cheshire_instance.position = $chessboard.convert_name_to_position(Chess.to_position_name(cheshire_by))
+	$chessboard.state.add_piece(cheshire_by, "k".unicode_at(0))
+	$chessboard.add_piece_instance(cheshire_instance, cheshire_by)
 	
-	engine.connect("search_finished", in_game_black)
-	$level/table_0/chessboard_standard.connect("clicked_move", in_game_black_check_move)
+	standard_engine.connect("search_finished", in_game_black)
+	$table_0/chessboard_standard.connect("clicked_move", in_game_black_check_move)
 
-	engine.set_max_depth(6)
-	engine.set_think_time(INF)
-	$player.force_set_camera($level/camera)
-	$level/table_0/chessboard_standard.set_enabled(false)
-	$level/chessboard/pieces/pastor.play_animation("thinking")
-	$level.interact_list[0x54] = {"下棋": interact_pastor}
-	$level.title[0x54] = "玉兰"
-	$level.interact_list[0x55] = {"下棋": interact_pastor}
-	$level.title[0x55] = "玉兰"
-	$level.interact_list[0x25] = {"": change_scene}
+	standard_engine.set_max_depth(6)
+	standard_engine.set_think_time(INF)
+	$player.force_set_camera($camera)
+	$table_0/chessboard_standard.set_enabled(false)
+	$chessboard/pieces/pastor.play_animation("thinking")
+	interact_list[0x54] = {"下棋": interact_pastor}
+	title[0x54] = "玉兰"
+	interact_list[0x55] = {"下棋": interact_pastor}
+	title[0x55] = "玉兰"
+	interact_list[0x25] = {"": change_scene}
 
 func interact_pastor() -> void:
-	var from:int = $level/chessboard.state.bit_index("k".unicode_at(0))[0]
+	var from:int = $chessboard.state.bit_index("k".unicode_at(0))[0]
 	from = Chess.to_x88(from)
 	if from != 0x54:
-		$level/chessboard.execute_move(Chess.create(from, 0x54, 0))
-	$level/chessboard.set_enabled(false)
-	$level/table_0/chessboard_standard.set_enabled(true)
-	$level/chessboard/pieces/cheshire.set_position($level/chessboard.convert_name_to_position("e2"))
-	$level/chessboard/pieces/cheshire.play_animation("thinking")
-	$player.force_set_camera($level/camera_chessboard)
+		$chessboard.execute_move(Chess.create(from, 0x54, 0))
+	$chessboard.set_enabled(false)
+	$table_0/chessboard_standard.set_enabled(true)
+	$chessboard/pieces/cheshire.set_position($chessboard.convert_name_to_position("e2"))
+	$chessboard/pieces/cheshire.play_animation("thinking")
+	$player.force_set_camera($camera_chessboard)
 	in_game()
 	await game_ended
 
 func in_game() -> void:
-	$level/table_0/chessboard_standard.state = RuleStandard.create_initial_state()
-	$level/table_0/chessboard_standard.add_default_piece_set()
+	$table_0/chessboard_standard.state = RuleStandard.create_initial_state()
+	$table_0/chessboard_standard.add_default_piece_set()
 	in_game_white.call_deferred()
 
 func in_game_white() -> void:
-	if $level/table_0/chessboard_standard.confirm_move != 0:
-		history_zobrist.push_back($level/table_0/chessboard_standard.state.get_zobrist())
-		history_state.push_back($level/table_0/chessboard_standard.state.duplicate())
-		var rollback_event:Dictionary = $level/table_0/chessboard_standard.execute_move($level/table_0/chessboard_standard.confirm_move)
-		history_event.push_back(rollback_event)
-	if RuleStandard.get_end_type($level/table_0/chessboard_standard.state) != "":
+	if $table_0/chessboard_standard.confirm_move != 0:
+		standard_history_zobrist.push_back($table_0/chessboard_standard.state.get_zobrist())
+		standard_history_state.push_back($table_0/chessboard_standard.state.duplicate())
+		var rollback_event:Dictionary = $table_0/chessboard_standard.execute_move($table_0/chessboard_standard.confirm_move)
+		standard_history_event.push_back(rollback_event)
+	if RuleStandard.get_end_type($table_0/chessboard_standard.state) != "":
 		game_end.call_deferred()
 		return
-	$level/table_0/chessboard_standard.set_valid_move([])
-	engine.start_search($level/table_0/chessboard_standard.state, 0, history_zobrist, Callable())
+	$table_0/chessboard_standard.set_valid_move([])
+	standard_engine.start_search($table_0/chessboard_standard.state, 0, standard_history_zobrist, Callable())
 
 func in_game_black() -> void:
-	if history_event.size() <= 1:
+	if standard_history_event.size() <= 1:
 		Dialog.push_selection(["离开对局"], false, false)
 	else:
 		Dialog.push_selection(["悔棋", "离开对局"], false, false)
 	Dialog.connect("on_next", on_select_dialog, ConnectFlags.CONNECT_ONE_SHOT)
-	history_zobrist.push_back($level/table_0/chessboard_standard.state.get_zobrist())
-	history_state.push_back($level/table_0/chessboard_standard.state.duplicate())
-	var rollback_event:Dictionary = $level/table_0/chessboard_standard.execute_move(engine.get_search_result())
-	history_event.push_back(rollback_event)
-	if RuleStandard.get_end_type($level/table_0/chessboard_standard.state) != "":
+	standard_history_zobrist.push_back($table_0/chessboard_standard.state.get_zobrist())
+	standard_history_state.push_back($table_0/chessboard_standard.state.duplicate())
+	var rollback_event:Dictionary = $table_0/chessboard_standard.execute_move(standard_engine.get_search_result())
+	standard_history_event.push_back(rollback_event)
+	if RuleStandard.get_end_type($table_0/chessboard_standard.state) != "":
 		game_end.call_deferred()
 		return
-	$level/table_0/chessboard_standard.set_valid_move(RuleStandard.generate_valid_move($level/table_0/chessboard_standard.state, 1))
+	$table_0/chessboard_standard.set_valid_move(RuleStandard.generate_valid_move($table_0/chessboard_standard.state, 1))
 
 func in_game_black_check_move() -> void:
 	Dialog.clear()
 	Dialog.disconnect("on_next", on_select_dialog)
-	var chessboard:Chessboard = $level/table_0/chessboard_standard
-	var from:int = Chess.from(chessboard.confirm_move)
-	var to:int = Chess.to(chessboard.confirm_move)
-	var valid_move:Dictionary = chessboard.valid_move
+	var standard_chessboard:Chessboard = $table_0/chessboard_standard
+	var from:int = Chess.from(standard_chessboard.confirm_move)
+	var to:int = Chess.to(standard_chessboard.confirm_move)
+	var valid_move:Dictionary = standard_chessboard.valid_move
 	if from & 0x88 || to & 0x88 || !valid_move.has(from):
 		in_game_black.call_deferred()
 		return
@@ -90,13 +91,13 @@ func in_game_black_check_move() -> void:
 	elif move_list.size() > 1:
 		in_game_black_extra_move.call_deferred(move_list)
 	else:
-		chessboard.confirm_move = move_list[0]
+		standard_chessboard.confirm_move = move_list[0]
 		in_game_white.call_deferred()
 
 func in_game_black_extra_move(move_list:PackedInt32Array) -> void:
 	var decision_list:PackedStringArray = []
 	var decision_to_move:Dictionary = {}
-	var chessboard:Chessboard = $level/table_0/chessboard_standard
+	var standard_chessboard:Chessboard = $table_0/chessboard_standard
 	for iter:int in move_list:
 		decision_list.push_back("%c" % Chess.extra(iter))
 		decision_to_move[decision_list[-1]] = iter
@@ -105,24 +106,24 @@ func in_game_black_extra_move(move_list:PackedInt32Array) -> void:
 		if Dialog.selected == "cancel":
 			in_game_black.call_deferred()
 		else:
-			chessboard.confirm_move = decision_to_move[Dialog.selected]
+			standard_chessboard.confirm_move = decision_to_move[Dialog.selected]
 			in_game_white.call_deferred()
 	)
 	Dialog.push_selection(decision_list, true, true)
 
 func on_select_dialog() -> void:
 	if Dialog.selected == "悔棋":
-		if history_event.size() <= 1:
+		if standard_history_event.size() <= 1:
 			Dialog.push_selection(["离开对局"], false, false)
 			return
-		$level/table_0/chessboard_standard.state = history_state[-2]
-		$level/table_0/chessboard_standard.set_valid_move(RuleStandard.generate_valid_move(history_state[-2], 1))
+		$table_0/chessboard_standard.state = standard_history_state[-2]
+		$table_0/chessboard_standard.set_valid_move(RuleStandard.generate_valid_move(standard_history_state[-2], 1))
 		for i:int in 2:
-			$level/table_0/chessboard_standard.receive_rollback_event(history_event[-1])
-			history_zobrist.resize(history_zobrist.size() - 1)
-			history_state.pop_back()
-			history_event.pop_back()
-		if history_event.size() <= 1:
+			$table_0/chessboard_standard.receive_rollback_event(standard_history_event[-1])
+			standard_history_zobrist.resize(standard_history_zobrist.size() - 1)
+			standard_history_state.pop_back()
+			standard_history_event.pop_back()
+		if standard_history_event.size() <= 1:
 			Dialog.push_selection(["离开对局"], false, false)
 		else:
 			Dialog.push_selection(["悔棋", "离开对局"], false, false)
@@ -131,11 +132,11 @@ func on_select_dialog() -> void:
 		game_end.call_deferred()
 
 func game_end() -> void:
-	$player.force_set_camera($level/camera)
-	$level/chessboard/pieces/cheshire.play_animation("battle_idle")
-	$level/chessboard/pieces/cheshire.set_position($level/chessboard.convert_name_to_position("e3"))
-	$level/chessboard.set_enabled(true)
-	$level/table_0/chessboard_standard.set_enabled(false)
+	$player.force_set_camera($camera)
+	$chessboard/pieces/cheshire.play_animation("battle_idle")
+	$chessboard/pieces/cheshire.set_position($chessboard.convert_name_to_position("e3"))
+	$chessboard.set_enabled(true)
+	$table_0/chessboard_standard.set_enabled(false)
 	game_ended.emit()
 
 func change_scene() -> void:
