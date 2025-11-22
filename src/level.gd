@@ -127,6 +127,10 @@ func state_ready_explore_check_attack(_arg:Dictionary) -> void:
 		if !chessboard.state.has_piece(to):
 			continue
 		if char(chessboard.state.get_piece(to)) in ["k", "q", "r", "b", "n", "p"]:
+			chessboard.state.set_turn(0)
+			chessboard.state.set_castle(0xF)
+			chessboard.state.set_step_to_draw(0)
+			chessboard.state.set_round(1)
 			change_state("versus_enemy")
 			return
 	change_state("explore_check_interact", _arg)
