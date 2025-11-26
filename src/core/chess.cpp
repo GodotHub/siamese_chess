@@ -192,6 +192,12 @@ void Chess::_bind_methods()
 	godot::ClassDB::bind_static_method(get_class_static(), godot::D_METHOD("rotate_90"), &Chess::rotate_90);
 	godot::ClassDB::bind_static_method(get_class_static(), godot::D_METHOD("rotate_45"), &Chess::rotate_45);
 	godot::ClassDB::bind_static_method(get_class_static(), godot::D_METHOD("rotate_315"), &Chess::rotate_315);
+	godot::ClassDB::bind_static_method(get_class_static(), godot::D_METHOD("rotate_45_length"), &Chess::rotate_45_length);
+	godot::ClassDB::bind_static_method(get_class_static(), godot::D_METHOD("rotate_315_length"), &Chess::rotate_315_length);
+	godot::ClassDB::bind_static_method(get_class_static(), godot::D_METHOD("rotate_0_shift"), &Chess::rotate_0_shift);
+	godot::ClassDB::bind_static_method(get_class_static(), godot::D_METHOD("rotate_90_shift"), &Chess::rotate_90_shift);
+	godot::ClassDB::bind_static_method(get_class_static(), godot::D_METHOD("rotate_45_shift"), &Chess::rotate_45_shift);
+	godot::ClassDB::bind_static_method(get_class_static(), godot::D_METHOD("rotate_315_shift"), &Chess::rotate_315_shift);
 	godot::ClassDB::bind_static_method(get_class_static(), godot::D_METHOD("to_64"), &Chess::to_64);
 	godot::ClassDB::bind_static_method(get_class_static(), godot::D_METHOD("to_x88"), &Chess::to_x88);
 	godot::ClassDB::bind_static_method(get_class_static(), godot::D_METHOD("mask"), &Chess::mask);
