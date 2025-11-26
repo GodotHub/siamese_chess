@@ -13,6 +13,12 @@ class Chess : public godot::Object
 		static int rotate_90(int n);
 		static int rotate_45(int n);
 		static int rotate_315(int n);
+		static int rotate_45_length(int n);
+		static int rotate_315_length(int n);
+		static int rotate_0_shift(int n);
+		static int rotate_90_shift(int n);
+		static int rotate_45_shift(int n);
+		static int rotate_315_shift(int n);
 		static int to_64(int n);
 		static int to_x88(int n);
 		static int group(int piece);
