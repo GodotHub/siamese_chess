@@ -114,7 +114,50 @@ RuleStandard::RuleStandard()
 			diag_a8h1_attacks[i][j] = bit;
 		}
 	}
-	
+	for (int i = 0; i < 64; i++)	//马
+	{
+		int from = Chess::to_x88(i);
+		for (int j = 0; j < directions_horse.size(); j++)
+		{
+			int to = from + directions_horse[j];
+			if (to & 0x88)
+			{
+				continue;
+			}
+			horse_attacks[i] |= Chess::mask(Chess::to_64(to));
+		}
+	}
+	for (int i = 0; i < 64; i++)	//王
+	{
+		int from = Chess::to_x88(i);
+		for (int j = 0; j < directions_eight_way.size(); j++)
+		{
+			int to = from + directions_eight_way[j];
+			if (to & 0x88)
+			{
+				continue;
+			}
+			king_attacks[i] |= Chess::mask(Chess::to_64(to));
+		}
+	}
+	for (int i = 0; i < 64; i++)	//兵，且不算吃过路兵
+	{
+		int from = Chess::to_x88(i);
+		int directions_pawn[4][2] = {{-17, -15}, {-15, 17}, {15, 17}, {15, -17}};	//上、右、下、左
+		for (int j = 0; j < 4; j++)
+		{
+			int to = from + directions_pawn[j][0];
+			if (!(to & 0x88))
+			{
+				pawn_attacks[i][j] |= Chess::mask(Chess::to_64(to));
+			}
+			to = from + directions_pawn[j][1];
+			if (!(to & 0x88))
+			{
+				pawn_attacks[i][j] |= Chess::mask(Chess::to_64(to));
+			}
+		}
+	}
 }
 
 godot::String RuleStandard::get_end_type(godot::Ref<State>_state)

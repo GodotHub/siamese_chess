@@ -46,6 +46,9 @@ class RuleStandard : public godot::Object
 		int64_t file_attacks[64][256];	//将棋盘转置后使用
 		int64_t diag_a1h8_attacks[64][256];
 		int64_t diag_a8h1_attacks[64][256];
+		int64_t horse_attacks[64];
+		int64_t king_attacks[64];
+		int64_t pawn_attacks[64][4];	//游戏特殊原因，兵会被设定为四种方向
 };
 
 #endif
