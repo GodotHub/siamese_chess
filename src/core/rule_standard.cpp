@@ -539,80 +539,61 @@ bool RuleStandard::is_move_valid(godot::Ref<State>_state, int _group, int _move)
 
 bool RuleStandard::is_check(godot::Ref<State> _state, int _group)
 {
+	int enemy_king = _group == 0 ? 'k' : 'K';
 	for (State::PieceIterator iter = _state->piece_iterator_begin(); !iter.end(); iter.next())
 	{
-		int _from = iter.pos();
+		int from = iter.pos();
+		int from_64 = Chess::to_64(from);
 		int from_piece = iter.piece();
 		if (_group != Chess::group(from_piece))
 		{
 			continue;
 		}
-		godot::PackedInt32Array *directions = nullptr;
 		if ((from_piece & 95) == 'P')
 		{
 			int front = from_piece == 'P' ? -16 : 16;
-			bool on_start = (_from >> 4) == (from_piece == 'P' ? 6 : 1);
-			bool on_end = (_from >> 4) == (from_piece == 'P' ? 1 : 6);
-			if (is_enemy(_state, _from, _from + front + 1) && (_state->get_piece(_from + front + 1) & 95) == 'K'
-			|| !((_from + front + 1) & 0x88) && on_end && _state->get_king_passant() != -1 && abs(_state->get_king_passant() - (_from + front + 1)) <= 1)
+			bool on_start = (from >> 4) == (from_piece == 'P' ? 6 : 1);
+			bool on_end = (from >> 4) == (from_piece == 'P' ? 1 : 6);
+			if (pawn_attacks[from_64][_group == 0 ? 0 : 2] & _state->get_bit(enemy_king))
 			{
 				return true;
 			}
-			if (is_enemy(_state, _from, _from + front - 1) && (_state->get_piece(_from + front - 1) & 95) == 'K'
-			|| !((_from + front - 1) & 0x88) && on_end && _state->get_king_passant() != -1 && abs(_state->get_king_passant() - (_from + front - 1)) <= 1)
+			if (on_end && !((from + front + 1) & 0x88) && _state->get_king_passant() != -1 && abs(_state->get_king_passant() - (from + front + 1)) <= 1)
+			{
+				return true;
+			}
+			if (on_end && !((from + front - 1) & 0x88) && _state->get_king_passant() != -1 && abs(_state->get_king_passant() - (from + front - 1)) <= 1)
 			{
 				return true;
 			}
 			continue;
 		}
-		else if ((from_piece & 95) == 'K' || (from_piece & 95) == 'Q')
+		if ((from_piece & 95) == 'K')
 		{
-			directions = &directions_eight_way;
-		}
-		else if ((from_piece & 95) == 'R')
-		{
-			directions = &directions_straight;
-		}
-		else if ((from_piece & 95) == 'N')
-		{
-			directions = &directions_horse;
-		}
-		else if ((from_piece & 95) == 'B')
-		{
-			directions = &directions_diagonal;
-		}
-		if (!directions)
-		{
+			if (king_attacks[from_64] & _state->get_bit(enemy_king))
+			{
+				return true;
+			}
 			continue;
 		}
-		for (int i = 0; i < directions->size(); i++)
+		if ((from_piece & 95) == 'Q' || (from_piece & 95) == 'B')
 		{
-			int to = _from;
-			int to_piece = _state->get_piece(to);
-			while (true)
+			int64_t diag_a8h1 = (uint64_t(_state->get_bit(')')) >> Chess::rotate_45_shift(from_64)) & Chess::rotate_45_length_mask(from_64);
+			int64_t diag_a1h8 = (uint64_t(_state->get_bit('(')) >> Chess::rotate_315_shift(from_64)) & Chess::rotate_315_length_mask(from_64);
+			int64_t bishop_attacks = diag_a1h8_attacks[from_64][diag_a1h8] | diag_a8h1_attacks[from_64][diag_a8h1];
+			if (bishop_attacks & _state->get_bit(enemy_king))
 			{
-				to += (*directions)[i];
-				if (to & 0x88)
-				{
-					break;
-				}
-				if (_state->get_king_passant() != -1 && abs(to - _state->get_king_passant()) <= 1 && (to >> 4) == _group * 7)
-				{
-					return true;
-				}
-				to_piece = _state->get_piece(to);
-				if (is_blocked(_state, _from, to) || is_enemy(_state, _from, to))
-				{
-					if (!Chess::is_same_group(from_piece, to_piece) && (to_piece & 95) == 'K')
-					{
-						return true;
-					}
-					break;
-				}
-				if ((from_piece & 95) == 'K' || (from_piece & 95) == 'N')
-				{
-					break;
-				}
+				return true;
+			}
+		}
+		if ((from_piece & 95) == 'Q' || (from_piece & 95) == 'R')
+		{
+			int64_t rank = (uint64_t(_state->get_bit('*')) >> Chess::rotate_0_shift(from_64)) & 7;
+			int64_t file = (uint64_t(_state->get_bit('!')) >> Chess::rotate_90_shift(from_64)) & 7;
+			int64_t rook_attacks = rank_attacks[from_64][rank] | file_attacks[from_64][file];
+			if (rook_attacks & _state->get_bit(enemy_king))
+			{
+				return true;
 			}
 		}
 	}
