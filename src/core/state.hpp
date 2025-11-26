@@ -52,8 +52,9 @@ class State : public godot::RefCounted
 		int pieces[128] = {0};
 		int64_t bit[128] = {0};
 		//'*'表示所有棋子
-		//'^'表示高处的格子
-		//'v'表示低处的格子	不能够从低到高地走棋
+		//'!'旋转90度后的棋盘
+		//'('逆时针旋转45度的棋盘
+		//')'顺时针旋转45度的棋盘
 		int turn = 0;
 		int castle = 0xF;
 		int en_passant = -1;

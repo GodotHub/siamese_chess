@@ -108,10 +108,15 @@ int State::has_piece(int _by)
 
 void State::add_piece(int _by, int _piece)
 {
-	int64_t by_mask = Chess::mask(Chess::to_64(_by));
+	int by_64 = Chess::to_64(_by);
+	int64_t by_mask = Chess::mask(by_64);
 	pieces[_by] = _piece;
-	bit[_piece] |= by_mask;
-	bit[Chess::group(_piece) == 0 ? 'A' : 'a'] |= by_mask;
+	bit[_piece] ^= by_mask;
+	bit[Chess::group(_piece) == 0 ? 'A' : 'a'] ^= by_mask;
+	bit['*'] ^= by_mask;
+	bit['!'] ^= Chess::mask(Chess::rotate_90(by_64));
+	bit[')'] ^= Chess::mask(Chess::rotate_45(by_64));
+	bit['('] ^= Chess::mask(Chess::rotate_315(by_64));
 	zobrist ^= ZobristHash::get_singleton()->hash_piece(_piece, _by);
 }
 
@@ -119,11 +124,16 @@ void State::capture_piece(int _by)
 {
 	if (has_piece(_by))
 	{
+		int by_64 = Chess::to_64(_by);
 		int piece = pieces[_by];
-		int64_t by_mask = Chess::mask(Chess::to_64(_by));
+		int64_t by_mask = Chess::mask(by_64);
 		zobrist ^= ZobristHash::get_singleton()->hash_piece(piece, _by);
-		bit[piece] &= ~by_mask;
-		bit[Chess::group(piece) == 0 ? 'A' : 'a'] &= ~by_mask;
+		bit[piece] ^= by_mask;
+		bit[Chess::group(piece) == 0 ? 'A' : 'a'] ^= by_mask;
+		bit['*'] ^= by_mask;
+		bit['!'] ^= Chess::mask(Chess::rotate_90(by_64));
+		bit[')'] ^= Chess::mask(Chess::rotate_45(by_64));
+		bit['('] ^= Chess::mask(Chess::rotate_315(by_64));
 		pieces[_by] = 0;
 		// 虽然大多数情况是攻击者移到被攻击者上，但是吃过路兵是例外，后续可能会出现类似情况，所以还是得手多一下
 	}
@@ -131,15 +141,25 @@ void State::capture_piece(int _by)
 
 void State::move_piece(int _from, int _to)
 {
+	int from_64 = Chess::to_64(_from);
+	int to_64 = Chess::to_64(_to);
 	int piece = get_piece(_from);
-	int64_t from_mask = Chess::mask(Chess::to_64(_from));
-	int64_t to_mask = Chess::mask(Chess::to_64(_to));
+	int64_t from_mask = Chess::mask(from_64);
+	int64_t to_mask = Chess::mask(to_64);
 	zobrist ^= ZobristHash::get_singleton()->hash_piece(piece, _from);
 	zobrist ^= ZobristHash::get_singleton()->hash_piece(piece, _to);
-	bit[piece] &= ~from_mask;
-	bit[Chess::group(piece) == 0 ? 'A' : 'a'] &= ~from_mask;
-	bit[piece] |= to_mask;
-	bit[Chess::group(piece) == 0 ? 'A' : 'a'] |= to_mask;
+	bit[piece] ^= from_mask;
+	bit[Chess::group(piece) == 0 ? 'A' : 'a'] ^= from_mask;
+	bit['*'] ^= from_mask;
+	bit['!'] ^= Chess::mask(Chess::rotate_90(from_64));
+	bit[')'] ^= Chess::mask(Chess::rotate_45(from_64));
+	bit['('] ^= Chess::mask(Chess::rotate_315(from_64));
+	bit[piece] ^= to_mask;
+	bit[Chess::group(piece) == 0 ? 'A' : 'a'] ^= to_mask;
+	bit['*'] ^= to_mask;
+	bit['!'] ^= Chess::mask(Chess::rotate_90(to_64));
+	bit[')'] ^= Chess::mask(Chess::rotate_45(to_64));
+	bit['('] ^= Chess::mask(Chess::rotate_315(to_64));
 	pieces[_to] = pieces[_from];
 	pieces[_from] = 0;
 }
