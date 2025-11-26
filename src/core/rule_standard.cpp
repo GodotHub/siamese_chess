@@ -14,6 +14,107 @@ RuleStandard::RuleStandard()
 	directions_straight = {-16, -1, 1, 16};
 	directions_eight_way = {-17, -16, -15, -1, 1, 15, 16, 17};
 	directions_horse = {33, 31, 18, 14, -33, -31, -18, -14};
+	for (int i = 0; i < 64; i++)	//直线行为准
+	{
+		int64_t rank = (i >> 3);
+		int64_t file = (i & 7);
+		for (int j = 0; j < 256; j++)
+		{
+			int64_t bit = 0;
+			for (int k = i - 1, l = (i & 7) - 1; k >= (rank << 3); k--, l--)	//试着向左走
+			{
+				bit |= Chess::mask(k);
+				if (Chess::mask(l) & j)
+				{
+					break;
+				}
+			}
+			for (int k = i + 1, l = (i & 7) + 1; k < ((rank + 1) << 3); k++, l++)	//试着向右走
+			{
+				bit |= Chess::mask(k);
+				if (Chess::mask(l) & j)
+				{
+					break;
+				}
+			}
+			rank_attacks[i][j] = bit;
+		}
+	}
+	for (int i = 0; i < 64; i++)	//直线列
+	{
+		int64_t rank = (i >> 3);
+		int64_t file = (i & 7);
+		for (int j = 0; j < 256; j++)
+		{
+			int64_t bit = 0;
+			for (int k = i - 8, l = (i & 7) - 1; k >= (rank << 3); k -= 8, l--)	//试着向上走
+			{
+				bit |= Chess::mask(k);
+				if (Chess::mask(l) & j)
+				{
+					break;
+				}
+			}
+			for (int k = i + 8, l = (i & 7) + 1; k < ((rank + 1) << 3); k += 8, l++)	//试着向下走
+			{
+				bit |= Chess::mask(k);
+				if (Chess::mask(l) & j)
+				{
+					break;
+				}
+			}
+			file_attacks[i][j] = bit;
+		}
+	}
+	for (int i = 0; i < 64; i++)	//斜线a1h8
+	{
+		for (int j = 0; j < 256; j++)
+		{
+			int64_t bit = 0;
+			for (int k = i - 7, l = (i & 7) - 1; k >= 0; k -= 7, l--)	//不超界即可，往右上
+			{
+				bit |= Chess::mask(k);
+				if (Chess::mask(l) & j)
+				{
+					break;
+				}
+			}
+			for (int k = i + 7, l = (i & 7) + 1; k < 64; k += 7, l++)	//往左下
+			{
+				bit |= Chess::mask(k);
+				if (Chess::mask(l) & j)
+				{
+					break;
+				}
+			}
+			diag_a1h8_attacks[i][j] = bit;
+		}
+	}
+	for (int i = 0; i < 64; i++)	//斜线a8h1
+	{
+		for (int j = 0; j < 256; j++)
+		{
+			int64_t bit = 0;
+			for (int k = i - 9, l = (i & 7) - 1; k >= 0; k -= 9, l--)	//往左上
+			{
+				bit |= Chess::mask(k);
+				if (Chess::mask(l) & j)
+				{
+					break;
+				}
+			}
+			for (int k = i + 9, l = (i & 7) + 1; k < 64; k += 9, l++)	//往右下
+			{
+				bit |= Chess::mask(k);
+				if (Chess::mask(l) & j)
+				{
+					break;
+				}
+			}
+			diag_a8h1_attacks[i][j] = bit;
+		}
+	}
+	
 }
 
 godot::String RuleStandard::get_end_type(godot::Ref<State>_state)

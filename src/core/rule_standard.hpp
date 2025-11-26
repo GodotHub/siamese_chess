@@ -42,6 +42,10 @@ class RuleStandard : public godot::Object
 		godot::PackedInt32Array directions_straight;
 		godot::PackedInt32Array directions_eight_way;
 		godot::PackedInt32Array directions_horse;
+		int64_t rank_attacks[64][256];
+		int64_t file_attacks[64][256];	//将棋盘转置后使用
+		int64_t diag_a1h8_attacks[64][256];
+		int64_t diag_a8h1_attacks[64][256];
 };
 
 #endif
