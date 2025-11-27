@@ -16,23 +16,23 @@ RuleStandard::RuleStandard()
 	directions_horse = {33, 31, 18, 14, -33, -31, -18, -14};
 	for (int i = 0; i < 64; i++)	//直线行为准
 	{
-		int64_t rank = (i >> 3);
-		int64_t file = (i & 7);
+
 		for (int j = 0; j < 256; j++)
 		{
+			uint64_t barrel = j << Chess::rotate_0_shift(i);
 			int64_t bit = 0;
-			for (int k = i - 1, l = (i & 7) - 1; k >= (rank << 3); k--, l--)	//试着向左走
+			for (int k = Chess::to_x88(i) - 1; !(k & 0x88); k--)	//试着向左走
 			{
 				bit |= Chess::mask(k);
-				if (Chess::mask(l) & j)
+				if (Chess::mask(Chess::to_64(k)) & barrel)
 				{
 					break;
 				}
 			}
-			for (int k = i + 1, l = (i & 7) + 1; k < ((rank + 1) << 3); k++, l++)	//试着向右走
+			for (int k = Chess::to_x88(i) + 1; !(k & 0x88); k++)	//试着向右走
 			{
 				bit |= Chess::mask(k);
-				if (Chess::mask(l) & j)
+				if (Chess::mask(Chess::to_64(k)) & barrel)
 				{
 					break;
 				}
@@ -42,23 +42,31 @@ RuleStandard::RuleStandard()
 	}
 	for (int i = 0; i < 64; i++)	//直线列
 	{
-		int64_t rank = (i >> 3);
-		int64_t file = (i & 7);
 		for (int j = 0; j < 256; j++)
 		{
+			uint64_t barrel_rotated = j << Chess::rotate_90_shift(i);
+			uint64_t barrel = 0;
+			for (int i = 0; i < 64; i++)
+			{
+				if (barrel_rotated & 1)
+				{
+					barrel |= Chess::mask(Chess::rotate_90_reverse(i));
+				}
+				barrel_rotated >>= 1;
+			}
 			int64_t bit = 0;
-			for (int k = i - 8, l = (i & 7) - 1; k >= (rank << 3); k -= 8, l--)	//试着向上走
+			for (int k = Chess::to_x88(i) - 16; !(k & 0x88); k -= 16)	//试着向上走
 			{
 				bit |= Chess::mask(k);
-				if (Chess::mask(l) & j)
+				if (Chess::mask(Chess::to_64(k)) & barrel)
 				{
 					break;
 				}
 			}
-			for (int k = i + 8, l = (i & 7) + 1; k < ((rank + 1) << 3); k += 8, l++)	//试着向下走
+			for (int k = Chess::to_x88(i) + 16; !(k & 0x88); k += 16)	//试着向下走
 			{
 				bit |= Chess::mask(k);
-				if (Chess::mask(l) & j)
+				if (Chess::mask(Chess::to_64(k)) & barrel)
 				{
 					break;
 				}
@@ -68,21 +76,31 @@ RuleStandard::RuleStandard()
 	}
 	for (int i = 0; i < 64; i++)	//斜线a1h8
 	{
-		for (int j = 0; j < 256; j++)
+		for (int j = 0; j < Chess::rotate_45_length(i); j++)
 		{
+			uint64_t barrel_rotated = j << Chess::rotate_45_shift(i);
+			uint64_t barrel = 0;
+			for (int i = 0; i < 64; i++)
+			{
+				if (barrel_rotated & 1)
+				{
+					barrel |= Chess::mask(Chess::rotate_45_reverse(i));
+				}
+				barrel_rotated >>= 1;
+			}
 			int64_t bit = 0;
-			for (int k = i - 7, l = (i & 7) - 1; k >= 0; k -= 7, l--)	//不超界即可，往右上
+			for (int k = Chess::to_x88(i) - 15; !(k & 0x88); k -= 15)	//不超界即可，往右上
 			{
 				bit |= Chess::mask(k);
-				if (Chess::mask(l) & j)
+				if (Chess::mask(Chess::to_64(k)) & barrel)
 				{
 					break;
 				}
 			}
-			for (int k = i + 7, l = (i & 7) + 1; k < 64; k += 7, l++)	//往左下
+			for (int k = Chess::to_x88(i) + 15; !(k & 0x88); k += 15)	//往左下
 			{
 				bit |= Chess::mask(k);
-				if (Chess::mask(l) & j)
+				if (Chess::mask(Chess::to_64(k)) & barrel)
 				{
 					break;
 				}
@@ -92,21 +110,31 @@ RuleStandard::RuleStandard()
 	}
 	for (int i = 0; i < 64; i++)	//斜线a8h1
 	{
-		for (int j = 0; j < 256; j++)
+		for (int j = 0; j < Chess::rotate_315_length(i); j++)
 		{
+			uint64_t barrel_rotated = j << Chess::rotate_315_shift(i);
+			uint64_t barrel = 0;
+			for (int i = 0; i < 64; i++)
+			{
+				if (barrel_rotated & 1)
+				{
+					barrel |= Chess::mask(Chess::rotate_315_reverse(i));
+				}
+				barrel_rotated >>= 1;
+			}
 			int64_t bit = 0;
-			for (int k = i - 9, l = (i & 7) - 1; k >= 0; k -= 9, l--)	//往左上
+			for (int k = Chess::to_x88(i) - 17; !(k & 0x88); k -= 17)	//往左上
 			{
 				bit |= Chess::mask(k);
-				if (Chess::mask(l) & j)
+				if (Chess::mask(Chess::to_64(k)) & barrel)
 				{
 					break;
 				}
 			}
-			for (int k = i + 9, l = (i & 7) + 1; k < 64; k += 9, l++)	//往右下
+			for (int k = Chess::to_x88(i) + 17; !(k & 0x88); k += 17)	//往右下
 			{
 				bit |= Chess::mask(k);
-				if (Chess::mask(l) & j)
+				if (Chess::mask(Chess::to_64(k)) & barrel)
 				{
 					break;
 				}
@@ -578,21 +606,31 @@ bool RuleStandard::is_check(godot::Ref<State> _state, int _group)
 		}
 		if ((from_piece & 95) == 'Q' || (from_piece & 95) == 'B')
 		{
-			int64_t diag_a8h1 = (uint64_t(_state->get_bit(')')) >> Chess::rotate_45_shift(from_64)) & Chess::rotate_45_length_mask(from_64);
-			int64_t diag_a1h8 = (uint64_t(_state->get_bit('(')) >> Chess::rotate_315_shift(from_64)) & Chess::rotate_315_length_mask(from_64);
+			int64_t diag_a1h8 = (uint64_t(_state->get_bit(')')) >> Chess::rotate_45_shift(from_64)) & Chess::rotate_45_length_mask(from_64);
+			int64_t diag_a8h1 = (uint64_t(_state->get_bit('(')) >> Chess::rotate_315_shift(from_64)) & Chess::rotate_315_length_mask(from_64);
 			int64_t bishop_attacks = diag_a1h8_attacks[from_64][diag_a1h8] | diag_a8h1_attacks[from_64][diag_a8h1];
 			if (bishop_attacks & _state->get_bit(enemy_king))
 			{
+				godot::print_line(Chess::print_bit_diamond(diag_a1h8 << Chess::rotate_45_shift(from_64)));
+				godot::print_line(Chess::print_bit_diamond(diag_a8h1 << Chess::rotate_315_shift(from_64)));
+				godot::print_line(Chess::print_bit_square(diag_a1h8_attacks[from_64][diag_a1h8]));
+				godot::print_line(Chess::print_bit_square(diag_a8h1_attacks[from_64][diag_a8h1]));
+				godot::print_line(_state->print_bit_square(enemy_king));
 				return true;
 			}
 		}
 		if ((from_piece & 95) == 'Q' || (from_piece & 95) == 'R')
 		{
-			int64_t rank = (uint64_t(_state->get_bit('*')) >> Chess::rotate_0_shift(from_64)) & 7;
-			int64_t file = (uint64_t(_state->get_bit('!')) >> Chess::rotate_90_shift(from_64)) & 7;
+			int64_t rank = (uint64_t(_state->get_bit('*')) >> Chess::rotate_0_shift(from_64)) & 255;
+			int64_t file = (uint64_t(_state->get_bit('!')) >> Chess::rotate_90_shift(from_64)) & 255;
 			int64_t rook_attacks = rank_attacks[from_64][rank] | file_attacks[from_64][file];
 			if (rook_attacks & _state->get_bit(enemy_king))
 			{
+				godot::print_line(Chess::print_bit_square(rank << Chess::rotate_0_shift(from_64)));
+				godot::print_line(Chess::print_bit_square(file << Chess::rotate_90_shift(from_64)));
+				godot::print_line(Chess::print_bit_square(rank_attacks[from_64][rank]));
+				godot::print_line(Chess::print_bit_square(file_attacks[from_64][file]));
+				godot::print_line(_state->print_bit_square(enemy_king));
 				return true;
 			}
 		}
