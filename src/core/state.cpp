@@ -276,6 +276,58 @@ godot::String State::print_board()
 	return output;
 }
 
+godot::String State::print_bit_square(int _piece)
+{
+	godot::String output;
+	uint64_t current_bit = bit[_piece];
+	for (int i = 0; i < 8; i++)
+	{
+		for (int j = 0; j < 8; j++)
+		{
+			output += (current_bit & 1) ? '#' : '.';
+			output += ' ';
+			current_bit >>= 1;
+		}
+		output += '\n';
+	}
+	return output;
+}
+
+godot::String State::print_bit_diamond(int _piece)
+{
+	godot::String output;
+	uint64_t current_bit = bit[_piece];
+	for (int i = 0; i < 8; i++)
+	{
+		for (int j = 0; j < 8 - i; j++)
+		{
+			output += ' ';
+		}
+		for (int j = 0; j < i + 1; j++)
+		{
+			output += (current_bit & 1) ? '#' : '.';
+			output += ' ';
+			current_bit >>= 1;
+		}
+		output += '\n';
+	}
+	for (int i = 6; i >= 0; i--)
+	{
+		for (int j = 0; j < 8 - i; j++)
+		{
+			output += ' ';
+		}
+		for (int j = 0; j < i + 1; j++)
+		{
+			output += (current_bit & 1) ? '#' : '.';
+			output += ' ';
+			current_bit >>= 1;
+		}
+		output += '\n';
+	}
+	return output;
+}
+
 void State::_bind_methods()
 {
 	godot::ClassDB::bind_method(godot::D_METHOD("duplicate"), &State::duplicate);
@@ -302,4 +354,6 @@ void State::_bind_methods()
 	godot::ClassDB::bind_method(godot::D_METHOD("set_king_passant"), &State::set_king_passant);
 	godot::ClassDB::bind_method(godot::D_METHOD("get_zobrist"), &State::get_zobrist);
 	godot::ClassDB::bind_method(godot::D_METHOD("print_board"), &State::print_board);
+	godot::ClassDB::bind_method(godot::D_METHOD("print_bit_square"), &State::print_bit_square);
+	godot::ClassDB::bind_method(godot::D_METHOD("print_bit_diamond"), &State::print_bit_diamond);
 }
