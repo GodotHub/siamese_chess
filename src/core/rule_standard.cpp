@@ -76,7 +76,7 @@ RuleStandard::RuleStandard()
 	}
 	for (int i = 0; i < 64; i++)	//斜线a1h8
 	{
-		for (int j = 0; j < Chess::rotate_45_length(i); j++)
+		for (int j = 0; j <= Chess::rotate_45_length_mask(i); j++)
 		{
 			uint64_t barrel_rotated = j << Chess::rotate_45_shift(i);
 			uint64_t barrel = 0;
@@ -110,7 +110,7 @@ RuleStandard::RuleStandard()
 	}
 	for (int i = 0; i < 64; i++)	//斜线a8h1
 	{
-		for (int j = 0; j < Chess::rotate_315_length(i); j++)
+		for (int j = 0; j <= Chess::rotate_315_length_mask(i); j++)
 		{
 			uint64_t barrel_rotated = j << Chess::rotate_315_shift(i);
 			uint64_t barrel = 0;
@@ -611,11 +611,6 @@ bool RuleStandard::is_check(godot::Ref<State> _state, int _group)
 			int64_t bishop_attacks = diag_a1h8_attacks[from_64][diag_a1h8] | diag_a8h1_attacks[from_64][diag_a8h1];
 			if (bishop_attacks & _state->get_bit(enemy_king))
 			{
-				godot::print_line(Chess::print_bit_diamond(diag_a1h8 << Chess::rotate_45_shift(from_64)));
-				godot::print_line(Chess::print_bit_diamond(diag_a8h1 << Chess::rotate_315_shift(from_64)));
-				godot::print_line(Chess::print_bit_square(diag_a1h8_attacks[from_64][diag_a1h8]));
-				godot::print_line(Chess::print_bit_square(diag_a8h1_attacks[from_64][diag_a8h1]));
-				godot::print_line(_state->print_bit_square(enemy_king));
 				return true;
 			}
 		}
@@ -626,11 +621,6 @@ bool RuleStandard::is_check(godot::Ref<State> _state, int _group)
 			int64_t rook_attacks = rank_attacks[from_64][rank] | file_attacks[from_64][file];
 			if (rook_attacks & _state->get_bit(enemy_king))
 			{
-				godot::print_line(Chess::print_bit_square(rank << Chess::rotate_0_shift(from_64)));
-				godot::print_line(Chess::print_bit_square(file << Chess::rotate_90_shift(from_64)));
-				godot::print_line(Chess::print_bit_square(rank_attacks[from_64][rank]));
-				godot::print_line(Chess::print_bit_square(file_attacks[from_64][file]));
-				godot::print_line(_state->print_bit_square(enemy_king));
 				return true;
 			}
 		}
