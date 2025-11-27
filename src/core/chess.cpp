@@ -23,6 +23,21 @@ int Chess::rotate_90(int n)
 	return table[n];
 }
 
+int Chess::rotate_90_reverse(int n)
+{
+	static const int table[64] = {
+		56, 48, 40, 32, 24, 16,  8,  0,
+		57, 49, 41, 33, 25, 17,  9,  1,
+		58, 50, 42, 34, 26, 18, 10,  2,
+		59, 51, 43, 35, 27, 19, 11,  3,
+		60, 52, 44, 36, 28, 20, 12,  4,
+		61, 53, 45, 37, 29, 21, 13,  5,
+		62, 54, 46, 38, 30, 22, 14,  6,
+		63, 55, 47, 39, 31, 23, 15,  7
+	};
+	return table[n];
+}
+
 int Chess::rotate_45(int n)
 {
 	static const int table[64] = {
@@ -34,6 +49,27 @@ int Chess::rotate_45(int n)
 		15, 22, 30, 38, 45, 51, 56, 60,
 		21, 29, 37, 44, 50, 55, 59, 62,
 		28, 36, 43, 49, 54, 58, 61, 63
+	};
+	return table[n];
+}
+int Chess::rotate_45_reverse(int n)
+{
+	static const int table[64] = {
+		               0, 
+		             8,  1,
+		          16,  9,  2,
+		        24, 17, 10,  3,
+		      32, 25, 18, 11,  4,
+		    40, 33, 26, 19, 12,  5,
+		  48, 41, 34, 27, 20, 13,  6,
+		56, 49, 42, 35, 28, 21, 14,  7,
+		  57, 50, 43, 36, 29, 22, 15,
+		    58, 51, 44, 37, 30, 23,
+		      59, 52, 45, 38, 31,
+		        60, 53, 46, 39,
+		          61, 54, 47,
+		            62, 55,
+		              63,
 	};
 	return table[n];
 }
@@ -49,6 +85,57 @@ int Chess::rotate_315(int n)
 		58, 55, 51, 46, 40, 33, 26, 20,
 		61, 59, 56, 52, 47, 41, 34, 27,
 		63, 62, 60, 57, 53, 48, 42, 35
+	};
+	return table[n];
+}
+
+int Chess::rotate_315_reverse(int n)
+{
+	static const int table[64] = {
+		               7, 
+		             6, 15,
+		           5, 14, 23,
+		         4, 13, 22, 31,
+		       3, 12, 21, 30, 39,
+		     2, 11, 20, 29, 38, 47,
+		   1, 10, 19, 28, 37, 46, 55,
+		 0,  9, 18, 27, 36, 45, 54, 63,
+		   8, 17, 26, 35, 44, 53, 62,
+		    16, 25, 34, 43, 52, 61,
+		      24, 33, 42, 51, 60,
+		        32, 41, 50, 59,
+		          40, 49, 58,
+		            48, 57,
+		              56,
+	};
+	return table[n];
+}
+int Chess::rotate_45_length(int n)
+{
+	static const int table[64] = {
+		1, 2, 3, 4, 5, 6, 7, 8,
+		2, 3, 4, 5, 6, 7, 8, 7,
+		3, 4, 5, 6, 7, 8, 7, 6,
+		4, 5, 6, 7, 8, 7, 6, 5,
+		5, 6, 7, 8, 7, 6, 5, 4,
+		6, 7, 8, 7, 6, 5, 4, 3,
+		7, 8, 7, 6, 5, 4, 3, 2,
+		8, 7, 6, 5, 4, 3, 2, 1,
+	};
+	return table[n];
+}
+
+int Chess::rotate_315_length(int n)
+{
+	static const int table[64] = {
+		8, 7, 6, 5, 4, 3, 2, 1,
+		7, 8, 7, 6, 5, 4, 3, 2,
+		6, 7, 8, 7, 6, 5, 4, 3,
+		5, 6, 7, 8, 7, 6, 5, 4,
+		4, 5, 6, 7, 8, 7, 6, 5,
+		3, 4, 5, 6, 7, 8, 7, 6,
+		2, 3, 4, 5, 6, 7, 8, 7,
+		1, 2, 3, 4, 5, 6, 7, 8,
 	};
 	return table[n];
 }
@@ -123,6 +210,58 @@ int Chess::rotate_315_shift(int n)
 	return table[n];
 }
 
+godot::String Chess::print_bit_square(int64_t bit)
+{
+	godot::String output;
+	uint64_t current_bit = bit;
+	for (int i = 0; i < 8; i++)
+	{
+		for (int j = 0; j < 8; j++)
+		{
+			output += (current_bit & 1) ? '#' : '.';
+			output += ' ';
+			current_bit >>= 1;
+		}
+		output += '\n';
+	}
+	return output;
+}
+
+godot::String Chess::print_bit_diamond(int64_t bit)
+{
+	godot::String output;
+	uint64_t current_bit = bit;
+	for (int i = 0; i < 8; i++)
+	{
+		for (int j = 0; j < 8 - i; j++)
+		{
+			output += ' ';
+		}
+		for (int j = 0; j < i + 1; j++)
+		{
+			output += (current_bit & 1) ? '#' : '.';
+			output += ' ';
+			current_bit >>= 1;
+		}
+		output += '\n';
+	}
+	for (int i = 6; i >= 0; i--)
+	{
+		for (int j = 0; j < 8 - i; j++)
+		{
+			output += ' ';
+		}
+		for (int j = 0; j < i + 1; j++)
+		{
+			output += (current_bit & 1) ? '#' : '.';
+			output += ' ';
+			current_bit >>= 1;
+		}
+		output += '\n';
+	}
+	return output;
+}
+
 int64_t Chess::mask(int n)
 {
 	return 1LL << n;
@@ -192,6 +331,8 @@ void Chess::_bind_methods()
 	godot::ClassDB::bind_static_method(get_class_static(), godot::D_METHOD("rotate_90"), &Chess::rotate_90);
 	godot::ClassDB::bind_static_method(get_class_static(), godot::D_METHOD("rotate_45"), &Chess::rotate_45);
 	godot::ClassDB::bind_static_method(get_class_static(), godot::D_METHOD("rotate_315"), &Chess::rotate_315);
+	godot::ClassDB::bind_static_method(get_class_static(), godot::D_METHOD("rotate_45_length"), &Chess::rotate_45_length);
+	godot::ClassDB::bind_static_method(get_class_static(), godot::D_METHOD("rotate_315_length"), &Chess::rotate_315_length);
 	godot::ClassDB::bind_static_method(get_class_static(), godot::D_METHOD("rotate_45_length_mask"), &Chess::rotate_45_length_mask);
 	godot::ClassDB::bind_static_method(get_class_static(), godot::D_METHOD("rotate_315_length_mask"), &Chess::rotate_315_length_mask);
 	godot::ClassDB::bind_static_method(get_class_static(), godot::D_METHOD("rotate_0_shift"), &Chess::rotate_0_shift);
