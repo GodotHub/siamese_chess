@@ -23,7 +23,7 @@ RuleStandard::RuleStandard()
 			int64_t bit = 0;
 			for (int k = Chess::to_x88(i) - 1; !(k & 0x88); k--)	//试着向左走
 			{
-				bit |= Chess::mask(k);
+				bit |= Chess::mask(Chess::to_64(k));
 				if (Chess::mask(Chess::to_64(k)) & barrel)
 				{
 					break;
@@ -31,7 +31,7 @@ RuleStandard::RuleStandard()
 			}
 			for (int k = Chess::to_x88(i) + 1; !(k & 0x88); k++)	//试着向右走
 			{
-				bit |= Chess::mask(k);
+				bit |= Chess::mask(Chess::to_64(k));
 				if (Chess::mask(Chess::to_64(k)) & barrel)
 				{
 					break;
@@ -57,7 +57,7 @@ RuleStandard::RuleStandard()
 			int64_t bit = 0;
 			for (int k = Chess::to_x88(i) - 16; !(k & 0x88); k -= 16)	//试着向上走
 			{
-				bit |= Chess::mask(k);
+				bit |= Chess::mask(Chess::to_64(k));
 				if (Chess::mask(Chess::to_64(k)) & barrel)
 				{
 					break;
@@ -65,7 +65,7 @@ RuleStandard::RuleStandard()
 			}
 			for (int k = Chess::to_x88(i) + 16; !(k & 0x88); k += 16)	//试着向下走
 			{
-				bit |= Chess::mask(k);
+				bit |= Chess::mask(Chess::to_64(k));
 				if (Chess::mask(Chess::to_64(k)) & barrel)
 				{
 					break;
@@ -91,7 +91,7 @@ RuleStandard::RuleStandard()
 			int64_t bit = 0;
 			for (int k = Chess::to_x88(i) - 15; !(k & 0x88); k -= 15)	//不超界即可，往右上
 			{
-				bit |= Chess::mask(k);
+				bit |= Chess::mask(Chess::to_64(k));
 				if (Chess::mask(Chess::to_64(k)) & barrel)
 				{
 					break;
@@ -99,7 +99,7 @@ RuleStandard::RuleStandard()
 			}
 			for (int k = Chess::to_x88(i) + 15; !(k & 0x88); k += 15)	//往左下
 			{
-				bit |= Chess::mask(k);
+				bit |= Chess::mask(Chess::to_64(k));
 				if (Chess::mask(Chess::to_64(k)) & barrel)
 				{
 					break;
@@ -125,7 +125,7 @@ RuleStandard::RuleStandard()
 			int64_t bit = 0;
 			for (int k = Chess::to_x88(i) - 17; !(k & 0x88); k -= 17)	//往左上
 			{
-				bit |= Chess::mask(k);
+				bit |= Chess::mask(Chess::to_64(k));
 				if (Chess::mask(Chess::to_64(k)) & barrel)
 				{
 					break;
@@ -133,7 +133,7 @@ RuleStandard::RuleStandard()
 			}
 			for (int k = Chess::to_x88(i) + 17; !(k & 0x88); k += 17)	//往右下
 			{
-				bit |= Chess::mask(k);
+				bit |= Chess::mask(Chess::to_64(k));
 				if (Chess::mask(Chess::to_64(k)) & barrel)
 				{
 					break;
