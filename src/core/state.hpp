@@ -19,6 +19,7 @@ class State : public godot::RefCounted
 			private:
 				friend State;
 				State *parent;
+				uint64_t bit;
 				int by;
 		};
 		State();

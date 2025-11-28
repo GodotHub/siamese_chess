@@ -6,29 +6,14 @@
 
 void State::PieceIterator::begin()
 {
-	while (!parent->pieces[by] && by < 128)
-	{
-		by++;
-		if (by & 0x88)
-		{
-			by += 8;
-			by -= by & 15;
-		}
-	}
+	bit = parent->get_bit('*');
+	by = Chess::to_x88(Chess::first_bit(bit));
 }
 
 void State::PieceIterator::next()
 {
-	by++;
-	while (!parent->pieces[by] && by < 128)
-	{
-		by++;
-		if (by & 0x88)
-		{
-			by += 8;
-			by -= by & 15;
-		}
-	}
+	bit = Chess::next_bit(bit);
+	by = Chess::to_x88(Chess::first_bit(bit));
 }
 
 int State::PieceIterator::piece()
@@ -43,7 +28,7 @@ int State::PieceIterator::pos()
 
 bool State::PieceIterator::end()
 {
-	return by & 0x88;
+	return bit == 0;
 }
 
 State::State()
