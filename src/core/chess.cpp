@@ -267,17 +267,45 @@ int64_t Chess::mask(int n)
 	return 1LL << n;
 }
 
-int Chess::population(uint64_t bit)
+int Chess::population(int64_t bit)
 {
 	const uint64_t k1 = 0x5555555555555555;
 	const uint64_t k2 = 0x3333333333333333;
 	const uint64_t k4 = 0x0f0f0f0f0f0f0f0f;
 	const uint64_t kf = 0x0101010101010101;
-	bit = bit - ((bit >> 1) & k1);
-	bit = (bit & k2) + ((bit >> 2) & k2);
-	bit = (bit + (bit >> 4)) & k4;
-	bit = (bit * kf) >> 56;
-	return (int)bit;
+	uint64_t x = bit;	//不声明uint64_t是因为Godot的数据类型限制
+	x = x - ((x >> 1) & k1);
+	x = (x & k2) + ((x >> 2) & k2);
+	x = (x + (x >> 4)) & k4;
+	x = (x * kf) >> 56;
+	return (int)x;
+}
+
+int Chess::first_bit(int64_t bit)
+{
+	static const int table[64] = {
+		 0,  1, 48,  2, 57, 49, 28,  3,
+		61, 58, 50, 42, 38, 29, 17,  4,
+		62, 55, 59, 36, 53, 51, 43, 22,
+		45, 39, 33, 30, 24, 18, 12,  5,
+		63, 47, 56, 27, 60, 41, 37, 16,
+		54, 35, 52, 21, 44, 32, 23, 11,
+		46, 26, 40, 15, 34, 20, 31, 10,
+		25, 14, 19,  9, 13,  8,  7,  6
+	};
+	const uint64_t debruijn64 = 0x03f79d71b4cb0a89;	//这是个magic number
+	uint64_t x = bit;
+	if (x == 0)
+	{
+		return -1;	//存在找不到的情况
+	}
+	return table[((x & -x) * debruijn64) >> 58];
+}
+
+int64_t Chess::next_bit(int64_t bit)
+{
+	uint64_t x = bit;
+	return x & (x - 1);
 }
 
 int Chess::to_64(int n)
@@ -356,6 +384,8 @@ void Chess::_bind_methods()
 	godot::ClassDB::bind_static_method(get_class_static(), godot::D_METHOD("to_x88"), &Chess::to_x88);
 	godot::ClassDB::bind_static_method(get_class_static(), godot::D_METHOD("mask"), &Chess::mask);
 	godot::ClassDB::bind_static_method(get_class_static(), godot::D_METHOD("population"), &Chess::population);
+	godot::ClassDB::bind_static_method(get_class_static(), godot::D_METHOD("first_bit"), &Chess::first_bit);
+	godot::ClassDB::bind_static_method(get_class_static(), godot::D_METHOD("next_bit"), &Chess::next_bit);
 	godot::ClassDB::bind_static_method(get_class_static(), godot::D_METHOD("group"), &Chess::group);
 	godot::ClassDB::bind_static_method(get_class_static(), godot::D_METHOD("is_same_group"), &Chess::is_same_group);
 	godot::ClassDB::bind_static_method(get_class_static(), godot::D_METHOD("to_position_int"), &Chess::to_position_int);

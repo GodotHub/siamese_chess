@@ -10,7 +10,9 @@ class Chess : public godot::Object
 	public:
 		Chess();
 		static int64_t mask(int n);
-		static int population(uint64_t bit);
+		static int population(int64_t bit);
+		static int first_bit(int64_t bit);
+		static int64_t next_bit(int64_t bit);
 		static int rotate_90(int n);
 		static int rotate_90_reverse(int n);
 		static int rotate_45(int n);
