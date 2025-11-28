@@ -267,6 +267,19 @@ int64_t Chess::mask(int n)
 	return 1LL << n;
 }
 
+int Chess::population(uint64_t bit)
+{
+	const uint64_t k1 = 0x5555555555555555;
+	const uint64_t k2 = 0x3333333333333333;
+	const uint64_t k4 = 0x0f0f0f0f0f0f0f0f;
+	const uint64_t kf = 0x0101010101010101;
+	bit = bit - ((bit >> 1) & k1);
+	bit = (bit & k2) + ((bit >> 2) & k2);
+	bit = (bit + (bit >> 4)) & k4;
+	bit = (bit * kf) >> 56;
+	return (int)bit;
+}
+
 int Chess::to_64(int n)
 {
 	return (n >> 4 << 3) | (n & 0xF);
@@ -342,6 +355,7 @@ void Chess::_bind_methods()
 	godot::ClassDB::bind_static_method(get_class_static(), godot::D_METHOD("to_64"), &Chess::to_64);
 	godot::ClassDB::bind_static_method(get_class_static(), godot::D_METHOD("to_x88"), &Chess::to_x88);
 	godot::ClassDB::bind_static_method(get_class_static(), godot::D_METHOD("mask"), &Chess::mask);
+	godot::ClassDB::bind_static_method(get_class_static(), godot::D_METHOD("population"), &Chess::population);
 	godot::ClassDB::bind_static_method(get_class_static(), godot::D_METHOD("group"), &Chess::group);
 	godot::ClassDB::bind_static_method(get_class_static(), godot::D_METHOD("is_same_group"), &Chess::is_same_group);
 	godot::ClassDB::bind_static_method(get_class_static(), godot::D_METHOD("to_position_int"), &Chess::to_position_int);
