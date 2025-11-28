@@ -567,6 +567,14 @@ bool RuleStandard::is_move_valid(godot::Ref<State>_state, int _group, int _move)
 bool RuleStandard::is_check(godot::Ref<State> _state, int _group)
 {
 	int enemy_king = _group == 0 ? 'k' : 'K';
+	uint64_t enemy_king_mask = _state->get_bit(enemy_king);
+	if (_state->get_king_passant() != -1)
+	{
+		enemy_king_mask |= Chess::mask(Chess::to_64(_state->get_king_passant()));
+		enemy_king_mask |= Chess::mask(Chess::to_64(_state->get_king_passant() - 1));
+		enemy_king_mask |= Chess::mask(Chess::to_64(_state->get_king_passant() + 1));
+	}
+	
 	for (State::PieceIterator iter = _state->piece_iterator_begin(); !iter.end(); iter.next())
 	{
 		int from = iter.pos();
@@ -578,18 +586,7 @@ bool RuleStandard::is_check(godot::Ref<State> _state, int _group)
 		}
 		if ((from_piece & 95) == 'P')
 		{
-			int front = from_piece == 'P' ? -16 : 16;
-			bool on_start = (from >> 4) == (from_piece == 'P' ? 6 : 1);
-			bool on_end = (from >> 4) == (from_piece == 'P' ? 1 : 6);
-			if (pawn_attacks[from_64][_group == 0 ? 0 : 2] & _state->get_bit(enemy_king))
-			{
-				return true;
-			}
-			if (on_end && !((from + front + 1) & 0x88) && _state->get_king_passant() != -1 && abs(_state->get_king_passant() - (from + front + 1)) <= 1)
-			{
-				return true;
-			}
-			if (on_end && !((from + front - 1) & 0x88) && _state->get_king_passant() != -1 && abs(_state->get_king_passant() - (from + front - 1)) <= 1)
+			if (pawn_attacks[from_64][_group == 0 ? 0 : 2] & enemy_king_mask)
 			{
 				return true;
 			}
@@ -597,7 +594,7 @@ bool RuleStandard::is_check(godot::Ref<State> _state, int _group)
 		}
 		if ((from_piece & 95) == 'K')
 		{
-			if (king_attacks[from_64] & _state->get_bit(enemy_king))
+			if (king_attacks[from_64] & enemy_king_mask)
 			{
 				return true;
 			}
@@ -608,7 +605,7 @@ bool RuleStandard::is_check(godot::Ref<State> _state, int _group)
 			int64_t diag_a1h8 = (uint64_t(_state->get_bit(')')) >> Chess::rotate_45_shift(from_64)) & Chess::rotate_45_length_mask(from_64);
 			int64_t diag_a8h1 = (uint64_t(_state->get_bit('(')) >> Chess::rotate_315_shift(from_64)) & Chess::rotate_315_length_mask(from_64);
 			int64_t bishop_attacks = diag_a1h8_attacks[from_64][diag_a1h8] | diag_a8h1_attacks[from_64][diag_a8h1];
-			if (bishop_attacks & _state->get_bit(enemy_king))
+			if (bishop_attacks & enemy_king_mask)
 			{
 				return true;
 			}
@@ -618,7 +615,7 @@ bool RuleStandard::is_check(godot::Ref<State> _state, int _group)
 			int64_t rank = (uint64_t(_state->get_bit('*')) >> Chess::rotate_0_shift(from_64)) & 255;
 			int64_t file = (uint64_t(_state->get_bit('!')) >> Chess::rotate_90_shift(from_64)) & 255;
 			int64_t rook_attacks = rank_attacks[from_64][rank] | file_attacks[from_64][file];
-			if (rook_attacks & _state->get_bit(enemy_king))
+			if (rook_attacks & enemy_king_mask)
 			{
 				return true;
 			}
