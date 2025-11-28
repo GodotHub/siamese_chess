@@ -20,11 +20,12 @@ class State : public godot::RefCounted
 				friend State;
 				State *parent;
 				uint64_t bit;
+				int target_piece;
 				int by;
 		};
 		State();
 		godot::Ref<State> duplicate();
-		PieceIterator piece_iterator_begin();
+		PieceIterator piece_iterator_begin(int _piece = '*');
 		godot::PackedInt32Array get_all_pieces();
 		int get_piece(int _by);
 		int has_piece(int _by);

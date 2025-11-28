@@ -258,14 +258,10 @@ PastorEngine::PastorEngine()
 godot::PackedInt32Array PastorEngine::generate_good_capture_move(godot::Ref<State>_state, int _group)
 {
 	godot::PackedInt32Array output;
-	for (State::PieceIterator iter = _state->piece_iterator_begin(); !iter.end(); iter.next())
+	for (State::PieceIterator iter = _state->piece_iterator_begin(_group == 0 ? 'A' : 'a'); !iter.end(); iter.next())
 	{
 		int _from = iter.pos();
 		int from_piece = iter.piece();
-		if (_group != Chess::group(from_piece))
-		{
-			continue;
-		}
 		godot::PackedInt32Array *directions = nullptr;
 		if ((from_piece & 95) == 'P')
 		{

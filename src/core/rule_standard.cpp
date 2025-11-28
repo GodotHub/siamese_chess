@@ -575,15 +575,11 @@ bool RuleStandard::is_check(godot::Ref<State> _state, int _group)
 		enemy_king_mask |= Chess::mask(Chess::to_64(_state->get_king_passant() + 1));
 	}
 	
-	for (State::PieceIterator iter = _state->piece_iterator_begin(); !iter.end(); iter.next())
+	for (State::PieceIterator iter = _state->piece_iterator_begin(_group == 0 ? 'A' : 'a'); !iter.end(); iter.next())
 	{
 		int from = iter.pos();
 		int from_64 = Chess::to_64(from);
 		int from_piece = iter.piece();
-		if (_group != Chess::group(from_piece))
-		{
-			continue;
-		}
 		if ((from_piece & 95) == 'P')
 		{
 			if (pawn_attacks[from_64][_group == 0 ? 0 : 2] & enemy_king_mask)
@@ -672,14 +668,10 @@ bool RuleStandard::is_en_passant(godot::Ref<State> _state, int _from, int _to)
 godot::PackedInt32Array RuleStandard::generate_premove(godot::Ref<State> _state, int _group)
 {
 	godot::PackedInt32Array output;
-	for (State::PieceIterator iter = _state->piece_iterator_begin(); !iter.end(); iter.next())
+	for (State::PieceIterator iter = _state->piece_iterator_begin(_group == 0 ? 'A' : 'a'); !iter.end(); iter.next())
 	{
 		int _from = iter.pos();
 		int from_piece = iter.piece();
-		if (_group != Chess::group(from_piece))
-		{
-			continue;
-		}
 		godot::PackedInt32Array *directions = nullptr;
 		if ((from_piece & 95) == 'P')
 		{
@@ -781,14 +773,10 @@ godot::PackedInt32Array RuleStandard::generate_premove(godot::Ref<State> _state,
 godot::PackedInt32Array RuleStandard::generate_move(godot::Ref<State> _state, int _group)
 {
 	godot::PackedInt32Array output;
-	for (State::PieceIterator iter = _state->piece_iterator_begin(); !iter.end(); iter.next())
+	for (State::PieceIterator iter = _state->piece_iterator_begin(_group == 0 ? 'A' : 'a'); !iter.end(); iter.next())
 	{
 		int _from = iter.pos();
 		int from_piece = iter.piece();
-		if (_group != Chess::group(from_piece))
-		{
-			continue;
-		}
 		godot::PackedInt32Array *directions = nullptr;
 		if ((from_piece & 95) == 'P')
 		{

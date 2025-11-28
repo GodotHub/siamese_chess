@@ -6,7 +6,7 @@
 
 void State::PieceIterator::begin()
 {
-	bit = parent->get_bit('*');
+	bit = parent->get_bit(target_piece);
 	by = Chess::to_x88(Chess::first_bit(bit));
 }
 
@@ -51,11 +51,11 @@ godot::Ref<State> State::duplicate()
 	return new_state;
 }
 
-State::PieceIterator State::piece_iterator_begin()
+State::PieceIterator State::piece_iterator_begin(int _piece)
 {
 	State::PieceIterator instance;
 	instance.parent = this;
-	instance.by = 0;
+	instance.target_piece = _piece;
 	instance.begin();
 	return instance;
 }
