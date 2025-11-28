@@ -600,6 +600,14 @@ bool RuleStandard::is_check(godot::Ref<State> _state, int _group)
 			}
 			continue;
 		}
+		if ((from_piece & 95) == 'N')
+		{
+			if (horse_attacks[from_64] & enemy_king_mask)
+			{
+				return true;
+			}
+			continue;
+		}
 		if ((from_piece & 95) == 'Q' || (from_piece & 95) == 'B')
 		{
 			int64_t diag_a1h8 = (uint64_t(_state->get_bit(')')) >> Chess::rotate_45_shift(from_64)) & Chess::rotate_45_length_mask(from_64);
