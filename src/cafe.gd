@@ -108,8 +108,8 @@ func in_game_black_extra_move(move_list:PackedInt32Array) -> void:
 		else:
 			standard_chessboard.confirm_move = decision_to_move[Dialog.selected]
 			in_game_white.call_deferred()
-	)
-	Dialog.push_selection(decision_list, true, true)
+	, ConnectFlags.CONNECT_ONE_SHOT)
+	Dialog.push_selection(decision_list, false, true)
 
 func on_select_dialog() -> void:
 	if Dialog.selected == "悔棋":
