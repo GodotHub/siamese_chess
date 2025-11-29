@@ -49,18 +49,21 @@ func captured(_capturing:Actor = null) -> void:	# 被攻击
 func promote(_pos:Vector3, _piece:int) -> void:
 	var tween:Tween = create_tween()
 	tween.tween_property(self, "global_position", _pos, 0.3).set_trans(Tween.TRANS_SINE)
+	tween.tween_callback(change_model.bind(_piece))
 	tween.tween_callback(animation_finished.emit)
+
+func change_model(_piece:int) -> void:
 	$piece.visible = false
 	var instance:Actor = null
 	match _piece:
 		81:
-			instance = load("res://scene/piece_queen_black.tscn").instantiate()
+			instance = load("res://scene/piece_queen_white.tscn").instantiate()
 		82:
-			instance = load("res://scene/piece_rook_black.tscn").instantiate()
+			instance = load("res://scene/piece_rook_white.tscn").instantiate()
 		66:
-			instance = load("res://scene/piece_bishop_black.tscn").instantiate()
+			instance = load("res://scene/piece_bishop_white.tscn").instantiate()
 		78:
-			instance = load("res://scene/piece_knight_black.tscn").instantiate()
+			instance = load("res://scene/piece_knight_white.tscn").instantiate()
 		113:
 			instance = load("res://scene/piece_queen_black.tscn").instantiate()
 		114:
@@ -70,6 +73,7 @@ func promote(_pos:Vector3, _piece:int) -> void:
 		110:
 			instance = load("res://scene/piece_knight_black.tscn").instantiate()
 	add_child(instance)
+	instance.top_level = false
 
 func set_show_on_backup(_show_on_backup:bool) -> Actor:
 	show_on_backup = _show_on_backup
