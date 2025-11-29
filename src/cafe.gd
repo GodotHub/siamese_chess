@@ -132,6 +132,22 @@ func on_select_dialog() -> void:
 		game_end.call_deferred()
 
 func game_end() -> void:
+	match RuleStandard.get_end_type($table_0/chessboard_standard.state):
+		"checkmate_black":
+			Dialog.push_dialog("黑方胜", true, true)
+			await Dialog.on_next
+		"checkmate_white":
+			Dialog.push_dialog("白方胜", true, true)
+			await Dialog.on_next
+		"stalemate_black":
+			Dialog.push_dialog("平局", true, true)
+			await Dialog.on_next
+		"stalemate_white":
+			Dialog.push_dialog("平局", true, true)
+			await Dialog.on_next
+		"50_moves":
+			Dialog.push_dialog("平局", true, true)
+			await Dialog.on_next
 	$player.force_set_camera($camera)
 	$chessboard/pieces/cheshire.play_animation("battle_idle")
 	$chessboard/pieces/cheshire.set_position($chessboard.convert_name_to_position("e3"))

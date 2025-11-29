@@ -192,7 +192,11 @@ func state_ready_versus_waiting() -> void:
 func state_ready_versus_move(_arg:Dictionary) -> void:
 	history_state.push_back(chessboard.state.get_zobrist())
 	chessboard.connect("animation_finished", func() -> void:
-		if chessboard.state.get_turn() == 0:
+		if RuleStandard.get_end_type(chessboard.state) == "checkmate_black":
+			change_state("black_win")
+		elif RuleStandard.get_end_type(chessboard.state) == "checkmate_white":
+			change_state("white_win")
+		elif chessboard.state.get_turn() == 0:
 			change_state("versus_enemy")
 		else:
 			change_state("versus_player")
@@ -232,6 +236,18 @@ func state_ready_versus_extra_move(_arg:Dictionary) -> void:
 		else:
 			change_state.bind("versus_move", {"move": decision_to_move[Dialog.selected]}), ConnectFlags.CONNECT_ONE_SHOT)
 	Dialog.push_selection(decision_list, true, true)
+
+func state_ready_black_win(_arg:Dictionary) -> void:
+	var bit_list:PackedInt32Array = chessboard.state.bit_index("A".unicode_at(0))
+	for iter:int in bit_list:
+		chessboard.state.capture_piece(Chess.to_x88(iter))
+		chessboard.chessboard_piece[Chess.to_x88(iter)].captured()
+	change_state("explore_idle")
+
+func state_ready_white_win(_arg:Dictionary) -> void:
+	var by:int = Chess.to_x88(chessboard.state.bit_index("k".unicode_at(0))[0])
+	chessboard.state.capture_piece(Chess.to_x88(by))
+	chessboard.chessboard_piece[Chess.to_x88(by)].captured()
 
 func state_ready_dialog(_arg:Dictionary) -> void:
 	var by:int = Chess.to_x88(chessboard.state.bit_index("k".unicode_at(0))[0])
