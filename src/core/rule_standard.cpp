@@ -773,6 +773,12 @@ godot::PackedInt32Array RuleStandard::generate_premove(godot::Ref<State> _state,
 godot::PackedInt32Array RuleStandard::generate_move(godot::Ref<State> _state, int _group)
 {
 	godot::PackedInt32Array output;
+	_internal_generate_move(output, _state, _group);
+	return output;
+}
+
+void RuleStandard::_internal_generate_move(godot::PackedInt32Array &output, godot::Ref<State> _state, int _group)
+{
 	for (State::PieceIterator iter = _state->piece_iterator_begin(_group == 0 ? 'A' : 'a'); !iter.end(); iter.next())
 	{
 		int _from = iter.pos();
@@ -786,8 +792,6 @@ godot::PackedInt32Array RuleStandard::generate_move(godot::Ref<State> _state, in
 			int to_1 = _from + front;
 			int to_2 = _from + front + 1;
 			int to_3 = _from + front - 1;
-			bool on_low = _state->get_bit('v') & Chess::mask(Chess::to_64(_from));
-			
 			if (!is_blocked(_state, _from, to_1) && !is_enemy(_state, _from, to_1))
 			{
 				if (on_end)
@@ -895,13 +899,19 @@ godot::PackedInt32Array RuleStandard::generate_move(godot::Ref<State> _state, in
 			}
 		}
 	}
-	return output;
 }
 
 godot::PackedInt32Array RuleStandard::generate_valid_move(godot::Ref<State>_state, int _group)
 {
-	godot::PackedInt32Array move_list = generate_move(_state, _group);
 	godot::PackedInt32Array output;
+	_internal_generate_valid_move(output, _state, _group);
+	return output;
+}
+
+void RuleStandard::_internal_generate_valid_move(godot::PackedInt32Array &output, godot::Ref<State> _state, int _group)
+{
+	godot::PackedInt32Array move_list;
+	_internal_generate_move(move_list, _state, _group);
 	for (int i = 0; i < move_list.size(); i++)
 	{
 		godot::Ref<State>test_state = _state->duplicate();
@@ -911,7 +921,6 @@ godot::PackedInt32Array RuleStandard::generate_valid_move(godot::Ref<State>_stat
 			output.push_back(move_list[i]);
 		}
 	}
-	return output;
 }
 
 godot::PackedInt32Array RuleStandard::generate_explore_move(godot::Ref<State> _state, int _group)
@@ -963,7 +972,7 @@ godot::PackedInt32Array RuleStandard::generate_explore_move(godot::Ref<State> _s
 	return move_list;
 }
 
-godot::PackedInt32Array	RuleStandard::generate_king_path(godot::Ref<State> _state, int _from, int _to)
+godot::PackedInt32Array RuleStandard::generate_king_path(godot::Ref<State> _state, int _from, int _to)
 {
 	std::vector<std::pair<int, godot::PackedInt32Array>> dp(64, std::make_pair(0x7FFFFFFF, godot::PackedInt32Array()));
 	std::vector<bool> shortest(64, false);

@@ -27,9 +27,11 @@ class RuleStandard : public godot::Object
 		bool is_en_passant(godot::Ref<State> _state, int _from, int _to);
 		godot::PackedInt32Array generate_premove(godot::Ref<State> _state, int _group);
 		godot::PackedInt32Array generate_move(godot::Ref<State> _state, int _group);
+		void _internal_generate_move(godot::PackedInt32Array &output, godot::Ref<State> _state, int _group);
 		godot::PackedInt32Array generate_valid_move(godot::Ref<State> _state, int _group);
+		void _internal_generate_valid_move(godot::PackedInt32Array &output, godot::Ref<State> _state, int _group);
 		godot::PackedInt32Array generate_explore_move(godot::Ref<State> _state, int _group);
-		godot::PackedInt32Array	generate_king_path(godot::Ref<State> _state, int _from, int _to);
+		godot::PackedInt32Array generate_king_path(godot::Ref<State> _state, int _from, int _to);
 		godot::String get_move_name(godot::Ref<State> _state, int move);
 		int name_to_move(godot::Ref<State> _state, godot::String name);
 		void apply_move(godot::Ref<State> _state, int _move);
