@@ -255,7 +255,7 @@ PastorEngine::PastorEngine()
 	};
 }
 
-void PastorEngine::generate_good_capture_move(godot::PackedInt32Array &output, godot::Ref<State>_state, int _group)
+void PastorEngine::generate_good_capture_move(godot::PackedInt32Array &output, const godot::Ref<State> &_state, int _group)
 {
 	for (State::PieceIterator iter = _state->piece_iterator_begin(_group == 0 ? 'A' : 'a'); !iter.end(); iter.next())
 	{
@@ -371,7 +371,7 @@ int PastorEngine::get_piece_score(int _by, int _piece)
 	return 0;
 }
 
-int PastorEngine::evaluate_all(godot::Ref<State> _state)
+int PastorEngine::evaluate_all(const godot::Ref<State> &_state)
 {
 	int score = 0;
 	for (State::PieceIterator iter = _state->piece_iterator_begin(); !iter.end(); iter.next())
@@ -383,7 +383,7 @@ int PastorEngine::evaluate_all(godot::Ref<State> _state)
 	return score;
 }
 
-int PastorEngine::evaluate(godot::Ref<State> _state, int _move)
+int PastorEngine::evaluate(const godot::Ref<State> &_state, int _move)
 {
 	int from = Chess::from(_move);
 	int from_piece = _state->get_piece(from);
@@ -457,7 +457,7 @@ int PastorEngine::compare_move(int a, int b, int best_move, int killer_1, int ki
 	return a > b;
 }
 
-int PastorEngine::quies(godot::Ref<State> _state, int score, int _alpha, int _beta, int _group)
+int PastorEngine::quies(const godot::Ref<State> &_state, int score, int _alpha, int _beta, int _group)
 {
 	int score_relative = _group == 0 ? score : -score;
 	if (score_relative >= _beta)
@@ -591,14 +591,7 @@ int PastorEngine::alphabeta(const godot::Ref<State> &_state, int score, int _alp
 		}
 	}
 	godot::PackedInt32Array move_list;
-	if (RuleStandard::get_singleton()->is_check(_state, 1 - _group))
-	{
-		RuleStandard::get_singleton()->_internal_generate_valid_move(move_list, _state, _group);
-	}
-	else
-	{
-		RuleStandard::get_singleton()->_internal_generate_move(move_list, _state, _group);
-	}
+	RuleStandard::get_singleton()->_internal_generate_valid_move(move_list, _state, _group);
 	if (move_list.size() == 0)
 	{
 		if (RuleStandard::get_singleton()->is_check(_state, 1 - _group))

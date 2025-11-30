@@ -2,7 +2,7 @@
 #include <godot_cpp/classes/file_access.hpp>
 #include <godot_cpp/classes/json.hpp>
 
-void OpeningBook::load_file(godot::String _path)
+void OpeningBook::load_file(const godot::String &_path)
 {
 	godot::Ref<godot::FileAccess> file = godot::FileAccess::open(_path, godot::FileAccess::ModeFlags::READ);
 	int size = file->get_32();
@@ -20,7 +20,7 @@ void OpeningBook::load_file(godot::String _path)
 	file->close();
 }
 
-void OpeningBook::save_file(godot::String _path)
+void OpeningBook::save_file(const godot::String &_path)
 {
 	godot::Ref<godot::FileAccess> file = godot::FileAccess::open(_path, godot::FileAccess::ModeFlags::WRITE);
 	file->store_32(opening_book.size());
@@ -38,12 +38,12 @@ void OpeningBook::save_file(godot::String _path)
 	file->close();
 }
 
-bool OpeningBook::has_record(godot::Ref<State> _state)
+bool OpeningBook::has_record(const godot::Ref<State> &_state)
 {
 	return opening_book.count(_state->get_zobrist());
 }
 
-godot::String OpeningBook::get_opening_name(godot::Ref<State> _state)
+godot::String OpeningBook::get_opening_name(const godot::Ref<State> &_state)
 {
 	if (!has_record(_state))
 	{
@@ -52,7 +52,7 @@ godot::String OpeningBook::get_opening_name(godot::Ref<State> _state)
 	return opening_book[_state->get_zobrist()].name;
 }
 
-godot::String OpeningBook::get_opening_description(godot::Ref<State> _state)
+godot::String OpeningBook::get_opening_description(const godot::Ref<State> &_state)
 {
 	if (!has_record(_state))
 	{
@@ -61,12 +61,12 @@ godot::String OpeningBook::get_opening_description(godot::Ref<State> _state)
 	return opening_book[_state->get_zobrist()].description;
 }
 
-godot::PackedInt32Array OpeningBook::get_suggest_move(godot::Ref<State> _state)
+godot::PackedInt32Array OpeningBook::get_suggest_move(const godot::Ref<State> &_state)
 {
 	return opening_book[_state->get_zobrist()].move;
 }
 
-void OpeningBook::set_opening(godot::Ref<State> _state, const godot::String &name, const godot::String &description, const godot::PackedInt32Array &move)
+void OpeningBook::set_opening(const godot::Ref<State> &_state, const godot::String &name, const godot::String &description, const godot::PackedInt32Array &move)
 {
 	opening_book[_state->get_zobrist()] = {name, description, move};
 }

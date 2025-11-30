@@ -26,8 +26,8 @@ class TranspositionTable : public godot::RefCounted
 	GDCLASS(TranspositionTable, RefCounted)
 	public:
 		void reserve(int _table_size);
-		void save_file(godot::String path);
-		void load_file(godot::String path);
+		void save_file(const godot::String &path);
+		void load_file(const godot::String &path);
 		int probe_hash(int64_t checksum, int8_t depth, int alpha, int beta);
 		int best_move(int64_t checksum);
 		void record_hash(int64_t checksum, int8_t depth, int value, int8_t flag, int best_move);

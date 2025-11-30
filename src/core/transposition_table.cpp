@@ -8,7 +8,7 @@ void TranspositionTable::reserve(int _table_size)
 	table.resize(table_size);
 }
 
-void TranspositionTable::save_file(godot::String path)
+void TranspositionTable::save_file(const godot::String &path)
 {
 	godot::Ref<godot::FileAccess> file = godot::FileAccess::open(path, godot::FileAccess::ModeFlags::WRITE);
 	file->store_32(table_size);
@@ -23,7 +23,7 @@ void TranspositionTable::save_file(godot::String path)
 	file->close();
 }
 
-void TranspositionTable::load_file(godot::String path)
+void TranspositionTable::load_file(const godot::String &path)
 {
 	godot::Ref<godot::FileAccess> file = godot::FileAccess::open(path, godot::FileAccess::READ);
 	table_size = file->get_32();

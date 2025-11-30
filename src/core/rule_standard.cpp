@@ -187,7 +187,7 @@ RuleStandard::RuleStandard()
 	}
 }
 
-godot::String RuleStandard::get_end_type(godot::Ref<State>_state)
+godot::String RuleStandard::get_end_type(const godot::Ref<State> &_state)
 {
 	int group = _state->get_turn();
 	if (generate_valid_move(_state, group).size() == 0)
@@ -208,7 +208,7 @@ godot::String RuleStandard::get_end_type(godot::Ref<State>_state)
 	return "";
 }
 
-godot::Ref<State>RuleStandard::parse(godot::String _str)
+godot::Ref<State>RuleStandard::parse(const godot::String &_str)
 {
 	godot::Ref<State>state = memnew(State);
 	godot::Vector2i pointer = godot::Vector2i(0, 0);
@@ -318,7 +318,7 @@ godot::Ref<State> RuleStandard::create_random_state(int piece_count)
 	return nullptr;
 }
 
-godot::Ref<State> RuleStandard::mirror_state(godot::Ref<State> _state)
+godot::Ref<State> RuleStandard::mirror_state(const godot::Ref<State> &_state)
 {
 	godot::Ref<State> output = memnew(State);
 	for (State::PieceIterator iter = _state->piece_iterator_begin(); !iter.end(); iter.next())
@@ -337,7 +337,7 @@ godot::Ref<State> RuleStandard::mirror_state(godot::Ref<State> _state)
 	return output;
 }
 
-godot::Ref<State> RuleStandard::rotate_state(godot::Ref<State> _state)
+godot::Ref<State> RuleStandard::rotate_state(const godot::Ref<State> &_state)
 {
 	godot::Ref<State> output = memnew(State);
 	for (State::PieceIterator iter = _state->piece_iterator_begin(); !iter.end(); iter.next())
@@ -356,7 +356,7 @@ godot::Ref<State> RuleStandard::rotate_state(godot::Ref<State> _state)
 	return output;
 }
 
-godot::Ref<State> RuleStandard::swap_group(godot::Ref<State> _state)
+godot::Ref<State> RuleStandard::swap_group(const godot::Ref<State> &_state)
 {
 	
 	godot::Ref<State> output = memnew(State);
@@ -376,7 +376,7 @@ godot::Ref<State> RuleStandard::swap_group(godot::Ref<State> _state)
 	return output;
 }
 
-godot::String RuleStandard::stringify(godot::Ref<State>_state)
+godot::String RuleStandard::stringify(const godot::Ref<State> &_state)
 {
 	int null_counter = 0;
 	godot::PackedStringArray chessboard;
@@ -432,7 +432,7 @@ godot::String RuleStandard::stringify(godot::Ref<State>_state)
 	return godot::String(" ").join(output);
 }
 
-bool RuleStandard::is_move_valid(godot::Ref<State>_state, int _group, int _move)
+bool RuleStandard::is_move_valid(const godot::Ref<State> &_state, int _group, int _move)
 {
 	int from = Chess::from(_move);
 	int from_piece = _state->get_piece(from);
@@ -564,7 +564,7 @@ bool RuleStandard::is_move_valid(godot::Ref<State>_state, int _group, int _move)
 	return !is_check(test_state, 1 - _group);
 }
 
-bool RuleStandard::is_check(godot::Ref<State> _state, int _group)
+bool RuleStandard::is_check(const godot::Ref<State> &_state, int _group)
 {
 	int enemy_king = _group == 0 ? 'k' : 'K';
 	uint64_t enemy_king_mask = _state->get_bit(enemy_king);
@@ -628,7 +628,7 @@ bool RuleStandard::is_check(godot::Ref<State> _state, int _group)
 	return false;
 }
 
-bool RuleStandard::is_blocked(godot::Ref<State> _state, int _from, int _to)
+bool RuleStandard::is_blocked(const godot::Ref<State> &_state, int _from, int _to)
 {
 	if (_to & 0x88)
 	{
@@ -655,17 +655,17 @@ bool RuleStandard::is_blocked(godot::Ref<State> _state, int _from, int _to)
 	return false;
 }
 
-bool RuleStandard::is_enemy(godot::Ref<State> _state, int _from, int _to)
+bool RuleStandard::is_enemy(const godot::Ref<State> &_state, int _from, int _to)
 {
 	return _state->has_piece(_to) && (_state->get_piece(_to) & 95) != 'W' && (!Chess::is_same_group(_state->get_piece(_from), _state->get_piece(_to)) || (_state->get_piece(_to) & 95) == 'X');
 }
 
-bool RuleStandard::is_en_passant(godot::Ref<State> _state, int _from, int _to)
+bool RuleStandard::is_en_passant(const godot::Ref<State> &_state, int _from, int _to)
 {
 	return ((_from >> 4) == 3 || (_from >> 4) == 4) && _state->get_en_passant() == _to;
 }
 
-godot::PackedInt32Array RuleStandard::generate_premove(godot::Ref<State> _state, int _group)
+godot::PackedInt32Array RuleStandard::generate_premove(const godot::Ref<State> &_state, int _group)
 {
 	godot::PackedInt32Array output;
 	for (State::PieceIterator iter = _state->piece_iterator_begin(_group == 0 ? 'A' : 'a'); !iter.end(); iter.next())
@@ -770,14 +770,14 @@ godot::PackedInt32Array RuleStandard::generate_premove(godot::Ref<State> _state,
 	return output;
 }
 
-godot::PackedInt32Array RuleStandard::generate_move(godot::Ref<State> _state, int _group)
+godot::PackedInt32Array RuleStandard::generate_move(const godot::Ref<State> &_state, int _group)
 {
 	godot::PackedInt32Array output;
 	_internal_generate_move(output, _state, _group);
 	return output;
 }
 
-void RuleStandard::_internal_generate_move(godot::PackedInt32Array &output, godot::Ref<State> _state, int _group)
+void RuleStandard::_internal_generate_move(godot::PackedInt32Array &output, const godot::Ref<State> &_state, int _group)
 {
 	for (State::PieceIterator iter = _state->piece_iterator_begin(_group == 0 ? 'A' : 'a'); !iter.end(); iter.next())
 	{
@@ -901,14 +901,14 @@ void RuleStandard::_internal_generate_move(godot::PackedInt32Array &output, godo
 	}
 }
 
-godot::PackedInt32Array RuleStandard::generate_valid_move(godot::Ref<State>_state, int _group)
+godot::PackedInt32Array RuleStandard::generate_valid_move(const godot::Ref<State> &_state, int _group)
 {
 	godot::PackedInt32Array output;
 	_internal_generate_valid_move(output, _state, _group);
 	return output;
 }
 
-void RuleStandard::_internal_generate_valid_move(godot::PackedInt32Array &output, godot::Ref<State> _state, int _group)
+void RuleStandard::_internal_generate_valid_move(godot::PackedInt32Array &output, const godot::Ref<State> &_state, int _group)
 {
 	godot::PackedInt32Array move_list;
 	_internal_generate_move(move_list, _state, _group);
@@ -923,7 +923,7 @@ void RuleStandard::_internal_generate_valid_move(godot::PackedInt32Array &output
 	}
 }
 
-godot::PackedInt32Array RuleStandard::generate_explore_move(godot::Ref<State> _state, int _group)
+godot::PackedInt32Array RuleStandard::generate_explore_move(const godot::Ref<State> &_state, int _group)
 {
 	godot::PackedInt32Array move_list = generate_valid_move(_state, _group);
 	if (_state->get_bit(_group == 0 ? 'K' : 'k'))
@@ -972,7 +972,7 @@ godot::PackedInt32Array RuleStandard::generate_explore_move(godot::Ref<State> _s
 	return move_list;
 }
 
-godot::PackedInt32Array RuleStandard::generate_king_path(godot::Ref<State> _state, int _from, int _to)
+godot::PackedInt32Array RuleStandard::generate_king_path(const godot::Ref<State> &_state, int _from, int _to)
 {
 	std::vector<std::pair<int, godot::PackedInt32Array>> dp(64, std::make_pair(0x7FFFFFFF, godot::PackedInt32Array()));
 	std::vector<bool> shortest(64, false);
@@ -1022,7 +1022,7 @@ godot::PackedInt32Array RuleStandard::generate_king_path(godot::Ref<State> _stat
 	return dp[Chess::to_64(_to)].second;
 }
 
-godot::String RuleStandard::get_move_name(godot::Ref<State> _state, int move)
+godot::String RuleStandard::get_move_name(const godot::Ref<State> &_state, int move)
 {
 	int from = Chess::get_singleton()->from(move);
 	int to = Chess::get_singleton()->to(move);
@@ -1109,7 +1109,7 @@ godot::String RuleStandard::get_move_name(godot::Ref<State> _state, int move)
 	return ans;
 }
 
-int RuleStandard::name_to_move(godot::Ref<State> _state, godot::String _name)
+int RuleStandard::name_to_move(const godot::Ref<State> &_state, const godot::String &_name)
 {
 	godot::PackedInt32Array move_list = generate_move(_state, _state->get_turn());
 	for (int i = 0; i < move_list.size(); i++)
@@ -1123,7 +1123,7 @@ int RuleStandard::name_to_move(godot::Ref<State> _state, godot::String _name)
 	return -1;
 }
 
-void RuleStandard::apply_move(godot::Ref<State>_state, int _move)
+void RuleStandard::apply_move(const godot::Ref<State> &_state, int _move)
 {
 	if (_state->get_turn() == 1)
 	{
@@ -1279,7 +1279,7 @@ void RuleStandard::apply_move(godot::Ref<State>_state, int _move)
 }
 
 
-godot::Dictionary RuleStandard::apply_move_custom(godot::Ref<State> _state, int _move)
+godot::Dictionary RuleStandard::apply_move_custom(const godot::Ref<State> &_state, int _move)
 {
 	godot::Dictionary output;
 	int from = Chess::from(_move);
@@ -1377,7 +1377,7 @@ godot::Dictionary RuleStandard::apply_move_custom(godot::Ref<State> _state, int 
 	return output;
 }
 
-uint64_t RuleStandard::perft(godot::Ref<State> _state, int _depth, int group)
+uint64_t RuleStandard::perft(const godot::Ref<State> &_state, int _depth, int group)
 {
 	if (_depth == 0)
 	{
