@@ -255,9 +255,8 @@ PastorEngine::PastorEngine()
 	};
 }
 
-godot::PackedInt32Array PastorEngine::generate_good_capture_move(godot::Ref<State>_state, int _group)
+void PastorEngine::generate_good_capture_move(godot::PackedInt32Array &output, godot::Ref<State>_state, int _group)
 {
-	godot::PackedInt32Array output;
 	for (State::PieceIterator iter = _state->piece_iterator_begin(_group == 0 ? 'A' : 'a'); !iter.end(); iter.next())
 	{
 		int _from = iter.pos();
@@ -359,7 +358,6 @@ godot::PackedInt32Array PastorEngine::generate_good_capture_move(godot::Ref<Stat
 			}
 		}
 	}
-	return output;
 }
 
 
@@ -470,7 +468,8 @@ int PastorEngine::quies(godot::Ref<State> _state, int score, int _alpha, int _be
 	{
 		_alpha = score_relative;
 	}
-	godot::PackedInt32Array move_list = generate_good_capture_move(_state, _group);
+	godot::PackedInt32Array move_list;
+	generate_good_capture_move(move_list, _state, _group);
 	std::sort(move_list.ptrw(), move_list.ptrw() + move_list.size(), std::bind(compare_move, this, std::placeholders::_1, std::placeholders::_2, 0, 0, 0, _state, nullptr));
 	for (int i = 0; i < move_list.size(); i++)
 	{
