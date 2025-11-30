@@ -591,7 +591,15 @@ int PastorEngine::alphabeta(const godot::Ref<State> &_state, int score, int _alp
 			return _beta;
 		}
 	}
-	godot::PackedInt32Array move_list = RuleStandard::get_singleton()->generate_valid_move(_state, _group);
+	godot::PackedInt32Array move_list;
+	if (RuleStandard::get_singleton()->is_check(_state, 1 - _group))
+	{
+		RuleStandard::get_singleton()->_internal_generate_valid_move(move_list, _state, _group);
+	}
+	else
+	{
+		RuleStandard::get_singleton()->_internal_generate_move(move_list, _state, _group);
+	}
 	if (move_list.size() == 0)
 	{
 		if (RuleStandard::get_singleton()->is_check(_state, 1 - _group))
