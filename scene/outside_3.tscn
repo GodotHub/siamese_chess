@@ -7,7 +7,7 @@
 [ext_resource type="PackedScene" uid="uid://bfl3bn4u2am21" path="res://scene/tree.tscn" id="7_l2gin"]
 [ext_resource type="PackedScene" uid="uid://rlos56ckp02d" path="res://scene/shrub.tscn" id="8_j2blk"]
 [ext_resource type="PackedScene" uid="uid://d13fcqueggvup" path="res://assets/model/fence.glb" id="9_0c3bi"]
-[ext_resource type="Script" uid="uid://chtqhpiu556i1" path="res://src/marker_bit.gd" id="10_4agfd"]
+[ext_resource type="Script" uid="uid://bt4vtnpxu5i4x" path="res://src/actor.gd" id="9_4agfd"]
 [ext_resource type="PackedScene" uid="uid://8kbw64nuq0ai" path="res://assets/model/fence_turn.glb" id="11_4agfd"]
 [ext_resource type="Script" uid="uid://bbi6kjxerg3hk" path="res://src/marker_teleport.gd" id="11_ebvva"]
 
@@ -86,54 +86,54 @@ metadata/_custom_type_script = "uid://bbi6kjxerg3hk"
 [node name="fence_7" parent="." instance=ExtResource("9_0c3bi")]
 transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -7, 0, 1)
 
-[node name="marker_bit_7" type="Marker3D" parent="."]
+[node name="actor_y" type="Node3D" parent="."]
 transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -7, 0, 1)
-script = ExtResource("10_4agfd")
-piece = 35
-metadata/_custom_type_script = "uid://chtqhpiu556i1"
+script = ExtResource("9_4agfd")
+piece_type = 121
+metadata/_custom_type_script = "uid://bt4vtnpxu5i4x"
 
 [node name="fence_8" parent="." instance=ExtResource("9_0c3bi")]
 transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -7, 0, -1)
 
-[node name="marker_bit_8" type="Marker3D" parent="."]
+[node name="actor_y_2" type="Node3D" parent="."]
 transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -7, 0, -1)
 visible = false
-script = ExtResource("10_4agfd")
-piece = 35
-metadata/_custom_type_script = "uid://chtqhpiu556i1"
+script = ExtResource("9_4agfd")
+piece_type = 121
+metadata/_custom_type_script = "uid://bt4vtnpxu5i4x"
 
 [node name="fence_9" parent="." instance=ExtResource("9_0c3bi")]
 transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -7, 0, -3)
 
-[node name="marker_bit_9" type="Marker3D" parent="."]
+[node name="actor_y_3" type="Node3D" parent="."]
 transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -7, 0, -3)
-script = ExtResource("10_4agfd")
-piece = 35
-metadata/_custom_type_script = "uid://chtqhpiu556i1"
+script = ExtResource("9_4agfd")
+piece_type = 121
+metadata/_custom_type_script = "uid://bt4vtnpxu5i4x"
 
 [node name="fence_10" parent="." instance=ExtResource("9_0c3bi")]
 transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -7, 0, -5)
 
-[node name="marker_bit_10" type="Marker3D" parent="."]
+[node name="actor_y_4" type="Node3D" parent="."]
 transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -7, 0, -5)
-script = ExtResource("10_4agfd")
-piece = 35
-metadata/_custom_type_script = "uid://chtqhpiu556i1"
+script = ExtResource("9_4agfd")
+piece_type = 121
+metadata/_custom_type_script = "uid://bt4vtnpxu5i4x"
 
 [node name="fence_11" parent="." instance=ExtResource("9_0c3bi")]
 transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -7, 0, -7)
 
-[node name="marker_bit_11" type="Marker3D" parent="."]
+[node name="actor_y_5" type="Node3D" parent="."]
 transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -7, 0, -7)
-script = ExtResource("10_4agfd")
-piece = 35
-metadata/_custom_type_script = "uid://chtqhpiu556i1"
+script = ExtResource("9_4agfd")
+piece_type = 121
+metadata/_custom_type_script = "uid://bt4vtnpxu5i4x"
 
-[node name="marker_bit_13" type="Marker3D" parent="."]
+[node name="actor_y_6" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7, 0, 3)
-script = ExtResource("10_4agfd")
-piece = 35
-metadata/_custom_type_script = "uid://chtqhpiu556i1"
+script = ExtResource("9_4agfd")
+piece_type = 121
+metadata/_custom_type_script = "uid://bt4vtnpxu5i4x"
 
 [node name="fence_turn_2" parent="." instance=ExtResource("11_4agfd")]
 transform = Transform3D(1, 0, 1.74846e-07, 0, 1, 0, -1.74846e-07, 0, 1, -7, 0, 3)
