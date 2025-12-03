@@ -12,7 +12,7 @@ func _ready() -> void:
 	engine.set_think_time(INF)
 	engine.set_max_depth(8)
 	var thread:Thread = Thread.new()
-	thread.start(make_database)
+	thread.start(performance_test)
 
 func _physics_process(_delta:float) -> void:
 	while progress_bar_data.size() > progress_bar.size():
@@ -20,14 +20,22 @@ func _physics_process(_delta:float) -> void:
 	for i:int in range(progress_bar_data.size()):
 		progress_bar[i].value = progress_bar_data[i]
 
-func make_database() -> void:
+func performance_test() -> void:
 	chess_state = RuleStandard.parse("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
-	engine.set_max_depth(20)
+	var time_start:float = Time.get_ticks_usec()
+	# RuleStandard.search(chess_state, 0, transposition_table, Callable(), 6, debug_output)
 	engine.start_search(chess_state, 0, [], debug_output)
 	await engine.search_finished
-	main_variation = engine.get_principal_variation()
-	print(main_variation)
-	engine.get_transposition_table().save_file("user://standard_opening.fa")
+	var time_end:float = Time.get_ticks_usec()
+	var test_state:State = chess_state.duplicate()
+	var variation:PackedInt32Array = engine.get_principal_variation()
+	var text:String = ""
+	for iter:int in variation:
+		var move_name:String = RuleStandard.get_move_name(test_state, iter)
+		text += move_name + " "
+		RuleStandard.apply_move(test_state, iter)
+	print(text)
+	print(time_end - time_start)
 
 func debug_output(_zobrist:int, depth:int, cur:int, total:int) -> void:
 	while depth >= progress_bar_data.size():
@@ -35,11 +43,6 @@ func debug_output(_zobrist:int, depth:int, cur:int, total:int) -> void:
 		progress_bar_data.push_back(0)
 	zobrist[depth] = _zobrist
 	progress_bar_data[depth] = float(cur) / float(total) * 100.0
-
-func get_value(depth:int, move:int, _value:int) -> void:
-	if main_variation.size() <= depth:
-		main_variation.resize(depth + 1)
-	main_variation[depth] = move
 
 func add_progress_bar() -> void:
 	var new_progress_bar:ProgressBar = ProgressBar.new()
