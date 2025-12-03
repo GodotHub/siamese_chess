@@ -1,0 +1,30 @@
+[gd_scene load_steps=3 format=3 uid="uid://rxu1cqxjo2dn"]
+
+[ext_resource type="PackedScene" uid="uid://cd30yi3gohbq5" path="res://assets/model/upright_piano.glb" id="1_mm7xa"]
+[ext_resource type="PackedScene" uid="uid://caqylflasg3lw" path="res://assets/model/upright_piano_chair.glb" id="2_qtvcp"]
+
+[node name="upright_piano" instance=ExtResource("1_mm7xa")]
+
+[node name="piano" parent="." index="0"]
+transform = Transform3D(1.15197, 0, 0, 0, 1.15197, 0, 0, 0, 1.15197, -0.000336002, -0.000632915, -0.624198)
+
+[node name="pedal_middle" parent="." index="1"]
+transform = Transform3D(1.15197, 0, 0, 0, 1.15197, 0, 0, 0, 1.15197, -0.000336002, -0.000632915, -0.624198)
+
+[node name="pedal_left" parent="." index="2"]
+transform = Transform3D(1.15197, 0, 0, 0, 1.15197, 0, 0, 0, 1.15197, -0.0839947, -0.000632915, -0.624198)
+
+[node name="pedal_right" parent="." index="3"]
+transform = Transform3D(1.15197, 0, 0, 0, 1.15197, 0, 0, 0, 1.15197, 0.0870067, -0.000632915, -0.624198)
+
+[node name="white_keys" parent="." index="4"]
+transform = Transform3D(1.15197, 0, 0, 0, 1.15197, 0, 0, 0, 1.15197, -0.000336002, -0.000632915, -0.624198)
+
+[node name="black_keys" parent="." index="5"]
+transform = Transform3D(1.15197, 0, 0, 0, 1.15197, 0, 0, 0, 1.15197, 0.0138089, 0.0329507, -0.624198)
+
+[node name="piano_001" parent="." index="6"]
+transform = Transform3D(1.15197, 0, 0, 0, 1.15197, 0, 0, 0, 1.15197, -0.000336002, -0.000632915, -0.624198)
+
+[node name="upright_piano_chair" parent="." index="7" instance=ExtResource("2_qtvcp")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.544648)

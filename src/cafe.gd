@@ -27,7 +27,6 @@ func _ready() -> void:
 	title[0x54] = "玉兰"
 	interact_list[0x55] = {"下棋": interact_pastor}
 	title[0x55] = "玉兰"
-	interact_list[0x25] = {"": change_scene}
 
 func interact_pastor() -> void:
 	var from:int = $chessboard.state.bit_index("k".unicode_at(0))[0]
@@ -154,7 +153,3 @@ func game_end() -> void:
 	$chessboard.set_enabled(true)
 	$table_0/chessboard_standard.set_enabled(false)
 	game_ended.emit()
-
-func change_scene() -> void:
-	HoldCard.reset()
-	Loading.change_scene("res://scene/outside_0.tscn", {"by": 0x04})
