@@ -14,5 +14,5 @@ func add_card() -> void:
 	var card:CardTarot = CardTarot.new()
 	card.cover = load("res://assets/texture/tarot_0.svg")
 	card.piece = "n".unicode_at(0)
-	card.actor = load("res://scene/cheshire.tscn").instantiate()
+	card.actor = load("res://scene/actor/cheshire.tscn").instantiate()
 	HoldCard.add_card(card)

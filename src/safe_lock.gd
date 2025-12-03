@@ -95,5 +95,5 @@ func unlock_archive() -> void:
 	if !FileAccess.file_exists("user://archive/piece.queen.json"):
 		var path:String = "user://archive/piece.queen.json"
 		var file:FileAccess = FileAccess.open(path, FileAccess.WRITE)
-		file.store_string("{\"path\": \"res://scene/piece_queen_white.tscn\"}")
+		file.store_string("{\"path\": \"res://scene/actor/piece_queen_white.tscn\"}")
 		file.close()

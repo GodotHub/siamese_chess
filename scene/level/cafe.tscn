@@ -9,7 +9,7 @@
 [ext_resource type="Texture2D" uid="uid://h85ppsibn8xk" path="res://assets/texture/Texturelabs_Wood_256S.jpg" id="8_yx65i"]
 [ext_resource type="PackedScene" uid="uid://df443q5sl4vaj" path="res://assets/model/sofa.glb" id="9_fsnob"]
 [ext_resource type="Texture2D" uid="uid://d15qcqdl3xuf3" path="res://assets/texture/Texturelabs_Fabric_186S.jpg" id="10_jb28s"]
-[ext_resource type="PackedScene" uid="uid://crucchfeabm" path="res://scene/pastor.tscn" id="11_ogoy6"]
+[ext_resource type="PackedScene" uid="uid://crucchfeabm" path="res://scene/actor/pastor.tscn" id="11_ogoy6"]
 [ext_resource type="PackedScene" uid="uid://d1s6qj7aofldk" path="res://scene/chessboard.tscn" id="12_yx65i"]
 [ext_resource type="PackedScene" uid="uid://bw127d1iawnv3" path="res://assets/model/radermachera_sinica.glb" id="13_fsnob"]
 [ext_resource type="Script" uid="uid://bt4vtnpxu5i4x" path="res://src/actor.gd" id="14_e7kou"]

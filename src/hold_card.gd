@@ -33,12 +33,12 @@ func init_card() -> void:
 	var card_1:CardTarot = CardTarot.new()
 	card_1.cover = load("res://assets/texture/tarot_1.svg")
 	card_1.piece = "n".unicode_at(0)
-	card_1.actor = load("res://scene/piece_knight_black.tscn").instantiate().set_larger_scale()
+	card_1.actor = load("res://scene/actor/piece_knight_black.tscn").instantiate().set_larger_scale()
 	card_list.push_back(card_1)
 	var card_2:CardTarot = CardTarot.new()
 	card_2.cover = load("res://assets/texture/tarot_2.svg")
 	card_2.piece = "b".unicode_at(0)
-	card_2.actor = load("res://scene/pastor.tscn").instantiate()
+	card_2.actor = load("res://scene/actor/pastor.tscn").instantiate()
 	card_list.push_back(card_2)
 
 func reset() -> void:

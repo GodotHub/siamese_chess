@@ -11,7 +11,7 @@ signal animation_finished()
 @export var COLOR_MOVE:Color = Color(0.3, 0.3, 0.3, 1)
 @export var COLOR_POINTER:Color = Color(0.3, 0.3, 0.3, 1)
 
-@onready var fallback_piece:Actor = load("res://scene/piece_shrub.tscn").instantiate()
+@onready var fallback_piece:Actor = load("res://scene/actor/piece_shrub.tscn").instantiate()
 var backup_piece:Array = []	#  被吃的子统一放这里管理
 var mouse_start_position_name:String = ""
 var mouse_moved:bool = false
@@ -31,45 +31,45 @@ func add_default_piece_set() -> void:	# 最好交由外部来负责棋子的准�
 	for i:int in 128:
 		match String.chr(state.get_piece(i)):
 			"K":
-				add_piece_instance(load("res://scene/piece_king_white.tscn").instantiate().set_show_on_backup(false), i)
+				add_piece_instance(load("res://scene/actor/piece_king_white.tscn").instantiate().set_show_on_backup(false), i)
 			"Q":
-				add_piece_instance(load("res://scene/piece_queen_white.tscn").instantiate().set_show_on_backup(false), i)
+				add_piece_instance(load("res://scene/actor/piece_queen_white.tscn").instantiate().set_show_on_backup(false), i)
 			"R":
-				add_piece_instance(load("res://scene/piece_rook_white.tscn").instantiate().set_show_on_backup(false), i)
+				add_piece_instance(load("res://scene/actor/piece_rook_white.tscn").instantiate().set_show_on_backup(false), i)
 			"B":
-				add_piece_instance(load("res://scene/piece_bishop_white.tscn").instantiate().set_show_on_backup(false), i)
+				add_piece_instance(load("res://scene/actor/piece_bishop_white.tscn").instantiate().set_show_on_backup(false), i)
 			"N":
-				add_piece_instance(load("res://scene/piece_knight_white.tscn").instantiate().set_show_on_backup(false), i)
+				add_piece_instance(load("res://scene/actor/piece_knight_white.tscn").instantiate().set_show_on_backup(false), i)
 			"P":
-				add_piece_instance(load("res://scene/piece_pawn_white.tscn").instantiate().set_show_on_backup(false), i)
+				add_piece_instance(load("res://scene/actor/piece_pawn_white.tscn").instantiate().set_show_on_backup(false), i)
 			"W":
-				add_piece_instance(load("res://scene/piece_checker_1_white.tscn").instantiate().set_show_on_backup(false), i)
+				add_piece_instance(load("res://scene/actor/piece_checker_1_white.tscn").instantiate().set_show_on_backup(false), i)
 			"X":
-				add_piece_instance(load("res://scene/piece_checker_2_white.tscn").instantiate().set_show_on_backup(false), i)
+				add_piece_instance(load("res://scene/actor/piece_checker_2_white.tscn").instantiate().set_show_on_backup(false), i)
 			"Y":
-				add_piece_instance(load("res://scene/piece_checker_3_white.tscn").instantiate().set_show_on_backup(false), i)
+				add_piece_instance(load("res://scene/actor/piece_checker_3_white.tscn").instantiate().set_show_on_backup(false), i)
 			"Z":
-				add_piece_instance(load("res://scene/piece_checker_4_white.tscn").instantiate().set_show_on_backup(false), i)
+				add_piece_instance(load("res://scene/actor/piece_checker_4_white.tscn").instantiate().set_show_on_backup(false), i)
 			"k":
-				add_piece_instance(load("res://scene/piece_king_black.tscn").instantiate().set_show_on_backup(false), i)
+				add_piece_instance(load("res://scene/actor/piece_king_black.tscn").instantiate().set_show_on_backup(false), i)
 			"q":
-				add_piece_instance(load("res://scene/piece_queen_black.tscn").instantiate().set_show_on_backup(false), i)
+				add_piece_instance(load("res://scene/actor/piece_queen_black.tscn").instantiate().set_show_on_backup(false), i)
 			"r":
-				add_piece_instance(load("res://scene/piece_rook_black.tscn").instantiate().set_show_on_backup(false), i)
+				add_piece_instance(load("res://scene/actor/piece_rook_black.tscn").instantiate().set_show_on_backup(false), i)
 			"b":
-				add_piece_instance(load("res://scene/piece_bishop_black.tscn").instantiate().set_show_on_backup(false), i)
+				add_piece_instance(load("res://scene/actor/piece_bishop_black.tscn").instantiate().set_show_on_backup(false), i)
 			"n":
-				add_piece_instance(load("res://scene/piece_knight_black.tscn").instantiate().set_show_on_backup(false), i)
+				add_piece_instance(load("res://scene/actor/piece_knight_black.tscn").instantiate().set_show_on_backup(false), i)
 			"p":
-				add_piece_instance(load("res://scene/piece_pawn_black.tscn").instantiate().set_show_on_backup(false), i)
+				add_piece_instance(load("res://scene/actor/piece_pawn_black.tscn").instantiate().set_show_on_backup(false), i)
 			"w":
-				add_piece_instance(load("res://scene/piece_checker_1_black.tscn").instantiate().set_show_on_backup(false), i)
+				add_piece_instance(load("res://scene/actor/piece_checker_1_black.tscn").instantiate().set_show_on_backup(false), i)
 			"x":
-				add_piece_instance(load("res://scene/piece_checker_2_black.tscn").instantiate().set_show_on_backup(false), i)
+				add_piece_instance(load("res://scene/actor/piece_checker_2_black.tscn").instantiate().set_show_on_backup(false), i)
 			"y":
-				add_piece_instance(load("res://scene/piece_checker_3_black.tscn").instantiate().set_show_on_backup(false), i)
+				add_piece_instance(load("res://scene/actor/piece_checker_3_black.tscn").instantiate().set_show_on_backup(false), i)
 			"z":
-				add_piece_instance(load("res://scene/piece_checker_4_black.tscn").instantiate().set_show_on_backup(false), i)
+				add_piece_instance(load("res://scene/actor/piece_checker_4_black.tscn").instantiate().set_show_on_backup(false), i)
 
 func input(_from:Node3D, _to:Area3D, _event:InputEvent, _event_position:Vector3, _normal:Vector3) -> void:
 	if _event is InputEventMouseButton:

@@ -57,21 +57,21 @@ func change_model(_piece:int) -> void:
 	var instance:Actor = null
 	match _piece:
 		81:
-			instance = load("res://scene/piece_queen_white.tscn").instantiate()
+			instance = load("res://scene/actor/piece_queen_white.tscn").instantiate()
 		82:
-			instance = load("res://scene/piece_rook_white.tscn").instantiate()
+			instance = load("res://scene/actor/piece_rook_white.tscn").instantiate()
 		66:
-			instance = load("res://scene/piece_bishop_white.tscn").instantiate()
+			instance = load("res://scene/actor/piece_bishop_white.tscn").instantiate()
 		78:
-			instance = load("res://scene/piece_knight_white.tscn").instantiate()
+			instance = load("res://scene/actor/piece_knight_white.tscn").instantiate()
 		113:
-			instance = load("res://scene/piece_queen_black.tscn").instantiate()
+			instance = load("res://scene/actor/piece_queen_black.tscn").instantiate()
 		114:
-			instance = load("res://scene/piece_rook_black.tscn").instantiate()
+			instance = load("res://scene/actor/piece_rook_black.tscn").instantiate()
 		98:
-			instance = load("res://scene/piece_bishop_black.tscn").instantiate()
+			instance = load("res://scene/actor/piece_bishop_black.tscn").instantiate()
 		110:
-			instance = load("res://scene/piece_knight_black.tscn").instantiate()
+			instance = load("res://scene/actor/piece_knight_black.tscn").instantiate()
 	add_child(instance)
 	instance.top_level = false
 
