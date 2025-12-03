@@ -9,6 +9,8 @@ var waiting:bool = false
 var click_anywhere:bool = false
 var force_selection:bool = false
 var click_cooldown:float = 0
+var tween:Tween = null
+var tween_title:Tween = null
 
 func _ready() -> void:
 	$texture_rect_bottom/label.connect("meta_clicked", clicked_selection)
@@ -37,7 +39,9 @@ func _input(event:InputEvent) -> void:
 		get_viewport().set_input_as_handled()
 
 func push_dialog(text:String, blackscreen:bool = false, _click_anywhere:bool = false, _waiting:bool = false) -> void:
-	var tween:Tween = create_tween()
+	if tween && tween.is_running():
+		tween.kill()
+	tween = create_tween()
 	force_selection = false
 	waiting = _waiting
 	click_anywhere = _click_anywhere
@@ -55,7 +59,9 @@ func push_selection(_selection:PackedStringArray, _force_selection:bool = true, 
 	selection = _selection
 	for iter:String in selection:
 		text += "[url=\"" + iter + "\"]" + tr(iter) + "[/url]  "
-	var tween:Tween = create_tween()
+	if tween && tween.is_running():
+		tween.kill()
+	tween = create_tween()
 	if blackscreen:
 		tween.tween_property($texture_rect_full, "visible", true, 0)
 	tween.tween_interval(0.3)
@@ -63,11 +69,17 @@ func push_selection(_selection:PackedStringArray, _force_selection:bool = true, 
 	tween.tween_property($texture_rect_full, "visible", false, 0)
 
 func set_title(text:String) -> void:
-	var tween:Tween = create_tween()
-	tween.tween_interval(0.3)
-	tween.tween_property($texture_rect_top/label, "text", text, 0)
+	if tween_title && tween_title.is_running():
+		tween_title.kill()
+	tween_title = create_tween()
+	tween_title.tween_interval(0.3)
+	tween_title.tween_property($texture_rect_top/label, "text", text, 0)
 
 func clear() -> void:
+	if tween && tween.is_running():
+		tween.kill()
+	if tween_title && tween_title.is_running():
+		tween_title.kill()
 	$texture_rect_bottom/label.text = ""
 	$texture_rect_top/label.text = ""
 	click_anywhere = false
