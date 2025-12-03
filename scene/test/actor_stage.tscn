@@ -1,6 +1,6 @@
 [gd_scene load_steps=8 format=3 uid="uid://i5cotwjboy0g"]
 
-[ext_resource type="Script" uid="uid://diiqv0o1t35ue" path="res://src/actor_stage.gd" id="1_iy66g"]
+[ext_resource type="Script" uid="uid://diiqv0o1t35ue" path="res://src/test/actor_stage.gd" id="1_iy66g"]
 [ext_resource type="PackedScene" uid="uid://bjdbj6ulswxgl" path="res://scene/actor/cheshire.tscn" id="1_pvi36"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_iy66g"]

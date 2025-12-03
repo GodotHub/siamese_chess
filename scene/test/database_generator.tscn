@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://b00nn8gq4ybud"]
 
-[ext_resource type="Script" uid="uid://bhbtth11qi5dn" path="res://src/database_generator.gd" id="1_tn6e1"]
+[ext_resource type="Script" uid="uid://bhbtth11qi5dn" path="res://src/test/database_generator.gd" id="1_tn6e1"]
 
 [node name="database_generator" type="Control"]
 layout_mode = 3
