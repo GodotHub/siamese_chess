@@ -1,7 +1,7 @@
 [gd_scene load_steps=34 format=3 uid="uid://b3f1o547exhk0"]
 
 [ext_resource type="PackedScene" uid="uid://s1v4ec45m2i5" path="res://assets/model/cheshire.glb" id="1_gqvfc"]
-[ext_resource type="Script" uid="uid://ckqop5jjivbg0" path="res://src/cheshire.gd" id="2_i4qp0"]
+[ext_resource type="Script" uid="uid://ckqop5jjivbg0" path="res://src/actor/cheshire.gd" id="2_i4qp0"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_a2gjj"]
 cull_mode = 1

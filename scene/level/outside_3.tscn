@@ -1,6 +1,6 @@
 [gd_scene load_steps=14 format=3 uid="uid://c6ey8gnor627h"]
 
-[ext_resource type="Script" uid="uid://cjddqgsgfo4hw" path="res://src/outside.gd" id="1_4agfd"]
+[ext_resource type="Script" uid="uid://cjddqgsgfo4hw" path="res://src/level/outside.gd" id="1_4agfd"]
 [ext_resource type="PackedScene" uid="uid://b3ml34bssywkr" path="res://scene/player.tscn" id="2_x378j"]
 [ext_resource type="PackedScene" uid="uid://dwvyc2qlcdag0" path="res://scene/chessboard_large.tscn" id="5_wlbto"]
 [ext_resource type="PackedScene" uid="uid://ekjtt81nkr2f" path="res://scene/actor/flower.tscn" id="6_7hbya"]

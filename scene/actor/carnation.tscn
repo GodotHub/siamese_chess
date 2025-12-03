@@ -1,7 +1,7 @@
 [gd_scene load_steps=5 format=3 uid="uid://d1orpuo40iup6"]
 
 [ext_resource type="PackedScene" uid="uid://c6jort6rt0j8h" path="res://assets/model/carnation.glb" id="1_74he7"]
-[ext_resource type="Script" uid="uid://dt43fcqhq8wr6" path="res://src/carnation.gd" id="2_eoyf3"]
+[ext_resource type="Script" uid="uid://dt43fcqhq8wr6" path="res://src/actor/carnation.gd" id="2_eoyf3"]
 
 [sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_74he7"]
 animation = &"idle"

@@ -1,7 +1,7 @@
 [gd_scene load_steps=6 format=3 uid="uid://crucchfeabm"]
 
 [ext_resource type="PackedScene" uid="uid://fpjpqr5sn1q7" path="res://assets/model/pastor.glb" id="1_np4ha"]
-[ext_resource type="Script" uid="uid://bx2k1annb145y" path="res://src/pastor.gd" id="2_0fow0"]
+[ext_resource type="Script" uid="uid://bx2k1annb145y" path="res://src/actor/pastor.gd" id="2_0fow0"]
 
 [sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_0fow0"]
 animation = &"battle_idle"

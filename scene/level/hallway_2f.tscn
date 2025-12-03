@@ -1,6 +1,6 @@
 [gd_scene load_steps=13 format=3 uid="uid://dqhrjov2u5bkh"]
 
-[ext_resource type="Script" uid="uid://cnmdm2via55ge" path="res://src/hallway_2f.gd" id="1_gs125"]
+[ext_resource type="Script" uid="uid://cnmdm2via55ge" path="res://src/level/hallway_2f.gd" id="1_gs125"]
 [ext_resource type="PackedScene" uid="uid://b3ml34bssywkr" path="res://scene/player.tscn" id="2_e5n4w"]
 [ext_resource type="PackedScene" uid="uid://dwvyc2qlcdag0" path="res://scene/chessboard_large.tscn" id="3_7733s"]
 [ext_resource type="PackedScene" uid="uid://bw021nt6bdr6t" path="res://assets/model/elevator.glb" id="4_ucain"]

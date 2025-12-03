@@ -1,7 +1,7 @@
 [gd_scene load_steps=7 format=3 uid="uid://dvfilx1shno5w"]
 
 [ext_resource type="PackedScene" uid="uid://bopgdgv46gefh" path="res://assets/model/piece_king.glb" id="1_wwyhy"]
-[ext_resource type="Script" uid="uid://pofjvdbbj3iy" path="res://src/piece.gd" id="2_bjoa2"]
+[ext_resource type="Script" uid="uid://pofjvdbbj3iy" path="res://src/actor/piece.gd" id="2_bjoa2"]
 [ext_resource type="Shader" uid="uid://dd7xsr1eeq6mo" path="res://src/unmoving_plaid.gdshader" id="3_g2tcd"]
 [ext_resource type="Texture2D" uid="uid://c41qgg7cur57o" path="res://assets/texture/Texturelabs_Stone_131S.jpg" id="4_at6jl"]
 

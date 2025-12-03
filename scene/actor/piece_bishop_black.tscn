@@ -1,7 +1,7 @@
 [gd_scene load_steps=7 format=3 uid="uid://8fh667jl5ppl"]
 
 [ext_resource type="PackedScene" uid="uid://biryspvlw2sv7" path="res://assets/model/piece_bishop.glb" id="1_0yd1k"]
-[ext_resource type="Script" uid="uid://pofjvdbbj3iy" path="res://src/piece.gd" id="2_g7twr"]
+[ext_resource type="Script" uid="uid://pofjvdbbj3iy" path="res://src/actor/piece.gd" id="2_g7twr"]
 [ext_resource type="Shader" uid="uid://dd7xsr1eeq6mo" path="res://src/unmoving_plaid.gdshader" id="3_jdrpt"]
 [ext_resource type="Texture2D" uid="uid://dc1bupw2qibgu" path="res://assets/texture/Texturelabs_Paper_374S.jpg" id="4_jw2ng"]
 

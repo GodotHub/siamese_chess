@@ -1,7 +1,7 @@
 [gd_scene load_steps=31 format=3 uid="uid://bjdbj6ulswxgl"]
 
 [ext_resource type="PackedScene" uid="uid://s1v4ec45m2i5" path="res://assets/model/cheshire.glb" id="1_lkfns"]
-[ext_resource type="Script" uid="uid://ckqop5jjivbg0" path="res://src/cheshire.gd" id="2_lp02k"]
+[ext_resource type="Script" uid="uid://ckqop5jjivbg0" path="res://src/actor/cheshire.gd" id="2_lp02k"]
 
 [sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_3kauh"]
 animation = &"battle_attack"
