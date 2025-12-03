@@ -77,7 +77,7 @@ piece_type = 88
 [node name="marker_teleport" type="Marker3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7, 0, 5)
 script = ExtResource("11_ebvva")
-to = "res://scene/outside_2.tscn"
+to = "res://scene/level/outside_2.tscn"
 args = {
 "by": 103
 }

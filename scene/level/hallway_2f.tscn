@@ -92,7 +92,7 @@ material = SubResource("StandardMaterial3D_ucain")
 [node name="marker_teleport_elevator" type="Marker3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 0, -7)
 script = ExtResource("6_a0cdp")
-to = "res://scene/reception_lobby.tscn"
+to = "res://scene/level/reception_lobby.tscn"
 args = {
 "by": 2
 }
@@ -101,7 +101,7 @@ metadata/_custom_type_script = "uid://bbi6kjxerg3hk"
 [node name="marker_teleport_music_room" type="Marker3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0, -1)
 script = ExtResource("6_a0cdp")
-to = "res://scene/music_room.tscn"
+to = "res://scene/level/music_room.tscn"
 args = {
 "by": 33
 }

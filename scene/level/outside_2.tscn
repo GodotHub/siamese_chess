@@ -115,7 +115,7 @@ piece_type = 81
 [node name="marker_teleport" type="Marker3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7, 0, 5)
 script = ExtResource("11_ogq1s")
-to = "res://scene/outside_1.tscn"
+to = "res://scene/level/outside_1.tscn"
 args = {
 "by": 103
 }
@@ -124,7 +124,7 @@ metadata/_custom_type_script = "uid://bbi6kjxerg3hk"
 [node name="marker_teleport_2" type="Marker3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7, 0, 5)
 script = ExtResource("11_ogq1s")
-to = "res://scene/outside_3.tscn"
+to = "res://scene/level/outside_3.tscn"
 args = {
 "by": 96
 }
@@ -239,7 +239,7 @@ transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -3, 0,
 [node name="marker_teleport_3" type="Marker3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7, 0, -3)
 script = ExtResource("11_ogq1s")
-to = "res://scene/outside_1.tscn"
+to = "res://scene/level/outside_1.tscn"
 args = {
 "by": 39
 }

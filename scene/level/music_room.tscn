@@ -60,7 +60,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 0, -4)
 [node name="marker_teleport" type="Marker3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 0, -3)
 script = ExtResource("18_lay20")
-to = "res://scene/hallway_2f.tscn"
+to = "res://scene/level/hallway_2f.tscn"
 args = {
 "by": 34
 }
