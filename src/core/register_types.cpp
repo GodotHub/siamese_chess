@@ -7,7 +7,6 @@
 #include <godot_cpp/godot.hpp>
 
 #include "chess.hpp"
-#include "rule_standard.hpp"
 #include "state.hpp"
 #include "opening_book.hpp"
 #include "transposition_table.hpp"
@@ -23,7 +22,6 @@ void initialize_siamese_module(godot::ModuleInitializationLevel p_level)
 	}
 
 	godot::ClassDB::register_class<Chess>();
-	godot::ClassDB::register_class<RuleStandard>();
 	godot::ClassDB::register_class<State>();
 	godot::ClassDB::register_class<OpeningBook>();
 	godot::ClassDB::register_class<TranspositionTable>();
@@ -33,7 +31,6 @@ void initialize_siamese_module(godot::ModuleInitializationLevel p_level)
 	
 	godot::Engine::get_singleton()->register_singleton("Chess", Chess::get_singleton());
 	godot::Engine::get_singleton()->register_singleton("ZobristHash", ZobristHash::get_singleton());
-	godot::Engine::get_singleton()->register_singleton("RuleStandard", RuleStandard::get_singleton());
 }
 
 void uninitialize_siamese_module(godot::ModuleInitializationLevel p_level) {

@@ -1,6 +1,5 @@
 #include "state.hpp"
 #include "zobrist_hash.hpp"
-#include "rule_standard.hpp"
 #include "chess.hpp"
 #include <cstring>
 

@@ -8,7 +8,7 @@ var chess_state:State = null
 var engine: PastorEngine = PastorEngine.new()
 
 func _ready() -> void:
-	chess_state = RuleStandard.parse("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
+	chess_state = Chess.parse("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
 	engine.set_think_time(INF)
 	engine.set_max_depth(8)
 	var thread:Thread = Thread.new()
@@ -21,7 +21,7 @@ func _physics_process(_delta:float) -> void:
 		progress_bar[i].value = progress_bar_data[i]
 
 func make_database() -> void:
-	chess_state = RuleStandard.parse("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
+	chess_state = Chess.parse("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
 	engine.set_max_depth(20)
 	engine.start_search(chess_state, 0, [], debug_output)
 	await engine.search_finished

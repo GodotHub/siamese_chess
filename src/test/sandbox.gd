@@ -12,7 +12,7 @@ func _ready() -> void:
 		var text_input_instance:TextInput = TextInput.create_text_input_instance("输入FEN格式的布局：", "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
 		add_child(text_input_instance)
 		await text_input_instance.confirmed
-		state = RuleStandard.parse(text_input_instance.text)
+		state = Chess.parse(text_input_instance.text)
 	initial_state = state.duplicate()
 	chessboard.set_state(state.duplicate())
 	chessboard.add_default_piece_set()
@@ -25,11 +25,11 @@ func _unhandled_input(event:InputEvent) -> void:
 func receive_move() -> void:
 	await check_move()
 	chessboard.execute_move(chessboard.confirm_move)
-	RuleStandard.apply_move(state, chessboard.confirm_move)
+	Chess.apply_move(state, chessboard.confirm_move)
 	update_move()
 
 func update_move() -> void:
-	var move_list:PackedInt32Array = RuleStandard.generate_valid_move(state, state.get_turn())
+	var move_list:PackedInt32Array = Chess.generate_valid_move(state, state.get_turn())
 	chessboard.set_valid_move(move_list)
 
 func check_move() -> bool:

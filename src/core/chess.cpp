@@ -1,213 +1,441 @@
 #include "chess.hpp"
 #include <godot_cpp/core/class_db.hpp>
+#include <random>
+#include <queue>
+#include <unordered_set>
 
 Chess *Chess::singleton = nullptr;
 
+const int Chess::rotate_90_table[64] = {
+	 7, 15, 23, 31, 39, 47, 55, 63,
+	 6, 14, 22, 30, 38, 46, 54, 62,
+	 5, 13, 21, 29, 37, 45, 53, 61,
+	 4, 12, 20, 28, 36, 44, 52, 60,
+	 3, 11, 19, 27, 35, 43, 51, 59,
+	 2, 10, 18, 26, 34, 42, 50, 58,
+	 1,  9, 17, 25, 33, 41, 49, 57,
+	 0,  8, 16, 24, 32, 40, 48, 56
+};
+
+
+const int Chess::rotate_90_reverse_table[64] = {
+	56, 48, 40, 32, 24, 16,  8,  0,
+	57, 49, 41, 33, 25, 17,  9,  1,
+	58, 50, 42, 34, 26, 18, 10,  2,
+	59, 51, 43, 35, 27, 19, 11,  3,
+	60, 52, 44, 36, 28, 20, 12,  4,
+	61, 53, 45, 37, 29, 21, 13,  5,
+	62, 54, 46, 38, 30, 22, 14,  6,
+	63, 55, 47, 39, 31, 23, 15,  7
+};
+
+const int Chess::rotate_45_table[64]
+{
+	0,  2,  5,  9, 14, 20, 27, 35,
+	1,  4,  8, 13, 19, 26, 34, 42,
+	3,  7, 12, 18, 25, 33, 41, 48,
+	6, 11, 17, 24, 32, 40, 47, 53,
+   10, 16, 23, 31, 39, 46, 52, 57,
+   15, 22, 30, 38, 45, 51, 56, 60,
+   21, 29, 37, 44, 50, 55, 59, 62,
+   28, 36, 43, 49, 54, 58, 61, 63
+};
+
+const int Chess::rotate_45_reverse_table[64]
+{
+	               0, 
+	             8,  1,
+	          16,  9,  2,
+	        24, 17, 10,  3,
+	      32, 25, 18, 11,  4,
+	    40, 33, 26, 19, 12,  5,
+	  48, 41, 34, 27, 20, 13,  6,
+	56, 49, 42, 35, 28, 21, 14,  7,
+	  57, 50, 43, 36, 29, 22, 15,
+	    58, 51, 44, 37, 30, 23,
+	      59, 52, 45, 38, 31,
+	        60, 53, 46, 39,
+	          61, 54, 47,
+	            62, 55,
+	              63,
+};
+
+const int Chess::rotate_315_table[64]
+{
+	28, 21, 15, 10,  6,  3,  1,  0,
+	36, 29, 22, 16, 11,  7,  4,  2,
+	43, 37, 30, 23, 17, 12,  8,  5,
+	49, 44, 38, 31, 24, 18, 13,  9,
+	54, 50, 45, 39, 32, 25, 19, 14,
+	58, 55, 51, 46, 40, 33, 26, 20,
+	61, 59, 56, 52, 47, 41, 34, 27,
+	63, 62, 60, 57, 53, 48, 42, 35
+};
+
+const int Chess::rotate_315_reverse_table[64]
+{
+	               7, 
+	             6, 15,
+	           5, 14, 23,
+	         4, 13, 22, 31,
+	       3, 12, 21, 30, 39,
+	     2, 11, 20, 29, 38, 47,
+	   1, 10, 19, 28, 37, 46, 55,
+	 0,  9, 18, 27, 36, 45, 54, 63,
+	   8, 17, 26, 35, 44, 53, 62,
+	    16, 25, 34, 43, 52, 61,
+	      24, 33, 42, 51, 60,
+	        32, 41, 50, 59,
+	          40, 49, 58,
+	            48, 57,
+	              56,
+};
+
+const int Chess::rotate_45_length_table[64]
+{
+	1, 2, 3, 4, 5, 6, 7, 8,
+	2, 3, 4, 5, 6, 7, 8, 7,
+	3, 4, 5, 6, 7, 8, 7, 6,
+	4, 5, 6, 7, 8, 7, 6, 5,
+	5, 6, 7, 8, 7, 6, 5, 4,
+	6, 7, 8, 7, 6, 5, 4, 3,
+	7, 8, 7, 6, 5, 4, 3, 2,
+	8, 7, 6, 5, 4, 3, 2, 1,
+};
+
+const int Chess::rotate_315_length_table[64]
+{
+	8, 7, 6, 5, 4, 3, 2, 1,
+	7, 8, 7, 6, 5, 4, 3, 2,
+	6, 7, 8, 7, 6, 5, 4, 3,
+	5, 6, 7, 8, 7, 6, 5, 4,
+	4, 5, 6, 7, 8, 7, 6, 5,
+	3, 4, 5, 6, 7, 8, 7, 6,
+	2, 3, 4, 5, 6, 7, 8, 7,
+	1, 2, 3, 4, 5, 6, 7, 8,
+};
+
+const int Chess::rotate_45_length_mask_table[64]
+{
+	   1,   3,   7,  15,  31,  63, 127, 255,
+	   3,   7,  15,  31,  63, 127, 255, 127,
+	   7,  15,  31,  63, 127, 255, 127,  63,
+	  15,  31,  63, 127, 255, 127,  63,  31,
+	  31,  63, 127, 255, 127,  63,  31,  15,
+	  63, 127, 255, 127,  63,  31,  15,   7,
+	 127, 255, 127,  63,  31,  15,   7,   3,
+	 255, 127,  63,  31,  15,   7,   3,   1
+};
+
+const int Chess::rotate_315_length_mask_table[64]
+{
+	255, 127,  63,  31,  15,   7,   3,   1,
+	127, 255, 127,  63,  31,  15,   7,   3,
+	 63, 127, 255, 127,  63,  31,  15,   7,
+	 31,  63, 127, 255, 127,  63,  31,  15,
+	 15,  31,  63, 127, 255, 127,  63,  31,
+	  7,  15,  31,  63, 127, 255, 127,  63,
+	  3,   7,  15,  31,  63, 127, 255, 127,
+	  1,   3,   7,  15,  31,  63, 127, 255,
+};
+
+const int Chess::rotate_0_shift_table[64]
+{
+	 0,  0,  0,  0,  0,  0,  0,  0,
+	 8,  8,  8,  8,  8,  8,  8,  8,
+	16, 16, 16, 16, 16, 16, 16, 16,
+	24, 24, 24, 24, 24, 24, 24, 24,
+	32, 32, 32, 32, 32, 32, 32, 32,
+	40, 40, 40, 40, 40, 40, 40, 40,
+	48, 48, 48, 48, 48, 48, 48, 48,
+	56, 56, 56, 56, 56, 56, 56, 56
+};
+
+const int Chess::rotate_90_shift_table[64]
+{
+	0, 8, 16, 24, 32, 40, 48, 56,
+	0, 8, 16, 24, 32, 40, 48, 56,
+	0, 8, 16, 24, 32, 40, 48, 56,
+	0, 8, 16, 24, 32, 40, 48, 56,
+	0, 8, 16, 24, 32, 40, 48, 56,
+	0, 8, 16, 24, 32, 40, 48, 56,
+	0, 8, 16, 24, 32, 40, 48, 56,
+	0, 8, 16, 24, 32, 40, 48, 56
+};
+
+const int Chess::rotate_45_shift_table[64]
+{
+	0,  1,  3,  6, 10, 15, 21, 28,
+	1,  3,  6, 10, 15, 21, 28, 36,
+	3,  6, 10, 15, 21, 28, 36, 43,
+	6, 10, 15, 21, 28, 36, 43, 49,
+   10, 15, 21, 28, 36, 43, 49, 54,
+   15, 21, 28, 36, 43, 49, 54, 58,
+   21, 28, 36, 43, 49, 54, 58, 61,
+   28, 36, 43, 49, 54, 58, 61, 63,
+};
+
+const int Chess::rotate_315_shift_table[64]
+{
+	28, 21, 15, 10,  6,  3,  1,  0,
+	36, 28, 21, 15, 10,  6,  3,  1,
+	43, 36, 28, 21, 15, 10,  6,  3,
+	49, 43, 36, 28, 21, 15, 10,  6,
+	54, 49, 43, 36, 28, 21, 15, 10,
+	58, 54, 49, 43, 36, 28, 21, 15,
+	61, 58, 54, 49, 43, 36, 28, 21,
+	63, 61, 58, 54, 49, 43, 36, 28
+};
+
+int64_t Chess::rank_attacks[64][256] = {};
+int64_t Chess::file_attacks[64][256] = {};	//将棋盘转置后使用
+int64_t Chess::diag_a1h8_attacks[64][256] = {};
+int64_t Chess::diag_a8h1_attacks[64][256] = {};
+int64_t Chess::horse_attacks[64] = {};
+int64_t Chess::king_attacks[64] = {};
+int64_t Chess::pawn_attacks[64][4] = {};	//游戏特殊原因，兵会被设定为四种方向
+
 Chess::Chess()
 {
-
+	for (int i = 0; i < 64; i++)	//直线行
+	{
+		for (int j = 0; j < 256; j++)
+		{
+			uint64_t barrel = uint64_t(j) << Chess::rotate_0_shift(i);
+			int64_t bit = 0;
+			for (int k = Chess::to_x88(i) - 1; !(k & 0x88); k--)	//试着向左走
+			{
+				bit |= Chess::mask(Chess::to_64(k));
+				if (Chess::mask(Chess::to_64(k)) & barrel)
+				{
+					break;
+				}
+			}
+			for (int k = Chess::to_x88(i) + 1; !(k & 0x88); k++)	//试着向右走
+			{
+				bit |= Chess::mask(Chess::to_64(k));
+				if (Chess::mask(Chess::to_64(k)) & barrel)
+				{
+					break;
+				}
+			}
+			rank_attacks[i][j] = bit;
+		}
+	}
+	for (int i = 0; i < 64; i++)	//直线列
+	{
+		for (int j = 0; j < 256; j++)
+		{
+			uint64_t barrel_rotated = uint64_t(j) << Chess::rotate_90_shift(i);
+			uint64_t barrel = 0;
+			for (int k = 0; k < 64; k++)
+			{
+				if (barrel_rotated & 1)
+				{
+					barrel |= Chess::mask(Chess::rotate_90_reverse(k));
+				}
+				barrel_rotated >>= 1;
+			}
+			int64_t bit = 0;
+			for (int k = Chess::to_x88(i) - 16; !(k & 0x88); k -= 16)	//试着向上走
+			{
+				bit |= Chess::mask(Chess::to_64(k));
+				if (Chess::mask(Chess::to_64(k)) & barrel)
+				{
+					break;
+				}
+			}
+			for (int k = Chess::to_x88(i) + 16; !(k & 0x88); k += 16)	//试着向下走
+			{
+				bit |= Chess::mask(Chess::to_64(k));
+				if (Chess::mask(Chess::to_64(k)) & barrel)
+				{
+					break;
+				}
+			}
+			file_attacks[i][j] = bit;
+		}
+	}
+	for (int i = 0; i < 64; i++)	//斜线a1h8
+	{
+		for (int j = 0; j <= Chess::rotate_45_length_mask(i); j++)
+		{
+			uint64_t barrel_rotated = uint64_t(j) << Chess::rotate_45_shift(i);
+			uint64_t barrel = 0;
+			for (int k = 0; k < 64; k++)
+			{
+				if (barrel_rotated & 1)
+				{
+					barrel |= Chess::mask(Chess::rotate_45_reverse(k));
+				}
+				barrel_rotated >>= 1;
+			}
+			int64_t bit = 0;
+			for (int k = Chess::to_x88(i) - 15; !(k & 0x88); k -= 15)	//不超界即可，往右上
+			{
+				bit |= Chess::mask(Chess::to_64(k));
+				if (Chess::mask(Chess::to_64(k)) & barrel)
+				{
+					break;
+				}
+			}
+			for (int k = Chess::to_x88(i) + 15; !(k & 0x88); k += 15)	//往左下
+			{
+				bit |= Chess::mask(Chess::to_64(k));
+				if (Chess::mask(Chess::to_64(k)) & barrel)
+				{
+					break;
+				}
+			}
+			diag_a1h8_attacks[i][j] = bit;
+		}
+	}
+	for (int i = 0; i < 64; i++)	//斜线a8h1
+	{
+		for (int j = 0; j <= Chess::rotate_315_length_mask(i); j++)
+		{
+			uint64_t barrel_rotated = uint64_t(j) << Chess::rotate_315_shift(i);
+			uint64_t barrel = 0;
+			for (int k = 0; k < 64; k++)
+			{
+				if (barrel_rotated & 1)
+				{
+					barrel |= Chess::mask(Chess::rotate_315_reverse(k));
+				}
+				barrel_rotated >>= 1;
+			}
+			int64_t bit = 0;
+			for (int k = Chess::to_x88(i) - 17; !(k & 0x88); k -= 17)	//往左上
+			{
+				bit |= Chess::mask(Chess::to_64(k));
+				if (Chess::mask(Chess::to_64(k)) & barrel)
+				{
+					break;
+				}
+			}
+			for (int k = Chess::to_x88(i) + 17; !(k & 0x88); k += 17)	//往右下
+			{
+				bit |= Chess::mask(Chess::to_64(k));
+				if (Chess::mask(Chess::to_64(k)) & barrel)
+				{
+					break;
+				}
+			}
+			diag_a8h1_attacks[i][j] = bit;
+		}
+	}
+	for (int i = 0; i < 64; i++)	//马
+	{
+		int from = Chess::to_x88(i);
+		for (int j = 0; j < direction_count('N'); j++)
+		{
+			int to = from + direction('N', j);
+			if (to & 0x88)
+			{
+				continue;
+			}
+			horse_attacks[i] |= Chess::mask(Chess::to_64(to));
+		}
+	}
+	for (int i = 0; i < 64; i++)	//王
+	{
+		int from = Chess::to_x88(i);
+		for (int j = 0; j < direction_count('K'); j++)
+		{
+			int to = from + direction('K', j);
+			if (to & 0x88)
+			{
+				continue;
+			}
+			king_attacks[i] |= Chess::mask(Chess::to_64(to));
+		}
+	}
+	for (int i = 0; i < 64; i++)	//兵，且不算吃过路兵
+	{
+		int from = Chess::to_x88(i);
+		int directions_pawn[4][2] = {{-17, -15}, {-15, 17}, {15, 17}, {15, -17}};	//上、右、下、左
+		for (int j = 0; j < 4; j++)
+		{
+			int to = from + directions_pawn[j][0];
+			if (!(to & 0x88))
+			{
+				pawn_attacks[i][j] |= Chess::mask(Chess::to_64(to));
+			}
+			to = from + directions_pawn[j][1];
+			if (!(to & 0x88))
+			{
+				pawn_attacks[i][j] |= Chess::mask(Chess::to_64(to));
+			}
+		}
+	}
 }
 
 int Chess::rotate_90(int n)
 {
-	static const int table[64] = {
-		 7, 15, 23, 31, 39, 47, 55, 63,
-		 6, 14, 22, 30, 38, 46, 54, 62,
-		 5, 13, 21, 29, 37, 45, 53, 61,
-		 4, 12, 20, 28, 36, 44, 52, 60,
-		 3, 11, 19, 27, 35, 43, 51, 59,
-		 2, 10, 18, 26, 34, 42, 50, 58,
-		 1,  9, 17, 25, 33, 41, 49, 57,
-		 0,  8, 16, 24, 32, 40, 48, 56
-	};
-	return table[n];
+	return rotate_90_table[n];
 }
 
 int Chess::rotate_90_reverse(int n)
 {
-	static const int table[64] = {
-		56, 48, 40, 32, 24, 16,  8,  0,
-		57, 49, 41, 33, 25, 17,  9,  1,
-		58, 50, 42, 34, 26, 18, 10,  2,
-		59, 51, 43, 35, 27, 19, 11,  3,
-		60, 52, 44, 36, 28, 20, 12,  4,
-		61, 53, 45, 37, 29, 21, 13,  5,
-		62, 54, 46, 38, 30, 22, 14,  6,
-		63, 55, 47, 39, 31, 23, 15,  7
-	};
-	return table[n];
+	return rotate_90_reverse_table[n];
 }
 
 int Chess::rotate_45(int n)
 {
-	static const int table[64] = {
-		 0,  2,  5,  9, 14, 20, 27, 35,
-		 1,  4,  8, 13, 19, 26, 34, 42,
-		 3,  7, 12, 18, 25, 33, 41, 48,
-		 6, 11, 17, 24, 32, 40, 47, 53,
-		10, 16, 23, 31, 39, 46, 52, 57,
-		15, 22, 30, 38, 45, 51, 56, 60,
-		21, 29, 37, 44, 50, 55, 59, 62,
-		28, 36, 43, 49, 54, 58, 61, 63
-	};
-	return table[n];
+	return rotate_45_table[n];
 }
 int Chess::rotate_45_reverse(int n)
 {
-	static const int table[64] = {
-		               0, 
-		             8,  1,
-		          16,  9,  2,
-		        24, 17, 10,  3,
-		      32, 25, 18, 11,  4,
-		    40, 33, 26, 19, 12,  5,
-		  48, 41, 34, 27, 20, 13,  6,
-		56, 49, 42, 35, 28, 21, 14,  7,
-		  57, 50, 43, 36, 29, 22, 15,
-		    58, 51, 44, 37, 30, 23,
-		      59, 52, 45, 38, 31,
-		        60, 53, 46, 39,
-		          61, 54, 47,
-		            62, 55,
-		              63,
-	};
-	return table[n];
+	return rotate_45_reverse_table[n];
 }
 
 int Chess::rotate_315(int n)
 {
-	static const int table[64] = {
-		28, 21, 15, 10,  6,  3,  1,  0,
-		36, 29, 22, 16, 11,  7,  4,  2,
-		43, 37, 30, 23, 17, 12,  8,  5,
-		49, 44, 38, 31, 24, 18, 13,  9,
-		54, 50, 45, 39, 32, 25, 19, 14,
-		58, 55, 51, 46, 40, 33, 26, 20,
-		61, 59, 56, 52, 47, 41, 34, 27,
-		63, 62, 60, 57, 53, 48, 42, 35
-	};
-	return table[n];
+	return rotate_315_table[n];
 }
 
 int Chess::rotate_315_reverse(int n)
 {
-	static const int table[64] = {
-		               7, 
-		             6, 15,
-		           5, 14, 23,
-		         4, 13, 22, 31,
-		       3, 12, 21, 30, 39,
-		     2, 11, 20, 29, 38, 47,
-		   1, 10, 19, 28, 37, 46, 55,
-		 0,  9, 18, 27, 36, 45, 54, 63,
-		   8, 17, 26, 35, 44, 53, 62,
-		    16, 25, 34, 43, 52, 61,
-		      24, 33, 42, 51, 60,
-		        32, 41, 50, 59,
-		          40, 49, 58,
-		            48, 57,
-		              56,
-	};
-	return table[n];
+	return rotate_315_reverse_table[n];
 }
 int Chess::rotate_45_length(int n)
 {
-	static const int table[64] = {
-		1, 2, 3, 4, 5, 6, 7, 8,
-		2, 3, 4, 5, 6, 7, 8, 7,
-		3, 4, 5, 6, 7, 8, 7, 6,
-		4, 5, 6, 7, 8, 7, 6, 5,
-		5, 6, 7, 8, 7, 6, 5, 4,
-		6, 7, 8, 7, 6, 5, 4, 3,
-		7, 8, 7, 6, 5, 4, 3, 2,
-		8, 7, 6, 5, 4, 3, 2, 1,
-	};
-	return table[n];
+	return rotate_45_length_table[n];
 }
 
 int Chess::rotate_315_length(int n)
 {
-	static const int table[64] = {
-		8, 7, 6, 5, 4, 3, 2, 1,
-		7, 8, 7, 6, 5, 4, 3, 2,
-		6, 7, 8, 7, 6, 5, 4, 3,
-		5, 6, 7, 8, 7, 6, 5, 4,
-		4, 5, 6, 7, 8, 7, 6, 5,
-		3, 4, 5, 6, 7, 8, 7, 6,
-		2, 3, 4, 5, 6, 7, 8, 7,
-		1, 2, 3, 4, 5, 6, 7, 8,
-	};
-	return table[n];
+	return rotate_315_length_table[n];
 }
 
 int Chess::rotate_45_length_mask(int n)
 {
-	static const int table[64] = {
-		(1 << 1) - 1, (1 << 2) - 1, (1 << 3) - 1, (1 << 4) - 1, (1 << 5) - 1, (1 << 6) - 1, (1 << 7) - 1, (1 << 8) - 1,
-		(1 << 2) - 1, (1 << 3) - 1, (1 << 4) - 1, (1 << 5) - 1, (1 << 6) - 1, (1 << 7) - 1, (1 << 8) - 1, (1 << 7) - 1,
-		(1 << 3) - 1, (1 << 4) - 1, (1 << 5) - 1, (1 << 6) - 1, (1 << 7) - 1, (1 << 8) - 1, (1 << 7) - 1, (1 << 6) - 1,
-		(1 << 4) - 1, (1 << 5) - 1, (1 << 6) - 1, (1 << 7) - 1, (1 << 8) - 1, (1 << 7) - 1, (1 << 6) - 1, (1 << 5) - 1,
-		(1 << 5) - 1, (1 << 6) - 1, (1 << 7) - 1, (1 << 8) - 1, (1 << 7) - 1, (1 << 6) - 1, (1 << 5) - 1, (1 << 4) - 1,
-		(1 << 6) - 1, (1 << 7) - 1, (1 << 8) - 1, (1 << 7) - 1, (1 << 6) - 1, (1 << 5) - 1, (1 << 4) - 1, (1 << 3) - 1,
-		(1 << 7) - 1, (1 << 8) - 1, (1 << 7) - 1, (1 << 6) - 1, (1 << 5) - 1, (1 << 4) - 1, (1 << 3) - 1, (1 << 2) - 1,
-		(1 << 8) - 1, (1 << 7) - 1, (1 << 6) - 1, (1 << 5) - 1, (1 << 4) - 1, (1 << 3) - 1, (1 << 2) - 1, (1 << 1) - 1,
-	};
-	return table[n];
+	return rotate_45_length_mask_table[n];
 }
 
 int Chess::rotate_315_length_mask(int n)
 {
-	static const int table[64] = {
-		(1 << 8) - 1, (1 << 7) - 1, (1 << 6) - 1, (1 << 5) - 1, (1 << 4) - 1, (1 << 3) - 1, (1 << 2) - 1, (1 << 1) - 1,
-		(1 << 7) - 1, (1 << 8) - 1, (1 << 7) - 1, (1 << 6) - 1, (1 << 5) - 1, (1 << 4) - 1, (1 << 3) - 1, (1 << 2) - 1,
-		(1 << 6) - 1, (1 << 7) - 1, (1 << 8) - 1, (1 << 7) - 1, (1 << 6) - 1, (1 << 5) - 1, (1 << 4) - 1, (1 << 3) - 1,
-		(1 << 5) - 1, (1 << 6) - 1, (1 << 7) - 1, (1 << 8) - 1, (1 << 7) - 1, (1 << 6) - 1, (1 << 5) - 1, (1 << 4) - 1,
-		(1 << 4) - 1, (1 << 5) - 1, (1 << 6) - 1, (1 << 7) - 1, (1 << 8) - 1, (1 << 7) - 1, (1 << 6) - 1, (1 << 5) - 1,
-		(1 << 3) - 1, (1 << 4) - 1, (1 << 5) - 1, (1 << 6) - 1, (1 << 7) - 1, (1 << 8) - 1, (1 << 7) - 1, (1 << 6) - 1,
-		(1 << 2) - 1, (1 << 3) - 1, (1 << 4) - 1, (1 << 5) - 1, (1 << 6) - 1, (1 << 7) - 1, (1 << 8) - 1, (1 << 7) - 1,
-		(1 << 1) - 1, (1 << 2) - 1, (1 << 3) - 1, (1 << 4) - 1, (1 << 5) - 1, (1 << 6) - 1, (1 << 7) - 1, (1 << 8) - 1,
-	};
-	return table[n];
+	return rotate_315_length_mask_table[n];
 }
 
 int Chess::rotate_0_shift(int n)
 {
-	return (n >> 3) << 3;
+	return rotate_0_shift_table[n];
 }
 
 int Chess::rotate_90_shift(int n)
 {
-	return (n & 7) << 3;
+	return rotate_90_shift_table[n];
 }
 
 int Chess::rotate_45_shift(int n)
 {
-	static const int table[64] = {
-		 0,  1,  3,  6, 10, 15, 21, 28,
-		 1,  3,  6, 10, 15, 21, 28, 36,
-		 3,  6, 10, 15, 21, 28, 36, 43,
-		 6, 10, 15, 21, 28, 36, 43, 49,
-		10, 15, 21, 28, 36, 43, 49, 54,
-		15, 21, 28, 36, 43, 49, 54, 58,
-		21, 28, 36, 43, 49, 54, 58, 61,
-		28, 36, 43, 49, 54, 58, 61, 63,
-	};
-	return table[n];
+	return rotate_45_shift_table[n];
 }
 
 int Chess::rotate_315_shift(int n)
 {
-	static const int table[64] = {
-		28, 21, 15, 10,  6,  3,  1,  0,
-		36, 28, 21, 15, 10,  6,  3,  1,
-		43, 36, 28, 21, 15, 10,  6,  3,
-		49, 43, 36, 28, 21, 15, 10,  6,
-		54, 49, 43, 36, 28, 21, 15, 10,
-		58, 54, 49, 43, 36, 28, 21, 15,
-		61, 58, 54, 49, 43, 36, 28, 21,
-		63, 61, 58, 54, 49, 43, 36, 28
-	};
-	return table[n];
+	return rotate_315_shift_table[n];
 }
 
 godot::String Chess::print_bit_square(int64_t bit)
@@ -260,6 +488,59 @@ godot::String Chess::print_bit_diamond(int64_t bit)
 		output += '\n';
 	}
 	return output;
+}
+
+int Chess::direction_count(int piece)
+{
+	switch (piece)
+	{
+		case 'K':
+		case 'k':
+		case 'Q':
+		case 'q':
+		case 'N':
+		case 'n':
+			return 8;
+		break;
+		case 'R':
+		case 'r':
+		case 'B':
+		case 'b':
+			return 4;
+		break;
+	}
+	return 0;
+}
+
+int Chess::direction(int piece, int index)
+{
+	static int directions_diagonal[4] = {-17, -15, 15, 17};
+	static int directions_straight[4] = {-16, -1, 1, 16};
+	static int directions_eight_way[8] = {-17, -16, -15, -1, 1, 15, 16, 17};
+	static int directions_horse[8] = {33, 31, 18, 14, -33, -31, -18, -14};
+	
+	switch (piece)
+	{
+		case 'K':
+		case 'k':
+		case 'Q':
+		case 'q':
+			return directions_eight_way[index];
+		break;
+		case 'N':
+		case 'n':
+			return directions_horse[index];
+		break;
+		case 'R':
+		case 'r':
+			return directions_straight[index];
+		break;
+		case 'B':
+		case 'b':
+			return directions_diagonal[index];
+		break;
+	}
+	return 0;
 }
 
 int64_t Chess::mask(int n)
@@ -367,6 +648,1153 @@ Chess *Chess::get_singleton()
 	return singleton;
 }
 
+godot::String Chess::get_end_type(const godot::Ref<State> &_state)
+{
+	int group = _state->get_turn();
+	if (generate_valid_move(_state, group).size() == 0)
+	{
+		if (is_check(_state, 1 - group))
+		{
+			return group == 0 ? "checkmate_black" : "checkmate_white";
+		}
+		else
+		{
+			return group == 0 ? "stalemate_black" : "stalemate_white";
+		}
+	}
+	if (_state->get_step_to_draw() == 50)
+	{
+		return "50_moves";
+	}
+	return "";
+}
+
+godot::Ref<State> Chess::parse(const godot::String &_str)
+{
+	godot::Ref<State>state = memnew(State);
+	godot::Vector2i pointer = godot::Vector2i(0, 0);
+	godot::PackedStringArray fen_splited = _str.split(" ");
+	if (fen_splited.size() < 6)
+	{
+		return nullptr;
+	}
+	for (int i = 0; i < fen_splited[0].length(); i++)
+	{
+		if (fen_splited[0][i] == '/')	//太先进了竟然是char32
+		{
+			pointer.x = 0;
+			pointer.y += 1;
+		}
+		else if (fen_splited[0][i] >= '1' && fen_splited[0][i] <= '9')
+		{
+			pointer.x += fen_splited[0][i] - '0';
+		}
+		else
+		{
+			state->add_piece(pointer.x + pointer.y * 16, fen_splited[0][i]);
+			pointer.x += 1;
+		}
+	}
+	if (pointer.x != 8 || pointer.y != 7)
+	{
+		return nullptr;
+	}
+	if (fen_splited[1] != "w" && fen_splited[1] != "b")
+	{
+		return nullptr;
+	}
+	if (!fen_splited[4].is_valid_int())
+	{
+		return nullptr;
+	}
+	if (!fen_splited[5].is_valid_int())
+	{
+		return nullptr;
+	}
+	state->set_turn(fen_splited[1] == "w" ? 0 : 1);
+	state->set_castle((int(fen_splited[2].contains("K")) << 3) + (int(fen_splited[2].contains("Q")) << 2) + (int(fen_splited[2].contains("k")) << 1) + int(fen_splited[2].contains("q")));
+	state->set_en_passant(Chess::to_position_int(fen_splited[3]));
+	state->set_step_to_draw(fen_splited[4].to_int());
+	state->set_round(fen_splited[5].to_int());
+	for (int i = 6; i < fen_splited.size(); i++)
+	{
+		int type = fen_splited[i][0];
+		int64_t bit = fen_splited[i].substr(1).hex_to_int();
+		state->set_bit(type, bit);
+	}
+	return state;
+}
+
+godot::Ref<State> Chess::create_initial_state()
+{
+	return parse("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
+}
+
+godot::Ref<State> Chess::create_random_state(int piece_count)
+{
+	std::mt19937_64 rng(time(nullptr));
+	godot::PackedInt32Array type = {'P', 'N', 'B', 'R', 'Q', 'W', 'X', 'Y'};
+	godot::PackedInt32Array pieces;
+	pieces.push_back('K');
+	pieces.push_back('k');
+	for (int i = 2; i < piece_count; i++)
+	{
+		int piece = type[rng() % type.size()];
+		pieces.push_back(piece);
+		pieces.push_back(piece + 32);	// 黑方
+	}
+	pieces.resize(64);
+	while (true)
+	{
+		godot::Ref<State> new_state = parse("8/8/8/8/8/8/8/8 w - - 0 1");
+		bool valid_pawn = true;
+		for (int i = 0; i < pieces.size(); i++)
+		{
+			int k = rng() % (i + 1);
+			std::swap(pieces[i], pieces[k]);
+		}
+		for (int i = 0; i < 64; i++)
+		{
+			if ((pieces[i] & 95) == 'P' && (i <= 7 || i >= 56))
+			{
+				valid_pawn = false;
+				break;
+			}
+			if (pieces[i] != 0)
+			{
+				new_state->add_piece(i % 8 + i / 8 * 16, pieces[i]);
+			}
+		}
+		if (!valid_pawn)
+		{
+			continue;
+		}
+		if (is_check(new_state, 0) || is_check(new_state, 1))
+		{
+			continue;
+		}
+
+		return new_state;
+	}
+	return nullptr;
+}
+
+godot::Ref<State> Chess::mirror_state(const godot::Ref<State> &_state)
+{
+	godot::Ref<State> output = memnew(State);
+	for (State::PieceIterator iter = _state->piece_iterator_begin(); !iter.end(); iter.next())
+	{
+		int _from = iter.pos();
+		int from_mirrored = (_from >> 4 << 4) | (7 - (_from & 0xF));
+		int from_piece = iter.piece();
+		output->add_piece(from_mirrored, from_piece);
+	}
+	output->set_turn(_state->get_turn());
+	output->set_castle(_state->get_castle());
+	output->set_en_passant(_state->get_en_passant());
+	output->set_step_to_draw(_state->get_step_to_draw());
+	output->set_round(_state->get_round());
+	output->set_king_passant(_state->get_king_passant());
+	return output;
+}
+
+godot::Ref<State> Chess::rotate_state(const godot::Ref<State> &_state)
+{
+	godot::Ref<State> output = memnew(State);
+	for (State::PieceIterator iter = _state->piece_iterator_begin(); !iter.end(); iter.next())
+	{
+		int _from = iter.pos();
+		int from_rotated = Chess::to_x88(63 - Chess::to_64(_from));
+		int from_piece = iter.piece();
+		output->add_piece(from_rotated, from_piece);
+	}
+	output->set_turn(_state->get_turn());
+	output->set_castle(_state->get_castle());
+	output->set_en_passant(_state->get_en_passant());
+	output->set_step_to_draw(_state->get_step_to_draw());
+	output->set_round(_state->get_round());
+	output->set_king_passant(_state->get_king_passant());
+	return output;
+}
+
+godot::Ref<State> Chess::swap_group(const godot::Ref<State> &_state)
+{
+	
+	godot::Ref<State> output = memnew(State);
+	for (State::PieceIterator iter = _state->piece_iterator_begin(); !iter.end(); iter.next())
+	{
+		int _from = iter.pos();
+		int from_piece = iter.piece();
+		int from_piece_fliped = Chess::group(from_piece) == 0 ? from_piece + 32 : from_piece - 32;
+		output->add_piece(_from, from_piece_fliped);
+	}
+	output->set_turn(1 - _state->get_turn());
+	output->set_castle(_state->get_castle());
+	output->set_en_passant(_state->get_en_passant());
+	output->set_step_to_draw(_state->get_step_to_draw());
+	output->set_round(_state->get_round());
+	output->set_king_passant(_state->get_king_passant());
+	return output;
+}
+
+godot::String Chess::stringify(const godot::Ref<State> &_state)
+{
+	int null_counter = 0;
+	godot::PackedStringArray chessboard;
+	for (int i = 0; i < 8; i++)
+	{
+		godot::String line = "";
+		for (int j = 0; j < 8; j++)
+		{
+			if (_state->get_piece((i << 4) + j))
+			{
+				if (null_counter)
+				{
+					line += null_counter + '0';
+					null_counter = 0;
+				}
+				line += _state->get_piece((i << 4) + j);
+			}
+			else
+			{
+				null_counter += 1;
+			}
+		}
+		if (null_counter)
+		{
+			line += null_counter + '0';
+			null_counter = 0;
+		}
+		chessboard.append(line);
+	}
+	godot::PackedStringArray output = {godot::String("/").join(chessboard)};
+	output.push_back(_state->get_turn() == 0 ? "w" : "b");
+	output.push_back("");
+	output[2] += (_state->get_castle() & 8) ? "K" : "";
+	output[2] += (_state->get_castle() & 4) ? "Q" : "";
+	output[2] += (_state->get_castle() & 2) ? "k" : "";
+	output[2] += (_state->get_castle() & 1) ? "q" : "";
+	if (!output[2])
+	{
+		output[2] = "-";
+	}
+	output.push_back(_state->get_en_passant() ? Chess::to_position_name(_state->get_en_passant()) : "-");
+	output.push_back(godot::String::num(_state->get_step_to_draw(), 0));
+	output.push_back(godot::String::num(_state->get_round(), 0));
+	// king_passant是为了判定是否违规走子，临时记录的，这里不做转换
+	if (_state->get_bit('^'))
+	{
+		output.push_back("^" + godot::String::num(_state->get_bit('^')));
+	}
+	if (_state->get_bit('v'))
+	{
+		output.push_back("v" + godot::String::num(_state->get_bit('v')));
+	}
+	return godot::String(" ").join(output);
+}
+
+bool Chess::is_move_valid(const godot::Ref<State> &_state, int _group, int _move)
+{
+	int from = Chess::from(_move);
+	int from_piece = _state->get_piece(from);
+	if (!from_piece || _group != Chess::group(from_piece))
+	{
+		return false;
+	}
+	int to = Chess::to(_move);
+	int to_piece = _state->get_piece(to);
+	int flag = false;
+	godot::PackedInt32Array *directions = nullptr;
+	if ((from_piece & 95) == 'P')
+	{
+		int front = from_piece == 'P' ? -16 : 16;
+		bool on_start = (from >> 4) == (from_piece == 'P' ? 6 : 1);
+		bool on_end = (from >> 4) == (from_piece == 'P' ? 1 : 6);
+		if (!_state->has_piece(from + front))
+		{
+			if (on_end)
+			{
+				flag = flag || _move == Chess::create(from, from + front, _group == 0 ? 'Q' : 'q');
+				flag = flag || _move == Chess::create(from, from + front, _group == 0 ? 'R' : 'r');
+				flag = flag || _move == Chess::create(from, from + front, _group == 0 ? 'N' : 'n');
+				flag = flag || _move == Chess::create(from, from + front, _group == 0 ? 'B' : 'b');
+			}
+			else
+			{
+				flag = flag || _move == Chess::create(from, from + front, 0);
+				if (!_state->has_piece(from + front + front) && on_start)
+				{
+					flag = flag || _move == Chess::create(from, from + front + front, 0);
+				}
+			}
+		}
+		if (_state->has_piece(from + front + 1) && !Chess::is_same_group(from_piece, _state->get_piece(from + front + 1)) || ((from >> 4) == 3 || (from >> 4) == 4) && _state->get_en_passant() == from + front + 1)
+		{
+			if (on_end)
+			{
+				flag = flag || _move == Chess::create(from, from + front + 1, _group == 0 ? 'Q' : 'q');
+				flag = flag || _move == Chess::create(from, from + front + 1, _group == 0 ? 'R' : 'r');
+				flag = flag || _move == Chess::create(from, from + front + 1, _group == 0 ? 'N' : 'n');
+				flag = flag || _move == Chess::create(from, from + front + 1, _group == 0 ? 'B' : 'b');
+			}
+			else
+			{
+				flag = flag || _move == Chess::create(from, from + front + 1, 0);
+			}
+		}
+		if (_state->has_piece(from + front - 1) && !Chess::is_same_group(from_piece, _state->get_piece(from + front - 1)) || ((from >> 4) == 3 || (from >> 4) == 4) && _state->get_en_passant() == from + front - 1)
+		{
+			if (on_end)
+			{
+				flag = flag || _move == Chess::create(from, from + front - 1, _group == 0 ? 'Q' : 'q');
+				flag = flag || _move == Chess::create(from, from + front - 1, _group == 0 ? 'R' : 'r');
+				flag = flag || _move == Chess::create(from, from + front - 1, _group == 0 ? 'N' : 'n');
+				flag = flag || _move == Chess::create(from, from + front - 1, _group == 0 ? 'B' : 'b');
+			}
+			else
+			{
+				flag = flag || _move == Chess::create(from, from + front - 1, 0);
+			}
+		}
+		if (!flag)
+		{
+			return false;
+		}
+		godot::Ref<State>test_state = _state->duplicate();
+		apply_move(test_state, _move);
+		return !is_check(test_state, 1 - _group);
+	}
+	for (int i = 0; i < direction_count(from_piece); i++)
+	{
+		int to = from + direction(from_piece, i);
+		int to_piece = _state->get_piece(to);
+		while (!(to & 0x88) && (!to_piece || !Chess::is_same_group(from_piece, to_piece)))
+		{
+			flag = flag || _move == Chess::create(from, to, 0);
+			if (!(to & 0x88) && to_piece && !Chess::is_same_group(from_piece, to_piece))
+			{
+				break;
+			}
+			if ((from_piece & 95) == 'K' || (from_piece & 95) == 'N')
+			{
+				break;
+			}
+			to += direction(from_piece, i);
+			to_piece = _state->get_piece(to);
+			if (!(from_piece == 'R' && to_piece == 'K' || from_piece == 'r' && to_piece == 'k'))
+			{
+				continue;
+			}
+			if ((from & 15) >= 4 && (from_piece == 'R' && (_state->get_castle() & 8) || from_piece == 'r' && (_state->get_castle() & 2)))
+			{
+				flag = flag || _move == Chess::create(to, from_piece == 'R' ? Chess::g1() : Chess::g8(), 'K');
+			}
+			else if ((from & 15) <= 3 && (from_piece == 'R' && (_state->get_castle() & 4) || from_piece == 'r' && (_state->get_castle() & 1)))
+			{
+				flag = flag || _move == Chess::create(to,from_piece == 'R' ? Chess::c1() : Chess::c8(), 'Q');
+			}
+		}
+	}
+
+	if (!flag)
+	{
+		return false;
+	}
+	godot::Ref<State>test_state = _state->duplicate();
+	apply_move(test_state, _move);
+	return !is_check(test_state, 1 - _group);
+}
+
+bool Chess::is_check(const godot::Ref<State> &_state, int _group)
+{
+	int enemy_king = _group == 0 ? 'k' : 'K';
+	uint64_t enemy_king_mask = _state->get_bit(enemy_king);
+	if (_state->get_king_passant() != -1)
+	{
+		enemy_king_mask |= Chess::mask(Chess::to_64(_state->get_king_passant()));
+		enemy_king_mask |= Chess::mask(Chess::to_64(_state->get_king_passant() - 1));
+		enemy_king_mask |= Chess::mask(Chess::to_64(_state->get_king_passant() + 1));
+	}
+	
+	for (State::PieceIterator iter = _state->piece_iterator_begin(_group == 0 ? 'A' : 'a'); !iter.end(); iter.next())
+	{
+		int from = iter.pos();
+		int from_64 = Chess::to_64(from);
+		int from_piece = iter.piece();
+		if ((from_piece & 95) == 'P')
+		{
+			if (pawn_attacks[from_64][_group == 0 ? 0 : 2] & enemy_king_mask)
+			{
+				return true;
+			}
+			continue;
+		}
+		if ((from_piece & 95) == 'K')
+		{
+			if (king_attacks[from_64] & enemy_king_mask)
+			{
+				return true;
+			}
+			continue;
+		}
+		if ((from_piece & 95) == 'N')
+		{
+			if (horse_attacks[from_64] & enemy_king_mask)
+			{
+				return true;
+			}
+			continue;
+		}
+		if ((from_piece & 95) == 'Q' || (from_piece & 95) == 'B')
+		{
+			int64_t diag_a1h8 = (uint64_t(_state->get_bit(')')) >> Chess::rotate_45_shift(from_64)) & Chess::rotate_45_length_mask(from_64);
+			int64_t diag_a8h1 = (uint64_t(_state->get_bit('(')) >> Chess::rotate_315_shift(from_64)) & Chess::rotate_315_length_mask(from_64);
+			int64_t bishop_attacks = diag_a1h8_attacks[from_64][diag_a1h8] | diag_a8h1_attacks[from_64][diag_a8h1];
+			if (bishop_attacks & enemy_king_mask)
+			{
+				return true;
+			}
+		}
+		if ((from_piece & 95) == 'Q' || (from_piece & 95) == 'R')
+		{
+			int64_t rank = (uint64_t(_state->get_bit('*')) >> Chess::rotate_0_shift(from_64)) & 255;
+			int64_t file = (uint64_t(_state->get_bit('!')) >> Chess::rotate_90_shift(from_64)) & 255;
+			int64_t rook_attacks = rank_attacks[from_64][rank] | file_attacks[from_64][file];
+			if (rook_attacks & enemy_king_mask)
+			{
+				return true;
+			}
+		}
+	}
+	return false;
+}
+
+bool Chess::is_blocked(const godot::Ref<State> &_state, int _from, int _to)
+{
+	if (_to & 0x88)
+	{
+		return true;
+	}
+	int from_piece = _state->get_piece(_from);
+	int from_group = Chess::group(from_piece);
+	if ((_state->get_piece(_to) & 95) == 'W' || (_state->get_piece(_to) & 95) == 'X')
+	{
+		return false;
+	}
+	if (_state->has_piece(_to) && Chess::is_same_group(from_piece, _state->get_piece(_to)))
+	{
+		return true;
+	}
+	if ((_state->get_piece(_to) & 95) == 'Y')
+	{
+		return true;
+	}
+	if (_state->get_bit('#') & Chess::mask(Chess::to_64(_to)))
+	{
+		return true;
+	}
+	return false;
+}
+
+bool Chess::is_enemy(const godot::Ref<State> &_state, int _from, int _to)
+{
+	return _state->has_piece(_to) && (_state->get_piece(_to) & 95) != 'W' && (!Chess::is_same_group(_state->get_piece(_from), _state->get_piece(_to)) || (_state->get_piece(_to) & 95) == 'X');
+}
+
+bool Chess::is_en_passant(const godot::Ref<State> &_state, int _from, int _to)
+{
+	return ((_from >> 4) == 3 || (_from >> 4) == 4) && _state->get_en_passant() == _to;
+}
+
+godot::PackedInt32Array Chess::generate_premove(const godot::Ref<State> &_state, int _group)
+{
+	godot::PackedInt32Array output;
+	for (State::PieceIterator iter = _state->piece_iterator_begin(_group == 0 ? 'A' : 'a'); !iter.end(); iter.next())
+	{
+		int _from = iter.pos();
+		int from_piece = iter.piece();
+		if ((from_piece & 95) == 'P')
+		{
+			int front = _group == 0 ? -16 : 16;
+			bool on_start = (_from >> 4) == (_group == 0 ? 6 : 1);
+			bool on_end = (_from >> 4) == (_group == 0 ? 1 : 6);
+			if (on_end)
+			{
+				output.push_back(Chess::create(_from, _from + front, _group == 0 ? 'Q' : 'q'));
+				output.push_back(Chess::create(_from, _from + front, _group == 0 ? 'R' : 'r'));
+				output.push_back(Chess::create(_from, _from + front, _group == 0 ? 'N' : 'n'));
+				output.push_back(Chess::create(_from, _from + front, _group == 0 ? 'B' : 'b'));
+				if (!((_from + front + 1) & 0x88))
+				{
+					output.push_back(Chess::create(_from, _from + front + 1, _group == 0 ? 'Q' : 'q'));
+					output.push_back(Chess::create(_from, _from + front + 1, _group == 0 ? 'R' : 'r'));
+					output.push_back(Chess::create(_from, _from + front + 1, _group == 0 ? 'N' : 'n'));
+					output.push_back(Chess::create(_from, _from + front + 1, _group == 0 ? 'B' : 'b'));
+				}
+				if (!((_from + front - 1) & 0x88))
+				{
+					output.push_back(Chess::create(_from, _from + front - 1, _group == 0 ? 'Q' : 'q'));
+					output.push_back(Chess::create(_from, _from + front - 1, _group == 0 ? 'R' : 'r'));
+					output.push_back(Chess::create(_from, _from + front - 1, _group == 0 ? 'N' : 'n'));
+					output.push_back(Chess::create(_from, _from + front - 1, _group == 0 ? 'B' : 'b'));
+				}
+			}
+			else
+			{
+				output.push_back(Chess::create(_from, _from + front, 0));
+				if (!((_from + front + 1) & 0x88))
+				{
+					output.push_back(Chess::create(_from, _from + front + 1, 0));
+				}
+				if (!((_from + front - 1) & 0x88))
+				{
+					output.push_back(Chess::create(_from, _from + front - 1, 0));
+				}
+				if (on_start)
+				{
+					output.push_back(Chess::create(_from, _from + front + front, 0));
+				}
+			}
+			continue;
+		}
+		for (int i = 0; i < direction_count(from_piece); i++)
+		{
+			int to = _from + direction(from_piece, i);
+			while (!(to & 0x88))
+			{
+				output.push_back(Chess::create(_from, to, 0));
+				if ((from_piece & 95) == 'K' || (from_piece & 95) == 'N')
+				{
+					break;
+				}
+				to += direction(from_piece, i);
+			}
+		}
+	}
+	if (_group == 0 && (_state->get_castle() & 8) && !_state->has_piece(Chess::g1()) && !_state->has_piece(Chess::f1()))
+	{
+		output.push_back(Chess::create(Chess::e1(), Chess::g1(), 'K'));
+	}
+	if (_group == 0 && (_state->get_castle() & 4) && !_state->has_piece(Chess::c1()) && !_state->has_piece(Chess::d1()))
+	{
+		output.push_back(Chess::create(Chess::e1(), Chess::c1(), 'Q'));
+	}
+	if (_group == 1 && (_state->get_castle() & 2) && !_state->has_piece(Chess::g8()) && !_state->has_piece(Chess::f8()))
+	{
+		output.push_back(Chess::create(Chess::e8(), Chess::g8(), 'k'));
+	}
+	if (_group == 1 && (_state->get_castle() & 1) && !_state->has_piece(Chess::c8()) && !_state->has_piece(Chess::d8()))
+	{
+		output.push_back(Chess::create(Chess::e8(), Chess::c8(), 'q'));
+	}
+	return output;
+}
+
+godot::PackedInt32Array Chess::generate_move(const godot::Ref<State> &_state, int _group)
+{
+	godot::PackedInt32Array output;
+	_internal_generate_move(output, _state, _group);
+	return output;
+}
+
+void Chess::_internal_generate_move(godot::PackedInt32Array &output, const godot::Ref<State> &_state, int _group)
+{
+	for (State::PieceIterator iter = _state->piece_iterator_begin(_group == 0 ? 'A' : 'a'); !iter.end(); iter.next())
+	{
+		int _from = iter.pos();
+		int from_piece = iter.piece();
+		if ((from_piece & 95) == 'P')
+		{
+			int front = from_piece == 'P' ? -16 : 16;
+			bool on_start = (_from >> 4) == (from_piece == 'P' ? 6 : 1);
+			bool on_end = (_from >> 4) == (from_piece == 'P' ? 1 : 6);
+			int to_1 = _from + front;
+			int to_2 = _from + front + 1;
+			int to_3 = _from + front - 1;
+			if (!is_blocked(_state, _from, to_1) && !is_enemy(_state, _from, to_1))
+			{
+				if (on_end)
+				{
+					output.push_back(Chess::create(_from, to_1, _group == 0 ? 'Q' : 'q'));
+					output.push_back(Chess::create(_from, to_1, _group == 0 ? 'R' : 'r'));
+					output.push_back(Chess::create(_from, to_1, _group == 0 ? 'N' : 'n'));
+					output.push_back(Chess::create(_from, to_1, _group == 0 ? 'B' : 'b'));
+				}
+				else
+				{
+					output.push_back(Chess::create(_from, to_1, 0));
+					if (!_state->has_piece(to_1 + front) && on_start)
+					{
+						output.push_back(Chess::create(_from, to_1 + front, 0));
+					}
+				}
+			}
+			if (!is_blocked(_state, _from, to_2) && (is_enemy(_state, _from, to_2) || is_en_passant(_state, _from, to_2)))
+			{
+				if (on_end)
+				{
+					output.push_back(Chess::create(_from, to_2, _group == 0 ? 'Q' : 'q'));
+					output.push_back(Chess::create(_from, to_2, _group == 0 ? 'R' : 'r'));
+					output.push_back(Chess::create(_from, to_2, _group == 0 ? 'N' : 'n'));
+					output.push_back(Chess::create(_from, to_2, _group == 0 ? 'B' : 'b'));
+				}
+				else
+				{
+					output.push_back(Chess::create(_from, to_2, 0));
+				}
+			}
+			if (!is_blocked(_state, _from, to_3) && (is_enemy(_state, _from, to_3) || is_en_passant(_state, _from, to_3)))
+			{
+				if (on_end)
+				{
+					output.push_back(Chess::create(_from, to_3, _group == 0 ? 'Q' : 'q'));
+					output.push_back(Chess::create(_from, to_3, _group == 0 ? 'R' : 'r'));
+					output.push_back(Chess::create(_from, to_3, _group == 0 ? 'N' : 'n'));
+					output.push_back(Chess::create(_from, to_3, _group == 0 ? 'B' : 'b'));
+				}
+				else
+				{
+					output.push_back(Chess::create(_from, to_3, 0));
+				}
+			}
+			continue;
+		}
+		for (int i = 0; i < direction_count(from_piece); i++)
+		{
+			int to = _from;
+			int to_piece = _state->get_piece(to);
+			while (true)
+			{
+				to += direction(from_piece, i);
+				if (to & 0x88)
+				{
+					break;
+				}
+				to_piece = _state->get_piece(to);
+				if ((to_piece & 95) == 'Y')
+				{
+					break;
+				}
+				if (is_blocked(_state, _from, to))
+				{
+					if ((from_piece & 95) == 'R' && (to_piece & 95) == 'K')
+					{
+						if ((_from & 15) >= 4 && (_group == 0 && (_state->get_castle() & 8) || _group == 1 && (_state->get_castle() & 2)))
+						{
+							output.push_back(Chess::create(to, _group == 0 ? Chess::g1() : Chess::g8(), 'K'));
+						}
+						else if ((_from & 15) <= 3 && (_group == 0 && (_state->get_castle() & 4) || _group == 1 && (_state->get_castle() & 1)))
+						{
+							output.push_back(Chess::create(to,_group == 0 ? Chess::c1() : Chess::c8(), 'Q'));
+						}
+					}
+					break;
+				}
+				output.push_back(Chess::create(_from, to, 0));
+				if ((from_piece & 95) == 'K' || (from_piece & 95) == 'N' || to_piece && (to_piece & 95) != 'W')
+				{
+					break;
+				}
+			}
+		}
+	}
+}
+
+godot::PackedInt32Array Chess::generate_valid_move(const godot::Ref<State> &_state, int _group)
+{
+	godot::PackedInt32Array output;
+	_internal_generate_valid_move(output, _state, _group);
+	return output;
+}
+
+void Chess::_internal_generate_valid_move(godot::PackedInt32Array &output, const godot::Ref<State> &_state, int _group)
+{
+	godot::PackedInt32Array move_list;
+	_internal_generate_move(move_list, _state, _group);
+	for (int i = 0; i < move_list.size(); i++)
+	{
+		godot::Ref<State>test_state = _state->duplicate();
+		apply_move(test_state, move_list[i]);
+		if (!is_check(test_state, 1 - _group))
+		{
+			output.push_back(move_list[i]);
+		}
+	}
+}
+
+godot::PackedInt32Array Chess::generate_explore_move(const godot::Ref<State> &_state, int _group)
+{
+	godot::PackedInt32Array move_list = generate_valid_move(_state, _group);
+	if (_state->get_bit(_group == 0 ? 'K' : 'k'))
+	{
+		uint64_t from_bit = _state->get_bit(_group == 0 ? 'K' : 'k');
+		int from = 0;
+		while (from_bit != 1 && from_bit != 0)
+		{
+			from_bit >>= 1;
+			from += 1;
+		}
+		from = from % 8 + from / 8 * 16;
+		godot::PackedInt32Array king_move;
+
+		std::queue<int> q;
+		std::unordered_set<int> closed;
+		closed.insert(from);
+		q.push(from);
+		while (!q.empty())
+		{
+			int cur = q.front();
+			q.pop();
+			for (int i = 0; i < direction_count('k'); i++)
+			{
+				int next = cur + direction('k', i);
+				int move = Chess::create(from, next, 0);
+				if (!closed.count(next) && !is_blocked(_state, cur, next) && !is_enemy(_state, cur, next))
+				{
+					godot::Ref<State>test_state = _state->duplicate();
+					apply_move(test_state, move);
+					if (!is_check(test_state, 1 - _group))
+					{
+						if (!move_list.has(move))
+						{
+							king_move.push_back(move);
+						}
+						q.push(next);
+					}
+				}
+				closed.insert(next);
+			}
+		}
+		move_list.append_array(king_move);
+	}
+	return move_list;
+}
+
+godot::PackedInt32Array Chess::generate_king_path(const godot::Ref<State> &_state, int _from, int _to)
+{
+	std::vector<std::pair<int, godot::PackedInt32Array>> dp(64, std::make_pair(0x7FFFFFFF, godot::PackedInt32Array()));
+	std::vector<bool> shortest(64, false);
+	dp[Chess::to_64(_from)].first = 0;
+	for (int i = 0; i < 64; i++)
+	{
+		int min_node = 0;
+		int min_step = 0x7FFFFFFF;
+		for (int j = 0; j < 64; j++)
+		{
+			if (dp[j].first < min_step && !shortest[j])
+			{
+				min_node = j;
+				min_step = dp[j].first;
+			}
+		}
+		shortest[min_node] = true;
+		for (int j = 0; j < direction_count('k'); j++)
+		{
+			bool is_diagonal = abs(direction('k', j)) != 1 && abs(direction('k', j)) != 16;
+			int step = is_diagonal ? 11 : 10;
+			int next_x88 = Chess::to_x88(min_node) + direction('k', j);
+
+			if ((next_x88 & 0x88) || is_blocked(_state, Chess::to_x88(min_node), next_x88) || is_enemy(_state, Chess::to_x88(min_node), next_x88))
+			{
+				continue;
+			}
+			godot::Ref<State>test_state = _state->duplicate();
+			apply_move(test_state, Chess::create(Chess::to_x88(min_node), next_x88, 0));
+			if (is_check(test_state, 1 - Chess::group(_state->get_piece(_from))))
+			{
+				continue;
+			}
+			int next = Chess::to_64(next_x88);
+			if (!shortest[next])
+			{
+				if (min_step + step < dp[next].first)
+				{
+					dp[next].first = min_step + step;
+					dp[next].second = dp[min_node].second.duplicate();
+					dp[next].second.push_back(Chess::to_x88(next));
+				}
+			}
+		}
+	}
+	return dp[Chess::to_64(_to)].second;
+}
+
+godot::String Chess::get_move_name(const godot::Ref<State> &_state, int move)
+{
+	int from = Chess::get_singleton()->from(move);
+	int to = Chess::get_singleton()->to(move);
+	int from_piece = _state->get_piece(from);
+	int extra = Chess::get_singleton()->extra(move);
+	int group = Chess::group(from_piece);
+	if ((from_piece & 95) == 'K' && extra)
+	{
+		if ((extra & 95) == 'K')
+		{
+			return "O-O";
+		}
+		else if ((extra & 95) == 'Q')
+		{
+			return "O-O-O";
+		}
+	}
+	godot::String ans;
+	if ((from_piece & 95) != 'P')
+	{
+		ans += (from_piece & 95);
+	}
+	else if (_state->get_piece(to) || to == _state->get_en_passant())
+	{
+		ans += (from & 0x0F) + 'a';
+	}
+
+	godot::PackedInt32Array move_list = generate_valid_move(_state, group);
+	godot::PackedInt32Array same_to;
+	bool has_same_piece = false;
+	bool has_same_col = false;
+	bool has_same_row = false;
+	for (int i = 0; i < move_list.size(); i++)
+	{
+		int _from = Chess::get_singleton()->from(move_list[i]);
+		if (_from != from && _state->get_piece(_from) == from_piece && Chess::get_singleton()->to(move_list[i]) == to)
+		{
+			has_same_piece = true;
+			if ((_from & 0xF0) == (from & 0xF0))
+			{
+				has_same_row = true;
+			}
+			if ((_from & 0x0F) == (from & 0x0F))
+			{
+				has_same_col = true;
+			}
+		}
+	}
+	if (has_same_piece)
+	{
+		if (has_same_row || !has_same_row && !has_same_col)
+		{
+			ans += (from & 0x0F) + 'a';
+		}
+		if (has_same_col)
+		{
+			ans +=  7 - (from >> 4) + '1';
+		}
+	}
+	if (_state->get_piece(to) || ((from_piece & 95) == 'P' && to == _state->get_en_passant()))
+	{
+		ans += 'x';
+	}
+	ans += (to & 0x0F) + 'a';
+	ans +=  7 - (to >> 4) + '1';
+	if (extra)
+	{
+		ans += '=';
+		ans += (extra & 95);
+	}
+	godot::Ref<State> next_state = _state->duplicate();
+	apply_move(next_state, move);
+	if (is_check(next_state, group))
+	{
+		if (generate_valid_move(next_state, 1 - group).size() == 0)
+		{
+			ans += '#';
+		}
+		else
+		{
+			ans += '+';
+		}
+	}
+	return ans;
+}
+
+int Chess::name_to_move(const godot::Ref<State> &_state, const godot::String &_name)
+{
+	godot::PackedInt32Array move_list = generate_move(_state, _state->get_turn());
+	for (int i = 0; i < move_list.size(); i++)
+	{
+		godot::String name = get_move_name(_state, move_list[i]);
+		if (name == _name)
+		{
+			return move_list[i];
+		}
+	}
+	return -1;
+}
+
+void Chess::apply_move(const godot::Ref<State> &_state, int _move)
+{
+	if (_state->get_turn() == 1)
+	{
+		_state->set_round(_state->get_round() + 1);
+		_state->set_turn(0);
+	}
+	else if (_state->get_turn() == 0)
+	{
+		_state->set_turn(1);
+	}
+	_state->set_step_to_draw(_state->get_step_to_draw() + 1);
+	int from = Chess::from(_move);
+	int from_piece = _state->get_piece(from);
+	int from_group = Chess::group(from_piece);
+	int to = Chess::to(_move);
+	int to_piece = _state->get_piece(to);
+	bool dont_move = false;
+	bool has_grafting = false;
+	bool has_en_passant = false;
+	bool has_king_passant = false;
+	if (to_piece)	//在apply_move阶段其实就默许了吃同阵营棋子的情况。
+	{
+		_state->capture_piece(to);
+		_state->set_step_to_draw(0);	// 吃子时重置50步和棋
+	}
+	if ((to_piece & 95) == 'W')
+	{
+		has_grafting = true;
+	}
+	if (_state->get_king_passant() != -1 && abs(_state->get_king_passant() - to) <= 1)
+	{
+		if (from_group == 0)
+		{
+			if (_state->get_piece(Chess::c8()) == 'k')
+			{
+				_state->capture_piece(Chess::c8());
+			}
+			if (_state->get_piece(Chess::g8()) == 'k')
+			{
+				_state->capture_piece(Chess::g8());
+			}
+		}
+		else
+		{
+			if (_state->get_piece(Chess::c1()) == 'K')
+			{
+				_state->capture_piece(Chess::c1());
+			}
+			if (_state->get_piece(Chess::g1()) == 'K')
+			{
+				_state->capture_piece(Chess::g1());
+			}
+		}
+	}
+	if ((from_piece & 95) == 'R')	// 哪边的车动过，就不能往那个方向易位
+	{
+		if ((from & 15) >= 4)
+		{
+			if (from_group == 0)
+			{
+				_state->set_castle(_state->get_castle() & 7);
+			}
+			else
+			{
+				_state->set_castle(_state->get_castle() & 13);
+			}
+		}
+		else if ((from & 15) <= 3)
+		{
+			if (from_group == 0)
+			{
+				_state->set_castle(_state->get_castle() & 11);
+			}
+			else
+			{
+				_state->set_castle(_state->get_castle() & 14);
+			}
+		}
+	}
+	if ((from_piece & 95) == 'K')
+	{
+		if (from_group == 0)
+		{
+			_state->set_castle(_state->get_castle() & 3);
+		}
+		else
+		{
+			_state->set_castle(_state->get_castle() & 12);
+		}
+		if (Chess::extra(_move))
+		{
+			if (to == Chess::g1())
+			{
+				_state->move_piece(Chess::h1(), Chess::f1());
+				_state->set_king_passant(Chess::f1());
+			}
+			if (to == Chess::c1())
+			{
+				_state->move_piece(Chess::a1(), Chess::d1());
+				_state->set_king_passant(Chess::d1());
+			}
+			if (to == Chess::g8())
+			{
+				_state->move_piece(Chess::h8(), Chess::f8());
+				_state->set_king_passant(Chess::f8());
+			}
+			if (to == Chess::c8())
+			{
+				_state->move_piece(Chess::a8(), Chess::d8());
+				_state->set_king_passant(Chess::d8());
+			}
+			has_king_passant = true;
+		}
+	}
+	if ((from_piece & 95) == 'P')
+	{
+		int front = from_piece == 'P' ? -16 : 16;
+		_state->set_step_to_draw(0);	// 移动兵时重置50步和棋
+		if (to - from == front * 2)
+		{
+			has_en_passant = true;
+			_state->set_en_passant(from + front);
+		}
+		if (((from >> 4) == 3 || (from >> 4) == 4) && to == _state->get_en_passant())
+		{
+			int captured = to - front;
+			_state->capture_piece(captured);
+		}
+		if (Chess::extra(_move))
+		{
+			dont_move = true;
+			_state->capture_piece(from);
+			_state->add_piece(to, Chess::extra(_move));
+		}
+	}
+	if (!dont_move)
+	{
+		_state->move_piece(from, to);
+	}
+	if (has_grafting)
+	{
+		_state->add_piece(from, to_piece);
+	}
+
+	if (!has_en_passant)
+	{
+		_state->set_en_passant(-1);
+	}
+	if (!has_king_passant)
+	{
+		_state->set_king_passant(-1);
+	}
+}
+
+
+godot::Dictionary Chess::apply_move_custom(const godot::Ref<State> &_state, int _move)
+{
+	godot::Dictionary output;
+	int from = Chess::from(_move);
+	int from_piece = _state->get_piece(from);
+	int from_group = Chess::group(from_piece);
+	int to = Chess::to(_move);
+	int to_piece = _state->get_piece(to);
+	if ((to_piece & 95) == 'W')
+	{
+		output["type"] = "grafting";
+		output["from"] = from;
+		output["to"] = to;
+		return output;	//移花接木机制有特殊动作
+	}
+	if (to_piece)
+	{
+		output["type"] = "capture";
+		output["from"] = from;
+		output["to"] = to;
+		return output;	//双方共同进行演出
+	}
+	if ((from_piece & 95) == 'K')
+	{
+		if (Chess::extra(_move))
+		{
+			if (to == Chess::g1())
+			{
+				output["type"] = "castle";
+				output["from_king"] = Chess::e1();
+				output["to_king"] = Chess::g1();
+				output["from_rook"] = Chess::h1();
+				output["to_rook"] = Chess::f1();
+				return output; //王车易位，王和车分开进行
+			}
+			if (to == Chess::c1())
+			{
+				output["type"] = "castle";
+				output["from_king"] = Chess::e1();
+				output["to_king"] = Chess::c1();
+				output["from_rook"] = Chess::a1();
+				output["to_rook"] = Chess::d1();
+				return output;
+			}
+			if (to == Chess::g8())
+			{
+				output["type"] = "castle";
+				output["from_king"] = Chess::e8();
+				output["to_king"] = Chess::g8();
+				output["from_rook"] = Chess::h8();
+				output["to_rook"] = Chess::f8();
+				return output;
+			}
+			if (to == Chess::c8())
+			{
+				output["type"] = "castle";
+				output["from_king"] = Chess::e8();
+				output["to_king"] = Chess::c8();
+				output["from_rook"] = Chess::a8();
+				output["to_rook"] = Chess::d8();
+				return output;
+			}
+		}
+		if (to % 16 < from % 16 - 1 || to % 16 > from % 16 + 1 || to / 16 < from / 16 - 1 || to / 16 > from / 16 + 1)
+		{
+			output["type"] = "king_explore";
+			output["from"] = from;
+			output["path"] = generate_king_path(_state, from, to);
+			return output;
+		}
+	}
+	if ((from_piece & 95) == 'P')
+	{
+		int front = from_piece == 'P' ? -16 : 16;
+		if (((from >> 4) == 3 || (from >> 4) == 4) && to == _state->get_en_passant())
+		{
+			int captured = to - front;
+			output["type"] = "en_passant";
+			output["from"] = from;
+			output["to"] = to;
+			output["captured"] = captured;
+			return output;
+		}
+		if (Chess::extra(_move))
+		{
+			output["type"] = "promotion";
+			output["from"] = from;
+			output["to"] = to;
+			output["piece"] = Chess::extra(_move);
+			return output;
+		}
+	}
+	output["type"] = "move";
+	output["from"] = from;
+	output["to"] = to;
+	return output;
+}
+
+uint64_t Chess::perft(const godot::Ref<State> &_state, int _depth, int group)
+{
+	if (_depth == 0)
+	{
+		return 1ULL;
+	}
+	godot::PackedInt32Array move_list = generate_valid_move(_state, group);
+	uint64_t cnt = 0;
+	if (_depth == 1)
+	{
+		return move_list.size();
+	}
+	for (int i = 0; i < move_list.size(); i++)
+	{
+		godot::Ref<State> test_state = _state->duplicate();
+		apply_move(test_state, move_list[i]);
+		cnt += perft(test_state, _depth - 1, 1 - group);
+	}
+	return cnt;
+}
+
 void Chess::_bind_methods()
 {
 	godot::ClassDB::bind_static_method(get_class_static(), godot::D_METHOD("rotate_90"), &Chess::rotate_90);
@@ -394,4 +1822,25 @@ void Chess::_bind_methods()
 	godot::ClassDB::bind_static_method(get_class_static(), godot::D_METHOD("from"), &Chess::from);
 	godot::ClassDB::bind_static_method(get_class_static(), godot::D_METHOD("to"), &Chess::to);
 	godot::ClassDB::bind_static_method(get_class_static(), godot::D_METHOD("extra"), &Chess::extra);
+
+	godot::ClassDB::bind_static_method(get_class_static(), godot::D_METHOD("get_end_type"), &Chess::get_end_type);
+	godot::ClassDB::bind_static_method(get_class_static(), godot::D_METHOD("parse"), &Chess::parse);
+	godot::ClassDB::bind_static_method(get_class_static(), godot::D_METHOD("create_initial_state"), &Chess::create_initial_state);
+	godot::ClassDB::bind_static_method(get_class_static(), godot::D_METHOD("create_random_state"), &Chess::create_random_state);
+	godot::ClassDB::bind_static_method(get_class_static(), godot::D_METHOD("mirror_state"), &Chess::mirror_state);
+	godot::ClassDB::bind_static_method(get_class_static(), godot::D_METHOD("rotate_state"), &Chess::rotate_state);
+	godot::ClassDB::bind_static_method(get_class_static(), godot::D_METHOD("swap_group"), &Chess::swap_group);
+	godot::ClassDB::bind_static_method(get_class_static(), godot::D_METHOD("stringify"), &Chess::stringify);
+	godot::ClassDB::bind_static_method(get_class_static(), godot::D_METHOD("is_check"), &Chess::is_check);
+	godot::ClassDB::bind_static_method(get_class_static(), godot::D_METHOD("is_move_valid"), &Chess::is_move_valid);
+	godot::ClassDB::bind_static_method(get_class_static(), godot::D_METHOD("generate_premove"), &Chess::generate_premove);
+	godot::ClassDB::bind_static_method(get_class_static(), godot::D_METHOD("generate_move"), &Chess::generate_move);
+	godot::ClassDB::bind_static_method(get_class_static(), godot::D_METHOD("generate_valid_move"), &Chess::generate_valid_move);
+	godot::ClassDB::bind_static_method(get_class_static(), godot::D_METHOD("generate_explore_move"), &Chess::generate_explore_move);
+	godot::ClassDB::bind_static_method(get_class_static(), godot::D_METHOD("generate_king_path"), &Chess::generate_king_path);
+	godot::ClassDB::bind_static_method(get_class_static(), godot::D_METHOD("get_move_name"), &Chess::get_move_name);
+	godot::ClassDB::bind_static_method(get_class_static(), godot::D_METHOD("name_to_move"), &Chess::name_to_move);
+	godot::ClassDB::bind_static_method(get_class_static(), godot::D_METHOD("apply_move"), &Chess::apply_move); 
+	godot::ClassDB::bind_static_method(get_class_static(), godot::D_METHOD("apply_move_custom"), &Chess::apply_move_custom);
+	godot::ClassDB::bind_static_method(get_class_static(), godot::D_METHOD("perft"), &Chess::perft);
 }

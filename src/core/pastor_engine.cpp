@@ -1,5 +1,4 @@
 #include "pastor_engine.hpp"
-#include "rule_standard.hpp"
 #include "chess.hpp"
 #include <godot_cpp/core/error_macros.hpp>
 #include <godot_cpp/classes/file_access.hpp>
@@ -474,7 +473,7 @@ int PastorEngine::quies(const godot::Ref<State> &_state, int score, int _alpha, 
 	for (int i = 0; i < move_list.size(); i++)
 	{
 		godot::Ref<State> test_state = _state->duplicate();
-		RuleStandard::get_singleton()->apply_move(test_state, move_list[i]);
+		Chess::apply_move(test_state, move_list[i]);
 		int test_score = -quies(test_state, score + evaluate(_state, move_list[i]), -_beta, -_alpha, 1 - _group);
 		if (test_score >= _beta)
 		{
@@ -519,10 +518,10 @@ int PastorEngine::alphabeta(const godot::Ref<State> &_state, int score, int _alp
 	int best_move = 0;
 	bool has_transposition_table_move = false;
 	best_move = transposition_table->best_move(_state->get_zobrist());
-	if (RuleStandard::get_singleton()->is_move_valid(_state, _group, best_move))
+	if (Chess::is_move_valid(_state, _group, best_move))
 	{
 		godot::Ref<State> test_state = _state->duplicate();
-		RuleStandard::get_singleton()->apply_move(test_state, best_move);
+		Chess::apply_move(test_state, best_move);
 		int next_score = -alphabeta(test_state, score + evaluate(_state, best_move), -_beta, -_alpha, _depth - 1, 1 - _group, _ply + 1, true, _history_state, _history_table, nullptr, nullptr, _debug_output);
 		has_transposition_table_move = true;
 		if (_beta <= next_score)
@@ -543,10 +542,10 @@ int PastorEngine::alphabeta(const godot::Ref<State> &_state, int score, int _alp
 	}
 	
 	bool has_killer_1 = false;
-	if (killer_1 && RuleStandard::get_singleton()->is_move_valid(_state, _group, *killer_1))
+	if (killer_1 && Chess::is_move_valid(_state, _group, *killer_1))
 	{
 		godot::Ref<State> test_state = _state->duplicate();
-		RuleStandard::get_singleton()->apply_move(test_state, *killer_1);
+		Chess::apply_move(test_state, *killer_1);
 		int next_score = -alphabeta(test_state, score + evaluate(_state, *killer_1), -_beta, -_alpha, _depth - 1, 1 - _group, _ply + 1, true, _history_state, _history_table, nullptr, nullptr, _debug_output);
 		has_killer_1 = true;
 		if (_beta <= next_score)
@@ -563,10 +562,10 @@ int PastorEngine::alphabeta(const godot::Ref<State> &_state, int score, int _alp
 		}
 	}
 	bool has_killer_2 = false;
-	if (killer_2 && RuleStandard::get_singleton()->is_move_valid(_state, _group, *killer_2))
+	if (killer_2 && Chess::is_move_valid(_state, _group, *killer_2))
 	{
 		godot::Ref<State> test_state = _state->duplicate();
-		RuleStandard::get_singleton()->apply_move(test_state, *killer_2);
+		Chess::apply_move(test_state, *killer_2);
 		int next_score = -alphabeta(test_state, score + evaluate(_state, *killer_2), -_beta, -_alpha, _depth - 1, 1 - _group, _ply + 1, true, _history_state, _history_table, nullptr, nullptr, _debug_output);
 		has_killer_2 = true;
 		if (_beta <= next_score)
@@ -591,10 +590,10 @@ int PastorEngine::alphabeta(const godot::Ref<State> &_state, int score, int _alp
 		}
 	}
 	godot::PackedInt32Array move_list;
-	RuleStandard::get_singleton()->_internal_generate_valid_move(move_list, _state, _group);
+	Chess::_internal_generate_valid_move(move_list, _state, _group);
 	if (move_list.size() == 0)
 	{
-		if (RuleStandard::get_singleton()->is_check(_state, 1 - _group))
+		if (Chess::is_check(_state, 1 - _group))
 		{
 			return -WIN + _ply;
 		} else {
@@ -621,7 +620,7 @@ int PastorEngine::alphabeta(const godot::Ref<State> &_state, int score, int _alp
 			_debug_output.call(_state->get_zobrist(), _depth, i, move_list.size());
 		}
 		godot::Ref<State> test_state = _state->duplicate();
-		RuleStandard::get_singleton()->apply_move(test_state, move_list[i]);
+		Chess::apply_move(test_state, move_list[i]);
 		int next_score = 0;
 		if (found_pv)
 		{
@@ -704,7 +703,7 @@ void PastorEngine::search(const godot::Ref<State> &_state, int _group, const god
 	{
 		int move = transposition_table->best_move(test_state->get_zobrist());
 		principal_variation.push_back(move);
-		RuleStandard::get_singleton()->apply_move(test_state, move);
+		Chess::apply_move(test_state, move);
 	}
 }
 

@@ -93,8 +93,8 @@ func set_state(_state:State) -> void:
 	$canvas.clear_pointer("last_move")
 	$canvas.clear_pointer("move")
 	state = _state.duplicate()
-	#king_instance[0].set_warning(RuleStandard.is_check(state, 1))
-	#king_instance[1].set_warning(RuleStandard.is_check(state, 0))
+	#king_instance[0].set_warning(Chess.is_check(state, 1))
+	#king_instance[1].set_warning(Chess.is_check(state, 0))
 
 func get_position_name(_position:Vector3) -> String:
 	var nearest:Area3D = null
@@ -158,15 +158,15 @@ func hide_move() -> void:
 	$canvas.clear_pointer("move")
 
 func execute_move(move:int) -> Dictionary:
-	var event:Dictionary = RuleStandard.apply_move_custom(state, move)
+	var event:Dictionary = Chess.apply_move_custom(state, move)
 	var rollback_event:Dictionary = receive_event(event)
-	RuleStandard.apply_move(state, move)
+	Chess.apply_move(state, move)
 	$canvas.clear_pointer("move")
 	$canvas.clear_pointer("last_move")
 	$canvas.draw_pointer("last_move", COLOR_LAST_MOVE, $canvas.convert_name_to_position(Chess.to_position_name(Chess.from(move))))
 	$canvas.draw_pointer("last_move", COLOR_LAST_MOVE, $canvas.convert_name_to_position(Chess.to_position_name(Chess.to(move))))
-	#king_instance[0].set_warning(RuleStandard.is_check(state, 1))
-	#king_instance[1].set_warning(RuleStandard.is_check(state, 0))
+	#king_instance[0].set_warning(Chess.is_check(state, 1))
+	#king_instance[1].set_warning(Chess.is_check(state, 0))
 	selected = -1
 	return rollback_event
 

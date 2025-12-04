@@ -6,14 +6,14 @@ var history:PackedStringArray = []
 func parse(data:String) -> void:
 	var data_dict:Dictionary = JSON.parse_string(data)
 	var fen:String = data_dict["state"]
-	state = RuleStandard.parse(fen)
+	state = Chess.parse(fen)
 	history = data_dict["history"]
 	draw_lines(data_dict["lines"])
 	update_table()
 
 func stringify() -> String:
 	var data_dict:Dictionary = {}
-	var fen:String = RuleStandard.stringify(state)
+	var fen:String = Chess.stringify(state)
 	data_dict["state"] = fen
 	data_dict["history"] = history
 	data_dict["lines"] = get_lines()
@@ -27,8 +27,8 @@ func set_state(_state:State) -> void:
 func push_move(move:int) -> void:
 	if history.size() >= 60:
 		return
-	history.push_back(RuleStandard.get_move_name(state, move))
-	RuleStandard.apply_move(state, move)
+	history.push_back(Chess.get_move_name(state, move))
+	Chess.apply_move(state, move)
 	update_table()
 
 func update_table() -> void:

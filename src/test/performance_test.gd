@@ -8,7 +8,7 @@ var chess_state:State = null
 var engine: PastorEngine = PastorEngine.new()
 
 func _ready() -> void:
-	chess_state = RuleStandard.parse("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
+	chess_state = Chess.parse("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
 	engine.set_think_time(INF)
 	engine.set_max_depth(8)
 	var thread:Thread = Thread.new()
@@ -21,9 +21,9 @@ func _physics_process(_delta:float) -> void:
 		progress_bar[i].value = progress_bar_data[i]
 
 func performance_test() -> void:
-	chess_state = RuleStandard.parse("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
+	chess_state = Chess.parse("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
 	var time_start:float = Time.get_ticks_usec()
-	# RuleStandard.search(chess_state, 0, transposition_table, Callable(), 6, debug_output)
+	# Chess.search(chess_state, 0, transposition_table, Callable(), 6, debug_output)
 	engine.start_search(chess_state, 0, [], debug_output)
 	await engine.search_finished
 	var time_end:float = Time.get_ticks_usec()
@@ -31,9 +31,9 @@ func performance_test() -> void:
 	var variation:PackedInt32Array = engine.get_principal_variation()
 	var text:String = ""
 	for iter:int in variation:
-		var move_name:String = RuleStandard.get_move_name(test_state, iter)
+		var move_name:String = Chess.get_move_name(test_state, iter)
 		text += move_name + " "
-		RuleStandard.apply_move(test_state, iter)
+		Chess.apply_move(test_state, iter)
 	print(text)
 	print(time_end - time_start)
 

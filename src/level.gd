@@ -54,7 +54,7 @@ func state_ready_explore_idle(_arg:Dictionary) -> void:
 		Dialog.set_title(title[by])
 	Dialog.connect("on_next", change_state.bind("dialog"))
 	chessboard.connect("ready_to_move", change_state.bind("explore_ready_to_move"))
-	chessboard.set_valid_move(RuleStandard.generate_explore_move(chessboard.state, 1))	# TODO: 由于移花接木机制，这个情况下Cheshire不会进行寻路。
+	chessboard.set_valid_move(Chess.generate_explore_move(chessboard.state, 1))	# TODO: 由于移花接木机制，这个情况下Cheshire不会进行寻路。
 
 func state_exit_explore_idle() -> void:
 	Dialog.disconnect("on_next", change_state.bind("dialog"))
@@ -124,7 +124,7 @@ func state_ready_explore_move(_arg:Dictionary) -> void:
 	chessboard.execute_move(_arg["move"])
 
 func state_ready_explore_check_attack(_arg:Dictionary) -> void:
-	var white_move_list:PackedInt32Array = RuleStandard.generate_valid_move(chessboard.state, 0)
+	var white_move_list:PackedInt32Array = Chess.generate_valid_move(chessboard.state, 0)
 	for move:int in white_move_list:
 		var to:int = Chess.to(move)
 		if !chessboard.state.has_piece(to):
@@ -195,9 +195,9 @@ func state_ready_versus_waiting() -> void:
 func state_ready_versus_move(_arg:Dictionary) -> void:
 	history_state.push_back(chessboard.state.get_zobrist())
 	chessboard.connect("animation_finished", func() -> void:
-		if RuleStandard.get_end_type(chessboard.state) == "checkmate_black":
+		if Chess.get_end_type(chessboard.state) == "checkmate_black":
 			change_state("black_win")
-		elif RuleStandard.get_end_type(chessboard.state) == "checkmate_white":
+		elif Chess.get_end_type(chessboard.state) == "checkmate_white":
 			change_state("white_win")
 		elif chessboard.state.get_turn() == 0:
 			change_state("versus_enemy")
@@ -208,7 +208,7 @@ func state_ready_versus_move(_arg:Dictionary) -> void:
 
 func state_ready_versus_player(_arg:Dictionary) -> void:
 	chessboard.connect("clicked_move", change_state.bind("versus_check_move"), ConnectFlags.CONNECT_ONE_SHOT)
-	chessboard.set_valid_move(RuleStandard.generate_valid_move(chessboard.state, 1))
+	chessboard.set_valid_move(Chess.generate_valid_move(chessboard.state, 1))
 
 func state_ready_versus_check_move(_arg:Dictionary) -> void:
 	var from:int = Chess.from(chessboard.confirm_move)

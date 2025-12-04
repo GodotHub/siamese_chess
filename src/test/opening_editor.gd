@@ -18,22 +18,22 @@ func _ready() -> void:
 	$canvas_layer/panel/v_box_container/margin_container/h_box_container/button_prev.connect("button_down", prev)
 	$canvas_layer/panel/v_box_container/margin_container/h_box_container/button_next.connect("button_down", next)
 	
-	state = RuleStandard.parse("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
+	state = Chess.parse("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
 	chessboard.set_state(state.duplicate())
 	history_prev.push_back(state.duplicate());
 	get_text()
 	update_move()
 
 func receive_move() -> void:
-	RuleStandard.apply_move(state, chessboard.confirm_move)
+	Chess.apply_move(state, chessboard.confirm_move)
 	get_text()
 	history_prev.push_back(state.duplicate());
 	history_next.clear();
 	update_move()
 
 func update_move() -> void:
-	var move_list:PackedInt32Array = RuleStandard.generate_valid_move(state, state.get_turn())
-	var premove_list:PackedInt32Array = RuleStandard.generate_premove(state, 1 - state.get_turn())
+	var move_list:PackedInt32Array = Chess.generate_valid_move(state, state.get_turn())
+	var premove_list:PackedInt32Array = Chess.generate_premove(state, 1 - state.get_turn())
 	chessboard.set_valid_move(move_list)
 	chessboard.set_valid_premove(premove_list)
 
@@ -44,14 +44,14 @@ func get_text() -> void:
 	var move_list_str:PackedStringArray = []
 	text_edit_move.text = ""
 	for iter:int in move_list:
-		move_list_str.push_back(RuleStandard.get_move_name(state, iter))
+		move_list_str.push_back(Chess.get_move_name(state, iter))
 	text_edit_move.text = ",".join(move_list_str)
 
 func set_text() -> void:
 	var move_list_str:PackedStringArray = text_edit_move.text.split(",", false)
 	var move_list:PackedInt32Array = []
 	for iter:String in move_list_str:
-		var move:int = RuleStandard.name_to_move(state, iter)
+		var move:int = Chess.name_to_move(state, iter)
 		if move != -1:
 			move_list.push_back(move)
 	opening_book.set_opening(state, text_edit_name.text, text_edit_description.text, move_list)

@@ -72,7 +72,7 @@ func dialog_telephone_2025() -> void:
 				await telephone_engine.search_finished
 			var best_move:int = telephone_engine.get_search_result()
 			$dialog.next()
-			$dialog.push_dialog("我认为您应当下" + RuleStandard.get_move_name(test_state, best_move), true, true)
+			$dialog.push_dialog("我认为您应当下" + Chess.get_move_name(test_state, best_move), true, true)
 			await $dialog.on_next
 		else:
 			$dialog.push_dialog("现在您还没在下棋，我暂时帮不上。", true, true)
@@ -121,7 +121,7 @@ func dialog_pastor_in_game() -> void:
 			engine.stop_search()
 		pastor_game_state = pastor_history.back().duplicate()
 		$chessboard_pastor.set_state(pastor_game_state)
-		$chessboard_pastor.set_valid_move(RuleStandard.generate_valid_move(pastor_game_state, 1))
+		$chessboard_pastor.set_valid_move(Chess.generate_valid_move(pastor_game_state, 1))
 		$chessboard_pastor.set_valid_premove([])
 	elif $dialog.selected == 1:
 		engine.stop_search()
@@ -138,7 +138,7 @@ func dialog_pastor_game_start() -> void:
 		$dialog.push_selection(["标准棋局（30+0）", "快棋（10+5）", "超快棋（5+3）", "子弹棋（随机布局，3+0）", "导入棋局", "取消"])
 		await $dialog.on_next
 		if $dialog.selected in [0, 1, 2]:
-			pastor_game_state = RuleStandard.parse("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
+			pastor_game_state = Chess.parse("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
 			$chessboard_pastor.set_state(pastor_game_state)
 			$chessboard_pastor.add_default_piece_set()
 			pastor_history_chart.set_state(pastor_game_state)
@@ -165,7 +165,7 @@ func dialog_pastor_game_start() -> void:
 			break
 		elif $dialog.selected == 3:
 			engine.set_think_time(1)
-			pastor_game_state = RuleStandard.create_random_state(15)
+			pastor_game_state = Chess.create_random_state(15)
 			$chessboard_pastor.set_state(pastor_game_state)
 			$chessboard_pastor.add_default_piece_set()
 			pastor_history_chart.set_state(pastor_game_state)
@@ -185,7 +185,7 @@ func dialog_pastor_game_start() -> void:
 			var text_input_instance:TextInput = TextInput.create_text_input_instance("输入FEN格式的布局：", "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
 			add_child(text_input_instance)
 			await text_input_instance.confirmed
-			pastor_game_state = RuleStandard.parse(text_input_instance.text)
+			pastor_game_state = Chess.parse(text_input_instance.text)
 			if is_instance_valid(pastor_game_state):
 				$clock_pastor.set_time(1800, 1, 0)
 				$chessboard_pastor.set_state(pastor_game_state)
@@ -210,34 +210,34 @@ func dialog_pastor_game_start() -> void:
 		await $dialog.on_next
 
 func game_with_pastor() -> void:
-	while RuleStandard.get_end_type(pastor_game_state) == "":
+	while Chess.get_end_type(pastor_game_state) == "":
 		$chessboard_pastor.set_valid_move([])
-		$chessboard_pastor.set_valid_premove(RuleStandard.generate_premove(pastor_game_state, 1))
+		$chessboard_pastor.set_valid_premove(Chess.generate_premove(pastor_game_state, 1))
 		engine.start_search(pastor_game_state, 0, pastor_history_state, Callable())
 		if engine.is_searching():
 			await engine.search_finished
 		var move:int = engine.get_search_result()
 		pastor_history_state.push_back(pastor_game_state.get_zobrist())
-		RuleStandard.apply_move(pastor_game_state, move)
+		Chess.apply_move(pastor_game_state, move)
 		$chessboard_pastor.execute_move(move)
 		pastor_history_chart.push_move(move)
 		pastor_history.push_back(pastor_game_state.duplicate())
-		if RuleStandard.get_end_type(pastor_game_state) != "":
+		if Chess.get_end_type(pastor_game_state) != "":
 			break
-		$chessboard_pastor.set_valid_move(RuleStandard.generate_valid_move(pastor_game_state, 1))
+		$chessboard_pastor.set_valid_move(Chess.generate_valid_move(pastor_game_state, 1))
 		$chessboard_pastor.set_valid_premove([])
 		$clock_pastor.next()
 		engine.start_search(pastor_game_state, 1, pastor_history_state, Callable())
 		await $chessboard_pastor.move_played
 		pastor_history_state.push_back(pastor_game_state.get_zobrist())
-		RuleStandard.apply_move(pastor_game_state, $chessboard_pastor.confirm_move)
+		Chess.apply_move(pastor_game_state, $chessboard_pastor.confirm_move)
 		pastor_history_chart.push_move($chessboard_pastor.confirm_move)
 		pastor_history.push_back(pastor_game_state.duplicate())
 		$clock_pastor.next()
 		engine.stop_search()
 		if engine.is_searching():
 			await engine.search_finished
-	pastor_game_end(RuleStandard.get_end_type(pastor_game_state))
+	pastor_game_end(Chess.get_end_type(pastor_game_state))
 
 func pastor_game_timeout(group:int) -> void:
 	if group == 0:	# 棋钟的阵营1才是Pastor的
@@ -294,7 +294,7 @@ func dialog_friend_start_game() -> void:
 		$dialog.push_selection(["标准棋局（30+0）", "快棋（10+5）", "超快棋（5+3）", "导入棋局", "取消"])
 		await $dialog.on_next
 		if $dialog.selected in [0, 1, 2]:
-			friend_game_state = RuleStandard.parse("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
+			friend_game_state = Chess.parse("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
 			$chessboard_friend.set_state(friend_game_state)
 			$chessboard_friend.add_default_piece_set()
 			if $dialog.selected == 0:
@@ -311,7 +311,7 @@ func dialog_friend_start_game() -> void:
 			var text_input_instance:TextInput = TextInput.create_text_input_instance("输入FEN格式的布局：", "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
 			add_child(text_input_instance)
 			await text_input_instance.confirmed
-			friend_game_state = RuleStandard.parse(text_input_instance.text)
+			friend_game_state = Chess.parse(text_input_instance.text)
 			if is_instance_valid(friend_game_state):
 				$chessboard_friend.set_state(friend_game_state)
 				$chessboard_friend.add_default_piece_set()
@@ -324,20 +324,20 @@ func dialog_friend_start_game() -> void:
 		await $dialog.on_next
 
 func game_with_friend() -> void:
-	while RuleStandard.get_end_type(friend_game_state) == "":
-		$chessboard_friend.set_valid_move(RuleStandard.generate_valid_move(friend_game_state, 0))
+	while Chess.get_end_type(friend_game_state) == "":
+		$chessboard_friend.set_valid_move(Chess.generate_valid_move(friend_game_state, 0))
 		$chessboard_friend.set_valid_premove([])
 		$player.move_camera($camera/camera_friend_chessboard_white)
 		await $chessboard_friend.move_played
-		RuleStandard.apply_move(friend_game_state, $chessboard_friend.confirm_move)
+		Chess.apply_move(friend_game_state, $chessboard_friend.confirm_move)
 		$clock_friend.next()
-		if RuleStandard.get_end_type(friend_game_state) != "":
+		if Chess.get_end_type(friend_game_state) != "":
 			break
-		$chessboard_friend.set_valid_move(RuleStandard.generate_valid_move(friend_game_state, 1))
+		$chessboard_friend.set_valid_move(Chess.generate_valid_move(friend_game_state, 1))
 		$chessboard_friend.set_valid_premove([])
 		$player.move_camera($camera/camera_friend_chessboard_black)
 		await $chessboard_friend.move_played
-		RuleStandard.apply_move(friend_game_state, $chessboard_friend.confirm_move)
+		Chess.apply_move(friend_game_state, $chessboard_friend.confirm_move)
 		$clock_friend.next()
 
 func go_outside() -> void:

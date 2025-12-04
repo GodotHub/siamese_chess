@@ -42,7 +42,7 @@ func interact_pastor() -> void:
 	await game_ended
 
 func in_game() -> void:
-	$table_0/chessboard_standard.state = RuleStandard.create_initial_state()
+	$table_0/chessboard_standard.state = Chess.create_initial_state()
 	$table_0/chessboard_standard.add_default_piece_set()
 	in_game_white.call_deferred()
 
@@ -52,7 +52,7 @@ func in_game_white() -> void:
 		standard_history_state.push_back($table_0/chessboard_standard.state.duplicate())
 		var rollback_event:Dictionary = $table_0/chessboard_standard.execute_move($table_0/chessboard_standard.confirm_move)
 		standard_history_event.push_back(rollback_event)
-	if RuleStandard.get_end_type($table_0/chessboard_standard.state) != "":
+	if Chess.get_end_type($table_0/chessboard_standard.state) != "":
 		game_end.call_deferred()
 		return
 	$table_0/chessboard_standard.set_valid_move([])
@@ -68,10 +68,10 @@ func in_game_black() -> void:
 	standard_history_state.push_back($table_0/chessboard_standard.state.duplicate())
 	var rollback_event:Dictionary = $table_0/chessboard_standard.execute_move(standard_engine.get_search_result())
 	standard_history_event.push_back(rollback_event)
-	if RuleStandard.get_end_type($table_0/chessboard_standard.state) != "":
+	if Chess.get_end_type($table_0/chessboard_standard.state) != "":
 		game_end.call_deferred()
 		return
-	$table_0/chessboard_standard.set_valid_move(RuleStandard.generate_valid_move($table_0/chessboard_standard.state, 1))
+	$table_0/chessboard_standard.set_valid_move(Chess.generate_valid_move($table_0/chessboard_standard.state, 1))
 
 func in_game_black_check_move() -> void:
 	Dialog.clear()
@@ -116,7 +116,7 @@ func on_select_dialog() -> void:
 			Dialog.push_selection(["离开对局"], false, false)
 			return
 		$table_0/chessboard_standard.state = standard_history_state[-2]
-		$table_0/chessboard_standard.set_valid_move(RuleStandard.generate_valid_move(standard_history_state[-2], 1))
+		$table_0/chessboard_standard.set_valid_move(Chess.generate_valid_move(standard_history_state[-2], 1))
 		for i:int in 2:
 			$table_0/chessboard_standard.receive_rollback_event(standard_history_event[-1])
 			standard_history_zobrist.resize(standard_history_zobrist.size() - 1)
@@ -131,7 +131,7 @@ func on_select_dialog() -> void:
 		game_end.call_deferred()
 
 func game_end() -> void:
-	match RuleStandard.get_end_type($table_0/chessboard_standard.state):
+	match Chess.get_end_type($table_0/chessboard_standard.state):
 		"checkmate_black":
 			Dialog.push_dialog("黑方胜", true, true)
 			await Dialog.on_next
