@@ -1045,6 +1045,10 @@ godot::String RuleStandard::get_move_name(const godot::Ref<State> &_state, int m
 	{
 		ans += (from_piece & 95);
 	}
+	else if (_state->get_piece(to) || to == _state->get_en_passant())
+	{
+		ans += (from & 0x0F) + 'a';
+	}
 
 	godot::PackedInt32Array move_list = generate_valid_move(_state, group);
 	godot::PackedInt32Array same_to;
@@ -1078,16 +1082,12 @@ godot::String RuleStandard::get_move_name(const godot::Ref<State> &_state, int m
 			ans +=  7 - (from >> 4) + '1';
 		}
 	}
-	if (_state->get_piece(to) && ((from_piece & 95) != 'P'))
+	if (_state->get_piece(to) || ((from_piece & 95) == 'P' && to == _state->get_en_passant()))
 	{
 		ans += 'x';
 	}
 	ans += (to & 0x0F) + 'a';
 	ans +=  7 - (to >> 4) + '1';
-	if (_state->get_piece(to) && ((from_piece & 95) == 'P') || to == _state->get_en_passant())
-	{
-		ans += 'x';
-	}
 	if (extra)
 	{
 		ans += '=';
