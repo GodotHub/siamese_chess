@@ -651,21 +651,20 @@ int PastorEngine::alphabeta(const godot::Ref<State> &_state, int score, int _alp
 			{
 				(*_history_table)[move_list[i] & 0xFFFF] += (1 << _depth);
 			}
-			if (_alpha >= WIN - MAX_PLY)
-			{
-				transposition_table->record_hash(_state->get_zobrist(), _depth, _alpha + _ply, flag, move_list[i]);
-			}
-			else if (_alpha <= -WIN + MAX_PLY)
-			{
-				transposition_table->record_hash(_state->get_zobrist(), _depth, _alpha - _ply, flag, move_list[i]);
-			}
-			else
-			{
-				transposition_table->record_hash(_state->get_zobrist(), _depth, _alpha, flag, move_list[i]);
-			}
 		}
 	}
-	transposition_table->record_hash(_state->get_zobrist(), _depth, _alpha, flag, best_move);
+	if (_alpha >= WIN - MAX_PLY)
+	{
+		transposition_table->record_hash(_state->get_zobrist(), _depth, _alpha + _ply, flag, best_move);
+	}
+	else if (_alpha <= -WIN + MAX_PLY)
+	{
+		transposition_table->record_hash(_state->get_zobrist(), _depth, _alpha - _ply, flag, best_move);
+	}
+	else
+	{
+		transposition_table->record_hash(_state->get_zobrist(), _depth, _alpha, flag, best_move);
+	}
 	return _alpha;
 }
 
