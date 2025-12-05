@@ -1,4 +1,4 @@
-extends "res://src/outside.gd"
+extends "res://src/level/outside.gd"
 
 var taken:bool = false
 
@@ -14,5 +14,5 @@ func add_card() -> void:
 	var card:CardTarot = CardTarot.new()
 	card.cover = load("res://assets/texture/piece_knight.svg")
 	card.piece = "n".unicode_at(0)
-	card.actor = load("res://scene/actor/piece_knight_black.tscn").instantiate()
+	card.actor = load("res://scene/actor/piece_knight_black.tscn").instantiate().set_larger_scale()
 	HoldCard.add_card(card)

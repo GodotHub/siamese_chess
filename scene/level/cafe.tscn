@@ -1,4 +1,4 @@
-[gd_scene load_steps=30 format=3 uid="uid://co6urdc5oyrbh"]
+[gd_scene load_steps=37 format=3 uid="uid://co6urdc5oyrbh"]
 
 [ext_resource type="Script" uid="uid://cln6ksgl3ll6o" path="res://src/level/cafe.gd" id="1_e1edc"]
 [ext_resource type="PackedScene" uid="uid://dwvyc2qlcdag0" path="res://scene/chessboard_large.tscn" id="1_o611t"]
@@ -19,6 +19,13 @@
 [ext_resource type="PackedScene" uid="uid://cefxs7grh28rs" path="res://assets/model/door.glb" id="18_e7kou"]
 [ext_resource type="Script" uid="uid://bbi6kjxerg3hk" path="res://src/marker_teleport.gd" id="18_lw61d"]
 [ext_resource type="PackedScene" uid="uid://dtu3l0xkrwcvx" path="res://assets/model/bookshelf.glb" id="19_lw61d"]
+[ext_resource type="PackedScene" uid="uid://ylr82inm0vxe" path="res://assets/model/counter.glb" id="20_uwrpd"]
+[ext_resource type="PackedScene" uid="uid://brwklx5c0sjbo" path="res://assets/model/kitchen_table.glb" id="21_u42d1"]
+[ext_resource type="PackedScene" uid="uid://ba012g1wjar5t" path="res://assets/model/coffee_machine.glb" id="22_uyp13"]
+[ext_resource type="PackedScene" uid="uid://cqom50qugj77u" path="res://scene/radio.tscn" id="23_qbjw3"]
+[ext_resource type="PackedScene" uid="uid://dkha0s03djtdq" path="res://scene/phonograph.tscn" id="24_0ldt7"]
+[ext_resource type="PackedScene" uid="uid://cuu3yjt7ru2ah" path="res://assets/model/hang_shelf.glb" id="25_0ldt7"]
+[ext_resource type="AudioStream" uid="uid://dsqaodhmws5v8" path="res://assets/audio/debussy-images-1-1-anderson.mp3" id="25_8pfak"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_e1edc"]
 sky_top_color = Color(1, 1, 1, 1)
@@ -536,6 +543,28 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0, 7)
 script = ExtResource("14_e7kou")
 piece_type = 121
 metadata/_custom_type_script = "uid://bt4vtnpxu5i4x"
+
+[node name="counter" parent="." instance=ExtResource("20_uwrpd")]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -3.9781, 0, 2.29696)
+
+[node name="kitchen_table" parent="." instance=ExtResource("21_u42d1")]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -6.38197, 0, 2)
+
+[node name="coffee_machine" parent="." instance=ExtResource("22_uyp13")]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -6.35432, 1.03095, 1.32514)
+
+[node name="radio" parent="." instance=ExtResource("23_qbjw3")]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -6.66671, 1.03238, 0.374076)
+
+[node name="phonograph" parent="." instance=ExtResource("24_0ldt7")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.25691, 0.888476, 0.396126)
+audio_stream = ExtResource("25_8pfak")
+
+[node name="hang_shelf" parent="." instance=ExtResource("25_0ldt7")]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -6.57524, 2, 1)
+
+[node name="hang_shelf_2" parent="." instance=ExtResource("25_0ldt7")]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -6.57524, 2, 3)
 
 [editable path="table_0"]
 [editable path="table_0/sofa_0"]

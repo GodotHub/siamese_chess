@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3 uid="uid://bilgu8ya10l7g"]
+[gd_scene load_steps=15 format=3 uid="uid://bilgu8ya10l7g"]
 
 [ext_resource type="Script" uid="uid://dv6xi5e2p0qcl" path="res://src/level/music_room.gd" id="1_a43ts"]
 [ext_resource type="PackedScene" uid="uid://b3ml34bssywkr" path="res://scene/player.tscn" id="2_exu1i"]
@@ -6,6 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://rxu1cqxjo2dn" path="res://scene/upright_piano.tscn" id="7_qe74a"]
 [ext_resource type="PackedScene" uid="uid://cjtow7squ3ylg" path="res://assets/model/chapel_chair.glb" id="8_jad32"]
 [ext_resource type="PackedScene" uid="uid://bw127d1iawnv3" path="res://assets/model/radermachera_sinica.glb" id="11_mytjl"]
+[ext_resource type="PackedScene" uid="uid://c3peh1jag1bb1" path="res://assets/model/reception_chair.glb" id="11_qtr2s"]
 [ext_resource type="Script" uid="uid://bt4vtnpxu5i4x" path="res://src/actor.gd" id="14_sshdh"]
 [ext_resource type="PackedScene" uid="uid://cingkxj4uodjo" path="res://assets/model/window.glb" id="15_okh5y"]
 [ext_resource type="PackedScene" uid="uid://cefxs7grh28rs" path="res://assets/model/door.glb" id="16_7f6gv"]
@@ -62,7 +63,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 0, -3)
 script = ExtResource("18_lay20")
 to = "res://scene/level/hallway_2f.tscn"
 args = {
-"by": 34
+"by": 51
 }
 metadata/_custom_type_script = "uid://bbi6kjxerg3hk"
 
@@ -370,3 +371,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 0, 7)
 script = ExtResource("14_sshdh")
 piece_type = 121
 metadata/_custom_type_script = "uid://bt4vtnpxu5i4x"
+
+[node name="reception_chair2" parent="." instance=ExtResource("11_qtr2s")]
+transform = Transform3D(0.258819, 0, -0.965926, 0, 1, 0, 0.965926, 0, 0.258819, 5.35379, 0, -3.42516)
