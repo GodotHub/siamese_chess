@@ -47,6 +47,7 @@ godot::Ref<State> State::duplicate()
 	new_state->round = round;
 	new_state->king_passant = king_passant;
 	new_state->zobrist = zobrist;
+	new_state->pawn_dir = pawn_dir;
 	return new_state;
 }
 
