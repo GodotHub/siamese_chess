@@ -1,7 +1,5 @@
 extends Control
 
-var chess_state:State = null
-var engine: PastorEngine = PastorEngine.new()
 var test_case:Array = [
 	{
 		"fen": "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
@@ -33,17 +31,15 @@ var test_case:Array = [
 	},
 ]
 func _ready() -> void:
-	chess_state = Chess.parse("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
-	engine.set_think_time(INF)
-	engine.set_max_depth(8)
-	var thread:Thread = Thread.new()
-	thread.start(perft_test.bind(0))
+	for i:int in test_case.size():
+		var thread:Thread = Thread.new()
+		thread.start(perft_test.bind(i))
 
 func perft_test(index:int) -> void:
-	chess_state = Chess.parse(test_case[index]["fen"])
+	var state = Chess.parse(test_case[index]["fen"])
 	var node_count:PackedInt32Array = test_case[index]["node_count"]
 	for i:int in range(node_count.size()):
-		var result:int = Chess.perft(chess_state, i, 0)
+		var result:int = Chess.perft(state, i, state.get_turn())
 		if result == node_count[i]:
 			print("perft_test_%d depth:%d expect:%d actual:%d" % [index, i, node_count[i], result])
 		else:
