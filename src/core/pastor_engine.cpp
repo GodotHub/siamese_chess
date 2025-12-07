@@ -256,6 +256,7 @@ PastorEngine::PastorEngine()
 
 void PastorEngine::generate_good_capture_move(godot::PackedInt32Array &output, const godot::Ref<State> &_state, int _group)
 {
+	//既然是good_capture_move，那么无需考虑王车易位、过路兵带来的潜在规则问题，因为上一步不是吃子着法
 	for (State::PieceIterator iter = _state->piece_iterator_begin(_group == 0 ? 'A' : 'a'); !iter.end(); iter.next())
 	{
 		int _from = iter.pos();
@@ -263,39 +264,38 @@ void PastorEngine::generate_good_capture_move(godot::PackedInt32Array &output, c
 		godot::PackedInt32Array *directions = nullptr;
 		if ((from_piece & 95) == 'P')
 		{
-			int front = from_piece == 'P' ? -16 : 16;
-			bool on_start = (_from >> 4) == (from_piece == 'P' ? 6 : 1);
-			bool on_end = (_from >> 4) == (from_piece == 'P' ? 1 : 6);
-			if (_state->has_piece(_from + front + 1) && (_state->get_piece(_from + front + 1) & 95) != 'W' && (_state->get_piece(_from + front + 1) & 95) != 'Y' && !Chess::is_same_group(from_piece, _state->get_piece(_from + front + 1))
-			|| ((_from >> 4) == 3 || (_from >> 4) == 4) && _state->get_en_passant() == _from + front + 1
-			|| !((_from + front + 1) & 0x88) && on_end && _state->get_king_passant() != -1 && abs(_state->get_king_passant() - (_from + front + 1)) <= 1)
+			int front = from_piece == 'P' ? (_state->get_pawn_dir() & 0xF) : (_state->get_pawn_dir() >> 4);
+			int front_dir = Chess::direction(from_piece, front);
+			int front_capture_left = Chess::direction_pawn_capture(front, false);
+			int front_capture_right = Chess::direction_pawn_capture(front, true);
+			bool on_start = Chess::pawn_on_start(front, _from);
+			bool on_end = Chess::pawn_on_end(front, _from);
+			if (!Chess::is_blocked(_state, _from, _from + front_capture_left) && Chess::is_enemy(_state, _from, _from + front_capture_left))
 			{
 				if (on_end)
 				{
-					output.push_back(Chess::create(_from, _from + front + 1, _group == 0 ? 'Q' : 'q'));
-					output.push_back(Chess::create(_from, _from + front + 1, _group == 0 ? 'R' : 'r'));
-					output.push_back(Chess::create(_from, _from + front + 1, _group == 0 ? 'N' : 'n'));
-					output.push_back(Chess::create(_from, _from + front + 1, _group == 0 ? 'B' : 'b'));
+					output.push_back(Chess::create(_from, _from + front_capture_left, _group == 0 ? 'Q' : 'q'));
+					output.push_back(Chess::create(_from, _from + front_capture_left, _group == 0 ? 'R' : 'r'));
+					output.push_back(Chess::create(_from, _from + front_capture_left, _group == 0 ? 'N' : 'n'));
+					output.push_back(Chess::create(_from, _from + front_capture_left, _group == 0 ? 'B' : 'b'));
 				}
 				else
 				{
-					output.push_back(Chess::create(_from, _from + front + 1, 0));
+					output.push_back(Chess::create(_from, _from + front_capture_left, 0));
 				}
 			}
-			if (_state->has_piece(_from + front - 1) && (_state->get_piece(_from + front - 1) & 95) != 'W' && (_state->get_piece(_from + front - 1) & 95) != 'Y' && !Chess::is_same_group(from_piece, _state->get_piece(_from + front - 1))
-			|| ((_from >> 4) == 3 || (_from >> 4) == 4) && _state->get_en_passant() == _from + front - 1
-			|| !((_from + front - 1) & 0x88) && on_end && _state->get_king_passant() != -1 && abs(_state->get_king_passant() - (_from + front - 1)) <= 1)
+			if (!Chess::is_blocked(_state, _from, _from + front_capture_right) && Chess::is_enemy(_state, _from, _from + front_capture_right))
 			{
 				if (on_end)
 				{
-					output.push_back(Chess::create(_from, _from + front - 1, _group == 0 ? 'Q' : 'q'));
-					output.push_back(Chess::create(_from, _from + front - 1, _group == 0 ? 'R' : 'r'));
-					output.push_back(Chess::create(_from, _from + front - 1, _group == 0 ? 'N' : 'n'));
-					output.push_back(Chess::create(_from, _from + front - 1, _group == 0 ? 'B' : 'b'));
+					output.push_back(Chess::create(_from, _from + front_capture_right, _group == 0 ? 'Q' : 'q'));
+					output.push_back(Chess::create(_from, _from + front_capture_right, _group == 0 ? 'R' : 'r'));
+					output.push_back(Chess::create(_from, _from + front_capture_right, _group == 0 ? 'N' : 'n'));
+					output.push_back(Chess::create(_from, _from + front_capture_right, _group == 0 ? 'B' : 'b'));
 				}
 				else
 				{
-					output.push_back(Chess::create(_from, _from + front - 1, 0));
+					output.push_back(Chess::create(_from, _from + front_capture_right, 0));
 				}
 			}
 			continue;
@@ -332,20 +332,11 @@ void PastorEngine::generate_good_capture_move(godot::PackedInt32Array &output, c
 					break;
 				}
 				to_piece = _state->get_piece(to);
-				if (to_piece && Chess::is_same_group(from_piece, to_piece) && (to_piece & 95) != 'W' && (to_piece & 95) != 'X')
+				if (Chess::is_blocked(_state, _from, to))
 				{
 					break;
 				}
 				if (to_piece)
-				{
-					output.push_back(Chess::create(_from, to, 0));
-					break;
-				}
-				if ((from_piece & 95) == 'K' || (from_piece & 95) == 'N')
-				{
-					break;
-				}
-				if (_state->get_king_passant() != -1 && abs(to - _state->get_king_passant()) <= 1)
 				{
 					output.push_back(Chess::create(_from, to, 0));
 					break;
