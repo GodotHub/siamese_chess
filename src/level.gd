@@ -12,10 +12,12 @@ var level_state:String = ""
 var mutex:Mutex = Mutex.new()
 var interact_list:Dictionary[int, Dictionary] = {}
 var title:Dictionary[int, String] = {}
+@export var pawn_dir:int = 0x61
 
 func _ready() -> void:
 	engine = PastorEngine.new()
 	var state = State.new()
+	state.set_pawn_dir(pawn_dir)
 	chessboard = $chessboard
 	for node:Node in get_children():
 		if node is Actor:
@@ -54,7 +56,7 @@ func state_ready_explore_idle(_arg:Dictionary) -> void:
 		Dialog.set_title(title[by])
 	Dialog.connect("on_next", change_state.bind("dialog"))
 	chessboard.connect("ready_to_move", change_state.bind("explore_ready_to_move"))
-	chessboard.set_valid_move(Chess.generate_explore_move(chessboard.state, 1))	# TODO: 由于移花接木机制，这个情况下Cheshire不会进行寻路。
+	chessboard.set_valid_move(Chess.generate_explore_move(chessboard.state, 1))
 
 func state_exit_explore_idle() -> void:
 	Dialog.disconnect("on_next", change_state.bind("dialog"))
