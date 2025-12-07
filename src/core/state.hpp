@@ -47,6 +47,8 @@ class State : public godot::RefCounted
 		void set_round(int _round);
 		int get_king_passant();
 		void set_king_passant(int _king_passant);
+		int get_pawn_dir();
+		void set_pawn_dir(int _pawn_dir);
 		int64_t get_zobrist();
 		godot::String print_board();
 		godot::String print_bit_square(int _piece);
@@ -65,7 +67,7 @@ class State : public godot::RefCounted
 		int step_to_draw = 0;
 		int round = 1;
 		int king_passant = -1;
-		int front = 0;	//兵的前进方向，前八位为白方，后八位为黑方
+		int pawn_dir = 0x16;	//兵的前进方向，前4位为白方，后4位为黑方
 		int64_t zobrist = 0;
 };
 
