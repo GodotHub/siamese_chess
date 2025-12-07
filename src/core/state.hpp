@@ -67,7 +67,7 @@ class State : public godot::RefCounted
 		int step_to_draw = 0;
 		int round = 1;
 		int king_passant = -1;
-		int pawn_dir = 0x16;	//兵的前进方向，前4位为白方，后4位为黑方
+		int pawn_dir = 0x61;	//兵的前进方向，前4位为白方，后4位为黑方
 		int64_t zobrist = 0;
 };
 

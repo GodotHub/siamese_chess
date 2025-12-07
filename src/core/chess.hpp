@@ -33,8 +33,8 @@ class Chess : public godot::Object
 		static int direction_count(int piece);
 		static int direction(int piece, int index);
 		static int direction_pawn_capture(int index, bool capture_dir);
-		static int pawn_on_start(int dir, int by);
-		static int pawn_on_end(int dir, int by);
+		static bool pawn_on_start(int dir, int by);
+		static bool pawn_on_end(int dir, int by);
 		static int to_64(int n);
 		static int to_x88(int n);
 		static int group(int piece);

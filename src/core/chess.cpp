@@ -200,8 +200,8 @@ const int Chess::directions_eight_way[8] = {-17, -16, -15, -1, 1, 15, 16, 17};
 const int Chess::directions_horse[8] = {33, 31, 18, 14, -33, -31, -18, -14};
 const int Chess::direction_pawn_capture_left[8] = {-1, -17, -16, 15, -15, 16, 17, 1};
 const int Chess::direction_pawn_capture_right[8] = {-16, -15, 1, -17, 17, -1, 15, 16};
-int64_t Chess::direction_pawn_start[8] = {};
-int64_t Chess::direction_pawn_end[8] = {};
+int64_t Chess::direction_pawn_start[8] = {0x40C0000000000000, 0x00FF000000000000, 0x0203000000000000, 0x4040404040404040, 0x0202020202020202, 0x000000000000C040, 0x000000000000FF00, 0x0000000000000302};
+int64_t Chess::direction_pawn_end[8] = {0x0000000000000302, 0x0000000000FF00, 0x000000000000C040, 0x0202020202020202, 0x4040404040404040, 0x0203000000000000, 0x00FF000000000000, 0x40C0000000000000};
 
 Chess::Chess()
 {
@@ -553,14 +553,14 @@ int Chess::direction_pawn_capture(int index, bool capture_dir)
 
 }
 
-int Chess::pawn_on_start(int dir, int by)
+bool Chess::pawn_on_start(int dir, int by)
 {
-
+	return direction_pawn_start[dir] & Chess::mask(Chess::to_64(by));
 }
 
-int Chess::pawn_on_end(int dir, int by)
+bool Chess::pawn_on_end(int dir, int by)
 {
-
+	return direction_pawn_end[dir] & Chess::mask(Chess::to_64(by));
 }
 
 int64_t Chess::mask(int n)
@@ -931,8 +931,8 @@ bool Chess::is_move_valid(const godot::Ref<State> &_state, int _group, int _move
 		int front_dir = direction(from_piece, front);
 		int front_capture_left = direction_pawn_capture(front, false);
 		int front_capture_right = direction_pawn_capture(front, true);
-		bool on_start = (from >> 4) == (from_piece == 'P' ? 6 : 1);
-		bool on_end = (from >> 4) == (from_piece == 'P' ? 1 : 6);
+		bool on_start = pawn_on_start(front, from);
+		bool on_end = pawn_on_end(front, from);
 		if (!_state->has_piece(from + front_dir))
 		{
 			if (on_end)
@@ -1142,8 +1142,8 @@ godot::PackedInt32Array Chess::generate_premove(const godot::Ref<State> &_state,
 			int front_dir = direction(from_piece, front);
 			int front_capture_left = direction_pawn_capture(front, false);
 			int front_capture_right = direction_pawn_capture(front, true);
-			bool on_start = (_from >> 4) == (_group == 0 ? 6 : 1);
-			bool on_end = (_from >> 4) == (_group == 0 ? 1 : 6);
+			bool on_start = pawn_on_start(front, _from);
+			bool on_end = pawn_on_end(front, _from);
 			if (on_end)
 			{
 				output.push_back(Chess::create(_from, _from + front_dir, _group == 0 ? 'Q' : 'q'));
@@ -1235,8 +1235,8 @@ void Chess::_internal_generate_move(godot::PackedInt32Array &output, const godot
 			int front_dir = direction(from_piece, front);
 			int front_capture_left = direction_pawn_capture(front, false);
 			int front_capture_right = direction_pawn_capture(front, true);
-			bool on_start = (_from >> 4) == (from_piece == 'P' ? 6 : 1);
-			bool on_end = (_from >> 4) == (from_piece == 'P' ? 1 : 6);
+			bool on_start = pawn_on_start(front, _from);
+			bool on_end = pawn_on_end(front, _from);
 			int to_1 = _from + front_dir;
 			int to_2 = _from + front_capture_left;
 			int to_3 = _from + front_capture_right;
@@ -1300,10 +1300,6 @@ void Chess::_internal_generate_move(godot::PackedInt32Array &output, const godot
 					break;
 				}
 				to_piece = _state->get_piece(to);
-				if ((to_piece & 95) == 'Y')
-				{
-					break;
-				}
 				if (is_blocked(_state, _from, to))
 				{
 					if ((from_piece & 95) == 'R' && (to_piece & 95) == 'K')
@@ -1674,10 +1670,9 @@ void Chess::apply_move(const godot::Ref<State> &_state, int _move)
 			has_en_passant = true;
 			_state->set_en_passant(from + front_dir);
 		}
-		if (((from >> 4) == 3 || (from >> 4) == 4) && to == _state->get_en_passant())
+		if (to == _state->get_en_passant() && !is_same_group(from_piece, _state->get_piece(to - front_dir)))
 		{
-			int captured = to - front_dir;
-			_state->capture_piece(captured);
+			_state->capture_piece(to - front_dir);
 		}
 		if (Chess::extra(_move))
 		{
