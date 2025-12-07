@@ -39,6 +39,7 @@ adjustment_enabled = true
 
 [node name="outside" type="Node3D"]
 script = ExtResource("1_4jhsc")
+pawn_dir = 22
 metadata/by = 96
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
