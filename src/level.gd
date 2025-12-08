@@ -126,7 +126,7 @@ func state_ready_explore_move(_arg:Dictionary) -> void:
 	chessboard.execute_move(_arg["move"])
 
 func state_ready_explore_check_attack(_arg:Dictionary) -> void:
-	var white_move_list:PackedInt32Array = Chess.generate_valid_move(chessboard.state, 0)
+	var white_move_list:PackedInt32Array = Chess.generate_move(chessboard.state, 0)
 	for move:int in white_move_list:
 		var to:int = Chess.to(move)
 		if !chessboard.state.has_piece(to):
