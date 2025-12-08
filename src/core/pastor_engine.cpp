@@ -354,7 +354,7 @@ void PastorEngine::generate_good_capture_move(godot::PackedInt32Array &output, c
 int PastorEngine::get_piece_score(int _by, int _piece)
 {
 	godot::Vector2i piece_position = godot::Vector2i(_by % 16, _by / 16);
-	if (piece_value.count(_piece))
+	if (piece_value.count(_piece) && position_value.count(_piece))
 	{
 		return position_value[_piece][piece_position.x + piece_position.y * 8] + piece_value[_piece];
 	}
