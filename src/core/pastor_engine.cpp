@@ -460,7 +460,9 @@ int PastorEngine::quies(const godot::Ref<State> &_state, int score, int _alpha, 
 	}
 	godot::PackedInt32Array move_list;
 	generate_good_capture_move(move_list, _state, _group);
-	std::sort(move_list.ptrw(), move_list.ptrw() + move_list.size(), std::bind(compare_move, this, std::placeholders::_1, std::placeholders::_2, 0, 0, 0, _state, nullptr));
+	std::sort(move_list.ptrw(), move_list.ptrw() + move_list.size(), [this, &_state](int a, int b) -> bool{
+		return compare_move(a, b, 0, 0, 0, _state, nullptr);
+	});
 	for (int i = 0; i < move_list.size(); i++)
 	{
 		godot::Ref<State> test_state = _state->duplicate();
@@ -591,7 +593,9 @@ int PastorEngine::alphabeta(const godot::Ref<State> &_state, int score, int _alp
 			return despise_factor;
 		}
 	}
-	std::sort(move_list.ptrw(), move_list.ptrw() + move_list.size(), std::bind(compare_move, this, std::placeholders::_1, std::placeholders::_2, best_move, killer_1 ? *killer_1 : 0, killer_2 ? *killer_2 : 0, _state, _history_table));
+	std::sort(move_list.ptrw(), move_list.ptrw() + move_list.size(), [this, &_state, best_move, killer_1, killer_2, _history_table](int a, int b) -> bool{
+		return compare_move(a, b, best_move,  killer_1 ? *killer_1 : 0, killer_2 ? *killer_2 : 0, _state, _history_table);
+	});
 	int move_count = move_list.size();
 	if (_depth > 2)
 	{
