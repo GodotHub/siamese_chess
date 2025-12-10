@@ -33,6 +33,13 @@ bool State::PieceIterator::end()
 State::State()
 {
 	memset(pieces, 0, sizeof(pieces));
+	bit[TURN] = 0;
+	bit[CASTLE] = 0xF;
+	bit[EN_PASSANT] = -1;
+	bit[STEP_TO_DRAW] = 0;
+	bit[ROUND] = 1;
+	bit[KING_PASSANT] = -1;
+	bit[PAWN_DIR] = 0x61;	//兵的前进方向，前4位为白方，后4位为黑方
 }
 
 godot::Ref<State> State::duplicate()
@@ -40,14 +47,6 @@ godot::Ref<State> State::duplicate()
 	godot::Ref<State> new_state = memnew(State);
 	memcpy(new_state->pieces, pieces, sizeof(pieces));
 	memcpy(new_state->bit, bit, sizeof(bit));
-	new_state->turn = turn;
-	new_state->castle = castle;
-	new_state->en_passant = en_passant;
-	new_state->step_to_draw = step_to_draw;
-	new_state->round = round;
-	new_state->king_passant = king_passant;
-	new_state->zobrist = zobrist;
-	new_state->pawn_dir = pawn_dir;
 	return new_state;
 }
 
@@ -97,12 +96,12 @@ void State::add_piece(int _by, int _piece)
 	int64_t by_mask = Chess::mask(by_64);
 	pieces[_by] = _piece;
 	bit[_piece] ^= by_mask;
-	bit[Chess::group(_piece) == 0 ? 'A' : 'a'] ^= by_mask;
-	bit['*'] ^= by_mask;
-	bit['!'] ^= Chess::mask(Chess::rotate_90(by_64));
-	bit[')'] ^= Chess::mask(Chess::rotate_45(by_64));
-	bit['('] ^= Chess::mask(Chess::rotate_315(by_64));
-	zobrist ^= ZobristHash::get_singleton()->hash_piece(_piece, _by);
+	bit[Chess::group(_piece) == 0 ? WHITE : BLACK] ^= by_mask;
+	bit[ALL_PIECE] ^= by_mask;
+	bit[ROTATE_90] ^= Chess::mask(Chess::rotate_90(by_64));
+	bit[ROTATE_45] ^= Chess::mask(Chess::rotate_45(by_64));
+	bit[ROTATE_315] ^= Chess::mask(Chess::rotate_315(by_64));
+	bit[ZOBRIST_HASH] ^= ZobristHash::get_singleton()->hash_piece(_piece, _by);
 }
 
 void State::capture_piece(int _by)
@@ -112,13 +111,13 @@ void State::capture_piece(int _by)
 		int by_64 = Chess::to_64(_by);
 		int piece = pieces[_by];
 		int64_t by_mask = Chess::mask(by_64);
-		zobrist ^= ZobristHash::get_singleton()->hash_piece(piece, _by);
+		bit[ZOBRIST_HASH] ^= ZobristHash::get_singleton()->hash_piece(piece, _by);
 		bit[piece] ^= by_mask;
-		bit[Chess::group(piece) == 0 ? 'A' : 'a'] ^= by_mask;
-		bit['*'] ^= by_mask;
-		bit['!'] ^= Chess::mask(Chess::rotate_90(by_64));
-		bit[')'] ^= Chess::mask(Chess::rotate_45(by_64));
-		bit['('] ^= Chess::mask(Chess::rotate_315(by_64));
+		bit[Chess::group(piece) == 0 ? WHITE : BLACK] ^= by_mask;
+		bit[ALL_PIECE] ^= by_mask;
+		bit[ROTATE_90] ^= Chess::mask(Chess::rotate_90(by_64));
+		bit[ROTATE_45] ^= Chess::mask(Chess::rotate_45(by_64));
+		bit[ROTATE_315] ^= Chess::mask(Chess::rotate_315(by_64));
 		pieces[_by] = 0;
 		// 虽然大多数情况是攻击者移到被攻击者上，但是吃过路兵是例外，后续可能会出现类似情况，所以还是得手多一下
 	}
@@ -131,20 +130,20 @@ void State::move_piece(int _from, int _to)
 	int piece = get_piece(_from);
 	int64_t from_mask = Chess::mask(from_64);
 	int64_t to_mask = Chess::mask(to_64);
-	zobrist ^= ZobristHash::get_singleton()->hash_piece(piece, _from);
-	zobrist ^= ZobristHash::get_singleton()->hash_piece(piece, _to);
+	bit[ZOBRIST_HASH] ^= ZobristHash::get_singleton()->hash_piece(piece, _from);
+	bit[ZOBRIST_HASH] ^= ZobristHash::get_singleton()->hash_piece(piece, _to);
 	bit[piece] ^= from_mask;
-	bit[Chess::group(piece) == 0 ? 'A' : 'a'] ^= from_mask;
-	bit['*'] ^= from_mask;
-	bit['!'] ^= Chess::mask(Chess::rotate_90(from_64));
-	bit[')'] ^= Chess::mask(Chess::rotate_45(from_64));
-	bit['('] ^= Chess::mask(Chess::rotate_315(from_64));
+	bit[Chess::group(piece) == 0 ? WHITE : BLACK] ^= from_mask;
+	bit[ALL_PIECE] ^= from_mask;
+	bit[ROTATE_90] ^= Chess::mask(Chess::rotate_90(from_64));
+	bit[ROTATE_45] ^= Chess::mask(Chess::rotate_45(from_64));
+	bit[ROTATE_315] ^= Chess::mask(Chess::rotate_315(from_64));
 	bit[piece] ^= to_mask;
-	bit[Chess::group(piece) == 0 ? 'A' : 'a'] ^= to_mask;
-	bit['*'] ^= to_mask;
-	bit['!'] ^= Chess::mask(Chess::rotate_90(to_64));
-	bit[')'] ^= Chess::mask(Chess::rotate_45(to_64));
-	bit['('] ^= Chess::mask(Chess::rotate_315(to_64));
+	bit[Chess::group(piece) == 0 ? WHITE : BLACK] ^= to_mask;
+	bit[ALL_PIECE] ^= to_mask;
+	bit[ROTATE_90] ^= Chess::mask(Chess::rotate_90(to_64));
+	bit[ROTATE_45] ^= Chess::mask(Chess::rotate_45(to_64));
+	bit[ROTATE_315] ^= Chess::mask(Chess::rotate_315(to_64));
 	pieces[_to] = pieces[_from];
 	pieces[_from] = 0;
 }
@@ -176,67 +175,67 @@ godot::PackedInt32Array State::bit_index(int _piece)
 
 int State::get_turn()
 {
-	return turn;
+	return bit[TURN];
 }
 
 void State::set_turn(int _turn)
 {
-	turn = _turn;
+	bit[TURN] = _turn;
 }
 
-int State::get_castle()
+int64_t State::get_castle()
 {
-	return castle;
+	return bit[CASTLE];
 }
 
-void State::set_castle(int _castle)
+void State::set_castle(int64_t _castle)
 {
-	castle = _castle;
+	bit[CASTLE] = _castle;
 }
 
 int State::get_en_passant()
 {
-	return en_passant;
+	return bit[EN_PASSANT];
 }
 
 void State::set_en_passant(int _en_passant)
 {
-	en_passant = _en_passant;
+	bit[EN_PASSANT] = _en_passant;
 }
 
 int State::get_step_to_draw()
 {
-	return step_to_draw;
+	return bit[STEP_TO_DRAW];
 }
 
 void State::set_step_to_draw(int _step_to_draw)
 {
-	step_to_draw = _step_to_draw;
+	bit[STEP_TO_DRAW] = _step_to_draw;
 }
 
 int State::get_round()
 {
-	return round;
+	return bit[ROUND];
 }
 
 void State::set_round(int _round)
 {
-	round = _round;
+	bit[ROUND] = _round;
 }
 
-int State::get_king_passant()
+int64_t State::get_king_passant()
 {
-	return king_passant;
+	return bit[KING_PASSANT];
 }
 
-void State::set_king_passant(int _king_passant)
+void State::set_king_passant(int64_t _king_passant)
 {
-	king_passant = _king_passant;
+	bit[KING_PASSANT] = _king_passant;
 }
 
 int64_t State::get_zobrist()
 {
-	return zobrist;
+	return bit[ZOBRIST_HASH];
 }
 
 godot::String State::print_board()
@@ -315,12 +314,12 @@ godot::String State::print_bit_diamond(int _piece)
 
 int State::get_pawn_dir()
 {
-	return pawn_dir;
+	return bit[PAWN_DIR];
 }
 
 void State::set_pawn_dir(int _pawn_dir)
 {
-	pawn_dir = _pawn_dir;
+	bit[PAWN_DIR] = _pawn_dir;
 }
 
 void State::_bind_methods()
