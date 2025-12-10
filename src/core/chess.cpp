@@ -913,18 +913,19 @@ godot::String Chess::stringify(const godot::Ref<State> &_state)
 	return godot::String(" ").join(output);
 }
 
+//针对置换表着法/杀手着法中某种状态下着法合法，但其他状态不一定合法的情况
 bool Chess::is_move_valid(const godot::Ref<State> &_state, int _group, int _move)
 {
 	int from = Chess::from(_move);
+	int from_64 = Chess::to_64(from);
 	int from_piece = _state->get_piece(from);
 	if (!from_piece || _group != Chess::group(from_piece))
 	{
 		return false;
 	}
 	int to = Chess::to(_move);
+	int to_64 = Chess::to_64(to);
 	int to_piece = _state->get_piece(to);
-	int flag = false;
-	godot::PackedInt32Array *directions = nullptr;
 	if ((from_piece & 95) == 'P')
 	{
 		int front = from_piece == 'P' ? (_state->get_pawn_dir() & 0xF) : (_state->get_pawn_dir() >> 4);
@@ -932,96 +933,54 @@ bool Chess::is_move_valid(const godot::Ref<State> &_state, int _group, int _move
 		int front_capture_left = direction_pawn_capture(front, false);
 		int front_capture_right = direction_pawn_capture(front, true);
 		bool on_start = pawn_on_start(front, from);
-		bool on_end = pawn_on_end(front, from);
-		if (!_state->has_piece(from + front_dir))
-		{
-			if (on_end)
-			{
-				flag = flag || _move == Chess::create(from, from + front_dir, _group == 0 ? 'Q' : 'q');
-				flag = flag || _move == Chess::create(from, from + front_dir, _group == 0 ? 'R' : 'r');
-				flag = flag || _move == Chess::create(from, from + front_dir, _group == 0 ? 'N' : 'n');
-				flag = flag || _move == Chess::create(from, from + front_dir, _group == 0 ? 'B' : 'b');
-			}
-			else
-			{
-				flag = flag || _move == Chess::create(from, from + front_dir, 0);
-				if (!_state->has_piece(from + front_dir + front_dir) && on_start)
-				{
-					flag = flag || _move == Chess::create(from, from + front_dir + front_dir, 0);
-				}
-			}
-		}
-		if (_state->has_piece(from + front_capture_left) && !Chess::is_same_group(from_piece, _state->get_piece(from + front_capture_left)) || ((from >> 4) == 3 || (from >> 4) == 4) && _state->get_en_passant() == from + front_capture_left)
-		{
-			if (on_end)
-			{
-				flag = flag || _move == Chess::create(from, from + front_capture_left, _group == 0 ? 'Q' : 'q');
-				flag = flag || _move == Chess::create(from, from + front_capture_left, _group == 0 ? 'R' : 'r');
-				flag = flag || _move == Chess::create(from, from + front_capture_left, _group == 0 ? 'N' : 'n');
-				flag = flag || _move == Chess::create(from, from + front_capture_left, _group == 0 ? 'B' : 'b');
-			}
-			else
-			{
-				flag = flag || _move == Chess::create(from, from + front_capture_left, 0);
-			}
-		}
-		if (_state->has_piece(from + front_capture_right) && !Chess::is_same_group(from_piece, _state->get_piece(from + front_capture_right)) || ((from >> 4) == 3 || (from >> 4) == 4) && _state->get_en_passant() == from + front_capture_right)
-		{
-			if (on_end)
-			{
-				flag = flag || _move == Chess::create(from, from + front_capture_right, _group == 0 ? 'Q' : 'q');
-				flag = flag || _move == Chess::create(from, from + front_capture_right, _group == 0 ? 'R' : 'r');
-				flag = flag || _move == Chess::create(from, from + front_capture_right, _group == 0 ? 'N' : 'n');
-				flag = flag || _move == Chess::create(from, from + front_capture_right, _group == 0 ? 'B' : 'b');
-			}
-			else
-			{
-				flag = flag || _move == Chess::create(from, from + front_capture_right, 0);
-			}
-		}
-		if (!flag)
+		if (to == from + front_dir && _state->has_piece(from + front_dir))
 		{
 			return false;
 		}
-		godot::Ref<State>test_state = _state->duplicate();
-		apply_move(test_state, _move);
-		return !is_check(test_state, 1 - _group);
-	}
-	for (int i = 0; i < direction_count(from_piece); i++)
-	{
-		int to = from + direction(from_piece, i);
-		int to_piece = _state->get_piece(to);
-		while (!(to & 0x88) && (!to_piece || !Chess::is_same_group(from_piece, to_piece)))
+		if (to == from + front_dir + front_dir && _state->has_piece(from + front_dir + front_dir))
 		{
-			flag = flag || _move == Chess::create(from, to, 0);
-			if (!(to & 0x88) && to_piece && !Chess::is_same_group(from_piece, to_piece))
-			{
-				break;
-			}
-			if ((from_piece & 95) == 'K' || (from_piece & 95) == 'N')
-			{
-				break;
-			}
-			to += direction(from_piece, i);
-			to_piece = _state->get_piece(to);
-			if (!(from_piece == 'R' && to_piece == 'K' || from_piece == 'r' && to_piece == 'k'))
-			{
-				continue;
-			}
-			if ((from & 15) >= 4 && (from_piece == 'R' && (_state->get_castle() & 8) || from_piece == 'r' && (_state->get_castle() & 2)))
-			{
-				flag = flag || _move == Chess::create(to, from_piece == 'R' ? Chess::g1() : Chess::g8(), 'K');
-			}
-			else if ((from & 15) <= 3 && (from_piece == 'R' && (_state->get_castle() & 4) || from_piece == 'r' && (_state->get_castle() & 1)))
-			{
-				flag = flag || _move == Chess::create(to,from_piece == 'R' ? Chess::c1() : Chess::c8(), 'Q');
-			}
+			return false;
+		}
+		if (to == from + front_capture_left && (!_state->has_piece(to) || !(!on_start && _state->get_en_passant() == to)))
+		{
+			return false;
+		}
+		if (to == from + front_capture_right && (!_state->has_piece(to) || !(!on_start && _state->get_en_passant() == to)))
+		{
+			return false;
 		}
 	}
-
-	if (!flag)
+	if ((from_piece & 95) == 'B')
 	{
-		return false;
+		int64_t diag_a1h8 = (uint64_t(_state->get_bit(')')) >> Chess::rotate_45_shift(from_64)) & Chess::rotate_45_length_mask(from_64);
+		int64_t diag_a8h1 = (uint64_t(_state->get_bit('(')) >> Chess::rotate_315_shift(from_64)) & Chess::rotate_315_length_mask(from_64);
+		int64_t bishop_attacks = diag_a1h8_attacks[from_64][diag_a1h8] | diag_a8h1_attacks[from_64][diag_a8h1];
+		if (!(bishop_attacks & Chess::mask(to_64)))
+		{
+			return false;
+		}
+	}
+	if ((from_piece & 95) == 'R')
+	{
+		int64_t rank = (uint64_t(_state->get_bit('*')) >> Chess::rotate_0_shift(from_64)) & 255;
+		int64_t file = (uint64_t(_state->get_bit('!')) >> Chess::rotate_90_shift(from_64)) & 255;
+		int64_t rook_attacks = rank_attacks[from_64][rank] | file_attacks[from_64][file];
+		if (!(rook_attacks & Chess::mask(to_64)))
+		{
+			return false;
+		}
+	}
+	if ((from_piece & 95) == 'Q')
+	{
+		int64_t diag_a1h8 = (uint64_t(_state->get_bit(')')) >> Chess::rotate_45_shift(from_64)) & Chess::rotate_45_length_mask(from_64);
+		int64_t diag_a8h1 = (uint64_t(_state->get_bit('(')) >> Chess::rotate_315_shift(from_64)) & Chess::rotate_315_length_mask(from_64);
+		int64_t rank = (uint64_t(_state->get_bit('*')) >> Chess::rotate_0_shift(from_64)) & 255;
+		int64_t file = (uint64_t(_state->get_bit('!')) >> Chess::rotate_90_shift(from_64)) & 255;
+		int64_t queen_attacks = diag_a1h8_attacks[from_64][diag_a1h8] | diag_a8h1_attacks[from_64][diag_a8h1] | rank_attacks[from_64][rank] | file_attacks[from_64][file];
+		if (!(queen_attacks & Chess::mask(to_64)))
+		{
+			return false;
+		}
 	}
 	godot::Ref<State>test_state = _state->duplicate();
 	apply_move(test_state, _move);
