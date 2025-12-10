@@ -183,12 +183,12 @@ void State::set_turn(int _turn)
 	bit[TURN] = _turn;
 }
 
-int64_t State::get_castle()
+int State::get_castle()
 {
 	return bit[CASTLE];
 }
 
-void State::set_castle(int64_t _castle)
+void State::set_castle(int _castle)
 {
 	bit[CASTLE] = _castle;
 }
