@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3 uid="uid://cb0x1dotn46nw"]
+[gd_scene load_steps=23 format=3 uid="uid://cb0x1dotn46nw"]
 
 [ext_resource type="Script" uid="uid://dv6xi5e2p0qcl" path="res://src/level/music_room.gd" id="1_lsvsq"]
 [ext_resource type="PackedScene" uid="uid://b3ml34bssywkr" path="res://scene/player.tscn" id="2_qvsbv"]
@@ -9,7 +9,16 @@
 [ext_resource type="PackedScene" uid="uid://bw127d1iawnv3" path="res://assets/model/radermachera_sinica.glb" id="10_fuo2w"]
 [ext_resource type="PackedScene" uid="uid://csyr72dpa475x" path="res://assets/model/hotel_bed.glb" id="10_sgxwk"]
 [ext_resource type="PackedScene" uid="uid://bcfafdue4esy7" path="res://assets/model/reception_table.glb" id="11_0snkg"]
+[ext_resource type="PackedScene" uid="uid://clc10vivqqctp" path="res://assets/model/bedside_table.glb" id="11_tn2u6"]
 [ext_resource type="PackedScene" uid="uid://c3peh1jag1bb1" path="res://assets/model/reception_chair.glb" id="11_yrfn8"]
+[ext_resource type="PackedScene" uid="uid://dw6x37rnwgmjw" path="res://assets/model/bedside_lamp.glb" id="12_tn2u6"]
+[ext_resource type="PackedScene" uid="uid://bt5m0eox0615k" path="res://assets/model/hotel_room_desk.glb" id="13_1gag5"]
+[ext_resource type="PackedScene" uid="uid://d1s6qj7aofldk" path="res://scene/chessboard.tscn" id="14_gqgar"]
+[ext_resource type="PackedScene" uid="uid://u1ropnj7v0ap" path="res://assets/model/hotel_room_desk_chair.glb" id="15_5i566"]
+[ext_resource type="PackedScene" uid="uid://blfa7tg8uh5xo" path="res://assets/model/book_stack_0.glb" id="16_bf4pa"]
+[ext_resource type="PackedScene" uid="uid://n6i5vwajcqn4" path="res://assets/model/cup.glb" id="17_l3vq7"]
+[ext_resource type="PackedScene" uid="uid://da5dhdmiewmi0" path="res://assets/model/carpet_small.glb" id="18_l3vq7"]
+[ext_resource type="PackedScene" uid="uid://pyhbjcnm4mpr" path="res://assets/model/hotel_closet.glb" id="19_grsh5"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_e1edc"]
 sky_top_color = Color(1, 1, 1, 1)
@@ -52,7 +61,7 @@ fov = 58.5874
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 3, 0, 0)
 
 [node name="door" parent="." instance=ExtResource("5_10bqq")]
-transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -6, 0, 1)
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -6, 0, -1)
 
 [node name="marker_teleport" type="Marker3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 0, 1)
@@ -66,10 +75,10 @@ metadata/_custom_type_script = "uid://bbi6kjxerg3hk"
 [node name="chairs" type="Node3D" parent="."]
 
 [node name="radermachera_sinica_1" parent="." instance=ExtResource("10_fuo2w")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.29198, 0, -0.346018)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.29198, 0, 1.76463)
 
 [node name="radermachera_sinica_2" parent="." instance=ExtResource("10_fuo2w")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.30046, 0, 2.2609)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.252704, 0, 1.73029)
 
 [node name="reception_chair" parent="." instance=ExtResource("11_yrfn8")]
 transform = Transform3D(0.258819, 0, -0.965926, 0, 1, 0, 0.965926, 0, 0.258819, 2.35379, 0, -3.42516)
@@ -82,3 +91,44 @@ transform = Transform3D(-0.707107, 0, -0.707107, 0, 1, 0, 0.707107, 0, -0.707107
 
 [node name="reception_table2" parent="." instance=ExtResource("11_0snkg")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.44213, 0, -2.26224)
+
+[node name="bedside_table" parent="." instance=ExtResource("11_tn2u6")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.22019, 0, -3.71715)
+
+[node name="bedside_table_2" parent="." instance=ExtResource("11_tn2u6")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.230906, 0, -3.71715)
+
+[node name="bedside_lamp" parent="." instance=ExtResource("12_tn2u6")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.102909, 0.637757, -3.8292)
+
+[node name="bedside_lamp_2" parent="." instance=ExtResource("12_tn2u6")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.1179, 0.637757, -3.82458)
+
+[node name="hotel_room_desk" parent="." instance=ExtResource("13_1gag5")]
+transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 1, 0, 1)
+
+[node name="chessboard_2" parent="." instance=ExtResource("14_gqgar")]
+transform = Transform3D(0.398457, 0, -0.0350988, 0, 0.4, 0, 0.0350988, 0, 0.398457, 1, 0.878564, 1.66418)
+
+[node name="hotel_room_desk_chair" parent="." instance=ExtResource("15_5i566")]
+transform = Transform3D(-0.866025, 0, 0.5, 0, 1, 0, -0.5, 0, -0.866025, 1.69429, 0, 0.639467)
+
+[node name="book_stack_0" parent="." instance=ExtResource("16_bf4pa")]
+transform = Transform3D(-0.100865, 0, -0.9949, 0, 1, 0, 0.9949, 0, -0.100865, 1.76318, 0.843658, 1.70578)
+
+[node name="cup2" parent="." instance=ExtResource("17_l3vq7")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.502406, 0.826559, 1.50441)
+
+[node name="carpet_small" parent="." instance=ExtResource("18_l3vq7")]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -5.38084, 0, -1)
+
+[node name="hotel_closet" parent="." instance=ExtResource("19_grsh5")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 0, -2.56392)
+
+[node name="door_2" parent="." instance=ExtResource("5_10bqq")]
+transform = Transform3D(1, 0, 1.06581e-14, 0, 1, 0, -1.06581e-14, 0, 1, -3, 0, 2)
+
+[node name="face" parent="door_2" index="1"]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -0.522462, 1.01108, 0.140696)
+
+[editable path="door_2"]
