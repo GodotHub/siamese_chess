@@ -14,7 +14,7 @@ var tween:Tween = null
 func _ready() -> void:
 	$texture_rect_bottom/label.connect("meta_clicked", clicked_selection)
 	
-func _input(event:InputEvent) -> void:
+func _unhandled_input(event:InputEvent) -> void:
 	if click_anywhere && !waiting:
 		if event is InputEventMouseButton && event.button_index == MOUSE_BUTTON_LEFT && event.pressed && Time.get_unix_time_from_system() - click_cooldown >= 0.3:
 			next()
