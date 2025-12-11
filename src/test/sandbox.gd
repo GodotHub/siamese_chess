@@ -54,7 +54,7 @@ func select_move(move_list:PackedInt32Array) -> bool:
 		decision_list.push_back("%c" % Chess.extra(iter))
 		decision_to_move[decision_list[-1]] = iter
 	decision_list.push_back("cancel")
-	Dialog.push_selection(decision_list, true, true)
+	Dialog.push_selection(decision_list, "请选择一个着法", true, true)
 	await Dialog.on_next
 	if Dialog.selected == "cancel":
 		return false

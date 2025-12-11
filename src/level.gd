@@ -52,8 +52,7 @@ func state_ready_explore_idle(_arg:Dictionary) -> void:
 	var selection:PackedStringArray = []
 	if chessboard.state.get_bit("z".unicode_at(0)) & Chess.mask(Chess.to_64(by)):
 		selection = interact_list[by].keys()
-		Dialog.push_selection(selection, false, false)
-		Dialog.set_title(title[by])
+		Dialog.push_selection(selection, title[by], false, false)
 	Dialog.connect("on_next", change_state.bind("dialog"))
 	chessboard.connect("ready_to_move", change_state.bind("explore_ready_to_move"))
 	chessboard.set_valid_move(Chess.generate_explore_move(chessboard.state, 1))
@@ -76,7 +75,7 @@ func ready_to_move_dialog_selection() -> void:
 
 func state_ready_explore_ready_to_move(_arg:Dictionary) -> void:
 	#HoldCard.show_card()
-	Dialog.push_selection(["卡牌", "档案", "设置"], false, false)
+	Dialog.push_selection(["卡牌", "档案", "设置"], "", false, false)
 	Dialog.connect("on_next", ready_to_move_dialog_selection)
 	chessboard.connect("clicked_move", change_state.bind("explore_check_move"))
 	chessboard.connect("canceled", change_state.bind("explore_idle"))
@@ -119,7 +118,7 @@ func state_ready_explore_extra_move(_arg:Dictionary) -> void:
 			change_state.bind("explore_idle")
 		else:
 			change_state.bind("explore_move", {"move": decision_to_move[Dialog.selected]}), ConnectFlags.CONNECT_ONE_SHOT)
-	Dialog.push_selection(decision_list, true, true)
+	Dialog.push_selection(decision_list, "请选择一个着法", true, true)
 
 func state_ready_explore_move(_arg:Dictionary) -> void:
 	chessboard.connect("animation_finished", change_state.bind("explore_check_attack", _arg), ConnectFlags.CONNECT_ONE_SHOT)
@@ -161,8 +160,7 @@ func state_ready_explore_use_card(_arg:Dictionary) -> void:
 	if HoldCard.selected_card.use_directly:
 		change_state("explore_using_card")
 		return
-	Dialog.set_title("选择一个位置")
-	Dialog.push_selection(["取消"], false, false)
+	Dialog.push_selection(["取消"], "选择一个位置", false, false)
 	Dialog.connect("on_next", change_state.bind("explore_idle"))
 	chessboard.connect("clicked_move", change_state.bind("explore_using_card"))
 
@@ -240,7 +238,7 @@ func state_ready_versus_extra_move(_arg:Dictionary) -> void:
 			change_state.bind("versus_player")
 		else:
 			change_state.bind("versus_move", {"move": decision_to_move[Dialog.selected]}), ConnectFlags.CONNECT_ONE_SHOT)
-	Dialog.push_selection(decision_list, true, true)
+	Dialog.push_selection(decision_list, "请选择一个着法", true, true)
 
 func state_ready_black_win(_arg:Dictionary) -> void:
 	var bit_list:PackedInt32Array = chessboard.state.bit_index("A".unicode_at(0))

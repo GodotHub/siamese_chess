@@ -60,9 +60,9 @@ func in_game_white() -> void:
 
 func in_game_black() -> void:
 	if standard_history_event.size() <= 1:
-		Dialog.push_selection(["离开对局"], false, false)
+		Dialog.push_selection(["离开对局"], "轮到你了", false, false)
 	else:
-		Dialog.push_selection(["悔棋", "离开对局"], false, false)
+		Dialog.push_selection(["悔棋", "离开对局"], "轮到你了", false, false)
 	Dialog.connect("on_next", on_select_dialog, ConnectFlags.CONNECT_ONE_SHOT)
 	standard_history_zobrist.push_back($table_0/chessboard_standard.state.get_zobrist())
 	standard_history_state.push_back($table_0/chessboard_standard.state.duplicate())
@@ -108,12 +108,12 @@ func in_game_black_extra_move(move_list:PackedInt32Array) -> void:
 			standard_chessboard.confirm_move = decision_to_move[Dialog.selected]
 			in_game_white.call_deferred()
 	, ConnectFlags.CONNECT_ONE_SHOT)
-	Dialog.push_selection(decision_list, false, true)
+	Dialog.push_selection(decision_list, "请选择着法", false, true)
 
 func on_select_dialog() -> void:
 	if Dialog.selected == "悔棋":
 		if standard_history_event.size() <= 1:
-			Dialog.push_selection(["离开对局"], false, false)
+			Dialog.push_selection(["离开对局"], "已回退", false, false)
 			return
 		$table_0/chessboard_standard.state = standard_history_state[-2]
 		$table_0/chessboard_standard.set_valid_move(Chess.generate_valid_move(standard_history_state[-2], 1))
@@ -123,9 +123,9 @@ func on_select_dialog() -> void:
 			standard_history_state.pop_back()
 			standard_history_event.pop_back()
 		if standard_history_event.size() <= 1:
-			Dialog.push_selection(["离开对局"], false, false)
+			Dialog.push_selection(["离开对局"], "已回退", false, false)
 		else:
-			Dialog.push_selection(["悔棋", "离开对局"], false, false)
+			Dialog.push_selection(["悔棋", "离开对局"], "已回退", false, false)
 		Dialog.connect("on_next", on_select_dialog, ConnectFlags.CONNECT_ONE_SHOT)
 	elif Dialog.selected == "离开对局":
 		game_end.call_deferred()
@@ -133,19 +133,19 @@ func on_select_dialog() -> void:
 func game_end() -> void:
 	match Chess.get_end_type($table_0/chessboard_standard.state):
 		"checkmate_black":
-			Dialog.push_dialog("黑方胜", true, true)
+			Dialog.push_dialog("黑方胜", "", true, true)
 			await Dialog.on_next
 		"checkmate_white":
-			Dialog.push_dialog("白方胜", true, true)
+			Dialog.push_dialog("白方胜", "", true, true)
 			await Dialog.on_next
 		"stalemate_black":
-			Dialog.push_dialog("平局", true, true)
+			Dialog.push_dialog("平局", "", true, true)
 			await Dialog.on_next
 		"stalemate_white":
-			Dialog.push_dialog("平局", true, true)
+			Dialog.push_dialog("平局", "", true, true)
 			await Dialog.on_next
 		"50_moves":
-			Dialog.push_dialog("平局", true, true)
+			Dialog.push_dialog("平局", "", true, true)
 			await Dialog.on_next
 	$player.force_set_camera($camera)
 	$chessboard/pieces/cheshire.play_animation("battle_idle")

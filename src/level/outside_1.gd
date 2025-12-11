@@ -14,7 +14,7 @@ func _ready() -> void:
 	title[0x32] = "康乃馨"
 
 func interact_with_carnation() -> void:
-	Dialog.push_dialog("……", true, true)
+	Dialog.push_dialog("……", "", true, true)
 	$player.force_set_camera($camera_carnation)
 	await Dialog.on_next
 	$player.force_set_camera($camera)
