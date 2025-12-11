@@ -21,7 +21,6 @@ sky_material = SubResource("ProceduralSkyMaterial_ka0b7")
 background_mode = 2
 background_color = Color(1, 1, 1, 1)
 sky = SubResource("Sky_kgksa")
-tonemap_mode = 2
 ssr_enabled = true
 fog_enabled = true
 fog_light_color = Color(1, 1, 1, 1)
@@ -35,14 +34,14 @@ script = ExtResource("1_1xocg")
 metadata/_custom_type_script = "uid://rhdq34na2j5m"
 metadata/by = 2
 
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_reac2")
+
 [node name="player" parent="." instance=ExtResource("2_snhjh")]
 
 [node name="camera" type="Camera3D" parent="."]
 transform = Transform3D(1, 7.06331e-09, 3.74149e-08, -2.36979e-08, 0.884581, 0.466387, -2.98023e-08, -0.466387, 0.884581, -3.20776, 4.32631, 10.7629)
 fov = 58.5874
-
-[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
-environment = SubResource("Environment_reac2")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(0.840762, 0.239459, -0.485571, 0.242345, 0.635549, 0.733039, 0.484137, -0.733987, 0.476314, 4.61496, 2.82427, 0)

@@ -3,13 +3,13 @@
 importer="scene"
 importer_version=1
 type="PackedScene"
-uid="uid://dbxji8pi5nulg"
-path="res://.godot/imported/tree.glb-fc6ab78095acb2b901990ca8f80f1ada.scn"
+uid="uid://c15on6e3ufthp"
+path="res://.godot/imported/hotel_bathtub.glb-eb1711ab1c27c9a0dad435a5e790ecdb.scn"
 
 [deps]
 
-source_file="res://assets/model/tree.glb"
-dest_files=["res://.godot/imported/tree.glb-fc6ab78095acb2b901990ca8f80f1ada.scn"]
+source_file="res://assets/model/hotel_bathtub.glb"
+dest_files=["res://.godot/imported/hotel_bathtub.glb-eb1711ab1c27c9a0dad435a5e790ecdb.scn"]
 
 [params]
 
@@ -20,7 +20,7 @@ nodes/root_scale=1.0
 nodes/import_as_skeleton_bones=false
 nodes/use_node_type_suffixes=true
 meshes/ensure_tangents=true
-meshes/generate_lods=false
+meshes/generate_lods=true
 meshes/create_shadow_meshes=true
 meshes/light_baking=1
 meshes/lightmap_texel_size=0.2

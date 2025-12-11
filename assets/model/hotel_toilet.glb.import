@@ -3,13 +3,13 @@
 importer="scene"
 importer_version=1
 type="PackedScene"
-uid="uid://dbxji8pi5nulg"
-path="res://.godot/imported/tree.glb-fc6ab78095acb2b901990ca8f80f1ada.scn"
+uid="uid://qlwwnxid6o4f"
+path="res://.godot/imported/hotel_toilet.glb-b17a296122a3e860306d6e1144c6f700.scn"
 
 [deps]
 
-source_file="res://assets/model/tree.glb"
-dest_files=["res://.godot/imported/tree.glb-fc6ab78095acb2b901990ca8f80f1ada.scn"]
+source_file="res://assets/model/hotel_toilet.glb"
+dest_files=["res://.godot/imported/hotel_toilet.glb-b17a296122a3e860306d6e1144c6f700.scn"]
 
 [params]
 
@@ -20,7 +20,7 @@ nodes/root_scale=1.0
 nodes/import_as_skeleton_bones=false
 nodes/use_node_type_suffixes=true
 meshes/ensure_tangents=true
-meshes/generate_lods=false
+meshes/generate_lods=true
 meshes/create_shadow_meshes=true
 meshes/light_baking=1
 meshes/lightmap_texel_size=0.2
