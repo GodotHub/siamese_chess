@@ -3,13 +3,13 @@
 importer="scene"
 importer_version=1
 type="PackedScene"
-uid="uid://brwklx5c0sjbo"
-path="res://.godot/imported/kitchen_table.glb-693a5aa059d24ebbacbe987d327f274a.scn"
+uid="uid://b21y0ovbvc8wy"
+path="res://.godot/imported/hotel_fridge.glb-cfc2689008dcb505509a9c34231dfb18.scn"
 
 [deps]
 
-source_file="res://assets/model/kitchen_table.glb"
-dest_files=["res://.godot/imported/kitchen_table.glb-693a5aa059d24ebbacbe987d327f274a.scn"]
+source_file="res://assets/model/hotel_fridge.glb"
+dest_files=["res://.godot/imported/hotel_fridge.glb-cfc2689008dcb505509a9c34231dfb18.scn"]
 
 [params]
 
