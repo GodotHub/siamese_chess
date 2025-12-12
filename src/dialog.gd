@@ -19,7 +19,7 @@ func _unhandled_input(event:InputEvent) -> void:
 		if event is InputEventMouseButton && event.button_index == MOUSE_BUTTON_LEFT && event.pressed && Time.get_unix_time_from_system() - click_cooldown >= 0.3:
 			next()
 			click_cooldown = Time.get_unix_time_from_system()
-	if click_anywhere || force_selection || Time.get_unix_time_from_system() - click_cooldown < 0.3:
+	if block_input():
 		get_viewport().set_input_as_handled()
 
 func push_dialog(text:String, title:String, blackscreen:bool = false, _click_anywhere:bool = false, _waiting:bool = false) -> void:
@@ -74,3 +74,6 @@ func next() -> void:
 func clicked_selection(_selected:String) -> void:
 	selected = _selected
 	next()
+
+func block_input() -> bool:
+	return click_anywhere || force_selection || Time.get_unix_time_from_system() - click_cooldown < 0.3

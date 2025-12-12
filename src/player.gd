@@ -14,7 +14,7 @@ func _physics_process(_delta:float) -> void:
 	#$head/camera.set_rotation(Vector3(0, 0, deg_to_rad(sin(Time.get_unix_time_from_system()) * 0.5)))
 
 func _unhandled_input(event:InputEvent) -> void:
-	if !can_move:
+	if !can_move || Dialog.block_input():
 		return
 	if event is InputEventMouseButton || event is InputEventMouseMotion:
 		var area:Area3D = click_area(event.position)
