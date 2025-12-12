@@ -24,6 +24,9 @@ var is_pressed:bool = false
 
 func _ready() -> void:
 	super._ready()
+	if !is_instance_valid(audio_stream):
+		set_physics_process(false)
+		return
 	var audio_stream_playback:AudioStreamPlayback = audio_stream.instantiate_playback()	
 	audio_stream_playback.start(0)
 	var data:PackedVector2Array = audio_stream_playback.mix_audio(1, 44100)
