@@ -31,45 +31,45 @@ func add_default_piece_set() -> void:	# 最好交由外部来负责棋子的准�
 	for i:int in 128:
 		match String.chr(state.get_piece(i)):
 			"K":
-				add_piece_instance(load("res://scene/actor/piece_king_white.tscn").instantiate().set_show_on_backup(false), i)
+				add_piece_instance(load("res://scene/actor/piece_king_white.tscn").instantiate(), i)
 			"Q":
-				add_piece_instance(load("res://scene/actor/piece_queen_white.tscn").instantiate().set_show_on_backup(false), i)
+				add_piece_instance(load("res://scene/actor/piece_queen_white.tscn").instantiate(), i)
 			"R":
-				add_piece_instance(load("res://scene/actor/piece_rook_white.tscn").instantiate().set_show_on_backup(false), i)
+				add_piece_instance(load("res://scene/actor/piece_rook_white.tscn").instantiate(), i)
 			"B":
-				add_piece_instance(load("res://scene/actor/piece_bishop_white.tscn").instantiate().set_show_on_backup(false), i)
+				add_piece_instance(load("res://scene/actor/piece_bishop_white.tscn").instantiate(), i)
 			"N":
-				add_piece_instance(load("res://scene/actor/piece_knight_white.tscn").instantiate().set_show_on_backup(false), i)
+				add_piece_instance(load("res://scene/actor/piece_knight_white.tscn").instantiate(), i)
 			"P":
-				add_piece_instance(load("res://scene/actor/piece_pawn_white.tscn").instantiate().set_show_on_backup(false), i)
+				add_piece_instance(load("res://scene/actor/piece_pawn_white.tscn").instantiate(), i)
 			"W":
-				add_piece_instance(load("res://scene/actor/piece_checker_1_white.tscn").instantiate().set_show_on_backup(false), i)
+				add_piece_instance(load("res://scene/actor/piece_checker_1_white.tscn").instantiate(), i)
 			"X":
-				add_piece_instance(load("res://scene/actor/piece_checker_2_white.tscn").instantiate().set_show_on_backup(false), i)
+				add_piece_instance(load("res://scene/actor/piece_checker_2_white.tscn").instantiate(), i)
 			"Y":
-				add_piece_instance(load("res://scene/actor/piece_checker_3_white.tscn").instantiate().set_show_on_backup(false), i)
+				add_piece_instance(load("res://scene/actor/piece_checker_3_white.tscn").instantiate(), i)
 			"Z":
-				add_piece_instance(load("res://scene/actor/piece_checker_4_white.tscn").instantiate().set_show_on_backup(false), i)
+				add_piece_instance(load("res://scene/actor/piece_checker_4_white.tscn").instantiate(), i)
 			"k":
-				add_piece_instance(load("res://scene/actor/piece_king_black.tscn").instantiate().set_show_on_backup(false), i)
+				add_piece_instance(load("res://scene/actor/piece_king_black.tscn").instantiate(), i)
 			"q":
-				add_piece_instance(load("res://scene/actor/piece_queen_black.tscn").instantiate().set_show_on_backup(false), i)
+				add_piece_instance(load("res://scene/actor/piece_queen_black.tscn").instantiate(), i)
 			"r":
-				add_piece_instance(load("res://scene/actor/piece_rook_black.tscn").instantiate().set_show_on_backup(false), i)
+				add_piece_instance(load("res://scene/actor/piece_rook_black.tscn").instantiate(), i)
 			"b":
-				add_piece_instance(load("res://scene/actor/piece_bishop_black.tscn").instantiate().set_show_on_backup(false), i)
+				add_piece_instance(load("res://scene/actor/piece_bishop_black.tscn").instantiate(), i)
 			"n":
-				add_piece_instance(load("res://scene/actor/piece_knight_black.tscn").instantiate().set_show_on_backup(false), i)
+				add_piece_instance(load("res://scene/actor/piece_knight_black.tscn").instantiate(), i)
 			"p":
-				add_piece_instance(load("res://scene/actor/piece_pawn_black.tscn").instantiate().set_show_on_backup(false), i)
+				add_piece_instance(load("res://scene/actor/piece_pawn_black.tscn").instantiate(), i)
 			"w":
-				add_piece_instance(load("res://scene/actor/piece_checker_1_black.tscn").instantiate().set_show_on_backup(false), i)
+				add_piece_instance(load("res://scene/actor/piece_checker_1_black.tscn").instantiate(), i)
 			"x":
-				add_piece_instance(load("res://scene/actor/piece_checker_2_black.tscn").instantiate().set_show_on_backup(false), i)
+				add_piece_instance(load("res://scene/actor/piece_checker_2_black.tscn").instantiate(), i)
 			"y":
-				add_piece_instance(load("res://scene/actor/piece_checker_3_black.tscn").instantiate().set_show_on_backup(false), i)
+				add_piece_instance(load("res://scene/actor/piece_checker_3_black.tscn").instantiate(), i)
 			"z":
-				add_piece_instance(load("res://scene/actor/piece_checker_4_black.tscn").instantiate().set_show_on_backup(false), i)
+				add_piece_instance(load("res://scene/actor/piece_checker_4_black.tscn").instantiate(), i)
 
 func input(_from:Node3D, _to:Area3D, _event:InputEvent, _event_position:Vector3, _normal:Vector3) -> void:
 	if _event is InputEventMouseButton:

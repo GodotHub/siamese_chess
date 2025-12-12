@@ -147,7 +147,7 @@ func state_ready_explore_check_interact(_arg:Dictionary) -> void:
 	change_state("explore_idle")
 
 func state_ready_explore_select_card(_arg:Dictionary) -> void:
-	Dialog.set_title("选择一张卡")
+	Dialog.push_dialog("", "选择一张卡", false, false)
 	HoldCard.show_card()
 	HoldCard.connect("selected", change_state.bind("explore_use_card"))
 

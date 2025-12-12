@@ -2,13 +2,13 @@ extends Actor
 
 var position_name:String = ""
 var sfx:AudioStreamPlayer3D = null
-var show_on_backup:bool = true
-var backup_position:Vector3 = Vector3(0, 0, 0)
+var larger_scale:bool = false
 
 func _ready() -> void:
 	super._ready()
+	if has_meta("larger_scale") && get_meta("larger_scale"):
+		set_larger_scale()
 	top_level = true
-	visible = show_on_backup
 	var audio_stream_randomizer:AudioStreamRandomizer = AudioStreamRandomizer.new()
 	audio_stream_randomizer.random_pitch = 1.3
 	audio_stream_randomizer.random_volume_offset_db = 2.0
@@ -26,7 +26,7 @@ func _ready() -> void:
 
 func introduce(_pos:Vector3) -> void:	# 登场动画
 	visible = true
-	move(_pos)
+	global_position = _pos
 
 func move(_pos:Vector3) -> void:
 	var tween:Tween = create_tween()
@@ -40,11 +40,8 @@ func capturing(_pos:Vector3, _captured:Actor) -> void:	# 攻击
 	_captured.captured(self)
 
 func captured(_capturing:Actor = null) -> void:	# 被攻击
-	if !show_on_backup:
-		visible = false
-		return
-	var tween:Tween = create_tween()
-	tween.tween_property(self, "global_position", backup_position, 0.3).set_trans(Tween.TRANS_SINE)
+	visible = false
+	return
 
 func promote(_pos:Vector3, _piece:int) -> void:
 	var tween:Tween = create_tween()
@@ -75,14 +72,7 @@ func change_model(_piece:int) -> void:
 	add_child(instance)
 	instance.top_level = false
 
-func set_show_on_backup(_show_on_backup:bool) -> Actor:
-	show_on_backup = _show_on_backup
-	return self
-
-func set_backup_position(_backup_position:Vector3) -> Actor:
-	backup_position = _backup_position
-	return self
-
 func set_larger_scale() -> Actor:
 	scale = Vector3(8, 8, 8)
+	larger_scale = true
 	return self
