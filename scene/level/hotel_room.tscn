@@ -39,7 +39,7 @@ background_mode = 2
 background_color = Color(1, 1, 1, 1)
 sky = SubResource("Sky_cw0l5")
 ssr_enabled = true
-fog_enabled = true
+sdfgi_read_sky_light = false
 fog_light_color = Color(1, 1, 1, 1)
 
 [node name="hotel_room" type="Node3D"]

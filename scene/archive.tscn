@@ -11,13 +11,13 @@ colors = PackedColorArray(0, 0, 0, 1)
 [sub_resource type="GradientTexture1D" id="GradientTexture1D_550ee"]
 gradient = SubResource("Gradient_j3y3i")
 
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_w5kv4"]
-
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_x4nah"]
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_uibjj"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_buvmo"]
 
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_uibjj"]
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_x4nah"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_w5kv4"]
 
 [node name="archive" type="CanvasLayer"]
 layer = 3
@@ -67,16 +67,16 @@ offset_left = 0.0240002
 offset_top = 0.208
 offset_right = 0.447998
 offset_bottom = 0.279999
-theme_override_colors/icon_hover_color = Color(1, 1, 1, 1)
-theme_override_colors/icon_pressed_color = Color(0.6, 0.6, 0.6, 1)
 theme_override_colors/font_color = Color(0.901961, 0.901961, 0.901961, 1)
 theme_override_colors/font_focus_color = Color(1, 1, 1, 1)
+theme_override_colors/icon_pressed_color = Color(0.6, 0.6, 0.6, 1)
+theme_override_colors/icon_hover_color = Color(1, 1, 1, 1)
 theme_override_fonts/font = ExtResource("3_w5kv4")
 theme_override_font_sizes/font_size = 30
-theme_override_styles/focus = SubResource("StyleBoxEmpty_w5kv4")
-theme_override_styles/hover = SubResource("StyleBoxEmpty_x4nah")
-theme_override_styles/pressed = SubResource("StyleBoxEmpty_buvmo")
 theme_override_styles/normal = SubResource("StyleBoxEmpty_uibjj")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_buvmo")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_x4nah")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_w5kv4")
 text = ""
 
 [node name="h_box_container" type="HBoxContainer" parent="texture_rect"]
@@ -94,59 +94,59 @@ offset_bottom = 0.104004
 [node name="button_rename" type="Button" parent="texture_rect/h_box_container"]
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_colors/icon_hover_color = Color(1, 1, 1, 1)
-theme_override_colors/icon_pressed_color = Color(0.6, 0.6, 0.6, 1)
 theme_override_colors/font_color = Color(0.901961, 0.901961, 0.901961, 1)
 theme_override_colors/font_focus_color = Color(1, 1, 1, 1)
+theme_override_colors/icon_pressed_color = Color(0.6, 0.6, 0.6, 1)
+theme_override_colors/icon_hover_color = Color(1, 1, 1, 1)
 theme_override_fonts/font = ExtResource("3_w5kv4")
 theme_override_font_sizes/font_size = 30
-theme_override_styles/focus = SubResource("StyleBoxEmpty_w5kv4")
-theme_override_styles/hover = SubResource("StyleBoxEmpty_x4nah")
-theme_override_styles/pressed = SubResource("StyleBoxEmpty_buvmo")
 theme_override_styles/normal = SubResource("StyleBoxEmpty_uibjj")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_buvmo")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_x4nah")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_w5kv4")
 text = ""
 
 [node name="button_delete" type="Button" parent="texture_rect/h_box_container"]
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_colors/icon_hover_color = Color(1, 1, 1, 1)
-theme_override_colors/icon_pressed_color = Color(0.6, 0.6, 0.6, 1)
 theme_override_colors/font_color = Color(0.901961, 0.901961, 0.901961, 1)
 theme_override_colors/font_focus_color = Color(1, 1, 1, 1)
+theme_override_colors/icon_pressed_color = Color(0.6, 0.6, 0.6, 1)
+theme_override_colors/icon_hover_color = Color(1, 1, 1, 1)
 theme_override_fonts/font = ExtResource("3_w5kv4")
 theme_override_font_sizes/font_size = 30
-theme_override_styles/focus = SubResource("StyleBoxEmpty_w5kv4")
-theme_override_styles/hover = SubResource("StyleBoxEmpty_x4nah")
-theme_override_styles/pressed = SubResource("StyleBoxEmpty_buvmo")
 theme_override_styles/normal = SubResource("StyleBoxEmpty_uibjj")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_buvmo")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_x4nah")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_w5kv4")
 text = ""
 
 [node name="button_duplicate" type="Button" parent="texture_rect/h_box_container"]
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_colors/icon_hover_color = Color(1, 1, 1, 1)
-theme_override_colors/icon_pressed_color = Color(0.6, 0.6, 0.6, 1)
 theme_override_colors/font_color = Color(0.901961, 0.901961, 0.901961, 1)
 theme_override_colors/font_focus_color = Color(1, 1, 1, 1)
+theme_override_colors/icon_pressed_color = Color(0.6, 0.6, 0.6, 1)
+theme_override_colors/icon_hover_color = Color(1, 1, 1, 1)
 theme_override_fonts/font = ExtResource("3_w5kv4")
 theme_override_font_sizes/font_size = 30
-theme_override_styles/focus = SubResource("StyleBoxEmpty_w5kv4")
-theme_override_styles/hover = SubResource("StyleBoxEmpty_x4nah")
-theme_override_styles/pressed = SubResource("StyleBoxEmpty_buvmo")
 theme_override_styles/normal = SubResource("StyleBoxEmpty_uibjj")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_buvmo")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_x4nah")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_w5kv4")
 text = ""
 
 [node name="button_add_empty" type="Button" parent="texture_rect/h_box_container"]
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_colors/icon_hover_color = Color(1, 1, 1, 1)
-theme_override_colors/icon_pressed_color = Color(0.6, 0.6, 0.6, 1)
 theme_override_colors/font_color = Color(0.901961, 0.901961, 0.901961, 1)
 theme_override_colors/font_focus_color = Color(1, 1, 1, 1)
+theme_override_colors/icon_pressed_color = Color(0.6, 0.6, 0.6, 1)
+theme_override_colors/icon_hover_color = Color(1, 1, 1, 1)
 theme_override_fonts/font = ExtResource("3_w5kv4")
 theme_override_font_sizes/font_size = 30
-theme_override_styles/focus = SubResource("StyleBoxEmpty_w5kv4")
-theme_override_styles/hover = SubResource("StyleBoxEmpty_x4nah")
-theme_override_styles/pressed = SubResource("StyleBoxEmpty_buvmo")
 theme_override_styles/normal = SubResource("StyleBoxEmpty_uibjj")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_buvmo")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_x4nah")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_w5kv4")
 text = ""

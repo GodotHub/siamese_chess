@@ -1,6 +1,6 @@
-[gd_scene load_steps=14 format=3 uid="uid://c7f6odob1fiwo"]
+[gd_scene load_steps=15 format=3 uid="uid://c7f6odob1fiwo"]
 
-[ext_resource type="Script" uid="uid://5i8x1kt3sppg" path="res://src/level/hallway_3f.gd" id="1_1xocg"]
+[ext_resource type="Script" path="res://src/level/hallway_3f.gd" id="1_1xocg"]
 [ext_resource type="PackedScene" uid="uid://b3ml34bssywkr" path="res://scene/player.tscn" id="2_snhjh"]
 [ext_resource type="PackedScene" uid="uid://dwvyc2qlcdag0" path="res://scene/chessboard_large.tscn" id="3_yedm7"]
 [ext_resource type="PackedScene" uid="uid://bw021nt6bdr6t" path="res://assets/model/elevator.glb" id="4_md6wq"]
@@ -8,6 +8,7 @@
 [ext_resource type="Script" uid="uid://bbi6kjxerg3hk" path="res://src/marker_teleport.gd" id="6_pjyyy"]
 [ext_resource type="Script" uid="uid://chtqhpiu556i1" path="res://src/marker_bit.gd" id="6_snhjh"]
 [ext_resource type="Script" uid="uid://bt4vtnpxu5i4x" path="res://src/actor.gd" id="7_6v2ut"]
+[ext_resource type="PackedScene" uid="uid://bw127d1iawnv3" path="res://assets/model/radermachera_sinica.glb" id="9_yedm7"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_ka0b7"]
 sky_top_color = Color(1, 1, 1, 1)
@@ -23,7 +24,6 @@ background_mode = 2
 background_color = Color(1, 1, 1, 1)
 sky = SubResource("Sky_kgksa")
 ssr_enabled = true
-fog_enabled = true
 fog_light_color = Color(1, 1, 1, 1)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_gs125"]
@@ -205,3 +205,9 @@ transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0, 0, 
 
 [node name="door_4" parent="." instance=ExtResource("5_unvbp")]
 transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -6, 0, 7)
+
+[node name="radermachera_sinica_2" parent="." instance=ExtResource("9_yedm7")]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -0.827981, 0, 3.0475721)
+
+[node name="radermachera_sinica_3" parent="." instance=ExtResource("9_yedm7")]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -5.352552, 0, 3.0475721)

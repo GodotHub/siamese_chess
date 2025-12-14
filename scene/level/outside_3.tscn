@@ -25,7 +25,6 @@ background_mode = 2
 sky = SubResource("Sky_cdevh")
 ssr_enabled = true
 ssr_max_steps = 32
-fog_enabled = true
 fog_light_color = Color(1, 1, 1, 1)
 volumetric_fog_albedo = Color(0.88, 0.79816, 0.6072, 1)
 volumetric_fog_emission = Color(1, 1, 1, 1)
@@ -79,7 +78,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7, 0, 5)
 script = ExtResource("11_ebvva")
 to = "res://scene/level/outside_2.tscn"
 args = {
-"by": 103
+"by": 16
 }
 metadata/_custom_type_script = "uid://bbi6kjxerg3hk"
 
