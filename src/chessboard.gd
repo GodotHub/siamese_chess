@@ -29,6 +29,8 @@ func add_default_piece_set() -> void:	# 最好交由外部来负责棋子的准�
 	backup_piece.clear()
 	chessboard_piece.clear()
 	for i:int in 128:
+		if !state.has_piece(i):
+			continue
 		match String.chr(state.get_piece(i)):
 			"K":
 				add_piece_instance(load("res://scene/actor/piece_king_white.tscn").instantiate(), i)
