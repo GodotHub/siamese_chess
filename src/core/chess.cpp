@@ -193,15 +193,14 @@ int64_t Chess::diag_a1h8_attacks[64][256] = {};
 int64_t Chess::diag_a8h1_attacks[64][256] = {};
 int64_t Chess::horse_attacks[64] = {};
 int64_t Chess::king_attacks[64] = {};
-int64_t Chess::pawn_attacks[64][8] = {};	//游戏特殊原因，兵会被设定为四种方向
+int64_t Chess::pawn_attacks[64][2] = {};	//游戏特殊原因，兵会被设定为四种方向
 const int Chess::directions_diagonal[4] = {-17, -15, 15, 17};
 const int Chess::directions_straight[4] = {-16, -1, 1, 16};
 const int Chess::directions_eight_way[8] = {-17, -16, -15, -1, 1, 15, 16, 17};
 const int Chess::directions_horse[8] = {33, 31, 18, 14, -33, -31, -18, -14};
-const int Chess::direction_pawn_capture_left[8] = {-1, -17, -16, 15, -15, 16, 17, 1};
-const int Chess::direction_pawn_capture_right[8] = {-16, -15, 1, -17, 17, -1, 15, 16};
-int64_t Chess::direction_pawn_start[8] = {0x40C0000000000000, 0x00FF000000000000, 0x0203000000000000, 0x4040404040404040, 0x0202020202020202, 0x000000000000C040, 0x000000000000FF00, 0x0000000000000302};
-int64_t Chess::direction_pawn_end[8] = {0x0000000000000302, 0x0000000000FF00, 0x000000000000C040, 0x0202020202020202, 0x4040404040404040, 0x0203000000000000, 0x00FF000000000000, 0x40C0000000000000};
+const int Chess::direction_pawn[2][2] = {{-17, -15}, {17, 15}};
+int64_t Chess::pawn_start[2] = {0x00FF000000000000, 0x000000000000FF00};
+int64_t Chess::pawn_end[2] = {0x0000000000FF00, 0x00FF000000000000};
 
 Chess::Chess()
 {
@@ -361,7 +360,7 @@ Chess::Chess()
 	for (int i = 0; i < 64; i++)	//兵，且不算吃过路兵
 	{
 		int from = Chess::to_x88(i);
-		for (int j = 0; j < 8; j++)
+		for (int j = 0; j < 2; j++)
 		{
 			int to = from + direction_pawn_capture(j, false);
 			if (!(to & 0x88))
@@ -527,8 +526,6 @@ int Chess::direction(int piece, int index)
 		case 'k':
 		case 'Q':
 		case 'q':
-		case 'P':
-		case 'p':
 			return directions_eight_way[index];
 		break;
 		case 'N':
@@ -543,24 +540,30 @@ int Chess::direction(int piece, int index)
 		case 'b':
 			return directions_diagonal[index];
 		break;
+		case 'P':
+			return -16;
+		break;
+		case 'p':
+			return 16;
+		break;
 	}
 	return 0;
 }
 
-int Chess::direction_pawn_capture(int index, bool capture_dir)
+int Chess::direction_pawn_capture(int group, bool capture_dir)
 {
-	return capture_dir ? direction_pawn_capture_right[index] : direction_pawn_capture_left[index];
+	return direction_pawn[group][capture_dir];
 
 }
 
-bool Chess::pawn_on_start(int dir, int by)
+bool Chess::pawn_on_start(int group, int by)
 {
-	return direction_pawn_start[dir] & Chess::mask(Chess::to_64(by));
+	return pawn_start[group] & Chess::mask(Chess::to_64(by));
 }
 
-bool Chess::pawn_on_end(int dir, int by)
+bool Chess::pawn_on_end(int group, int by)
 {
-	return direction_pawn_end[dir] & Chess::mask(Chess::to_64(by));
+	return pawn_end[group] & Chess::mask(Chess::to_64(by));
 }
 
 int64_t Chess::mask(int n)
@@ -928,16 +931,15 @@ bool Chess::is_move_valid(const godot::Ref<State> &_state, int _group, int _move
 	int to_piece = _state->get_piece(to);
 	if ((from_piece & 95) == 'P')
 	{
-		int front = from_piece == 'P' ? (_state->get_pawn_dir() & 0xF) : (_state->get_pawn_dir() >> 4);
-		int front_dir = direction(from_piece, front);
-		int front_capture_left = direction_pawn_capture(front, false);
-		int front_capture_right = direction_pawn_capture(front, true);
-		bool on_start = pawn_on_start(front, from);
-		if (to == from + front_dir && _state->has_piece(from + front_dir))
+		int front = direction(from_piece, 0);
+		int front_capture_left = direction_pawn_capture(_group, false);
+		int front_capture_right = direction_pawn_capture(_group, true);
+		bool on_start = pawn_on_start(_group, from);
+		if (to == from + front && _state->has_piece(from + front))
 		{
 			return false;
 		}
-		if (to == from + front_dir + front_dir && _state->has_piece(from + front_dir + front_dir))
+		if (to == from + front + front && _state->has_piece(from + front + front))
 		{
 			return false;
 		}
@@ -1005,7 +1007,7 @@ bool Chess::is_check(const godot::Ref<State> &_state, int _group)
 		int from_piece = iter.piece();
 		if ((from_piece & 95) == 'P')
 		{
-			if (pawn_attacks[from_64][_group == 0 ? (_state->get_pawn_dir() & 0xF) : (_state->get_pawn_dir() >> 4)] & enemy_king_mask)
+			if (pawn_attacks[from_64][_group] & enemy_king_mask)
 			{
 				return true;
 			}
@@ -1097,18 +1099,17 @@ godot::PackedInt32Array Chess::generate_premove(const godot::Ref<State> &_state,
 		int from_piece = iter.piece();
 		if ((from_piece & 95) == 'P')
 		{
-			int front = _group == 0 ? (_state->get_pawn_dir() & 0xF) : (_state->get_pawn_dir() >> 4);
-			int front_dir = direction(from_piece, front);
-			int front_capture_left = direction_pawn_capture(front, false);
-			int front_capture_right = direction_pawn_capture(front, true);
-			bool on_start = pawn_on_start(front, _from);
-			bool on_end = pawn_on_end(front, _from);
+			int front = direction(from_piece, 0);
+			int front_capture_left = direction_pawn_capture(_group, false);
+			int front_capture_right = direction_pawn_capture(_group, true);
+			bool on_start = pawn_on_start(_group, _from);
+			bool on_end = pawn_on_end(_group, _from);
 			if (on_end)
 			{
-				output.push_back(Chess::create(_from, _from + front_dir, _group == 0 ? 'Q' : 'q'));
-				output.push_back(Chess::create(_from, _from + front_dir, _group == 0 ? 'R' : 'r'));
-				output.push_back(Chess::create(_from, _from + front_dir, _group == 0 ? 'N' : 'n'));
-				output.push_back(Chess::create(_from, _from + front_dir, _group == 0 ? 'B' : 'b'));
+				output.push_back(Chess::create(_from, _from + front, _group == 0 ? 'Q' : 'q'));
+				output.push_back(Chess::create(_from, _from + front, _group == 0 ? 'R' : 'r'));
+				output.push_back(Chess::create(_from, _from + front, _group == 0 ? 'N' : 'n'));
+				output.push_back(Chess::create(_from, _from + front, _group == 0 ? 'B' : 'b'));
 				if (!((_from + front_capture_left) & 0x88))
 				{
 					output.push_back(Chess::create(_from, _from + front_capture_left, _group == 0 ? 'Q' : 'q'));
@@ -1126,7 +1127,7 @@ godot::PackedInt32Array Chess::generate_premove(const godot::Ref<State> &_state,
 			}
 			else
 			{
-				output.push_back(Chess::create(_from, _from + front_dir, 0));
+				output.push_back(Chess::create(_from, _from + front, 0));
 				if (!((_from + front_capture_left) & 0x88))
 				{
 					output.push_back(Chess::create(_from, _from + front_capture_left, 0));
@@ -1137,7 +1138,7 @@ godot::PackedInt32Array Chess::generate_premove(const godot::Ref<State> &_state,
 				}
 				if (on_start)
 				{
-					output.push_back(Chess::create(_from, _from + front_dir + front_dir, 0));
+					output.push_back(Chess::create(_from, _from + front + front, 0));
 				}
 			}
 			continue;
@@ -1190,13 +1191,12 @@ void Chess::_internal_generate_move(godot::PackedInt32Array &output, const godot
 		int from_piece = iter.piece();
 		if ((from_piece & 95) == 'P')
 		{
-			int front = _group == 0 ? (_state->get_pawn_dir() & 0xF) : (_state->get_pawn_dir() >> 4);
-			int front_dir = direction(from_piece, front);
-			int front_capture_left = direction_pawn_capture(front, false);
-			int front_capture_right = direction_pawn_capture(front, true);
-			bool on_start = pawn_on_start(front, _from);
-			bool on_end = pawn_on_end(front, _from);
-			int to_1 = _from + front_dir;
+			int front = direction(from_piece, 0);
+			int front_capture_left = direction_pawn_capture(_group, false);
+			int front_capture_right = direction_pawn_capture(_group, true);
+			bool on_start = pawn_on_start(_group, _from);
+			bool on_end = pawn_on_end(_group, _from);
+			int to_1 = _from + front;
 			int to_2 = _from + front_capture_left;
 			int to_3 = _from + front_capture_right;
 			if (!is_blocked(_state, _from, to_1) && !is_enemy(_state, _from, to_1))
@@ -1211,9 +1211,9 @@ void Chess::_internal_generate_move(godot::PackedInt32Array &output, const godot
 				else
 				{
 					output.push_back(Chess::create(_from, to_1, 0));
-					if (!_state->has_piece(to_1 + front_dir) && on_start)
+					if (!_state->has_piece(to_1 + front) && on_start)
 					{
-						output.push_back(Chess::create(_from, to_1 + front_dir, 0));
+						output.push_back(Chess::create(_from, to_1 + front, 0));
 					}
 				}
 			}
@@ -1621,17 +1621,16 @@ void Chess::apply_move(const godot::Ref<State> &_state, int _move)
 	}
 	if ((from_piece & 95) == 'P')
 	{
-		int front = from_group == 0 ? (_state->get_pawn_dir() & 0xF) : (_state->get_pawn_dir() >> 4);
-		int front_dir = direction(from_piece, front);
+		int front = direction(from_piece, 0);
 		_state->set_step_to_draw(0);	// 移动兵时重置50步和棋
-		if (to - from == front_dir * 2)
+		if (to - from == front * 2)
 		{
 			has_en_passant = true;
-			_state->set_en_passant(from + front_dir);
+			_state->set_en_passant(from + front);
 		}
-		if (to == _state->get_en_passant() && !is_same_group(from_piece, _state->get_piece(to - front_dir)))
+		if (to == _state->get_en_passant() && !is_same_group(from_piece, _state->get_piece(to - front)))
 		{
-			_state->capture_piece(to - front_dir);
+			_state->capture_piece(to - front);
 		}
 		if (Chess::extra(_move))
 		{
@@ -1733,11 +1732,10 @@ godot::Dictionary Chess::apply_move_custom(const godot::Ref<State> &_state, int 
 	}
 	if ((from_piece & 95) == 'P')
 	{
-		int front = from_group == 0 ? (_state->get_pawn_dir() & 0xF) : (_state->get_pawn_dir() >> 4);
-		int front_dir = direction(from_piece, front);
+		int front = direction(from_piece, 0);
 		if (((from >> 4) == 3 || (from >> 4) == 4) && to == _state->get_en_passant())
 		{
-			int captured = to - front_dir;
+			int captured = to - front;
 			output["type"] = "en_passant";
 			output["from"] = from;
 			output["to"] = to;

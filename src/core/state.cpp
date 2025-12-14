@@ -39,7 +39,6 @@ State::State()
 	bit[STEP_TO_DRAW] = 0;
 	bit[ROUND] = 1;
 	bit[KING_PASSANT] = -1;
-	bit[PAWN_DIR] = 0x61;	//兵的前进方向，前4位为白方，后4位为黑方
 }
 
 godot::Ref<State> State::duplicate()
@@ -312,16 +311,6 @@ godot::String State::print_bit_diamond(int _piece)
 	return output;
 }
 
-int State::get_pawn_dir()
-{
-	return bit[PAWN_DIR];
-}
-
-void State::set_pawn_dir(int _pawn_dir)
-{
-	bit[PAWN_DIR] = _pawn_dir;
-}
-
 void State::_bind_methods()
 {
 	godot::ClassDB::bind_method(godot::D_METHOD("duplicate"), &State::duplicate);
@@ -346,8 +335,6 @@ void State::_bind_methods()
 	godot::ClassDB::bind_method(godot::D_METHOD("set_round"), &State::set_round);
 	godot::ClassDB::bind_method(godot::D_METHOD("get_king_passant"), &State::get_king_passant);
 	godot::ClassDB::bind_method(godot::D_METHOD("set_king_passant"), &State::set_king_passant);
-	godot::ClassDB::bind_method(godot::D_METHOD("get_pawn_dir"), &State::get_pawn_dir);
-	godot::ClassDB::bind_method(godot::D_METHOD("set_pawn_dir"), &State::set_pawn_dir);
 	godot::ClassDB::bind_method(godot::D_METHOD("get_zobrist"), &State::get_zobrist);
 	godot::ClassDB::bind_method(godot::D_METHOD("print_board"), &State::print_board);
 	godot::ClassDB::bind_method(godot::D_METHOD("print_bit_square"), &State::print_bit_square);

@@ -32,9 +32,9 @@ class Chess : public godot::Object
 		static godot::String print_bit_diamond(int64_t bit);
 		static int direction_count(int piece);
 		static int direction(int piece, int index);
-		static int direction_pawn_capture(int index, bool capture_dir);
-		static bool pawn_on_start(int dir, int by);
-		static bool pawn_on_end(int dir, int by);
+		static int direction_pawn_capture(int group, bool capture_dir);
+		static bool pawn_on_start(int group, int by);
+		static bool pawn_on_end(int group, int by);
 		static int to_64(int n);
 		static int to_x88(int n);
 		static int group(int piece);
@@ -113,15 +113,14 @@ class Chess : public godot::Object
 		static int64_t diag_a8h1_attacks[64][256];
 		static int64_t horse_attacks[64];
 		static int64_t king_attacks[64];
-		static int64_t pawn_attacks[64][8];	//游戏特殊原因，兵会被设定为八种方向
+		static int64_t pawn_attacks[64][2];	//游戏特殊原因，兵会被设定为八种方向
 		const static int directions_diagonal[4];
 		const static int directions_straight[4];
 		const static int directions_eight_way[8];
 		const static int directions_horse[8];
-		const static int direction_pawn_capture_left[8];
-		const static int direction_pawn_capture_right[8];
-		static int64_t direction_pawn_start[8];
-		static int64_t direction_pawn_end[8];
+		const static int direction_pawn[2][2];
+		static int64_t pawn_start[2];
+		static int64_t pawn_end[2];
 };
 
 #endif

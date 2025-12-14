@@ -264,12 +264,10 @@ void PastorEngine::generate_good_capture_move(godot::PackedInt32Array &output, c
 		godot::PackedInt32Array *directions = nullptr;
 		if ((from_piece & 95) == 'P')
 		{
-			int front = from_piece == 'P' ? (_state->get_pawn_dir() & 0xF) : (_state->get_pawn_dir() >> 4);
-			int front_dir = Chess::direction(from_piece, front);
-			int front_capture_left = Chess::direction_pawn_capture(front, false);
-			int front_capture_right = Chess::direction_pawn_capture(front, true);
-			bool on_start = Chess::pawn_on_start(front, _from);
-			bool on_end = Chess::pawn_on_end(front, _from);
+			int front_capture_left = Chess::direction_pawn_capture(_group, false);
+			int front_capture_right = Chess::direction_pawn_capture(_group, true);
+			bool on_start = Chess::pawn_on_start(_group, _from);
+			bool on_end = Chess::pawn_on_end(_group, _from);
 			if (!Chess::is_blocked(_state, _from, _from + front_capture_left) && Chess::is_enemy(_state, _from, _from + front_capture_left))
 			{
 				if (on_end)
@@ -402,7 +400,7 @@ int PastorEngine::evaluate(const godot::Ref<State> &_state, int _move)
 	}
 	if ((from_piece & 95) == 'P')
 	{
-		int front = group == 0 ? -16 : 16;
+		int front = Chess::direction(from_piece, 0);
 		if (extra)
 		{
 			score += get_piece_score(to, extra);
