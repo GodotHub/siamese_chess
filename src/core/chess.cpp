@@ -1157,7 +1157,7 @@ godot::PackedInt32Array Chess::generate_premove(const godot::Ref<State> &_state,
 			}
 		}
 	}
-	if (_group == 0 && (_state->get_castle() & 8) && !_state->has_piece(Chess::g1()) && !_state->has_piece(Chess::f1()))
+	if (_group == 0 && (_state->get_castle() & 8))
 	{
 		output.push_back(Chess::create(Chess::e1(), Chess::g1(), 'K'));
 	}
@@ -1165,11 +1165,11 @@ godot::PackedInt32Array Chess::generate_premove(const godot::Ref<State> &_state,
 	{
 		output.push_back(Chess::create(Chess::e1(), Chess::c1(), 'Q'));
 	}
-	if (_group == 1 && (_state->get_castle() & 2) && !_state->has_piece(Chess::g8()) && !_state->has_piece(Chess::f8()))
+	if (_group == 1 && (_state->get_castle() & 2))
 	{
 		output.push_back(Chess::create(Chess::e8(), Chess::g8(), 'k'));
 	}
-	if (_group == 1 && (_state->get_castle() & 1) && !_state->has_piece(Chess::c8()) && !_state->has_piece(Chess::d8()))
+	if (_group == 1 && (_state->get_castle() & 1))
 	{
 		output.push_back(Chess::create(Chess::e8(), Chess::c8(), 'q'));
 	}
