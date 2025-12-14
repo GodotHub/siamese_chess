@@ -10,15 +10,15 @@ colors = PackedColorArray(0, 0, 0, 1)
 [sub_resource type="GradientTexture1D" id="GradientTexture1D_j3y3i"]
 gradient = SubResource("Gradient_j3y3i")
 
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_nu684"]
-
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_l1wpo"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_nu684"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_nu684"]
 font_size = 26
 
 [node name="text_input" type="CanvasLayer"]
-layer = 2
+layer = 4
 script = ExtResource("1_nu684")
 
 [node name="texture_rect" type="TextureRect" parent="."]
@@ -48,8 +48,8 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_fonts/font = ExtResource("2_l1wpo")
 theme_override_font_sizes/font_size = 30
-theme_override_styles/focus = SubResource("StyleBoxEmpty_nu684")
 theme_override_styles/normal = SubResource("StyleBoxEmpty_l1wpo")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_nu684")
 flat = true
 draw_control_chars = true
 

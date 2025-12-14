@@ -10,6 +10,7 @@ colors = PackedColorArray(0, 0, 0, 1)
 gradient = SubResource("Gradient_j3y3i")
 
 [node name="decision" type="CanvasLayer"]
+layer = 4
 script = ExtResource("1_j3y3i")
 
 [node name="texture_rect" type="TextureRect" parent="."]
