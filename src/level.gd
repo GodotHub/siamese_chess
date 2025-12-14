@@ -12,12 +12,10 @@ var level_state:String = ""
 var mutex:Mutex = Mutex.new()
 var interact_list:Dictionary[int, Dictionary] = {}
 var title:Dictionary[int, String] = {}
-@export var pawn_dir:int = 0x61
 
 func _ready() -> void:
 	engine = PastorEngine.new()
 	var state = State.new()
-	state.set_pawn_dir(pawn_dir)
 	chessboard = $chessboard
 	for node:Node in get_children():
 		if node is Actor:
