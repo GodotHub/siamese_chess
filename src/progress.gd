@@ -10,13 +10,20 @@ func _ready() -> void:
 	pass
 
 func load_file() -> void:
-	pass
+	var file:FileAccess = FileAccess.open("user://progress/prototype_2.json", FileAccess.READ)
+	if !is_instance_valid(file):
+		return
 
 func save_file() -> void:
-	pass
+	var dir:DirAccess = DirAccess.open("user://progress/prototype_2.json")
+	if !dir:
+		DirAccess.make_dir_absolute("user://progress/prototype_2.json")
+		dir = DirAccess.open("user://progress/prototype_2.json")
 
 func get_table(key:String) -> Dictionary:
-	return table[key]
+	if table.has(key):
+		return table[key]
+	return {}
 
 func set_table(key:String, data:Dictionary) -> void:
 	table[key] = data

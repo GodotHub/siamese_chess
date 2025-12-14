@@ -162,7 +162,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7, 0, 5)
 script = ExtResource("10_6ytrl")
 to = "res://scene/level/outside_2.tscn"
 args = {
-"by": 96
+"by": 23
 }
 metadata/_custom_type_script = "uid://bbi6kjxerg3hk"
 
@@ -322,7 +322,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7, 0, -3)
 script = ExtResource("10_6ytrl")
 to = "res://scene/level/outside_2.tscn"
 args = {
-"by": 32
+"by": 87
 }
 metadata/_custom_type_script = "uid://bbi6kjxerg3hk"
 
