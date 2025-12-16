@@ -40,7 +40,6 @@ background_mode = 2
 background_color = Color(1, 1, 1, 1)
 sky = SubResource("Sky_kgksa")
 ssr_enabled = true
-fog_enabled = true
 fog_light_color = Color(1, 1, 1, 1)
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_n3pbh"]
@@ -563,6 +562,29 @@ transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -6.575
 [node name="hotel_fridge" parent="." instance=ExtResource("25_8pfak")]
 transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -4, 0.039903313, 3.810114)
 
+[node name="table_1" parent="." instance=ExtResource("6_ecjec")]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -1, 0.0249235, 5)
+
+[node name="table_000" parent="table_1" index="0"]
+surface_material_override/0 = SubResource("ShaderMaterial_n3pbh")
+
+[node name="sofa_0" parent="table_1" instance=ExtResource("9_fsnob")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.045349, 0, -0.90022)
+
+[node name="sofa" parent="table_1/sofa_0" index="0"]
+transform = Transform3D(1.78814e-07, 0, -1, 0, 1, 0, 1, 0, 1.78814e-07, 0, 0, -0.116446)
+surface_material_override/0 = SubResource("ShaderMaterial_0icrd")
+surface_material_override/1 = SubResource("ShaderMaterial_q5uxw")
+surface_material_override/2 = SubResource("ShaderMaterial_q5uxw")
+
+[node name="sofa_1" parent="table_1" instance=ExtResource("9_fsnob")]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, -0.048802, 0, 1.09839)
+
+[node name="sofa" parent="table_1/sofa_1" index="0"]
+surface_material_override/0 = SubResource("ShaderMaterial_e7kou")
+surface_material_override/1 = SubResource("ShaderMaterial_lw61d")
+surface_material_override/2 = SubResource("ShaderMaterial_lw61d")
+
 [editable path="table_0"]
 [editable path="table_0/sofa_0"]
 [editable path="table_0/sofa_1"]
@@ -587,3 +609,6 @@ transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -4, 
 [editable path="table_high_2/chair_high_3"]
 [editable path="table_high_2/chair_high_4"]
 [editable path="table_high_2/chair_high_5"]
+[editable path="table_1"]
+[editable path="table_1/sofa_0"]
+[editable path="table_1/sofa_1"]

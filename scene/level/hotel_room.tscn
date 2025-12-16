@@ -58,11 +58,11 @@ shadow_enabled = true
 [node name="chessboard" parent="." instance=ExtResource("3_w2bcl")]
 
 [node name="camera" type="Camera3D" parent="."]
-transform = Transform3D(0.654556, -0.352595, 0.668755, -1.13133e-08, 0.884581, 0.466387, -0.756013, -0.305276, 0.579008, 3.61948, 3.60401, 5.0518)
+transform = Transform3D(-1, 8.742278e-08, 3.821371e-15, 0, -4.371139e-08, 1, 8.742278e-08, 1, 4.371139e-08, -1.830138, 11.636706, 0.35143906)
 fov = 58.5874
 
 [node name="window" parent="." instance=ExtResource("4_4jgku")]
-transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 3, 0, 0)
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 3, 0, -1)
 
 [node name="door" parent="." instance=ExtResource("5_10bqq")]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -6, 0, -1)
@@ -91,10 +91,10 @@ transform = Transform3D(0.258819, 0, -0.965926, 0, 1, 0, 0.965926, 0, 0.258819, 
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0, -3)
 
 [node name="reception_chair_2" parent="." instance=ExtResource("11_yrfn8")]
-transform = Transform3D(-0.707107, 0, -0.707107, 0, 1, 0, 0.707107, 0, -0.707107, 2.35379, 0, -1.42516)
+transform = Transform3D(-0.2698947, 0, -0.96289, 0, 1, 0, 0.96289, 0, -0.2698947, 2.35379, 0, -1.0599103)
 
 [node name="reception_table2" parent="." instance=ExtResource("11_0snkg")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.44213, 0, -2.26224)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.0766568, 0, -2.3138988)
 
 [node name="bedside_table" parent="." instance=ExtResource("11_tn2u6")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.22019, 0, -3.71715)
@@ -127,27 +127,82 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.502406, 0.826559, 1.50441)
 transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -5.38084, 0, -1)
 
 [node name="hotel_closet" parent="." instance=ExtResource("19_grsh5")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 0, -2.56392)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 0, -3.56392)
 
 [node name="door_2" parent="." instance=ExtResource("5_10bqq")]
 transform = Transform3D(1, 0, 1.06581e-14, 0, 1, 0, -1.06581e-14, 0, 1, -3, 0, 2)
 
+[node name="structure" parent="door_2" index="0"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0, 0)
+
 [node name="face" parent="door_2" index="1"]
-transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -0.522462, 1.01108, 0.140696)
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 1.4775381, 1.01108, 0.14069605)
 
 [node name="hotel_washbasin" parent="door_2" instance=ExtResource("20_ijqg8")]
-transform = Transform3D(1, 0, -1.06581e-14, 0, 1, 0, 1.06581e-14, 0, 1, 0, 0, 2.37805)
+transform = Transform3D(1, 0, -1.06581e-14, 0, 1, 0, 1.06581e-14, 0, 1, 2, 0, 2.3780499)
 
 [node name="hotel_mirror" parent="door_2" instance=ExtResource("21_5ans0")]
-transform = Transform3D(1, 0, -1.06581e-14, 0, 1, 0, 1.06581e-14, 0, 1, 0, 0, 2.72086)
+transform = Transform3D(1, 0, -1.06581e-14, 0, 1, 0, 1.06581e-14, 0, 1, 2, 0, 2.72086)
 
 [node name="hotel_toilet" parent="door_2" instance=ExtResource("22_ncv1s")]
-transform = Transform3D(1, 0, -1.06581e-14, 0, 1, 0, 1.06581e-14, 0, 1, 1.72436, 0, 2.37157)
+transform = Transform3D(1, 0, -1.06581e-14, 0, 1, 0, 1.06581e-14, 0, 1, 3.5715077, 0, 2.37157)
 
 [node name="hotel_bathtub" parent="door_2" instance=ExtResource("23_skhdv")]
-transform = Transform3D(1, 0, -1.06581e-14, 0, 1, 0, 1.06581e-14, 0, 1, 3.87252, 0, 1.74202)
+transform = Transform3D(1, 0, -1.06581e-14, 0, 1, 0, 1.06581e-14, 0, 1, 5.16565, 0, 1.3998809)
 
 [node name="phonograph" parent="." instance=ExtResource("24_ncv1s")]
-transform = Transform3D(0.06923409, 0, -0.99760044, 0, 1, 0, 0.99760044, 0, 0.06923409, 1.6748261, 0.6171086, -2.2748027)
+transform = Transform3D(0.06923409, 0, -0.99760044, 0, 1, 0, 0.99760044, 0, 0.06923409, 1.8726802, 0.6171086, -2.3264616)
+
+[node name="csg_box_3d" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.999695, 1.3895569, 0.82366943)
+size = Vector3(0.08630371, 2.7948608, 2.4754639)
+
+[node name="csg_box_3d_2" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.999695, 1.39151, -2.8407435)
+size = Vector3(0.08630371, 2.7909546, 2.4625244)
+
+[node name="csg_box_3d_4" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.473526, 1.8468475, -4.0745516)
+size = Vector3(9.130859, 3.7016296, 0.011730469)
+
+[node name="csg_box_3d_5" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.7941833, 1.8567963, 1.9877013)
+size = Vector3(4.3847246, 3.721527, 0.13623632)
+
+[node name="csg_box_3d_3" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.9996948, 1.8535004, 3.4159164)
+size = Vector3(0.08630371, 3.7227478, 2.7566986)
+
+[node name="csg_box_3d_6" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.49471116, 1.8568573, 4.8156233)
+size = Vector3(5.0555315, 3.7216492, 0.13623632)
+
+[node name="csg_box_3d_7" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.999695, 3.2454174, -1.0086517)
+size = Vector3(0.08630371, 0.94377136, 6.140106)
+
+[node name="csg_box_3d_8" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.3150849, 1.8567963, 1.9877013)
+size = Vector3(3.4441223, 3.721527, 0.13623632)
+
+[node name="csg_box_3d_9" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.0003052, 1.3082733, -3.3174438)
+size = Vector3(0.08630371, 2.6322937, 1.6787109)
+
+[node name="csg_box_3d_10" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.999695, 3.2454174, -1.0086517)
+size = Vector3(0.08630371, 0.94377136, 6.140106)
+
+[node name="csg_box_3d_11" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.0003052, 3.166663, 0.39431)
+size = Vector3(0.08630371, 1.1012802, 8.94603)
+
+[node name="csg_box_3d_12" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.0003052, 1.3082733, 2.6274195)
+size = Vector3(0.08630371, 2.6322937, 4.4194336)
+
+[node name="csg_box_3d_13" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.0003052, 0.42648196, -1.0086517)
+size = Vector3(0.08630371, 0.8589382, 6.140106)
 
 [editable path="door_2"]

@@ -33,7 +33,6 @@ size = Vector2(0.1, 0.1)
 
 [node name="shrub" instance=ExtResource("1_08tlt")]
 script = ExtResource("2_4hxfj")
-piece_type = [120, 88]
 
 [node name="root" parent="." index="0"]
 transform = Transform3D(2.685, 0, 0, 0, 1.31539, 0, 0, 0, 2.685, 0, 0.00401676, 0)
@@ -42,7 +41,7 @@ transform = Transform3D(2.685, 0, 0, 0, 1.31539, 0, 0, 0, 2.685, 0, 0.00401676, 
 transform = Transform3D(0.715, 0, 0, 0, 0.456989, 0, 0, 0, 0.715, 0, 0.668965, 0)
 
 [node name="leaves_001" parent="." index="2"]
-transform = Transform3D(1.39216e-07, 0, -0.715, 0, 0.456989, 0, 0.715, 0, 1.39216e-07, 0, 0.668965, 0)
+transform = Transform3D(1.3921563e-07, 0, -0.715, 0, 0.456989, 0, 0.715, 0, 1.3921563e-07, 0, 0.668965, 0)
 
 [node name="gpu_particles_died" type="GPUParticles3D" parent="." index="3"]
 emitting = false
