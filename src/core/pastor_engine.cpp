@@ -741,7 +741,6 @@ godot::Ref<TranspositionTable> PastorEngine::get_transposition_table() const
 
 void PastorEngine::_bind_methods()
 {
-	ADD_SIGNAL(godot::MethodInfo("search_finished"));
 	godot::ClassDB::bind_method(godot::D_METHOD("search"), &PastorEngine::search);
 	godot::ClassDB::bind_method(godot::D_METHOD("get_search_result"), &PastorEngine::get_search_result);
 	godot::ClassDB::bind_method(godot::D_METHOD("get_score"), &PastorEngine::get_score);

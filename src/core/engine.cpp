@@ -35,6 +35,7 @@ double ChessEngine::time_passed()
 
 void ChessEngine::_bind_methods()
 {
+	ADD_SIGNAL(godot::MethodInfo("search_finished"));
 	godot::ClassDB::bind_method(godot::D_METHOD("start_search"), &ChessEngine::start_search);
 	godot::ClassDB::bind_method(godot::D_METHOD("stop_search"), &ChessEngine::stop_search);
 	godot::ClassDB::bind_method(godot::D_METHOD("is_searching"), &ChessEngine::is_searching);
