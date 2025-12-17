@@ -89,6 +89,35 @@ void TranspositionTable::clear()
 	table.resize(table_size, {0});
 }
 
+void TranspositionTable::print_status()
+{
+	int all_cnt = 0;
+	std::vector<int> depth_cnt(100);
+	std::vector<int> flag_cnt(4);
+	for (int i = 0; i < table_size; i++)
+	{
+		if (table[i].checksum)
+		{
+			all_cnt++;
+			depth_cnt[table[i].depth]++;
+			flag_cnt[table[i].flag]++;
+		}
+	}
+	godot::print_line("all:", all_cnt);
+	godot::print_line("depth:");
+	for (int i = 0; i < depth_cnt.size(); i++)
+	{
+		if (depth_cnt[i])
+		{
+			godot::print_line("\t", i, ": ", depth_cnt[i]);
+		}
+	}
+	godot::print_line("exact:", flag_cnt[1]);
+	godot::print_line("alpha:", flag_cnt[2]);
+	godot::print_line("beta:", flag_cnt[3]);
+	godot::print_line("unused:", table_size - all_cnt);
+}
+
 void TranspositionTable::_bind_methods()
 {
 	godot::ClassDB::bind_method(godot::D_METHOD("reserve"), &TranspositionTable::reserve);
@@ -98,4 +127,5 @@ void TranspositionTable::_bind_methods()
 	godot::ClassDB::bind_method(godot::D_METHOD("best_move"), &TranspositionTable::best_move);
 	godot::ClassDB::bind_method(godot::D_METHOD("record_hash"), &TranspositionTable::record_hash);
 	godot::ClassDB::bind_method(godot::D_METHOD("clear"), &TranspositionTable::clear);
+	godot::ClassDB::bind_method(godot::D_METHOD("print_status"), &TranspositionTable::print_status);
 }
