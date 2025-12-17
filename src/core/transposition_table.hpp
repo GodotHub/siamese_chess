@@ -38,6 +38,7 @@ class TranspositionTable : public godot::RefCounted
 		bool read_only = false;
 		int table_size;
 		int table_size_mask;
+		int collide_count;
 		std::vector<TranspositionTableItem> table;
 };
 
