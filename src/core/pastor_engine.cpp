@@ -519,7 +519,6 @@ int PastorEngine::alphabeta(const godot::Ref<State> &_state, int score, int _alp
 			found_pv = true;
 			_alpha = next_score;
 			flag = EXACT;
-			transposition_table->record_hash(_state->get_zobrist(), _depth, _alpha, flag, best_move);
 		}
 	}
 	else
@@ -544,7 +543,6 @@ int PastorEngine::alphabeta(const godot::Ref<State> &_state, int score, int _alp
 			best_move = *killer_1;
 			_alpha = next_score;
 			flag = EXACT;
-			transposition_table->record_hash(_state->get_zobrist(), _depth, _alpha, flag, *killer_1);
 		}
 	}
 	bool has_killer_2 = false;
@@ -564,7 +562,6 @@ int PastorEngine::alphabeta(const godot::Ref<State> &_state, int score, int _alp
 			best_move = *killer_2;
 			_alpha = next_score;
 			flag = EXACT;
-			transposition_table->record_hash(_state->get_zobrist(), _depth, _alpha, flag, *killer_2);
 		}
 	}
 	if (_can_null)
