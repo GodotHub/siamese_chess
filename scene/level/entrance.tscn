@@ -268,3 +268,21 @@ args = {
 "by": 115
 }
 metadata/_custom_type_script = "uid://bbi6kjxerg3hk"
+
+[node name="marker_teleport_entrance_3" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0, -8)
+script = ExtResource("7_2kov4")
+to = "res://scene/level/outside_0.tscn"
+args = {
+"by": 4
+}
+metadata/_custom_type_script = "uid://bbi6kjxerg3hk"
+
+[node name="marker_teleport_entrance_4" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, -8)
+script = ExtResource("7_2kov4")
+to = "res://scene/level/outside_0.tscn"
+args = {
+"by": 3
+}
+metadata/_custom_type_script = "uid://bbi6kjxerg3hk"

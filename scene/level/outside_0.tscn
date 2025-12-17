@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=3 uid="uid://bpxhvxnph5us"]
+[gd_scene load_steps=16 format=3 uid="uid://bpxhvxnph5us"]
 
 [ext_resource type="Script" uid="uid://qu3f0pfdm0a3" path="res://src/level/outside_0.gd" id="1_hcaay"]
 [ext_resource type="PackedScene" uid="uid://b3ml34bssywkr" path="res://scene/player.tscn" id="2_a6ui3"]
@@ -6,12 +6,11 @@
 [ext_resource type="PackedScene" uid="uid://rlos56ckp02d" path="res://scene/shrub.tscn" id="7_6yoeu"]
 [ext_resource type="PackedScene" uid="uid://bfl3bn4u2am21" path="res://scene/actor/tree.tscn" id="8_kcqwh"]
 [ext_resource type="PackedScene" uid="uid://ekjtt81nkr2f" path="res://scene/actor/flower.tscn" id="9_3g7ix"]
-[ext_resource type="PackedScene" uid="uid://cefxs7grh28rs" path="res://assets/model/door.glb" id="9_nnfx6"]
-[ext_resource type="PackedScene" uid="uid://cingkxj4uodjo" path="res://assets/model/window.glb" id="10_a6ui3"]
 [ext_resource type="PackedScene" uid="uid://d13fcqueggvup" path="res://assets/model/fence.glb" id="10_agd6e"]
 [ext_resource type="Script" uid="uid://bbi6kjxerg3hk" path="res://src/marker_teleport.gd" id="10_tlhmt"]
 [ext_resource type="Script" uid="uid://bt4vtnpxu5i4x" path="res://src/actor.gd" id="11_not3w"]
 [ext_resource type="Script" uid="uid://chtqhpiu556i1" path="res://src/marker_bit.gd" id="11_w3qr7"]
+[ext_resource type="PackedScene" uid="uid://bwss6iu3vs38d" path="res://assets/model/hotel_gate.glb" id="12_not3w"]
 [ext_resource type="PackedScene" uid="uid://c7joe7stxo7vb" path="res://scene/card_item.tscn" id="12_sq15a"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_gs8dr"]
@@ -47,13 +46,10 @@ shadow_enabled = true
 
 [node name="player" parent="." instance=ExtResource("2_a6ui3")]
 
-[node name="window_3" parent="." instance=ExtResource("10_a6ui3")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 0, -8)
-
 [node name="chessboard" parent="." instance=ExtResource("5_up75d")]
 
 [node name="camera" type="Camera3D" parent="."]
-transform = Transform3D(-0.883406, -0.318211, 0.343999, 1.93588e-08, 0.734086, 0.679057, -0.468608, 0.599883, -0.648496, 6.0261, 6.60401, -11.1437)
+transform = Transform3D(-0.6103667, -0.5378936, 0.5814835, 3.1720752e-08, 0.73408604, 0.6790566, -0.792119, 0.41447353, -0.44806162, 8.727721, 6.60401, -5.4021616)
 
 [node name="shrub" parent="." instance=ExtResource("7_6yoeu")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 0, 1)
@@ -201,18 +197,12 @@ args = {
 }
 metadata/_custom_type_script = "uid://bbi6kjxerg3hk"
 
-[node name="door" parent="." instance=ExtResource("9_nnfx6")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, -8)
-
-[node name="face" parent="door" index="1"]
-transform = Transform3D(-0.594332, 0, -0.80422, 0, 1, 0, 0.80422, 0, -0.594332, -0.522462, 1.01108, 0.140696)
-
 [node name="marker_teleport_3" type="Marker3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, -7)
 script = ExtResource("10_tlhmt")
-to = "res://scene/level/cafe.tscn"
+to = "res://scene/level/entrance.tscn"
 args = {
-"by": 37
+"by": 3
 }
 metadata/_custom_type_script = "uid://bbi6kjxerg3hk"
 
@@ -260,4 +250,14 @@ script = ExtResource("11_w3qr7")
 piece = 90
 metadata/_custom_type_script = "uid://chtqhpiu556i1"
 
-[editable path="door"]
+[node name="hotel_gate" parent="." instance=ExtResource("12_not3w")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -7.9819274)
+
+[node name="marker_teleport_4" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0, -7)
+script = ExtResource("10_tlhmt")
+to = "res://scene/level/entrance.tscn"
+args = {
+"by": 4
+}
+metadata/_custom_type_script = "uid://bbi6kjxerg3hk"
