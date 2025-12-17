@@ -488,12 +488,7 @@ int PastorEngine::alphabeta(const godot::Ref<State> &_state, int score, int _alp
 	}
 	if (_depth <= 0)
 	{
-		int next_score = quies(_state, score, _alpha, _beta, _group);
-		if (!transposition_table.is_null())
-		{
-			transposition_table->record_hash(_state->get_zobrist(), _depth, next_score, EXACT, 0);
-		}
-		return next_score;
+		return quies(_state, score, _alpha, _beta, _group);
 	}
 	if (_history_state && _history_state->count(_state->get_zobrist()))
 	{
