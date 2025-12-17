@@ -1452,7 +1452,7 @@ godot::String Chess::get_move_name(const godot::Ref<State> &_state, int move)
 			}
 		}
 	}
-	if (has_same_piece)
+	if (has_same_piece && (from_piece & 95) != 'P')	//兵走到同一地方只有吃子时才出现这种情况，而这种情况标记法早已标注列名
 	{
 		if (has_same_row || !has_same_row && !has_same_col)
 		{
