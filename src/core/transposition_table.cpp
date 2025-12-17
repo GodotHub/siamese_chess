@@ -75,12 +75,9 @@ int TranspositionTable::best_move(int64_t checksum)
 void TranspositionTable::record_hash(int64_t checksum, int8_t depth, int value, int8_t flag, int best_move)
 {
 	int index = checksum & table_size_mask;
-	if ((read_only && table[index].flag != UNKNOWN || depth <= table[index].depth))
+	if ((read_only && table[index].flag != UNKNOWN || depth < table[index].depth))
 	{
-		if (table[index].checksum != 0 && table[index].checksum != checksum)
-		{
-			collide_count++;
-		}
+		collide_count++;
 		return;	// 最好不要丢掉开局库内容，这是容不得覆盖的
 	}
 	table[index].checksum = checksum;
@@ -98,6 +95,7 @@ void TranspositionTable::clear()
 void TranspositionTable::print_status()
 {
 	int all_cnt = 0;
+	int best_move_cnt = 0;
 	std::vector<int> depth_cnt(100);
 	std::vector<int> flag_cnt(4);
 	for (int i = 0; i < table_size; i++)
@@ -107,6 +105,10 @@ void TranspositionTable::print_status()
 			all_cnt++;
 			depth_cnt[table[i].depth]++;
 			flag_cnt[table[i].flag]++;
+			if (table[i].best_move)
+			{
+				best_move_cnt++;
+			}
 		}
 	}
 	godot::print_line("all: ", all_cnt);
@@ -123,6 +125,7 @@ void TranspositionTable::print_status()
 	godot::print_line("beta: ", flag_cnt[3]);
 	godot::print_line("unused: ", table_size - all_cnt);
 	godot::print_line("collide: ", collide_count);
+	godot::print_line("best_move: ", best_move_cnt);
 }
 
 void TranspositionTable::_bind_methods()
