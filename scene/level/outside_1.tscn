@@ -49,6 +49,7 @@ shadow_enabled = true
 [node name="player" parent="." instance=ExtResource("2_4c3sk")]
 
 [node name="chessboard" parent="." instance=ExtResource("5_6ehyn")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.044418335, -0.011221886, -0.013936043)
 
 [node name="camera" type="Camera3D" parent="."]
 transform = Transform3D(-0.930877, 0.248081, -0.268185, 6.34992e-08, 0.734086, 0.679057, 0.365332, 0.632118, -0.683344, -3.98332, 6.60401, -11.035)

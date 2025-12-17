@@ -1,0 +1,270 @@
+[gd_scene load_steps=15 format=3 uid="uid://bfjv22gvsub2x"]
+
+[ext_resource type="Script" uid="uid://cjddqgsgfo4hw" path="res://src/level/outside.gd" id="1_vie8g"]
+[ext_resource type="PackedScene" uid="uid://b3ml34bssywkr" path="res://scene/player.tscn" id="2_x41v6"]
+[ext_resource type="PackedScene" uid="uid://dwvyc2qlcdag0" path="res://scene/chessboard_large.tscn" id="3_as14m"]
+[ext_resource type="PackedScene" uid="uid://cpdfjiqb4d2q6" path="res://assets/model/pool.glb" id="4_vie8g"]
+[ext_resource type="PackedScene" uid="uid://d13fcqueggvup" path="res://assets/model/fence.glb" id="5_of156"]
+[ext_resource type="PackedScene" uid="uid://8kbw64nuq0ai" path="res://assets/model/fence_turn.glb" id="6_78g2j"]
+[ext_resource type="Script" uid="uid://bbi6kjxerg3hk" path="res://src/marker_teleport.gd" id="7_2kov4"]
+[ext_resource type="PackedScene" uid="uid://bwss6iu3vs38d" path="res://assets/model/hotel_gate.glb" id="7_h0t85"]
+[ext_resource type="PackedScene" uid="uid://cddqnr41xmo4x" path="res://assets/model/lotus_leaf.glb" id="8_h0t85"]
+[ext_resource type="Script" uid="uid://bt4vtnpxu5i4x" path="res://src/actor.gd" id="9_r5kom"]
+[ext_resource type="PackedScene" uid="uid://cwjgphuayqvy3" path="res://assets/model/hotel_door_large.glb" id="10_lvxho"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_j5fnc"]
+sky_top_color = Color(1, 1, 1, 1)
+sky_horizon_color = Color(1, 1, 1, 1)
+ground_bottom_color = Color(1, 1, 1, 1)
+ground_horizon_color = Color(1, 1, 1, 1)
+
+[sub_resource type="Sky" id="Sky_gimty"]
+sky_material = SubResource("ProceduralSkyMaterial_j5fnc")
+
+[sub_resource type="Environment" id="Environment_sb1hd"]
+background_mode = 2
+background_color = Color(1, 1, 1, 1)
+sky = SubResource("Sky_gimty")
+ssr_enabled = true
+fog_light_color = Color(1, 1, 1, 1)
+
+[node name="entrance" type="Node3D"]
+script = ExtResource("1_vie8g")
+metadata/_custom_type_script = "uid://rhdq34na2j5m"
+metadata/by = 116
+
+[node name="player" parent="." instance=ExtResource("2_x41v6")]
+
+[node name="camera" type="Camera3D" parent="."]
+transform = Transform3D(-0.9911276, 0.09025611, -0.09757031, 1.93588e-08, 0.73408616, 0.6790564, 0.13291399, 0.6730315, -0.72757304, -2.8076081, 12.81213, -15.432731)
+fov = 58.5874
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_sb1hd")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.840762, 0.239459, -0.485571, 0.242345, 0.635549, 0.733039, 0.484137, -0.733987, 0.476314, 4.61496, 2.82427, 0)
+shadow_enabled = true
+
+[node name="chessboard" parent="." instance=ExtResource("3_as14m")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.001, 0)
+metadata/_edit_lock_ = true
+
+[node name="pool" parent="." instance=ExtResource("4_vie8g")]
+metadata/_edit_lock_ = true
+
+[node name="fence_0" parent="." instance=ExtResource("5_of156")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 8, 0, 7)
+
+[node name="fence_1" parent="." instance=ExtResource("5_of156")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 8, 0, 5)
+
+[node name="fence_2" parent="." instance=ExtResource("5_of156")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 8, 0, 3)
+
+[node name="fence_3" parent="." instance=ExtResource("5_of156")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 8, 0, 1)
+
+[node name="fence_4" parent="." instance=ExtResource("5_of156")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 8, 0, -1)
+
+[node name="fence_5" parent="." instance=ExtResource("5_of156")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 8, 0, -3)
+
+[node name="fence_6" parent="." instance=ExtResource("5_of156")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 8, 0, -5)
+
+[node name="fence_7" parent="." instance=ExtResource("5_of156")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 8, 0, -7)
+
+[node name="fence_8" parent="." instance=ExtResource("5_of156")]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -8, 0, 7)
+
+[node name="fence_9" parent="." instance=ExtResource("5_of156")]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -8, 0, 5)
+
+[node name="fence_10" parent="." instance=ExtResource("5_of156")]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -8, 0, 3)
+
+[node name="fence_11" parent="." instance=ExtResource("5_of156")]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -8, 0, 1)
+
+[node name="fence_12" parent="." instance=ExtResource("5_of156")]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -8, 0, -1)
+
+[node name="fence_13" parent="." instance=ExtResource("5_of156")]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -8, 0, -3)
+
+[node name="fence_14" parent="." instance=ExtResource("5_of156")]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -8, 0, -5)
+
+[node name="fence_15" parent="." instance=ExtResource("5_of156")]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -8, 0, -7)
+
+[node name="fence_16" parent="." instance=ExtResource("5_of156")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 6, 0, -9)
+
+[node name="fence_turn_3" parent="." instance=ExtResource("6_78g2j")]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 8.000002, 0, -9)
+
+[node name="fence_turn_4" parent="." instance=ExtResource("6_78g2j")]
+transform = Transform3D(-1, 0, -8.742279e-08, 0, 1, 0, 8.742279e-08, 0, -1, -7.999998, 0, -9)
+
+[node name="fence_17" parent="." instance=ExtResource("5_of156")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -6, 0, -9)
+
+[node name="fence_18" parent="." instance=ExtResource("5_of156")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 4, 0, -9)
+
+[node name="fence_19" parent="." instance=ExtResource("5_of156")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -4, 0, -9)
+
+[node name="hotel_gate" parent="." instance=ExtResource("7_h0t85")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -9)
+
+[node name="lotus_leaf" parent="." instance=ExtResource("8_h0t85")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.2433438, 0.2866273, 3.1765003)
+
+[node name="lotus_leaf_2" parent="." instance=ExtResource("8_h0t85")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.4222376, 0.2866273, -2.819873)
+
+[node name="lotus_leaf_3" parent="." instance=ExtResource("8_h0t85")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.2773333, 0.2866273, 2.7655392)
+
+[node name="lotus_leaf_4" parent="." instance=ExtResource("8_h0t85")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.8459296, 0.2866273, -3.3832188)
+
+[node name="lotus_leaf_5" parent="." instance=ExtResource("8_h0t85")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.8758286, 0.2866273, 1.3786383)
+
+[node name="lotus_leaf_6" parent="." instance=ExtResource("8_h0t85")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.980884, 0.2866273, 2.032551)
+
+[node name="lotus_leaf_7" parent="." instance=ExtResource("8_h0t85")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.549369, 0.28662777, -1.3288717)
+
+[node name="lotus_leaf_8" parent="." instance=ExtResource("8_h0t85")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.7911234, 0.28662777, -2.9378479)
+
+[node name="lotus_leaf_9" parent="." instance=ExtResource("8_h0t85")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.8795881, 0.2866273, -2.651114)
+
+[node name="lotus_leaf_10" parent="." instance=ExtResource("8_h0t85")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.3832865, 0.2866273, 1.83669)
+
+[node name="actor_y_0" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 0, -3)
+script = ExtResource("9_r5kom")
+piece_type = 121
+metadata/_custom_type_script = "uid://bt4vtnpxu5i4x"
+
+[node name="actor_y_1" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 0, -1)
+script = ExtResource("9_r5kom")
+piece_type = 121
+metadata/_custom_type_script = "uid://bt4vtnpxu5i4x"
+
+[node name="actor_y_2" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 0, 1)
+script = ExtResource("9_r5kom")
+piece_type = 121
+metadata/_custom_type_script = "uid://bt4vtnpxu5i4x"
+
+[node name="actor_y_3" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 0, 3)
+script = ExtResource("9_r5kom")
+piece_type = 121
+metadata/_custom_type_script = "uid://bt4vtnpxu5i4x"
+
+[node name="actor_y_4" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0, -3)
+script = ExtResource("9_r5kom")
+piece_type = 121
+metadata/_custom_type_script = "uid://bt4vtnpxu5i4x"
+
+[node name="actor_y_5" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0, -1)
+script = ExtResource("9_r5kom")
+piece_type = 121
+metadata/_custom_type_script = "uid://bt4vtnpxu5i4x"
+
+[node name="actor_y_6" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0, 1)
+script = ExtResource("9_r5kom")
+piece_type = 121
+metadata/_custom_type_script = "uid://bt4vtnpxu5i4x"
+
+[node name="actor_y_7" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0, 3)
+script = ExtResource("9_r5kom")
+piece_type = 121
+metadata/_custom_type_script = "uid://bt4vtnpxu5i4x"
+
+[node name="actor_y_8" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, -3)
+script = ExtResource("9_r5kom")
+piece_type = 121
+metadata/_custom_type_script = "uid://bt4vtnpxu5i4x"
+
+[node name="actor_y_9" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, -1)
+script = ExtResource("9_r5kom")
+piece_type = 121
+metadata/_custom_type_script = "uid://bt4vtnpxu5i4x"
+
+[node name="actor_y_10" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 1)
+script = ExtResource("9_r5kom")
+piece_type = 121
+metadata/_custom_type_script = "uid://bt4vtnpxu5i4x"
+
+[node name="actor_y_11" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 3)
+script = ExtResource("9_r5kom")
+piece_type = 121
+metadata/_custom_type_script = "uid://bt4vtnpxu5i4x"
+
+[node name="actor_y_12" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0, -3)
+script = ExtResource("9_r5kom")
+piece_type = 121
+metadata/_custom_type_script = "uid://bt4vtnpxu5i4x"
+
+[node name="actor_y_13" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0, -1)
+script = ExtResource("9_r5kom")
+piece_type = 121
+metadata/_custom_type_script = "uid://bt4vtnpxu5i4x"
+
+[node name="actor_y_14" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0, 1)
+script = ExtResource("9_r5kom")
+piece_type = 121
+metadata/_custom_type_script = "uid://bt4vtnpxu5i4x"
+
+[node name="actor_y_15" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0, 3)
+script = ExtResource("9_r5kom")
+piece_type = 121
+metadata/_custom_type_script = "uid://bt4vtnpxu5i4x"
+
+[node name="hotel_door_large" parent="." instance=ExtResource("10_lvxho")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.27220386, 11.386337)
+
+[node name="marker_teleport_entrance" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0, 7)
+script = ExtResource("7_2kov4")
+to = "res://scene/level/reception_lobby.tscn"
+args = {
+"by": 116
+}
+metadata/_custom_type_script = "uid://bbi6kjxerg3hk"
+
+[node name="marker_teleport_entrance_2" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 7)
+script = ExtResource("7_2kov4")
+to = "res://scene/level/reception_lobby.tscn"
+args = {
+"by": 115
+}
+metadata/_custom_type_script = "uid://bbi6kjxerg3hk"
