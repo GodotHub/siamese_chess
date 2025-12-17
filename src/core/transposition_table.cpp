@@ -3,6 +3,7 @@
 
 void TranspositionTable::reserve(int _table_size)
 {
+	read_only = false;
 	table_size = _table_size;
 	table_size_mask = table_size - 1;
 	collide_count = 0;
@@ -74,9 +75,12 @@ int TranspositionTable::best_move(int64_t checksum)
 void TranspositionTable::record_hash(int64_t checksum, int8_t depth, int value, int8_t flag, int best_move)
 {
 	int index = checksum & table_size_mask;
-	if ((read_only && table[index].flag != UNKNOWN || depth < table[index].depth))
+	if ((read_only && table[index].flag != UNKNOWN || depth <= table[index].depth))
 	{
-		collide_count++;
+		if (table[index].checksum != 0 && table[index].checksum != checksum)
+		{
+			collide_count++;
+		}
 		return;	// 最好不要丢掉开局库内容，这是容不得覆盖的
 	}
 	table[index].checksum = checksum;

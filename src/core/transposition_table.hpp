@@ -35,7 +35,7 @@ class TranspositionTable : public godot::RefCounted
 		void print_status();
 		static void _bind_methods();
 	private:
-		bool read_only = false;
+		bool read_only;
 		int table_size;
 		int table_size_mask;
 		int collide_count;
