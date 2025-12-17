@@ -11,6 +11,7 @@ class ZobristHash : public godot::Object
 		ZobristHash();  //随机数打表
 		static ZobristHash *get_singleton();
 		int64_t hash_piece(int _piece, int _by);
+		void print_randomized();
 		static void _bind_methods();
 	private:
 		static ZobristHash *singleton;
