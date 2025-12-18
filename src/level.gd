@@ -24,9 +24,10 @@ func _ready() -> void:
 		if node is MarkerBit:
 			var by:int = Chess.to_position_int(chessboard.get_position_name(node.position))
 			state.set_bit(node.piece, state.get_bit(node.piece) | Chess.mask(Chess.to_64(by)))
-		if node is MarkerTeleport:
+		if node is MarkerEvent:
 			var by:int = Chess.to_position_int($chessboard.get_position_name(node.global_position))
-			interact_list[by] = {"": node.change_scene}
+			state.set_bit(ord("Z"), state.get_bit(ord("Z")) | Chess.mask(Chess.to_64(by)))
+			interact_list[by] = {"": node.event}
 	chessboard.set_state(state)
 	for node:Node in get_children():
 		if node is Actor:
