@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=3 uid="uid://c7f6odob1fiwo"]
+[gd_scene load_steps=17 format=3 uid="uid://c7f6odob1fiwo"]
 
 [ext_resource type="Script" path="res://src/level/hallway_3f.gd" id="1_1xocg"]
 [ext_resource type="PackedScene" uid="uid://b3ml34bssywkr" path="res://scene/player.tscn" id="2_snhjh"]
@@ -9,6 +9,8 @@
 [ext_resource type="Script" uid="uid://chtqhpiu556i1" path="res://src/marker_bit.gd" id="6_snhjh"]
 [ext_resource type="Script" uid="uid://bt4vtnpxu5i4x" path="res://src/actor.gd" id="7_6v2ut"]
 [ext_resource type="PackedScene" uid="uid://bw127d1iawnv3" path="res://assets/model/radermachera_sinica.glb" id="9_yedm7"]
+[ext_resource type="PackedScene" uid="uid://h3wcv7lnqe8x" path="res://assets/model/painting_frame_square.glb" id="10_md6wq"]
+[ext_resource type="PackedScene" uid="uid://324uto1yslin" path="res://assets/model/painting_frame_rect.glb" id="11_unvbp"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_ka0b7"]
 sky_top_color = Color(1, 1, 1, 1)
@@ -211,3 +213,24 @@ transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -0.827
 
 [node name="radermachera_sinica_3" parent="." instance=ExtResource("9_yedm7")]
 transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -5.352552, 0, 3.0475721)
+
+[node name="painting_frame_rect_5" parent="." instance=ExtResource("11_unvbp")]
+transform = Transform3D(3.2584137e-07, 8.742283e-08, 2, 3.019916e-07, -2, 8.7422784e-08, 2, 3.0199158e-07, -3.2584137e-07, -5.854195, 1.543026, 1.3119698)
+
+[node name="painting_frame_square" parent="." instance=ExtResource("10_md6wq")]
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, -2.9693432, 2.9083605, -7.9958887)
+
+[node name="painting_frame_square_2" parent="." instance=ExtResource("10_md6wq")]
+transform = Transform3D(-8.742278e-08, 0, 2, 0, 2, 0, -2, 0, -8.742278e-08, -5.833545, 1.9238081, 4.7786083)
+
+[node name="painting_frame_square_3" parent="." instance=ExtResource("10_md6wq")]
+transform = Transform3D(-8.742278e-08, 0, 2, 0, 2, 0, -2, 0, -8.742278e-08, -5.833545, 1.3993824, 3.5747728)
+
+[node name="painting_frame_rect_4" parent="." instance=ExtResource("11_unvbp")]
+transform = Transform3D(-2.6226832e-07, -8.742279e-08, -2, -2, -8.742278e-08, 2.6226832e-07, -8.742279e-08, 2, -8.742278e-08, -0.34096807, 0.94797325, 3.9442968)
+
+[node name="painting_frame_square_4" parent="." instance=ExtResource("10_md6wq")]
+transform = Transform3D(-8.742278e-08, 0, -2, 0, 2, 0, 2, 0, -8.742278e-08, -0.31052977, 1.7661083, 1.8681479)
+
+[node name="painting_frame_rect_6" parent="." instance=ExtResource("11_unvbp")]
+transform = Transform3D(-2.6226832e-07, -8.742279e-08, -2, -2, -8.742278e-08, 2.6226832e-07, -8.742279e-08, 2, -8.742278e-08, -0.34096807, 2.042315, 4.675614)

@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=3 uid="uid://bfjv22gvsub2x"]
+[gd_scene load_steps=16 format=3 uid="uid://bfjv22gvsub2x"]
 
 [ext_resource type="Script" uid="uid://cjddqgsgfo4hw" path="res://src/level/outside.gd" id="1_vie8g"]
 [ext_resource type="PackedScene" uid="uid://b3ml34bssywkr" path="res://scene/player.tscn" id="2_x41v6"]
@@ -11,6 +11,7 @@
 [ext_resource type="PackedScene" uid="uid://cddqnr41xmo4x" path="res://assets/model/lotus_leaf.glb" id="8_h0t85"]
 [ext_resource type="Script" uid="uid://bt4vtnpxu5i4x" path="res://src/actor.gd" id="9_r5kom"]
 [ext_resource type="PackedScene" uid="uid://cwjgphuayqvy3" path="res://assets/model/hotel_door_large.glb" id="10_lvxho"]
+[ext_resource type="PackedScene" uid="uid://bfl3bn4u2am21" path="res://scene/actor/tree.tscn" id="12_x41v6"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_j5fnc"]
 sky_top_color = Color(1, 1, 1, 1)
@@ -286,3 +287,15 @@ args = {
 "by": 3
 }
 metadata/_custom_type_script = "uid://bbi6kjxerg3hk"
+
+[node name="tree" parent="." instance=ExtResource("12_x41v6")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7, 0, -8)
+piece_type = 121
+
+[node name="tree_2" parent="." instance=ExtResource("12_x41v6")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7, 0, 4)
+piece_type = 121
+
+[node name="tree_3" parent="." instance=ExtResource("12_x41v6")]
+transform = Transform3D(-0.082703836, 0, 0.99657416, 0, 1, 0, -0.99657416, 0, -0.082703836, -7, 0, -8)
+piece_type = 0

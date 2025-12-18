@@ -1,4 +1,4 @@
-[gd_scene load_steps=16 format=3 uid="uid://bhjsdubmphpk4"]
+[gd_scene load_steps=20 format=3 uid="uid://bhjsdubmphpk4"]
 
 [ext_resource type="Script" uid="uid://cr2epvubmbpcu" path="res://src/level/reception_lobby.gd" id="1_s7rcd"]
 [ext_resource type="PackedScene" uid="uid://b3ml34bssywkr" path="res://scene/player.tscn" id="2_gimty"]
@@ -10,7 +10,11 @@
 [ext_resource type="Script" uid="uid://chtqhpiu556i1" path="res://src/marker_bit.gd" id="10_h67uj"]
 [ext_resource type="PackedScene" uid="uid://d14xggudtxih0" path="res://assets/model/hotel_sofa_small.glb" id="11_h67uj"]
 [ext_resource type="PackedScene" uid="uid://ji4lvbpsrte5" path="res://assets/model/hotel_sofa_large.glb" id="12_4fyxn"]
+[ext_resource type="PackedScene" uid="uid://dtu3l0xkrwcvx" path="res://assets/model/bookshelf.glb" id="12_r1xpb"]
 [ext_resource type="PackedScene" uid="uid://cwjgphuayqvy3" path="res://assets/model/hotel_door_large.glb" id="12_uoe5a"]
+[ext_resource type="PackedScene" uid="uid://bw127d1iawnv3" path="res://assets/model/radermachera_sinica.glb" id="13_uoe5a"]
+[ext_resource type="PackedScene" uid="uid://324uto1yslin" path="res://assets/model/painting_frame_rect.glb" id="14_fugbc"]
+[ext_resource type="PackedScene" uid="uid://h3wcv7lnqe8x" path="res://assets/model/painting_frame_square.glb" id="15_pgyt1"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_j5fnc"]
 sky_top_color = Color(1, 1, 1, 1)
@@ -79,7 +83,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7, 0, 3)
 script = ExtResource("9_lctwu")
 to = "res://scene/level/cafe.tscn"
 args = {
-"by": 34
+"by": 53
 }
 metadata/_custom_type_script = "uid://bbi6kjxerg3hk"
 
@@ -118,3 +122,53 @@ metadata/_custom_type_script = "uid://bbi6kjxerg3hk"
 
 [node name="hotel_sofa_small2_2" parent="." instance=ExtResource("11_h67uj")]
 transform = Transform3D(1.0000001, 0, 0, 0, 1, 0, 0, 0, 1.0000001, 5, 0, 1)
+
+[node name="bookshelf" parent="." instance=ExtResource("12_r1xpb")]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 7.6484838, 0, -1)
+
+[node name="bookshelf_2" parent="." instance=ExtResource("12_r1xpb")]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 7.6484838, 0, -3)
+
+[node name="bookshelf_3" parent="." instance=ExtResource("12_r1xpb")]
+transform = Transform3D(1, 0, -1.0658141e-14, 0, 1, 0, 1.0658141e-14, 0, 1, -0.78321743, 0, -7)
+
+[node name="radermachera_sinica_4" parent="." instance=ExtResource("13_uoe5a")]
+transform = Transform3D(-4.371141e-08, 0, -1, 0, 1, 0, 1, 0, -4.371141e-08, -7.1206746, 0, -7.232878)
+metadata/_edit_group_ = true
+
+[node name="bookshelf_4" parent="." instance=ExtResource("12_r1xpb")]
+transform = Transform3D(1, 0, -1.0658141e-14, 0, 1, 0, 1.0658141e-14, 0, 1, 0.97249174, 0, -7)
+
+[node name="radermachera_sinica_5" parent="." instance=ExtResource("13_uoe5a")]
+transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 6.412306, 0, 6.5691338)
+
+[node name="radermachera_sinica_3" parent="." instance=ExtResource("13_uoe5a")]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 6.2990494, 0, 1.3022995)
+
+[node name="painting_frame_rect" parent="." instance=ExtResource("14_fugbc")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.9545586, 1.4034414, -3.3943443)
+
+[node name="painting_frame_square" parent="." instance=ExtResource("15_pgyt1")]
+transform = Transform3D(-1.3113416e-07, 0, -3, 0, 3, 0, 3, 0, -1.3113416e-07, 8, 2.1504283, 4.427103)
+
+[node name="painting_frame_rect_2" parent="." instance=ExtResource("14_fugbc")]
+transform = Transform3D(-8.742278e-08, 0, -2, 0, 2, 0, 2, 0, -8.742278e-08, 8, 1.5935471, 6)
+
+[node name="painting_frame_square_2" parent="." instance=ExtResource("15_pgyt1")]
+transform = Transform3D(-6.556708e-08, 0, -1.5, 0, 1.5, 0, 1.5, 0, -6.556708e-08, 8, 1.781857, 3.234159)
+
+[node name="painting_frame_square_3" parent="." instance=ExtResource("15_pgyt1")]
+transform = Transform3D(-6.556708e-08, 0, -1.5, 0, 1.5, 0, 1.5, 0, -6.556708e-08, 8, 2.5794823, 3.077238)
+
+[node name="painting_frame_rect_3" parent="." instance=ExtResource("14_fugbc")]
+transform = Transform3D(5.2453663e-07, -1.7484552e-07, 4, -4, -1.7484555e-07, 5.2453663e-07, 1.7484552e-07, -4, -1.7484555e-07, -7.749239, 1.4821427, 0.3972044)
+
+[node name="painting_frame_square_4" parent="." instance=ExtResource("15_pgyt1")]
+transform = Transform3D(-1.3113416e-07, 0, 3, 0, 3, 0, -3, 0, -1.3113416e-07, -7.7880893, 1.6206155, -3.4449682)
+
+[node name="radermachera_sinica_6" parent="." instance=ExtResource("13_uoe5a")]
+transform = Transform3D(-4.371141e-08, 0, -1, 0, 1, 0, 1, 0, -4.371141e-08, -7.1206746, 0, -1.5530853)
+metadata/_edit_group_ = true
+
+[node name="painting_frame_square_5" parent="." instance=ExtResource("15_pgyt1")]
+transform = Transform3D(-1.3113416e-07, 0, 3, 0, 3, 0, -3, 0, -1.3113416e-07, -7.7880893, 1.6206155, 5.4111357)

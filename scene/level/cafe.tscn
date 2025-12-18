@@ -121,7 +121,7 @@ shader_parameter/contrast_mult = 1.0
 
 [node name="cafe" type="Node3D"]
 script = ExtResource("1_e1edc")
-metadata/by = 34
+metadata/by = 53
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_ve7rb")
@@ -135,8 +135,8 @@ shadow_enabled = true
 [node name="chessboard" parent="." instance=ExtResource("1_o611t")]
 
 [node name="camera" type="Camera3D" parent="."]
-transform = Transform3D(-0.995709, 0.0628432, -0.0679359, 2.21169e-08, 0.734086, 0.679056, 0.0925449, 0.676142, -0.730936, -0.621102, 6.60401, -7.33297)
-fov = 58.5874
+transform = Transform3D(1.3044414e-07, 0.7638636, -0.64537776, 7.736119e-09, 0.64537776, 0.7638636, 1, -1.0463425e-07, 7.82764e-08, -5.501005, 6.3051796, 3.2519171)
+fov = 72.17557
 
 [node name="table_0" parent="." instance=ExtResource("6_ecjec")]
 transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 2, 0.0249235, 5)
@@ -336,13 +336,10 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0, 6)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 0, 6)
 
 [node name="door" parent="." instance=ExtResource("18_e7kou")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0, -4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0, -2)
 
 [node name="bookshelf" parent="." instance=ExtResource("19_lw61d")]
 transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 6, 0, 3)
-
-[node name="window_3" parent="." instance=ExtResource("17_q5uxw")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -4)
 
 [node name="bookshelf_2" parent="." instance=ExtResource("19_lw61d")]
 transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 6, 0, 1)
@@ -357,15 +354,6 @@ fov = 51.3432
 [node name="camera_chessboard" type="Camera3D" parent="."]
 transform = Transform3D(-4.21108e-08, 0.71145, -0.702737, 1.17203e-08, 0.702737, 0.71145, 1, 2.17234e-08, -3.79312e-08, 1.60037, 1.24647, 5.02685)
 fov = 63.9549
-
-[node name="marker_teleport" type="Marker3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0, -3)
-script = ExtResource("18_lw61d")
-to = "res://scene/level/outside_0.tscn"
-args = {
-"by": 4
-}
-metadata/_custom_type_script = "uid://bbi6kjxerg3hk"
 
 [node name="marker_bit_7" type="Marker3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0, 3)
@@ -386,10 +374,10 @@ piece_type = 121
 metadata/_custom_type_script = "uid://bt4vtnpxu5i4x"
 
 [node name="door_2" parent="." instance=ExtResource("18_e7kou")]
-transform = Transform3D(1.31134e-07, 0, 1, 0, 1, 0, -1, 0, 1.31134e-07, -4, 0, -3)
+transform = Transform3D(1.31134e-07, 0, 1, 0, 1, 0, -1, 0, 1.31134e-07, -6, 0, 5)
 
 [node name="marker_teleport_2" type="Marker3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 0, -3)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0, -1)
 script = ExtResource("18_lw61d")
 to = "res://scene/level/reception_lobby.tscn"
 args = {

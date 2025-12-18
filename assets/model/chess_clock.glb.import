@@ -4,20 +4,22 @@ importer="scene"
 importer_version=1
 type="PackedScene"
 uid="uid://dmo5204uinktq"
-path="res://.godot/imported/clock.glb-6cd93f1962b7687286fe10cda4355f39.scn"
+path="res://.godot/imported/chess_clock.glb-dc9350465e5b56bce67be66e9a6aa6fa.scn"
 
 [deps]
 
-source_file="res://assets/model/clock.glb"
-dest_files=["res://.godot/imported/clock.glb-6cd93f1962b7687286fe10cda4355f39.scn"]
+source_file="res://assets/model/chess_clock.glb"
+dest_files=["res://.godot/imported/chess_clock.glb-dc9350465e5b56bce67be66e9a6aa6fa.scn"]
 
 [params]
 
 nodes/root_type=""
 nodes/root_name=""
+nodes/root_script=null
 nodes/apply_root_scale=true
 nodes/root_scale=1.0
 nodes/import_as_skeleton_bones=false
+nodes/use_name_suffixes=true
 nodes/use_node_type_suffixes=true
 meshes/ensure_tangents=true
 meshes/generate_lods=true
@@ -32,6 +34,9 @@ animation/trimming=false
 animation/remove_immutable_tracks=true
 animation/import_rest_as_RESET=false
 import_script/path=""
+materials/extract=0
+materials/extract_format=0
+materials/extract_path=""
 _subresources={}
 gltf/naming_version=1
 gltf/embedded_image_handling=1

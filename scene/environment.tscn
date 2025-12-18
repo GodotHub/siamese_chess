@@ -4,7 +4,7 @@
 [ext_resource type="PackedScene" uid="uid://d1s6qj7aofldk" path="res://scene/chessboard.tscn" id="2_3p4nk"]
 [ext_resource type="Script" uid="uid://b5tdvskepo5dh" path="res://src/environment.gd" id="2_7r8ay"]
 [ext_resource type="PackedScene" uid="uid://bjdbj6ulswxgl" path="res://scene/actor/cheshire.tscn" id="3_1vcsq"]
-[ext_resource type="PackedScene" uid="uid://n5i2mcgyqj3k" path="res://scene/clock.tscn" id="3_po4na"]
+[ext_resource type="PackedScene" uid="uid://n5i2mcgyqj3k" path="res://scene/chess_clock.tscn" id="3_po4na"]
 [ext_resource type="Texture2D" uid="uid://bhyrjuctg4vsr" path="res://assets/texture/Texturelabs_Paper_312S.jpg" id="6_r58fw"]
 [ext_resource type="PackedScene" uid="uid://bujgvbqsjgnrk" path="res://assets/model/radio.glb" id="7_geasp"]
 [ext_resource type="Script" uid="uid://dg85frcnjlauy" path="res://src/interact.gd" id="7_hgmdq"]

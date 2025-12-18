@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3 uid="uid://dqhrjov2u5bkh"]
+[gd_scene load_steps=16 format=3 uid="uid://dqhrjov2u5bkh"]
 
 [ext_resource type="Script" uid="uid://cnmdm2via55ge" path="res://src/level/hallway_2f.gd" id="1_gs125"]
 [ext_resource type="PackedScene" uid="uid://b3ml34bssywkr" path="res://scene/player.tscn" id="2_e5n4w"]
@@ -8,6 +8,8 @@
 [ext_resource type="Script" uid="uid://bbi6kjxerg3hk" path="res://src/marker_teleport.gd" id="6_a0cdp"]
 [ext_resource type="Script" uid="uid://chtqhpiu556i1" path="res://src/marker_bit.gd" id="6_y4d10"]
 [ext_resource type="Script" uid="uid://bt4vtnpxu5i4x" path="res://src/actor.gd" id="7_e5wmh"]
+[ext_resource type="PackedScene" uid="uid://324uto1yslin" path="res://assets/model/painting_frame_rect.glb" id="9_n2gtx"]
+[ext_resource type="PackedScene" uid="uid://h3wcv7lnqe8x" path="res://assets/model/painting_frame_square.glb" id="10_vf3t0"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_ka0b7"]
 sky_top_color = Color(1, 1, 1, 1)
@@ -198,3 +200,21 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 7)
 script = ExtResource("7_e5wmh")
 piece_type = 121
 metadata/_custom_type_script = "uid://bt4vtnpxu5i4x"
+
+[node name="painting_frame_rect_3" parent="." instance=ExtResource("9_n2gtx")]
+transform = Transform3D(2.6226832e-07, -8.742276e-08, 2, -2, -8.742278e-08, 2.6226832e-07, 8.742276e-08, -2, -8.742278e-08, -5.803107, 1.6737189, 2.6371717)
+
+[node name="painting_frame_square" parent="." instance=ExtResource("10_vf3t0")]
+transform = Transform3D(-8.742278e-08, 0, 2, 0, 2, 0, -2, 0, -8.742278e-08, -5.833545, 1.9238081, 1)
+
+[node name="painting_frame_rect_4" parent="." instance=ExtResource("9_n2gtx")]
+transform = Transform3D(-2.6226832e-07, -8.742279e-08, -2, -2, -8.742278e-08, 2.6226832e-07, -8.742279e-08, 2, -8.742278e-08, -0.34096807, 2.0751853, 3.7684698)
+
+[node name="painting_frame_square_2" parent="." instance=ExtResource("10_vf3t0")]
+transform = Transform3D(-8.742278e-08, 0, -2, 0, 2, 0, 2, 0, -8.742278e-08, -0.31052977, 1.6600966, 1.9532957)
+
+[node name="painting_frame_rect_5" parent="." instance=ExtResource("9_n2gtx")]
+transform = Transform3D(-2, -1.7484555e-07, 3.496911e-07, 1.7484557e-07, -2, 8.742276e-08, 3.496911e-07, 8.7422805e-08, 2, -1.3409681, 1.4510243, -7.9934025)
+
+[node name="painting_frame_rect_6" parent="." instance=ExtResource("9_n2gtx")]
+transform = Transform3D(-2, -1.7484555e-07, 3.496911e-07, 1.7484557e-07, -2, 8.742276e-08, 3.496911e-07, 8.7422805e-08, 2, -4.701347, 1.4510243, -7.9934025)
