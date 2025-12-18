@@ -1,4 +1,4 @@
-[gd_scene load_steps=16 format=3 uid="uid://bpxhvxnph5us"]
+[gd_scene load_steps=17 format=3 uid="uid://bpxhvxnph5us"]
 
 [ext_resource type="Script" uid="uid://qu3f0pfdm0a3" path="res://src/level/outside_0.gd" id="1_hcaay"]
 [ext_resource type="PackedScene" uid="uid://b3ml34bssywkr" path="res://scene/player.tscn" id="2_a6ui3"]
@@ -8,9 +8,10 @@
 [ext_resource type="PackedScene" uid="uid://ekjtt81nkr2f" path="res://scene/actor/flower.tscn" id="9_3g7ix"]
 [ext_resource type="PackedScene" uid="uid://d13fcqueggvup" path="res://assets/model/fence.glb" id="10_agd6e"]
 [ext_resource type="Script" uid="uid://bbi6kjxerg3hk" path="res://src/marker_teleport.gd" id="10_tlhmt"]
+[ext_resource type="Texture2D" uid="uid://cv64jbrjk4a11" path="res://assets/texture/piece_pawn.svg" id="11_crw01"]
 [ext_resource type="Script" uid="uid://bt4vtnpxu5i4x" path="res://src/actor.gd" id="11_not3w"]
-[ext_resource type="Script" uid="uid://chtqhpiu556i1" path="res://src/marker_bit.gd" id="11_w3qr7"]
 [ext_resource type="PackedScene" uid="uid://bwss6iu3vs38d" path="res://assets/model/hotel_gate.glb" id="12_not3w"]
+[ext_resource type="PackedScene" uid="uid://dmwl65mg7565u" path="res://scene/actor/piece_pawn_black.tscn" id="12_owa5c"]
 [ext_resource type="PackedScene" uid="uid://c7joe7stxo7vb" path="res://scene/card_item.tscn" id="12_sq15a"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_gs8dr"]
@@ -243,12 +244,11 @@ piece_type = 121
 
 [node name="card_item" parent="." instance=ExtResource("12_sq15a")]
 transform = Transform3D(-7, 0, -6.119594e-07, 0, 7, 0, 6.119594e-07, 0, -7, 1.0000005, 0, -1.0000005)
-
-[node name="marker_bit_16" type="Marker3D" parent="."]
-transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 1.0000005, 0, -1.0000005)
-script = ExtResource("11_w3qr7")
-piece = 90
-metadata/_custom_type_script = "uid://chtqhpiu556i1"
+cover = ExtResource("11_crw01")
+actor = ExtResource("12_owa5c")
+card_piece = 112
+comment = "在“卡牌”页面中使用这张卡"
+progress_key = "piece_pawn_card_0"
 
 [node name="hotel_gate" parent="." instance=ExtResource("12_not3w")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -7.9819274)

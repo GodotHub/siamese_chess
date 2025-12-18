@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=3 uid="uid://cykcx1exlkx7v"]
+[gd_scene load_steps=19 format=3 uid="uid://cykcx1exlkx7v"]
 
 [ext_resource type="Script" uid="uid://cbp35h7o5vhl0" path="res://src/level/outside_2.gd" id="1_4jhsc"]
 [ext_resource type="PackedScene" uid="uid://b3ml34bssywkr" path="res://scene/player.tscn" id="2_4jhsc"]
@@ -7,10 +7,11 @@
 [ext_resource type="PackedScene" uid="uid://ekjtt81nkr2f" path="res://scene/actor/flower.tscn" id="9_w5d3f"]
 [ext_resource type="PackedScene" uid="uid://d13fcqueggvup" path="res://assets/model/fence.glb" id="10_ogq1s"]
 [ext_resource type="Script" uid="uid://bt4vtnpxu5i4x" path="res://src/actor.gd" id="10_qs46h"]
+[ext_resource type="Texture2D" uid="uid://bcktgfe4r1bsf" path="res://assets/texture/piece_knight.svg" id="11_cqecb"]
 [ext_resource type="PackedScene" uid="uid://b3f1o547exhk0" path="res://scene/actor/enemy_cheshire.tscn" id="11_mbv38"]
 [ext_resource type="Script" uid="uid://bbi6kjxerg3hk" path="res://src/marker_teleport.gd" id="11_ogq1s"]
+[ext_resource type="PackedScene" uid="uid://cgoyrycf6ngyw" path="res://scene/actor/piece_knight_black.tscn" id="12_ngi5n"]
 [ext_resource type="PackedScene" uid="uid://8kbw64nuq0ai" path="res://assets/model/fence_turn.glb" id="13_mi7h5"]
-[ext_resource type="Script" uid="uid://chtqhpiu556i1" path="res://src/marker_bit.gd" id="15_ijp1v"]
 [ext_resource type="PackedScene" uid="uid://c7joe7stxo7vb" path="res://scene/card_item.tscn" id="15_qs46h"]
 [ext_resource type="PackedScene" uid="uid://dadbbopm5hcen" path="res://scene/actor/piece_pawn_white.tscn" id="16_dfohu"]
 [ext_resource type="PackedScene" uid="uid://hwvhjiv4h8w1" path="res://assets/model/fence_branch.glb" id="16_ijp1v"]
@@ -165,12 +166,10 @@ metadata/_custom_type_script = "uid://bbi6kjxerg3hk"
 
 [node name="card_item" parent="." instance=ExtResource("15_qs46h")]
 transform = Transform3D(-7, 0, -6.119594e-07, 0, 7, 0, 6.119594e-07, 0, -7, 5.0000005, 0, 2.9999995)
-
-[node name="marker_bit_16" type="Marker3D" parent="."]
-transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 5.0000005, 0, 2.9999995)
-script = ExtResource("15_ijp1v")
-piece = 90
-metadata/_custom_type_script = "uid://chtqhpiu556i1"
+cover = ExtResource("11_cqecb")
+actor = ExtResource("12_ngi5n")
+card_piece = 110
+progress_key = "piece_knight_card"
 
 [node name="fence_13" parent="." instance=ExtResource("10_ogq1s")]
 transform = Transform3D(1.3113417e-07, 0, -1, 0, 1, 0, 1, 0, 1.3113417e-07, 3, 0, -1.0000002)

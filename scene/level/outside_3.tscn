@@ -1,11 +1,13 @@
-[gd_scene load_steps=12 format=3 uid="uid://c6ey8gnor627h"]
+[gd_scene load_steps=14 format=3 uid="uid://c6ey8gnor627h"]
 
 [ext_resource type="Script" uid="uid://in8n7yjdw5tm" path="res://src/level/outside_3.gd" id="1_e5o5s"]
 [ext_resource type="PackedScene" uid="uid://b3ml34bssywkr" path="res://scene/player.tscn" id="2_x378j"]
 [ext_resource type="PackedScene" uid="uid://dwvyc2qlcdag0" path="res://scene/chessboard_large.tscn" id="5_wlbto"]
 [ext_resource type="PackedScene" uid="uid://d13fcqueggvup" path="res://assets/model/fence.glb" id="9_0c3bi"]
 [ext_resource type="Script" uid="uid://bt4vtnpxu5i4x" path="res://src/actor.gd" id="9_4agfd"]
+[ext_resource type="Texture2D" uid="uid://q6pm5ephq24b" path="res://assets/texture/piece_bishop.svg" id="9_e5o5s"]
 [ext_resource type="PackedScene" uid="uid://c7joe7stxo7vb" path="res://scene/card_item.tscn" id="10_a3wim"]
+[ext_resource type="PackedScene" uid="uid://8fh667jl5ppl" path="res://scene/actor/piece_bishop_black.tscn" id="10_n5co1"]
 [ext_resource type="PackedScene" uid="uid://8kbw64nuq0ai" path="res://assets/model/fence_turn.glb" id="11_4agfd"]
 [ext_resource type="Script" uid="uid://bbi6kjxerg3hk" path="res://src/marker_teleport.gd" id="11_ebvva"]
 
@@ -93,6 +95,10 @@ piece_type = 121
 
 [node name="card_item" parent="." instance=ExtResource("10_a3wim")]
 transform = Transform3D(-7, 0, -6.119594e-07, 0, 7, 0, 6.119594e-07, 0, -7, -6.9999995, 0, -5.0000005)
+cover = ExtResource("9_e5o5s")
+actor = ExtResource("10_n5co1")
+card_piece = 98
+progress_key = "piece_bishop_card"
 
 [node name="fence_13" parent="." instance=ExtResource("9_0c3bi")]
 transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -1, 0, -1)
