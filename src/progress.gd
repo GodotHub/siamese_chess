@@ -20,10 +20,13 @@ func save_file() -> void:
 		DirAccess.make_dir_absolute("user://progress/prototype_2.json")
 		dir = DirAccess.open("user://progress/prototype_2.json")
 
-func get_table(key:String) -> Dictionary:
+func has_key(key:String) -> bool:
+	return table.has(key)
+
+func get_value(key:String) -> Variant:
 	if table.has(key):
 		return table[key]
-	return {}
+	return null
 
-func set_table(key:String, data:Dictionary) -> void:
+func set_value(key:String, data:Variant) -> void:
 	table[key] = data
