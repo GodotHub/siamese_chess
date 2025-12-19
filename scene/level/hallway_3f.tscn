@@ -1,16 +1,16 @@
 [gd_scene load_steps=17 format=3 uid="uid://c7f6odob1fiwo"]
 
-[ext_resource type="Script" path="res://src/level/hallway_3f.gd" id="1_1xocg"]
+[ext_resource type="Script" uid="uid://5i8x1kt3sppg" path="res://src/level/hallway_3f.gd" id="1_1xocg"]
 [ext_resource type="PackedScene" uid="uid://b3ml34bssywkr" path="res://scene/player.tscn" id="2_snhjh"]
 [ext_resource type="PackedScene" uid="uid://dwvyc2qlcdag0" path="res://scene/chessboard_large.tscn" id="3_yedm7"]
 [ext_resource type="PackedScene" uid="uid://bw021nt6bdr6t" path="res://assets/model/elevator.glb" id="4_md6wq"]
 [ext_resource type="PackedScene" uid="uid://cefxs7grh28rs" path="res://assets/model/door.glb" id="5_unvbp"]
-[ext_resource type="Script" uid="uid://bbi6kjxerg3hk" path="res://src/marker_teleport.gd" id="6_pjyyy"]
 [ext_resource type="Script" uid="uid://chtqhpiu556i1" path="res://src/marker_bit.gd" id="6_snhjh"]
 [ext_resource type="Script" uid="uid://bt4vtnpxu5i4x" path="res://src/actor.gd" id="7_6v2ut"]
 [ext_resource type="PackedScene" uid="uid://bw127d1iawnv3" path="res://assets/model/radermachera_sinica.glb" id="9_yedm7"]
 [ext_resource type="PackedScene" uid="uid://h3wcv7lnqe8x" path="res://assets/model/painting_frame_square.glb" id="10_md6wq"]
 [ext_resource type="PackedScene" uid="uid://324uto1yslin" path="res://assets/model/painting_frame_rect.glb" id="11_unvbp"]
+[ext_resource type="PackedScene" uid="uid://dgvq7kuhcahlb" path="res://scene/teleport_pointer.tscn" id="12_pjyyy"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_ka0b7"]
 sky_top_color = Color(1, 1, 1, 1)
@@ -96,15 +96,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 0, -7)
 script = ExtResource("6_snhjh")
 piece = 122
 metadata/_custom_type_script = "uid://chtqhpiu556i1"
-
-[node name="marker_teleport_hotel_room" type="Marker3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0, -1)
-script = ExtResource("6_pjyyy")
-to = "res://scene/level/hotel_room.tscn"
-args = {
-"by": 49
-}
-metadata/_custom_type_script = "uid://bbi6kjxerg3hk"
 
 [node name="actor_y_0" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7, 0, -7)
@@ -234,3 +225,10 @@ transform = Transform3D(-8.742278e-08, 0, -2, 0, 2, 0, 2, 0, -8.742278e-08, -0.3
 
 [node name="painting_frame_rect_6" parent="." instance=ExtResource("11_unvbp")]
 transform = Transform3D(-2.6226832e-07, -8.742279e-08, -2, -2, -8.742278e-08, 2.6226832e-07, -8.742279e-08, 2, -8.742278e-08, -0.34096807, 2.042315, 4.675614)
+
+[node name="marker_teleport_hotel_room" parent="." instance=ExtResource("12_pjyyy")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -1, 0, -1)
+to = "res://scene/level/hotel_room.tscn"
+args = {
+"by": 49
+}

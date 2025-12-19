@@ -6,7 +6,6 @@
 [ext_resource type="PackedScene" uid="uid://cefxs7grh28rs" path="res://assets/model/door.glb" id="3_aion5"]
 [ext_resource type="PackedScene" uid="uid://ylr82inm0vxe" path="res://assets/model/counter.glb" id="4_s8vca"]
 [ext_resource type="PackedScene" uid="uid://bw021nt6bdr6t" path="res://assets/model/elevator.glb" id="7_s7rcd"]
-[ext_resource type="Script" uid="uid://bbi6kjxerg3hk" path="res://src/marker_teleport.gd" id="9_lctwu"]
 [ext_resource type="Script" uid="uid://chtqhpiu556i1" path="res://src/marker_bit.gd" id="10_h67uj"]
 [ext_resource type="PackedScene" uid="uid://d14xggudtxih0" path="res://assets/model/hotel_sofa_small.glb" id="11_h67uj"]
 [ext_resource type="PackedScene" uid="uid://ji4lvbpsrte5" path="res://assets/model/hotel_sofa_large.glb" id="12_4fyxn"]
@@ -16,6 +15,7 @@
 [ext_resource type="PackedScene" uid="uid://324uto1yslin" path="res://assets/model/painting_frame_rect.glb" id="14_fugbc"]
 [ext_resource type="PackedScene" uid="uid://h3wcv7lnqe8x" path="res://assets/model/painting_frame_square.glb" id="15_pgyt1"]
 [ext_resource type="PackedScene" uid="uid://d4j8pwy7ljqhy" path="res://assets/model/table_low.glb" id="16_pgyt1"]
+[ext_resource type="PackedScene" uid="uid://dgvq7kuhcahlb" path="res://scene/teleport_pointer.tscn" id="17_088yb"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_j5fnc"]
 sky_top_color = Color(1, 1, 1, 1)
@@ -79,15 +79,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.96607, 1.51379, -2.79782)
 size = Vector3(0.408875, 3, 10.4044)
 material = SubResource("StandardMaterial3D_gimty")
 
-[node name="marker_teleport_cafe" type="Marker3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7, 0, 3)
-script = ExtResource("9_lctwu")
-to = "res://scene/level/cafe.tscn"
-args = {
-"by": 53
-}
-metadata/_custom_type_script = "uid://bbi6kjxerg3hk"
-
 [node name="marker_elevator" type="Marker3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 0, -7)
 script = ExtResource("10_h67uj")
@@ -102,24 +93,6 @@ transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 5.33
 
 [node name="hotel_door_large" parent="." instance=ExtResource("12_uoe5a")]
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, 0, 7.8414392)
-
-[node name="marker_teleport_entrance" type="Marker3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0, 7)
-script = ExtResource("9_lctwu")
-to = "res://scene/level/entrance.tscn"
-args = {
-"by": 116
-}
-metadata/_custom_type_script = "uid://bbi6kjxerg3hk"
-
-[node name="marker_teleport_entrance_2" type="Marker3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 7)
-script = ExtResource("9_lctwu")
-to = "res://scene/level/entrance.tscn"
-args = {
-"by": 115
-}
-metadata/_custom_type_script = "uid://bbi6kjxerg3hk"
 
 [node name="hotel_sofa_small2_2" parent="." instance=ExtResource("11_h67uj")]
 transform = Transform3D(1.0000001, 0, 0, 0, 1, 0, 0, 0, 1.0000001, 5.332678, 0, 1.7044959)
@@ -176,3 +149,24 @@ transform = Transform3D(-1.3113416e-07, 0, 3, 0, 3, 0, -3, 0, -1.3113416e-07, -7
 
 [node name="table_low2" parent="." instance=ExtResource("16_pgyt1")]
 transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 5.3857136, 0, 4)
+
+[node name="marker_teleport_cafe" parent="." instance=ExtResource("17_088yb")]
+transform = Transform3D(-8.7422784e-08, 0, -1.0000001, 0, 1, 0, 1.0000001, 0, -8.7422784e-08, -7, 0, 3)
+to = "res://scene/level/cafe.tscn"
+args = {
+"by": 53
+}
+
+[node name="marker_teleport_cafe_2" parent="." instance=ExtResource("17_088yb")]
+transform = Transform3D(1.0000001, 0, -4.37114e-08, 0, 1, 0, 4.37114e-08, 0, 1.0000001, -1, 0, 7)
+to = "res://scene/level/entrance.tscn"
+args = {
+"by": 116
+}
+
+[node name="marker_teleport_cafe_3" parent="." instance=ExtResource("17_088yb")]
+transform = Transform3D(1.0000001, 0, -4.37114e-08, 0, 1, 0, 4.37114e-08, 0, 1.0000001, 1, 0, 7)
+to = "res://scene/level/entrance.tscn"
+args = {
+"by": 115
+}
