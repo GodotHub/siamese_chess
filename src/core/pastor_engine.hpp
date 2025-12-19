@@ -5,6 +5,7 @@
 #include "transposition_table.hpp"
 #include "opening_book.hpp"
 #include <unordered_map>
+#include <vector>
 
 class PastorEngine : public ChessEngine
 {
@@ -14,10 +15,10 @@ class PastorEngine : public ChessEngine
 		int get_piece_score(int _by, int _piece);
 		int evaluate_all(const godot::Ref<State> &_state);
 		int evaluate(const godot::Ref<State> &_state, int _move);
-		int compare_move(int a, int b, int best_move, int killer_1, int killer_2, const godot::Ref<State> &state, std::array<int, 65536> *history_table = nullptr);
-		int quies(const godot::Ref<State> &_state, int score, int alpha, int beta, int _group = 0);
+		int compare_move(int a, int b, int best_move, int killer_1, int killer_2, const godot::Ref<State> &state);
+		int quies(const godot::Ref<State> &_state, int score, int alpha, int beta, int _group = 0, int _ply = 0);
 		void generate_good_capture_move(godot::PackedInt32Array &output, const godot::Ref<State> &_state, int _group);
-		int alphabeta(const godot::Ref<State> &_state, int score, int _alpha, int _beta, int _depth, int _group = 0, int _ply = 0, bool _can_null = true, std::unordered_map<int64_t, int> *_history_state = nullptr, std::array<int, 65536> *_history_table = nullptr, int *killer_1 = nullptr, int *killer_2 = nullptr, const godot::Callable &_debug_output = godot::Callable());
+		int alphabeta(const godot::Ref<State> &_state, int score, int _alpha, int _beta, int _depth, int _group = 0, int _ply = 0, bool _can_null = true, int *killer_1 = nullptr, int *killer_2 = nullptr, const godot::Callable &_debug_output = godot::Callable());
 		void search(const godot::Ref<State> &_state, int _group, const godot::PackedInt64Array &history_state, const godot::Callable &_debug_output) override;
 		int get_search_result() override;
 		godot::PackedInt32Array get_principal_variation();
@@ -39,6 +40,9 @@ class PastorEngine : public ChessEngine
 		double think_time;
 		int best_move;
 		int best_score;
+		std::vector<godot::Ref<State>> state_pool;
+		std::unordered_map<int64_t, int> map_history_state;
+		std::array<int, 65536> history_table;
 		godot::PackedInt32Array principal_variation;
 		std::unordered_map<int, int> piece_value;
 		godot::PackedInt32Array directions_diagonal;

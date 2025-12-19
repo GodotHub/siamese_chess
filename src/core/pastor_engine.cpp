@@ -8,6 +8,12 @@
 
 PastorEngine::PastorEngine()
 {
+	state_pool.resize(1000);
+	for (int i = 0; i < 1000; i++)
+	{
+		godot::Ref<State> new_state = memnew(State);
+		state_pool[i] = new_state;
+	}
 	transposition_table.instantiate();
 	opening_book.instantiate();
 	if (godot::FileAccess::file_exists("user://standard_opening.fa"))
@@ -414,7 +420,7 @@ int PastorEngine::evaluate(const godot::Ref<State> &_state, int _move)
 	return score;
 }
 
-int PastorEngine::compare_move(int a, int b, int best_move, int killer_1, int killer_2, const godot::Ref<State> &state, std::array<int, 65536> *history_table)
+int PastorEngine::compare_move(int a, int b, int best_move, int killer_1, int killer_2, const godot::Ref<State> &state)
 {
 	if (best_move == a)
 		return true;
@@ -428,8 +434,8 @@ int PastorEngine::compare_move(int a, int b, int best_move, int killer_1, int ki
 		return true;
 	if (killer_2 == b)
 		return false;
-	if (history_table && (*history_table)[a & 0xFFFF] != (*history_table)[b & 0xFFFF])
-		return (*history_table)[a & 0xFFFF] > (*history_table)[b & 0xFFFF];
+	if (history_table[a & 0xFFFF] != history_table[b & 0xFFFF])
+		return history_table[a & 0xFFFF] > history_table[b & 0xFFFF];
 	int mvv_a = abs(piece_value[state->get_piece(Chess::to(a))]);
 	int mvv_b = abs(piece_value[state->get_piece(Chess::to(b))]);
 	if (mvv_a != mvv_b)
@@ -445,7 +451,7 @@ int PastorEngine::compare_move(int a, int b, int best_move, int killer_1, int ki
 	return a > b;
 }
 
-int PastorEngine::quies(const godot::Ref<State> &_state, int score, int _alpha, int _beta, int _group)
+int PastorEngine::quies(const godot::Ref<State> &_state, int score, int _alpha, int _beta, int _group, int _ply)
 {
 	int score_relative = _group == 0 ? score : -score;
 	if (score_relative >= _beta)
@@ -459,13 +465,25 @@ int PastorEngine::quies(const godot::Ref<State> &_state, int score, int _alpha, 
 	godot::PackedInt32Array move_list;
 	generate_good_capture_move(move_list, _state, _group);
 	std::sort(move_list.ptrw(), move_list.ptrw() + move_list.size(), [this, &_state](int a, int b) -> bool{
-		return compare_move(a, b, 0, 0, 0, _state, nullptr);
+		int mvv_a = abs(piece_value[_state->get_piece(Chess::to(a))]);
+		int mvv_b = abs(piece_value[_state->get_piece(Chess::to(b))]);
+		if (mvv_a != mvv_b)
+		{
+			return mvv_a > mvv_b;
+		}
+		int lva_a = abs(piece_value[_state->get_piece(Chess::from(a))]);
+		int lva_b = abs(piece_value[_state->get_piece(Chess::from(b))]);
+		if (mvv_a != 0 && lva_a != lva_b)
+		{
+			return lva_a < lva_b;
+		}
+		return a > b;
 	});
 	for (int i = 0; i < move_list.size(); i++)
 	{
 		godot::Ref<State> test_state = _state->duplicate();
 		Chess::apply_move(test_state, move_list[i]);
-		int test_score = -quies(test_state, score + evaluate(_state, move_list[i]), -_beta, -_alpha, 1 - _group);
+		int test_score = -quies(test_state, score + evaluate(_state, move_list[i]), -_beta, -_alpha, 1 - _group, _ply + 1);
 		if (test_score >= _beta)
 		{
 			return _beta;
@@ -478,7 +496,7 @@ int PastorEngine::quies(const godot::Ref<State> &_state, int score, int _alpha, 
 	return _alpha;
 }
 
-int PastorEngine::alphabeta(const godot::Ref<State> &_state, int score, int _alpha, int _beta, int _depth, int _group, int _ply, bool _can_null, std::unordered_map<int64_t, int> *_history_state, std::array<int, 65536> *_history_table, int *killer_1, int *killer_2, const godot::Callable &_debug_output)
+int PastorEngine::alphabeta(const godot::Ref<State> &_state, int score, int _alpha, int _beta, int _depth, int _group, int _ply, bool _can_null, int *killer_1, int *killer_2, const godot::Callable &_debug_output)
 {
 	bool found_pv = false;
 	int transposition_table_score = transposition_table->probe_hash(_state->get_zobrist(), _depth, _alpha, _beta);
@@ -488,16 +506,16 @@ int PastorEngine::alphabeta(const godot::Ref<State> &_state, int score, int _alp
 	}
 	if (_depth <= 0)
 	{
-		return quies(_state, score, _alpha, _beta, _group);
+		return quies(_state, score, _alpha, _beta, _group, _ply + 1);
 	}
-	if (_history_state && _history_state->count(_state->get_zobrist()))
+	if (map_history_state.count(_state->get_zobrist()))
 	{
 		return despise_factor; // 视作平局，如果局面不太好，也不会选择负分的下法
 	}
 
 	if (time_passed() >= think_time || interrupted)
 	{
-		return quies(_state, score, _alpha, _beta, _group);
+		return quies(_state, score, _alpha, _beta, _group, _ply + 1);
 	}
 
 	unsigned char flag = ALPHA;
@@ -506,9 +524,10 @@ int PastorEngine::alphabeta(const godot::Ref<State> &_state, int score, int _alp
 	best_move = transposition_table->best_move(_state->get_zobrist());
 	if (Chess::is_move_valid(_state, _group, best_move))
 	{
-		godot::Ref<State> test_state = _state->duplicate();
+		godot::Ref<State> test_state = state_pool[_ply + 1];
+		_state->_internal_duplicate(test_state);
 		Chess::apply_move(test_state, best_move);
-		int next_score = -alphabeta(test_state, score + evaluate(_state, best_move), -_beta, -_alpha, _depth - 1, 1 - _group, _ply + 1, true, _history_state, _history_table, nullptr, nullptr, _debug_output);
+		int next_score = -alphabeta(test_state, score + evaluate(_state, best_move), -_beta, -_alpha, _depth - 1, 1 - _group, _ply + 1, true, nullptr, nullptr, _debug_output);
 		has_transposition_table_move = true;
 		if (_beta <= next_score)
 		{
@@ -529,9 +548,10 @@ int PastorEngine::alphabeta(const godot::Ref<State> &_state, int score, int _alp
 	bool has_killer_1 = false;
 	if (killer_1 && Chess::is_move_valid(_state, _group, *killer_1))
 	{
-		godot::Ref<State> test_state = _state->duplicate();
+		godot::Ref<State> test_state = state_pool[_ply + 1];
+		_state->_internal_duplicate(test_state);
 		Chess::apply_move(test_state, *killer_1);
-		int next_score = -alphabeta(test_state, score + evaluate(_state, *killer_1), -_beta, -_alpha, _depth - 1, 1 - _group, _ply + 1, true, _history_state, _history_table, nullptr, nullptr, _debug_output);
+		int next_score = -alphabeta(test_state, score + evaluate(_state, *killer_1), -_beta, -_alpha, _depth - 1, 1 - _group, _ply + 1, true, nullptr, nullptr, _debug_output);
 		has_killer_1 = true;
 		if (_beta <= next_score)
 		{
@@ -548,9 +568,10 @@ int PastorEngine::alphabeta(const godot::Ref<State> &_state, int score, int _alp
 	bool has_killer_2 = false;
 	if (killer_2 && Chess::is_move_valid(_state, _group, *killer_2))
 	{
-		godot::Ref<State> test_state = _state->duplicate();
+		godot::Ref<State> test_state = state_pool[_ply + 1];
+		_state->_internal_duplicate(test_state);
 		Chess::apply_move(test_state, *killer_2);
-		int next_score = -alphabeta(test_state, score + evaluate(_state, *killer_2), -_beta, -_alpha, _depth - 1, 1 - _group, _ply + 1, true, _history_state, _history_table, nullptr, nullptr, _debug_output);
+		int next_score = -alphabeta(test_state, score + evaluate(_state, *killer_2), -_beta, -_alpha, _depth - 1, 1 - _group, _ply + 1, true, nullptr, nullptr, _debug_output);
 		has_killer_2 = true;
 		if (_beta <= next_score)
 		{
@@ -583,8 +604,8 @@ int PastorEngine::alphabeta(const godot::Ref<State> &_state, int score, int _alp
 			return despise_factor;
 		}
 	}
-	std::sort(move_list.ptrw(), move_list.ptrw() + move_list.size(), [this, &_state, best_move, killer_1, killer_2, _history_table](int a, int b) -> bool{
-		return compare_move(a, b, best_move,  killer_1 ? *killer_1 : 0, killer_2 ? *killer_2 : 0, _state, _history_table);
+	std::sort(move_list.ptrw(), move_list.ptrw() + move_list.size(), [this, &_state, best_move, killer_1, killer_2](int a, int b) -> bool{
+		return compare_move(a, b, best_move,  killer_1 ? *killer_1 : 0, killer_2 ? *killer_2 : 0, _state);
 	});
 	int move_count = move_list.size();
 	if (_depth > 2)
@@ -604,16 +625,17 @@ int PastorEngine::alphabeta(const godot::Ref<State> &_state, int score, int _alp
 		{
 			_debug_output.call(_state->get_zobrist(), _depth, i, move_list.size());
 		}
-		godot::Ref<State> test_state = _state->duplicate();
+		godot::Ref<State> test_state = state_pool[_ply + 1];
+		_state->_internal_duplicate(test_state);
 		Chess::apply_move(test_state, move_list[i]);
 		int next_score = 0;
 		if (found_pv)
 		{
-			next_score = -alphabeta(test_state, score + evaluate(_state, move_list[i]), -_alpha - 1, -_alpha, _depth - 1, 1 - _group, _ply + 1, true, _history_state, _history_table, &next_killer_1, &next_killer_2, _debug_output);
+			next_score = -alphabeta(test_state, score + evaluate(_state, move_list[i]), -_alpha - 1, -_alpha, _depth - 1, 1 - _group, _ply + 1, true, &next_killer_1, &next_killer_2, _debug_output);
 		}
 		if (!found_pv || next_score > _alpha && next_score < _beta)
 		{
-			next_score = -alphabeta(test_state, score + evaluate(_state, move_list[i]), -_beta, -_alpha, _depth - 1, 1 - _group, _ply + 1, true, _history_state, _history_table, &next_killer_1, &next_killer_2, _debug_output);
+			next_score = -alphabeta(test_state, score + evaluate(_state, move_list[i]), -_beta, -_alpha, _depth - 1, 1 - _group, _ply + 1, true, &next_killer_1, &next_killer_2, _debug_output);
 		}
 
 		if (_beta <= next_score)
@@ -632,10 +654,7 @@ int PastorEngine::alphabeta(const godot::Ref<State> &_state, int score, int _alp
 			best_move = move_list[i];
 			_alpha = next_score;
 			flag = EXACT;
-			if (_history_table)
-			{
-				(*_history_table)[move_list[i] & 0xFFFF] += (1 << _depth);
-			}
+			history_table[move_list[i] & 0xFFFF] += (1 << _depth);
 		}
 	}
 	if (_alpha >= WIN - MAX_PLY)
@@ -665,15 +684,15 @@ void PastorEngine::search(const godot::Ref<State> &_state, int _group, const god
 			return;
 		}
 	}
-	std::array<int, 65536> history_table;
-	std::unordered_map<int64_t, int> map_history_state;
+	map_history_state.clear();
+	history_table.fill(0);
 	for (int i = 0; i < history_state.size(); i++)
 	{
 		map_history_state[history_state[i]]++;
 	}
 	for (int i = 2; i <= max_depth; i += 2)
 	{
-		alphabeta(_state, evaluate_all(_state), -THRESHOLD, THRESHOLD, i, _group, 0, true, &map_history_state, &history_table, nullptr, nullptr, _debug_output);
+		alphabeta(_state, evaluate_all(_state), -THRESHOLD, THRESHOLD, i, _group, 0, true, nullptr, nullptr, _debug_output);
 		if (time_passed() >= think_time || interrupted)
 		{
 			break;

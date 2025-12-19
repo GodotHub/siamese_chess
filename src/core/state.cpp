@@ -49,6 +49,12 @@ godot::Ref<State> State::duplicate()
 	return new_state;
 }
 
+void State::_internal_duplicate(godot::Ref<State> &other)
+{
+	memcpy(other->pieces, pieces, sizeof(pieces));
+	memcpy(other->bit, bit, sizeof(bit));
+}
+
 State::PieceIterator State::piece_iterator_begin(int _piece)
 {
 	State::PieceIterator instance;
