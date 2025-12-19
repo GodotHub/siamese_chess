@@ -36,6 +36,7 @@ func performance_test() -> void:
 		Chess.apply_move(test_state, iter)
 	print(text)
 	print(time_end - time_start)
+	print(engine.get_deepest_ply())
 
 func debug_output(_zobrist:int, depth:int, cur:int, total:int) -> void:
 	while depth >= progress_bar_data.size():

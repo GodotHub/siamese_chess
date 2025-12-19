@@ -453,6 +453,7 @@ int PastorEngine::compare_move(int a, int b, int best_move, int killer_1, int ki
 
 int PastorEngine::quies(const godot::Ref<State> &_state, int score, int _alpha, int _beta, int _group, int _ply)
 {
+	deepest_ply = std::max(_ply, deepest_ply);
 	int score_relative = _group == 0 ? score : -score;
 	if (score_relative >= _beta)
 	{
@@ -498,6 +499,7 @@ int PastorEngine::quies(const godot::Ref<State> &_state, int score, int _alpha, 
 
 int PastorEngine::alphabeta(const godot::Ref<State> &_state, int score, int _alpha, int _beta, int _depth, int _group, int _ply, bool _can_null, int *killer_1, int *killer_2, const godot::Callable &_debug_output)
 {
+	deepest_ply = std::max(_ply, deepest_ply);
 	bool found_pv = false;
 	int transposition_table_score = transposition_table->probe_hash(_state->get_zobrist(), _depth, _alpha, _beta);
 	if (transposition_table_score != 65535)
@@ -725,6 +727,11 @@ int PastorEngine::get_score()
 	return best_score;
 }
 
+int PastorEngine::get_deepest_ply()
+{
+	return deepest_ply;
+}
+
 void PastorEngine::set_max_depth(int _max_depth)
 {
 	max_depth = _max_depth;
@@ -755,6 +762,7 @@ void PastorEngine::_bind_methods()
 	godot::ClassDB::bind_method(godot::D_METHOD("search"), &PastorEngine::search);
 	godot::ClassDB::bind_method(godot::D_METHOD("get_search_result"), &PastorEngine::get_search_result);
 	godot::ClassDB::bind_method(godot::D_METHOD("get_score"), &PastorEngine::get_score);
+	godot::ClassDB::bind_method(godot::D_METHOD("get_deepest_ply"), &PastorEngine::get_deepest_ply);
 	godot::ClassDB::bind_method(godot::D_METHOD("get_principal_variation"), &PastorEngine::get_principal_variation);
 	godot::ClassDB::bind_method(godot::D_METHOD("set_max_depth"), &PastorEngine::set_max_depth);
 	godot::ClassDB::bind_method(godot::D_METHOD("set_despise_factor"), &PastorEngine::set_despise_factor);
