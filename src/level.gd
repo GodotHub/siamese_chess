@@ -1,7 +1,7 @@
 extends Node3D
 class_name Level
 
-signal move_camera(camera:Camera3D)
+signal level_state_changed()
 
 var engine:ChessEngine = null	# 有可能会出现多线作战，共用同一个引擎显然不好
 var chessboard:Chessboard = null
@@ -34,8 +34,6 @@ func _ready() -> void:
 			var by:int = Chess.to_position_int(chessboard.get_position_name(node.position))
 			node.get_parent().remove_child(node)
 			chessboard.add_piece_instance(node, by)
-	if has_node("camera"):
-		chessboard.connect("clicked", move_camera.emit.call_deferred.bind($camera))
 	change_state("explore_idle")
 
 func change_state(next_state:String, arg:Dictionary = {}) -> void:
@@ -44,6 +42,7 @@ func change_state(next_state:String, arg:Dictionary = {}) -> void:
 		call_deferred("state_exit_" + level_state)
 	level_state = next_state
 	call_deferred("state_ready_" + level_state, arg)
+	level_state_changed.emit.call_deferred()
 	mutex.unlock()
 
 func state_ready_explore_idle(_arg:Dictionary) -> void:
@@ -127,6 +126,13 @@ func state_ready_explore_check_attack(_arg:Dictionary) -> void:
 	if !chessboard.state.get_bit(ord("K")):
 		change_state("explore_check_interact", _arg)
 		return
+	if Chess.is_check(chessboard.state, 1):
+		chessboard.state.set_turn(0)
+		chessboard.state.set_castle(0xF)
+		chessboard.state.set_step_to_draw(0)
+		chessboard.state.set_round(1)
+		change_state("versus_enemy")
+		return
 	var white_move_list:PackedInt32Array = Chess.generate_move(chessboard.state, 0)
 	for move:int in white_move_list:
 		var to:int = Chess.to(move)
@@ -198,13 +204,13 @@ func state_ready_versus_move(_arg:Dictionary) -> void:
 	history_state.push_back(chessboard.state.get_zobrist())
 	chessboard.connect("animation_finished", func() -> void:
 		if Chess.get_end_type(chessboard.state) == "checkmate_black":
-			change_state("black_win")
+			change_state.call_deferred("black_win")
 		elif Chess.get_end_type(chessboard.state) == "checkmate_white":
-			change_state("white_win")
+			change_state.call_deferred("white_win")
 		elif chessboard.state.get_turn() == 0:
-			change_state("versus_enemy")
+			change_state.call_deferred("versus_enemy")
 		else:
-			change_state("versus_player")
+			change_state.call_deferred("versus_player")
 	, ConnectFlags.CONNECT_ONE_SHOT)
 	chessboard.execute_move(_arg["move"])
 
