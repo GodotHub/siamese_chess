@@ -1,7 +1,7 @@
 extends Node3D
 class_name Level
 
-signal level_state_changed()
+signal level_state_changed(state:String)
 
 var engine:ChessEngine = null	# 有可能会出现多线作战，共用同一个引擎显然不好
 var chessboard:Chessboard = null
@@ -42,7 +42,7 @@ func change_state(next_state:String, arg:Dictionary = {}) -> void:
 		call_deferred("state_exit_" + level_state)
 	level_state = next_state
 	call_deferred("state_ready_" + level_state, arg)
-	level_state_changed.emit.call_deferred()
+	level_state_changed.emit.call_deferred(level_state)
 	mutex.unlock()
 
 func state_ready_explore_idle(_arg:Dictionary) -> void:
@@ -131,7 +131,7 @@ func state_ready_explore_check_attack(_arg:Dictionary) -> void:
 		chessboard.state.set_castle(0xF)
 		chessboard.state.set_step_to_draw(0)
 		chessboard.state.set_round(1)
-		change_state("versus_enemy")
+		change_state("versus_start")
 		return
 	var white_move_list:PackedInt32Array = Chess.generate_move(chessboard.state, 0)
 	for move:int in white_move_list:
@@ -143,7 +143,7 @@ func state_ready_explore_check_attack(_arg:Dictionary) -> void:
 			chessboard.state.set_castle(0xF)
 			chessboard.state.set_step_to_draw(0)
 			chessboard.state.set_round(1)
-			change_state("versus_enemy")
+			change_state("versus_start")
 			return
 	change_state("explore_check_interact", _arg)
 
@@ -186,6 +186,16 @@ func state_ready_explore_using_card(_arg:Dictionary) -> void:
 		card.use_card_on_chessboard(chessboard, Chess.to(chessboard.confirm_move))
 	HoldCard.deselect()
 	change_state("explore_check_attack")
+
+func state_ready_versus_start(_arg:Dictionary) -> void:
+	if Chess.get_end_type(chessboard.state) == "checkmate_black":
+		change_state.call_deferred("black_win")
+	elif Chess.get_end_type(chessboard.state) == "checkmate_white":
+		change_state.call_deferred("white_win")
+	elif chessboard.state.get_turn() == 0:
+		change_state.call_deferred("versus_enemy")
+	else:
+		change_state.call_deferred("versus_player")
 
 func state_ready_versus_enemy(_arg:Dictionary) -> void:
 	chessboard.set_valid_move([])
@@ -249,10 +259,11 @@ func state_ready_versus_extra_move(_arg:Dictionary) -> void:
 	Dialog.push_selection(decision_list, "请选择一个着法", true, true)
 
 func state_ready_black_win(_arg:Dictionary) -> void:
-	var bit_list:PackedInt32Array = chessboard.state.bit_index("A".unicode_at(0))
-	for iter:int in bit_list:
-		chessboard.state.capture_piece(Chess.to_x88(iter))
-		chessboard.chessboard_piece[Chess.to_x88(iter)].captured()
+	var bit:int = chessboard.state.get_bit("A".unicode_at(0))
+	while bit:
+		chessboard.state.capture_piece(Chess.to_x88(Chess.first_bit(bit)))
+		chessboard.chessboard_piece[Chess.to_x88(Chess.first_bit(bit))].captured()
+		bit = Chess.next_bit(bit)
 	change_state("explore_idle")
 
 func state_ready_white_win(_arg:Dictionary) -> void:

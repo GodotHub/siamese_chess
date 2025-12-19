@@ -41,7 +41,7 @@ func _ready() -> void:
 			$chessboard.add_piece_instance(actor, piece_pos)
 	connect("level_state_changed", on_level_state_changed)
 
-func on_level_state_changed() -> void:
-	if level_state == "black_win":
+func on_level_state_changed(state:String) -> void:
+	if state == "black_win":
 		battle_finished = true
 		Progress.set_value("outside_2_battle", true)
