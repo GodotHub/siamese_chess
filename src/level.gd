@@ -34,7 +34,7 @@ func _ready() -> void:
 			var by:int = Chess.to_position_int(chessboard.get_position_name(node.position))
 			node.get_parent().remove_child(node)
 			chessboard.add_piece_instance(node, by)
-	change_state("explore_idle")
+	change_state.call_deferred("explore_idle")
 
 func change_state(next_state:String, arg:Dictionary = {}) -> void:
 	mutex.lock()
@@ -63,13 +63,13 @@ func state_exit_explore_idle() -> void:
 func ready_to_move_dialog_selection() -> void:
 	match Dialog.selected:
 		"卡牌":
-			change_state("explore_select_card")
+			change_state.call_deferred("explore_select_card")
 		"档案":
 			Archive.open()
 			chessboard.cancel()
-			change_state("explore_idle")
+			change_state.call_deferred("explore_idle")
 		"设置":
-			change_state("explore_idle")
+			change_state.call_deferred("explore_idle")
 
 func state_ready_explore_ready_to_move(_arg:Dictionary) -> void:
 	#HoldCard.show_card()
@@ -92,17 +92,17 @@ func state_ready_explore_check_move(_arg:Dictionary) -> void:
 	var to:int = Chess.to(chessboard.confirm_move)
 	var valid_move:Dictionary = chessboard.valid_move
 	if from & 0x88 || to & 0x88 || !valid_move.has(from):
-		change_state("explore_idle", {})
+		change_state.call_deferred("explore_idle", {})
 		return
 	var move_list:PackedInt32Array = valid_move[from].filter(func (move:int) -> bool: return to == Chess.to(move))
 	if move_list.size() == 0:
-		change_state("explore_idle", {})
+		change_state.call_deferred("explore_idle", {})
 		return
 	elif move_list.size() > 1:
-		change_state("explore_extra_move", {"move_list": move_list})
+		change_state.call_deferred("explore_extra_move", {"move_list": move_list})
 
 	else:
-		change_state("explore_move", {"move": move_list[0]})
+		change_state.call_deferred("explore_move", {"move": move_list[0]})
 
 func state_ready_explore_extra_move(_arg:Dictionary) -> void:
 	var decision_list:PackedStringArray = []
@@ -124,14 +124,10 @@ func state_ready_explore_move(_arg:Dictionary) -> void:
 
 func state_ready_explore_check_attack(_arg:Dictionary) -> void:
 	if !chessboard.state.get_bit(ord("K")):
-		change_state("explore_check_interact", _arg)
+		change_state.call_deferred("explore_check_interact", _arg)
 		return
 	if Chess.is_check(chessboard.state, 1):
-		chessboard.state.set_turn(0)
-		chessboard.state.set_castle(0xF)
-		chessboard.state.set_step_to_draw(0)
-		chessboard.state.set_round(1)
-		change_state("versus_start")
+		change_state.call_deferred("versus_start")
 		return
 	var white_move_list:PackedInt32Array = Chess.generate_move(chessboard.state, 0)
 	for move:int in white_move_list:
@@ -139,20 +135,16 @@ func state_ready_explore_check_attack(_arg:Dictionary) -> void:
 		if !chessboard.state.has_piece(to):
 			continue
 		if char(chessboard.state.get_piece(to)) in ["k", "q", "r", "b", "n", "p"]:
-			chessboard.state.set_turn(0)
-			chessboard.state.set_castle(0xF)
-			chessboard.state.set_step_to_draw(0)
-			chessboard.state.set_round(1)
-			change_state("versus_start")
+			change_state.call_deferred("versus_start")
 			return
-	change_state("explore_check_interact", _arg)
+	change_state.call_deferred("explore_check_interact", _arg)
 
 func state_ready_explore_check_interact(_arg:Dictionary) -> void:
 	var by:int = Chess.to_x88(chessboard.state.bit_index("k".unicode_at(0))[0])
 	if _arg.has("move") && Chess.to(_arg["move"]) == by && chessboard.state.get_bit("Z".unicode_at(0)) & Chess.mask(Chess.to_64(by)):
-		change_state("interact", {"callback": interact_list[by][""]})
+		change_state.call_deferred("interact", {"callback": interact_list[by][""]})
 		return
-	change_state("explore_idle")
+	change_state.call_deferred("explore_idle")
 
 func state_ready_explore_select_card(_arg:Dictionary) -> void:
 	Dialog.push_dialog("", "选择一张卡", false, false)
@@ -166,7 +158,7 @@ func state_exit_explore_select_card() -> void:
 
 func state_ready_explore_use_card(_arg:Dictionary) -> void:
 	if HoldCard.selected_card.use_directly:
-		change_state("explore_using_card")
+		change_state.call_deferred("explore_using_card")
 		return
 	Dialog.push_selection(["取消"], "选择一个位置", false, false)
 	Dialog.connect("on_next", change_state.bind("explore_idle"))
@@ -185,9 +177,13 @@ func state_ready_explore_using_card(_arg:Dictionary) -> void:
 	else:
 		card.use_card_on_chessboard(chessboard, Chess.to(chessboard.confirm_move))
 	HoldCard.deselect()
-	change_state("explore_check_attack")
+	change_state.call_deferred("explore_check_attack")
 
 func state_ready_versus_start(_arg:Dictionary) -> void:
+	chessboard.state.set_turn(0)
+	chessboard.state.set_castle(0xF)
+	chessboard.state.set_step_to_draw(0)
+	chessboard.state.set_round(1)
 	if Chess.get_end_type(chessboard.state) == "checkmate_black":
 		change_state.call_deferred("black_win")
 	elif Chess.get_end_type(chessboard.state) == "checkmate_white":
@@ -200,7 +196,7 @@ func state_ready_versus_start(_arg:Dictionary) -> void:
 func state_ready_versus_enemy(_arg:Dictionary) -> void:
 	chessboard.set_valid_move([])
 	engine.connect("search_finished", func() -> void:
-		change_state("versus_move", {"move": engine.get_search_result()})
+		change_state.call_deferred("versus_move", {"move": engine.get_search_result()})
 		, ConnectFlags.CONNECT_ONE_SHOT)
 	engine.set_think_time(3)
 	engine.set_max_depth(20)
@@ -233,16 +229,16 @@ func state_ready_versus_check_move(_arg:Dictionary) -> void:
 	var to:int = Chess.to(chessboard.confirm_move)
 	var valid_move:Dictionary = chessboard.valid_move
 	if from & 0x88 || to & 0x88 || !valid_move.has(from):
-		change_state("versus_player", {})
+		change_state.call_deferred("versus_player", {})
 		return
 	var move_list:PackedInt32Array = valid_move[from].filter(func (move:int) -> bool: return to == Chess.to(move))
 	if move_list.size() == 0:
-		change_state("versus_player", {})
+		change_state.call_deferred("versus_player", {})
 		return
 	elif move_list.size() > 1:
-		change_state("versus_extra_move", {"move_list": move_list})
+		change_state.call_deferred("versus_extra_move", {"move_list": move_list})
 	else:
-		change_state("versus_move", {"move": move_list[0]})
+		change_state.call_deferred("versus_move", {"move": move_list[0]})
 
 func state_ready_versus_extra_move(_arg:Dictionary) -> void:
 	var decision_list:PackedStringArray = []
@@ -264,7 +260,7 @@ func state_ready_black_win(_arg:Dictionary) -> void:
 		chessboard.state.capture_piece(Chess.to_x88(Chess.first_bit(bit)))
 		chessboard.chessboard_piece[Chess.to_x88(Chess.first_bit(bit))].captured()
 		bit = Chess.next_bit(bit)
-	change_state("explore_idle")
+	change_state.call_deferred("explore_idle")
 
 func state_ready_white_win(_arg:Dictionary) -> void:
 	var by:int = Chess.to_x88(chessboard.state.bit_index("k".unicode_at(0))[0])
@@ -273,8 +269,8 @@ func state_ready_white_win(_arg:Dictionary) -> void:
 
 func state_ready_dialog(_arg:Dictionary) -> void:
 	var by:int = Chess.to_x88(chessboard.state.bit_index("k".unicode_at(0))[0])
-	change_state("interact", {"callback": interact_list[by][Dialog.selected]})
+	change_state.call_deferred("interact", {"callback": interact_list[by][Dialog.selected]})
 
 func state_ready_interact(_arg:Dictionary) -> void:
 	await _arg["callback"].call()
-	change_state("explore_idle")
+	change_state.call_deferred("explore_idle")
