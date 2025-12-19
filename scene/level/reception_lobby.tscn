@@ -1,4 +1,4 @@
-[gd_scene load_steps=20 format=3 uid="uid://bhjsdubmphpk4"]
+[gd_scene load_steps=21 format=3 uid="uid://bhjsdubmphpk4"]
 
 [ext_resource type="Script" uid="uid://cr2epvubmbpcu" path="res://src/level/reception_lobby.gd" id="1_s7rcd"]
 [ext_resource type="PackedScene" uid="uid://b3ml34bssywkr" path="res://scene/player.tscn" id="2_gimty"]
@@ -15,6 +15,7 @@
 [ext_resource type="PackedScene" uid="uid://bw127d1iawnv3" path="res://assets/model/radermachera_sinica.glb" id="13_uoe5a"]
 [ext_resource type="PackedScene" uid="uid://324uto1yslin" path="res://assets/model/painting_frame_rect.glb" id="14_fugbc"]
 [ext_resource type="PackedScene" uid="uid://h3wcv7lnqe8x" path="res://assets/model/painting_frame_square.glb" id="15_pgyt1"]
+[ext_resource type="PackedScene" uid="uid://d4j8pwy7ljqhy" path="res://assets/model/table_low.glb" id="16_pgyt1"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_j5fnc"]
 sky_top_color = Color(1, 1, 1, 1)
@@ -97,7 +98,7 @@ metadata/_custom_type_script = "uid://chtqhpiu556i1"
 transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 7, 0, 4)
 
 [node name="hotel_sofa_small2" parent="." instance=ExtResource("11_h67uj")]
-transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 5, 0, 7)
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 5.332678, 0, 6.2378125)
 
 [node name="hotel_door_large" parent="." instance=ExtResource("12_uoe5a")]
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, 0, 7.8414392)
@@ -121,7 +122,7 @@ args = {
 metadata/_custom_type_script = "uid://bbi6kjxerg3hk"
 
 [node name="hotel_sofa_small2_2" parent="." instance=ExtResource("11_h67uj")]
-transform = Transform3D(1.0000001, 0, 0, 0, 1, 0, 0, 0, 1.0000001, 5, 0, 1)
+transform = Transform3D(1.0000001, 0, 0, 0, 1, 0, 0, 0, 1.0000001, 5.332678, 0, 1.7044959)
 
 [node name="bookshelf" parent="." instance=ExtResource("12_r1xpb")]
 transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 7.6484838, 0, -1)
@@ -172,3 +173,6 @@ metadata/_edit_group_ = true
 
 [node name="painting_frame_square_5" parent="." instance=ExtResource("15_pgyt1")]
 transform = Transform3D(-1.3113416e-07, 0, 3, 0, 3, 0, -3, 0, -1.3113416e-07, -7.7880893, 1.6206155, 5.4111357)
+
+[node name="table_low2" parent="." instance=ExtResource("16_pgyt1")]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 5.3857136, 0, 4)

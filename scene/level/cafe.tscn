@@ -1,4 +1,4 @@
-[gd_scene load_steps=36 format=3 uid="uid://co6urdc5oyrbh"]
+[gd_scene load_steps=40 format=3 uid="uid://co6urdc5oyrbh"]
 
 [ext_resource type="Script" uid="uid://cln6ksgl3ll6o" path="res://src/level/cafe.gd" id="1_e1edc"]
 [ext_resource type="PackedScene" uid="uid://dwvyc2qlcdag0" path="res://scene/chessboard_large.tscn" id="1_o611t"]
@@ -25,6 +25,10 @@
 [ext_resource type="PackedScene" uid="uid://cqom50qugj77u" path="res://scene/radio.tscn" id="23_qbjw3"]
 [ext_resource type="PackedScene" uid="uid://cuu3yjt7ru2ah" path="res://assets/model/hang_shelf.glb" id="25_0ldt7"]
 [ext_resource type="PackedScene" uid="uid://b21y0ovbvc8wy" path="res://assets/model/hotel_fridge.glb" id="25_8pfak"]
+[ext_resource type="PackedScene" uid="uid://324uto1yslin" path="res://assets/model/painting_frame_rect.glb" id="26_8pfak"]
+[ext_resource type="PackedScene" uid="uid://h3wcv7lnqe8x" path="res://assets/model/painting_frame_square.glb" id="26_gphu1"]
+[ext_resource type="PackedScene" uid="uid://culu2eni4tooo" path="res://assets/model/curtain.glb" id="28_jnxq1"]
+[ext_resource type="PackedScene" uid="uid://cpgbfn65ff3ca" path="res://assets/model/curtain_support.glb" id="29_7tmgw"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_e1edc"]
 sky_top_color = Color(1, 1, 1, 1)
@@ -330,10 +334,10 @@ piece_type = 121
 metadata/_custom_type_script = "uid://bt4vtnpxu5i4x"
 
 [node name="window" parent="." instance=ExtResource("17_q5uxw")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0, 6)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.6713133, 0, 6.232663)
 
 [node name="window_2" parent="." instance=ExtResource("17_q5uxw")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 0, 6)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.8133861, 0, 6.232663)
 
 [node name="door" parent="." instance=ExtResource("18_e7kou")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0, -2)
@@ -572,6 +576,66 @@ transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, -0.048
 surface_material_override/0 = SubResource("ShaderMaterial_e7kou")
 surface_material_override/1 = SubResource("ShaderMaterial_lw61d")
 surface_material_override/2 = SubResource("ShaderMaterial_lw61d")
+
+[node name="painting_frame_square_2" parent="." instance=ExtResource("26_gphu1")]
+transform = Transform3D(-2, 1.7484558e-07, 3.4969108e-07, -1.7484555e-07, -2, 1.7484558e-07, 3.496911e-07, 1.7484555e-07, 2, 4.7202787, 1.5019372, -1.9429536)
+
+[node name="painting_frame_rect_6" parent="." instance=ExtResource("26_8pfak")]
+transform = Transform3D(-2, -3.0199158e-07, 3.496911e-07, 3.019916e-07, -2, 8.742278e-08, 3.496911e-07, 8.7422826e-08, 2, -0.7013469, 1.6403265, -1.9934025)
+
+[node name="actor_y_29" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 0, -3)
+script = ExtResource("14_e7kou")
+piece_type = 121
+metadata/_custom_type_script = "uid://bt4vtnpxu5i4x"
+
+[node name="actor_y_30" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0, -3)
+script = ExtResource("14_e7kou")
+piece_type = 121
+metadata/_custom_type_script = "uid://bt4vtnpxu5i4x"
+
+[node name="actor_y_31" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, -3)
+script = ExtResource("14_e7kou")
+piece_type = 121
+metadata/_custom_type_script = "uid://bt4vtnpxu5i4x"
+
+[node name="actor_y_32" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0, -3)
+script = ExtResource("14_e7kou")
+piece_type = 121
+metadata/_custom_type_script = "uid://bt4vtnpxu5i4x"
+
+[node name="actor_y_33" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 0, -3)
+script = ExtResource("14_e7kou")
+piece_type = 121
+metadata/_custom_type_script = "uid://bt4vtnpxu5i4x"
+
+[node name="actor_y_34" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 0, -3)
+script = ExtResource("14_e7kou")
+piece_type = 121
+metadata/_custom_type_script = "uid://bt4vtnpxu5i4x"
+
+[node name="curtain2" parent="." instance=ExtResource("28_jnxq1")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.4575335, 2.9938352, 6.053683)
+
+[node name="curtain_support2" parent="." instance=ExtResource("29_7tmgw")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.742231, 2.9938352, 6.0536833)
+
+[node name="curtain2_2" parent="." instance=ExtResource("28_jnxq1")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.9760733, 2.9938352, 6.0536833)
+
+[node name="curtain2_3" parent="." instance=ExtResource("28_jnxq1")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.0289516, 2.9938352, 6.053683)
+
+[node name="curtain_support2_2" parent="." instance=ExtResource("29_7tmgw")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.744254, 2.9938352, 6.0536833)
+
+[node name="curtain2_4" parent="." instance=ExtResource("28_jnxq1")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.51041186, 2.9938352, 6.0536833)
 
 [editable path="table_0"]
 [editable path="table_0/sofa_0"]

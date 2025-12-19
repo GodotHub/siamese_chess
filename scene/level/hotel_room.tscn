@@ -1,4 +1,4 @@
-[gd_scene load_steps=29 format=3 uid="uid://cb0x1dotn46nw"]
+[gd_scene load_steps=32 format=3 uid="uid://cb0x1dotn46nw"]
 
 [ext_resource type="Script" uid="uid://dv6xi5e2p0qcl" path="res://src/level/music_room.gd" id="1_lsvsq"]
 [ext_resource type="PackedScene" uid="uid://b3ml34bssywkr" path="res://scene/player.tscn" id="2_qvsbv"]
@@ -25,6 +25,9 @@
 [ext_resource type="PackedScene" uid="uid://c15on6e3ufthp" path="res://assets/model/hotel_bathtub.glb" id="23_skhdv"]
 [ext_resource type="PackedScene" uid="uid://dkha0s03djtdq" path="res://scene/phonograph.tscn" id="24_ncv1s"]
 [ext_resource type="PackedScene" uid="uid://324uto1yslin" path="res://assets/model/painting_frame_rect.glb" id="25_skhdv"]
+[ext_resource type="PackedScene" uid="uid://h3wcv7lnqe8x" path="res://assets/model/painting_frame_square.glb" id="26_88lxp"]
+[ext_resource type="PackedScene" uid="uid://culu2eni4tooo" path="res://assets/model/curtain.glb" id="27_rjel0"]
+[ext_resource type="PackedScene" uid="uid://cpgbfn65ff3ca" path="res://assets/model/curtain_support.glb" id="28_q2hjl"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_e1edc"]
 sky_top_color = Color(1, 1, 1, 1)
@@ -95,7 +98,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0, -3)
 transform = Transform3D(-0.2698947, 0, -0.96289, 0, 1, 0, 0.96289, 0, -0.2698947, 2.35379, 0, -1.0599103)
 
 [node name="reception_table2" parent="." instance=ExtResource("11_0snkg")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.0766568, 0, -2.3138988)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.9224062, 0, -2.3138988)
 
 [node name="bedside_table" parent="." instance=ExtResource("11_tn2u6")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.22019, 0, -3.71715)
@@ -207,6 +210,27 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.0003052, 0.42648196, -1.008
 size = Vector3(0.08630371, 0.8589382, 6.140106)
 
 [node name="painting_frame_rect_6" parent="." instance=ExtResource("25_skhdv")]
-transform = Transform3D(-1.3113416e-07, 3, -4.1201135e-15, -3, -1.3113416e-07, 3.9340247e-07, 3.9340247e-07, 2.1316282e-14, 3, -0.9429524, 1.9579754, -4.053211)
+transform = Transform3D(-1.3113416e-07, 3, -4.1201135e-15, -3, -1.3113416e-07, 3.9340247e-07, 3.9340247e-07, 2.1316282e-14, 3, -0.9954612, 1.9579754, -4.053211)
+
+[node name="painting_frame_rect" parent="." instance=ExtResource("25_skhdv")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -5.962844, 1.4494848, 0.5618793)
+
+[node name="painting_frame_rect_2" parent="." instance=ExtResource("25_skhdv")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -5.962844, 1.6702673, 1.1776997)
+
+[node name="painting_frame_square" parent="." instance=ExtResource("26_88lxp")]
+transform = Transform3D(-2, 0, 3.019916e-07, 0, 2, 0, -3.019916e-07, 0, -2, -2.9131372, 1.9238555, 1.881119)
+
+[node name="painting_frame_rect_7" parent="." instance=ExtResource("25_skhdv")]
+transform = Transform3D(3, 2.6226832e-07, -3.934025e-07, 2.6226832e-07, -3, -2.6226832e-07, -3.9340247e-07, 2.6226826e-07, -3, 0.9102833, 2.3948498, 1.9228005)
+
+[node name="curtain2" parent="." instance=ExtResource("27_rjel0")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 2.7917943, 2.9938352, 0.08876622)
+
+[node name="curtain_support2" parent="." instance=ExtResource("28_q2hjl")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 2.7917943, 2.9938352, -1.1959312)
+
+[node name="curtain2_2" parent="." instance=ExtResource("27_rjel0")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 2.7917943, 2.9938352, -2.4297738)
 
 [editable path="door_2"]

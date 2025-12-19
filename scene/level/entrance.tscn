@@ -299,3 +299,6 @@ piece_type = 121
 [node name="tree_3" parent="." instance=ExtResource("12_x41v6")]
 transform = Transform3D(-0.082703836, 0, 0.99657416, 0, 1, 0, -0.99657416, 0, -0.082703836, -7, 0, -8)
 piece_type = 0
+
+[node name="lotus_leaf_11" parent="." instance=ExtResource("8_h0t85")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.8758287, 0.2866273, 2.3786383)
