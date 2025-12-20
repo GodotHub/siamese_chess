@@ -113,9 +113,9 @@ func state_ready_explore_extra_move(_arg:Dictionary) -> void:
 	decision_list.push_back("cancel")
 	Dialog.connect("on_next", func () -> void:
 		if Dialog.selected == "cancel":
-			change_state.bind("explore_idle")
+			change_state.call_deferred("explore_idle")
 		else:
-			change_state.bind("explore_move", {"move": decision_to_move[Dialog.selected]}), ConnectFlags.CONNECT_ONE_SHOT)
+			change_state.call_deferred("explore_move", {"move": decision_to_move[Dialog.selected]}), ConnectFlags.CONNECT_ONE_SHOT)
 	Dialog.push_selection(decision_list, "请选择一个着法", true, true)
 
 func state_ready_explore_move(_arg:Dictionary) -> void:
@@ -249,9 +249,9 @@ func state_ready_versus_extra_move(_arg:Dictionary) -> void:
 	decision_list.push_back("cancel")
 	Dialog.connect("on_next", func () -> void:
 		if Dialog.selected == "cancel":
-			change_state.bind("versus_player")
+			change_state.call_deferred("versus_player")
 		else:
-			change_state.bind("versus_move", {"move": decision_to_move[Dialog.selected]}), ConnectFlags.CONNECT_ONE_SHOT)
+			change_state.call_deferred("versus_move", {"move": decision_to_move[Dialog.selected]}), ConnectFlags.CONNECT_ONE_SHOT)
 	Dialog.push_selection(decision_list, "请选择一个着法", true, true)
 
 func state_ready_black_win(_arg:Dictionary) -> void:
