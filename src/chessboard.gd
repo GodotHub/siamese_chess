@@ -2,9 +2,8 @@ extends InspectableItem
 class_name Chessboard
 
 signal clicked()
-signal clicked_move()
-signal ready_to_move()
-signal canceled()
+signal click_selection()
+signal click_empty()
 signal animation_finished()
 
 @export var COLOR_LAST_MOVE:Color = Color(0.3, 0.3, 0.3, 1)
@@ -16,12 +15,11 @@ var backup_piece:Array = []	#  被吃的子统一放这里管理
 var mouse_start_position_name:String = ""
 var mouse_moved:bool = false
 var state:State = null
-var valid_move:Dictionary[int, Array] = {}
-var selected:int = -1
 var chessboard_piece:Dictionary[int, Actor] = {}
 var king_instance:Array[Actor] = [null, null]
-var confirm_move:int = 0
-var force_select:bool = false
+
+var square_selection:int = 0
+var selected:int = -1
 
 func _ready() -> void:
 	super._ready()
@@ -112,27 +110,11 @@ func convert_name_to_position(_position_name:String) -> Vector3:
 	return get_node(_position_name).position
 
 func tap_position(position_name:String) -> void:
-	var by:int = Chess.to_position_int(position_name)
-	if !is_instance_valid(state):
+	selected = Chess.to_position_int(position_name)
+	if square_selection != -1 && (Chess.mask(Chess.to_64(selected)) & square_selection):
+		click_selection.emit.call_deferred()
 		return
-	if selected != -1:
-		var move_list:PackedInt32Array = valid_move[selected].filter(func (move:int) -> bool: return by == Chess.to(move))
-		if move_list.size() == 0:
-			if !force_select:
-				cancel()
-				canceled.emit.call_deferred()
-			return
-		confirm_move = Chess.create(selected, by, 0)
-		clicked_move.emit.call_deferred()
-		cancel()
-		return
-	if !state.has_piece(by) || !valid_move.has(by):
-		canceled.emit.call_deferred()
-		cancel()
-		return
-	show_move(by)
-	ready_to_move.emit.call_deferred()
-	select(by)
+	click_empty.emit.call_deferred()
 
 func finger_on_position(position_name:String) -> void:
 	$canvas.clear_pointer("pointer")
@@ -143,23 +125,15 @@ func finger_on_position(position_name:String) -> void:
 func finger_up() -> void:
 	$canvas.clear_pointer("pointer")
 
-func show_move(by:int) -> void:
-	if !valid_move.has(by):
-		return
-	for iter:int in valid_move[by]:
-		$canvas.draw_pointer("move", COLOR_MOVE, $canvas.convert_name_to_position(Chess.to_position_name(Chess.to(iter))))
-
-func select(by:int, _force_select:bool = false) -> void:
-	selected = by
-	force_select = _force_select
-	show_move(by)
-
-func cancel() -> void:
-	selected = -1
-	hide_move()
-
-func hide_move() -> void:
+func set_square_selection(_square_selection:int) -> void:
 	$canvas.clear_pointer("move")
+	selected = -1
+	square_selection = _square_selection
+	var bit:int = square_selection
+	while bit:
+		var by:int = Chess.to_x88(Chess.first_bit(bit))
+		$canvas.draw_pointer("move", COLOR_MOVE, $canvas.convert_name_to_position(Chess.to_position_name(by)))
+		bit = Chess.next_bit(bit)
 
 func execute_move(move:int) -> Dictionary:
 	var event:Dictionary = Chess.apply_move_custom(state, move)
@@ -173,13 +147,6 @@ func execute_move(move:int) -> Dictionary:
 	#king_instance[1].set_warning(Chess.is_check(state, 0))
 	selected = -1
 	return rollback_event
-
-func set_valid_move(move_list:PackedInt32Array) -> void:
-	valid_move.clear()
-	for move:int in move_list:
-		if !valid_move.has(Chess.from(move)):
-			valid_move[Chess.from(move)] = []
-		valid_move[Chess.from(move)].push_back(move)
 
 # 由引擎通过字典传入事件、并通过字典返回撤销事件。
 func receive_event(event:Dictionary) -> Dictionary:
