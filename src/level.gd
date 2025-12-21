@@ -58,7 +58,12 @@ func state_signal_connect(_signal:Signal, _method:Callable) -> void:
 func state_ready_explore_idle(_arg:Dictionary) -> void:
 	var by:int = Chess.to_x88(chessboard.state.bit_index("k".unicode_at(0))[0])
 	var selection:PackedStringArray = []
-	var start_from:int = chessboard.state.get_bit(ord("*"))		# 允许点击所有角色（包括障碍？）
+	var start_from:int = chessboard.state.get_bit(ord("K")) | chessboard.state.get_bit(ord("k")) | \
+						 chessboard.state.get_bit(ord("Q")) | chessboard.state.get_bit(ord("q")) | \
+						 chessboard.state.get_bit(ord("R")) | chessboard.state.get_bit(ord("r")) | \
+						 chessboard.state.get_bit(ord("B")) | chessboard.state.get_bit(ord("b")) | \
+						 chessboard.state.get_bit(ord("N")) | chessboard.state.get_bit(ord("N")) | \
+						 chessboard.state.get_bit(ord("P")) | chessboard.state.get_bit(ord("p"))
 	state_signal_connect(Dialog.on_next, change_state.bind("dialog"))
 	state_signal_connect(chessboard.click_selection, func () -> void:
 		change_state.call_deferred("explore_ready_to_move", {"from": chessboard.selected})
@@ -232,7 +237,12 @@ func state_ready_versus_move(_arg:Dictionary) -> void:
 	chessboard.execute_move(_arg["move"])
 
 func state_ready_versus_player(_arg:Dictionary) -> void:
-	var start_from:int = chessboard.state.get_bit(ord("*"))		# 允许点击所有角色（包括障碍？）
+	var start_from:int = chessboard.state.get_bit(ord("K")) | chessboard.state.get_bit(ord("k")) | \
+						 chessboard.state.get_bit(ord("Q")) | chessboard.state.get_bit(ord("q")) | \
+						 chessboard.state.get_bit(ord("R")) | chessboard.state.get_bit(ord("r")) | \
+						 chessboard.state.get_bit(ord("B")) | chessboard.state.get_bit(ord("b")) | \
+						 chessboard.state.get_bit(ord("N")) | chessboard.state.get_bit(ord("N")) | \
+						 chessboard.state.get_bit(ord("P")) | chessboard.state.get_bit(ord("p"))
 	state_signal_connect(chessboard.click_selection, func () -> void:
 		change_state.call_deferred("versus_ready_to_move", {"from": chessboard.selected})
 	)
