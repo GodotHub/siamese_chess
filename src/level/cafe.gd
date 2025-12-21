@@ -51,15 +51,17 @@ func state_ready_in_game_enemy(_arg:Dictionary) -> void:
 	)
 	engine.set_think_time(3)
 	engine.set_max_depth(20)
-	engine.start_search($table_0/chessboard_standard.state, 0, history_state, Callable())
+	engine.start_search($table_0/chessboard_standard.state, 0, standard_history_state, Callable())
 
 func state_ready_in_game_waiting() -> void:
 	state_signal_connect(engine.search_finished, change_state.bind("in_game_enemy"))
 	engine.stop_search()
 
 func state_ready_in_game_move(_arg:Dictionary) -> void:
-	history_state.push_back($table_0/chessboard_standard.state.get_zobrist())
-	$table_0/chessboard_standard.execute_move(_arg["move"])
+	standard_history_state.push_back($table_0/chessboard_standard.state.duplicate())
+	standard_history_zobrist.push_back($table_0/chessboard_standard.state.get_zobrist())
+	var rollback_event:Dictionary = $table_0/chessboard_standard.execute_move(_arg["move"])
+	standard_history_event.push_back(rollback_event)
 	if Chess.get_end_type($table_0/chessboard_standard.state) != "":
 		change_state.call_deferred("game_end")
 	elif $table_0/chessboard_standard.state.get_turn() == 0:
@@ -74,10 +76,44 @@ func state_ready_in_game_player(_arg:Dictionary) -> void:
 						 $table_0/chessboard_standard.state.get_bit(ord("B")) | $table_0/chessboard_standard.state.get_bit(ord("b")) | \
 						 $table_0/chessboard_standard.state.get_bit(ord("N")) | $table_0/chessboard_standard.state.get_bit(ord("n")) | \
 						 $table_0/chessboard_standard.state.get_bit(ord("P")) | $table_0/chessboard_standard.state.get_bit(ord("p"))
+	state_signal_connect(Dialog.on_next, func () -> void:
+		if Dialog.selected == "悔棋":
+			if standard_history_event.size() <= 1:
+				Dialog.push_selection(["离开对局"], "已回退", false, false)
+				return
+			$table_0/chessboard_standard.state = standard_history_state[-2]
+			$table_0/chessboard_standard.set_square_selection(
+				$table_0/chessboard_standard.state.get_bit(ord("K")) | $table_0/chessboard_standard.state.get_bit(ord("k")) |
+				$table_0/chessboard_standard.state.get_bit(ord("Q")) | $table_0/chessboard_standard.state.get_bit(ord("q")) |
+				$table_0/chessboard_standard.state.get_bit(ord("R")) | $table_0/chessboard_standard.state.get_bit(ord("r")) |
+				$table_0/chessboard_standard.state.get_bit(ord("B")) | $table_0/chessboard_standard.state.get_bit(ord("b")) |
+				$table_0/chessboard_standard.state.get_bit(ord("N")) | $table_0/chessboard_standard.state.get_bit(ord("n")) |
+				$table_0/chessboard_standard.state.get_bit(ord("P")) | $table_0/chessboard_standard.state.get_bit(ord("p"))
+			)
+			for i:int in 2:
+				$table_0/chessboard_standard.receive_rollback_event(standard_history_event[-1])
+				standard_history_zobrist.resize(standard_history_zobrist.size() - 1)
+				standard_history_state.pop_back()
+				standard_history_event.pop_back()
+			if standard_history_event.size() <= 1:
+				Dialog.push_selection(["离开对局"], "已回退", false, false)
+			else:
+				Dialog.push_selection(["悔棋", "离开对局"], "已回退", false, false)
+		elif Dialog.selected == "离开对局":
+			change_state.call_deferred("game_end")
+	)
 	state_signal_connect($table_0/chessboard_standard.click_selection, func () -> void:
 		change_state.call_deferred("in_game_ready_to_move", {"from": $table_0/chessboard_standard.selected})
 	)
+
+	if standard_history_event.size() <= 1:
+		Dialog.push_selection(["离开对局"], "轮到你了", false, false)
+	else:
+		Dialog.push_selection(["悔棋", "离开对局"], "轮到你了", false, false)
 	$table_0/chessboard_standard.set_square_selection(start_from)
+
+func state_exit_in_game_player() -> void:
+	Dialog.clear()
 
 func state_ready_in_game_ready_to_move(_arg:Dictionary) -> void:
 	var move_list:PackedInt32Array = Chess.generate_valid_move($table_0/chessboard_standard.state, 1)
@@ -119,7 +155,7 @@ func state_ready_in_game_extra_move(_arg:Dictionary) -> void:
 	)
 	Dialog.push_selection(decision_list, "请选择一个着法", true, true)
 
-func state_game_end() -> void:
+func state_ready_game_end(_arg:Dictionary) -> void:
 	match Chess.get_end_type($table_0/chessboard_standard.state):
 		"checkmate_black":
 			Dialog.push_dialog("黑方胜", "", true, true)
