@@ -13,6 +13,7 @@ func _ready() -> void:
 
 func event() -> void:
 	if taken:
+		level.change_state("explore_idle")
 		return
 	taken = true
 	Progress.set_value(progress_key, true)
@@ -23,3 +24,4 @@ func event() -> void:
 	card.actor = actor.instantiate().set_larger_scale()
 	HoldCard.add_card(card)
 	Dialog.push_dialog(comment, "你获得了一张卡牌", false, false, false)
+	level.change_state("explore_idle")
