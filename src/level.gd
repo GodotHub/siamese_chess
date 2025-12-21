@@ -62,7 +62,7 @@ func state_ready_explore_idle(_arg:Dictionary) -> void:
 						 chessboard.state.get_bit(ord("Q")) | chessboard.state.get_bit(ord("q")) | \
 						 chessboard.state.get_bit(ord("R")) | chessboard.state.get_bit(ord("r")) | \
 						 chessboard.state.get_bit(ord("B")) | chessboard.state.get_bit(ord("b")) | \
-						 chessboard.state.get_bit(ord("N")) | chessboard.state.get_bit(ord("N")) | \
+						 chessboard.state.get_bit(ord("N")) | chessboard.state.get_bit(ord("n")) | \
 						 chessboard.state.get_bit(ord("P")) | chessboard.state.get_bit(ord("p"))
 	state_signal_connect(Dialog.on_next, change_state.bind("dialog"))
 	state_signal_connect(chessboard.click_selection, func () -> void:
@@ -211,7 +211,7 @@ func state_ready_versus_start(_arg:Dictionary) -> void:
 		change_state.call_deferred("versus_player")
 
 func state_ready_versus_enemy(_arg:Dictionary) -> void:
-	chessboard.set_valid_move([])
+	chessboard.set_square_selection(0)
 	state_signal_connect(engine.search_finished, func() -> void:
 		change_state.call_deferred("versus_move", {"move": engine.get_search_result()})
 	)
@@ -241,7 +241,7 @@ func state_ready_versus_player(_arg:Dictionary) -> void:
 						 chessboard.state.get_bit(ord("Q")) | chessboard.state.get_bit(ord("q")) | \
 						 chessboard.state.get_bit(ord("R")) | chessboard.state.get_bit(ord("r")) | \
 						 chessboard.state.get_bit(ord("B")) | chessboard.state.get_bit(ord("b")) | \
-						 chessboard.state.get_bit(ord("N")) | chessboard.state.get_bit(ord("N")) | \
+						 chessboard.state.get_bit(ord("N")) | chessboard.state.get_bit(ord("n")) | \
 						 chessboard.state.get_bit(ord("P")) | chessboard.state.get_bit(ord("p"))
 	state_signal_connect(chessboard.click_selection, func () -> void:
 		change_state.call_deferred("versus_ready_to_move", {"from": chessboard.selected})
