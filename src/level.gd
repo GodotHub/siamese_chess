@@ -306,5 +306,4 @@ func state_ready_dialog(_arg:Dictionary) -> void:
 	change_state.call_deferred("interact", {"callback": interact_list[by][Dialog.selected]})
 
 func state_ready_interact(_arg:Dictionary) -> void:
-	await _arg["callback"].call()
-	change_state.call_deferred("explore_idle")
+	_arg["callback"].call()

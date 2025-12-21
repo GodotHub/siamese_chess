@@ -29,3 +29,4 @@ func interact_with_carnation() -> void:
 			Dialog.push_dialog("期待您能和他过过招。", "", true, true)
 			await Dialog.on_next
 	$player.force_set_camera($camera)
+	change_state.call_deferred("explore_idle")
