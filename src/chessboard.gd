@@ -21,6 +21,7 @@ var selected:int = -1
 var chessboard_piece:Dictionary[int, Actor] = {}
 var king_instance:Array[Actor] = [null, null]
 var confirm_move:int = 0
+var force_select:bool = false
 
 func _ready() -> void:
 	super._ready()
@@ -111,28 +112,27 @@ func convert_name_to_position(_position_name:String) -> Vector3:
 	return get_node(_position_name).position
 
 func tap_position(position_name:String) -> void:
-	hide_move()
 	var by:int = Chess.to_position_int(position_name)
 	if !is_instance_valid(state):
 		return
 	if selected != -1:
 		var move_list:PackedInt32Array = valid_move[selected].filter(func (move:int) -> bool: return by == Chess.to(move))
 		if move_list.size() == 0:
-			selected = -1
-			canceled.emit.call_deferred()
+			if !force_select:
+				cancel()
+				canceled.emit.call_deferred()
 			return
 		confirm_move = Chess.create(selected, by, 0)
 		clicked_move.emit.call_deferred()
-		selected = -1
+		cancel()
 		return
 	if !state.has_piece(by) || !valid_move.has(by):
 		canceled.emit.call_deferred()
-		selected = -1
+		cancel()
 		return
-	if valid_move.has(by):
-		show_move(by)
-		ready_to_move.emit.call_deferred()
-	selected = by
+	show_move(by)
+	ready_to_move.emit.call_deferred()
+	select(by)
 
 func finger_on_position(position_name:String) -> void:
 	$canvas.clear_pointer("pointer")
@@ -149,8 +149,10 @@ func show_move(by:int) -> void:
 	for iter:int in valid_move[by]:
 		$canvas.draw_pointer("move", COLOR_MOVE, $canvas.convert_name_to_position(Chess.to_position_name(Chess.to(iter))))
 
-func select(by:int) -> void:
+func select(by:int, _force_select:bool = false) -> void:
 	selected = by
+	force_select = _force_select
+	show_move(by)
 
 func cancel() -> void:
 	selected = -1
