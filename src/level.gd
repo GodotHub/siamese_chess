@@ -215,8 +215,8 @@ func state_ready_versus_enemy(_arg:Dictionary) -> void:
 	state_signal_connect(engine.search_finished, func() -> void:
 		change_state.call_deferred("versus_move", {"move": engine.get_search_result()})
 	)
-	engine.set_think_time(3)
-	engine.set_max_depth(20)
+	engine.set_think_time(INF)
+	engine.set_max_depth(6)
 	engine.start_search(chessboard.state, 0, history_state, Callable())
 
 func state_ready_versus_waiting() -> void:
