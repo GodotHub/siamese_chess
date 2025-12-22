@@ -28,6 +28,10 @@ func promote(_pos:Vector3, _piece:int) -> void:	# 升变
 	visible = false
 	animation_finished.emit.call_deferred()
 
+func unpromote() -> void:
+	visible = true
+	animation_finished.emit.call_deferred()
+
 func move(_pos:Vector3) -> void:	# 单纯的移动
 	var tween:Tween = create_tween()
 	tween.tween_property(self, "global_position", _pos, 0.3).set_trans(Tween.TRANS_SINE)
