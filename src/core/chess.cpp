@@ -1667,12 +1667,34 @@ godot::Dictionary Chess::apply_move_custom(const godot::Ref<State> &_state, int 
 	int from_group = Chess::group(from_piece);
 	int to = Chess::to(_move);
 	int to_piece = _state->get_piece(to);
-	if ((to_piece & 95) == 'W')
+	if ((from_piece & 95) == 'P')
 	{
-		output["type"] = "grafting";
-		output["from"] = from;
-		output["to"] = to;
-		return output;	//移花接木机制有特殊动作
+		int front = direction(from_piece, 0);
+		if (((from >> 4) == 3 || (from >> 4) == 4) && to == _state->get_en_passant())
+		{
+			int captured = to - front;
+			output["type"] = "en_passant";
+			output["from"] = from;
+			output["to"] = to;
+			output["captured"] = captured;
+			return output;
+		}
+		if (Chess::extra(_move))
+		{
+			if (to_piece)
+			{
+				output["type"] = "promotion&capture";
+				output["from"] = from;
+				output["to"] = to;
+				output["piece"] = Chess::extra(_move);
+				return output;
+			}
+			output["type"] = "promotion";
+			output["from"] = from;
+			output["to"] = to;
+			output["piece"] = Chess::extra(_move);
+			return output;
+		}
 	}
 	if (to_piece)
 	{
@@ -1727,27 +1749,6 @@ godot::Dictionary Chess::apply_move_custom(const godot::Ref<State> &_state, int 
 			output["type"] = "king_explore";
 			output["from"] = from;
 			output["path"] = generate_king_path(_state, from, to);
-			return output;
-		}
-	}
-	if ((from_piece & 95) == 'P')
-	{
-		int front = direction(from_piece, 0);
-		if (((from >> 4) == 3 || (from >> 4) == 4) && to == _state->get_en_passant())
-		{
-			int captured = to - front;
-			output["type"] = "en_passant";
-			output["from"] = from;
-			output["to"] = to;
-			output["captured"] = captured;
-			return output;
-		}
-		if (Chess::extra(_move))
-		{
-			output["type"] = "promotion";
-			output["from"] = from;
-			output["to"] = to;
-			output["piece"] = Chess::extra(_move);
 			return output;
 		}
 	}

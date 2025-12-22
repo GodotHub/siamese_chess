@@ -3,6 +3,7 @@ extends Actor
 var position_name:String = ""
 var sfx:AudioStreamPlayer3D = null
 var larger_scale:bool = false
+var promote_instance:Actor = null
 
 func _ready() -> void:
 	super._ready()
@@ -49,28 +50,31 @@ func promote(_pos:Vector3, _piece:int) -> void:
 	tween.tween_callback(change_model.bind(_piece))
 	tween.tween_callback(animation_finished.emit)
 
+func unpromote() -> void:
+	promote_instance.queue_free()
+	$piece.visible = true
+
 func change_model(_piece:int) -> void:
 	$piece.visible = false
-	var instance:Actor = null
 	match _piece:
 		81:
-			instance = load("res://scene/actor/piece_queen_white.tscn").instantiate()
+			promote_instance = load("res://scene/actor/piece_queen_white.tscn").instantiate()
 		82:
-			instance = load("res://scene/actor/piece_rook_white.tscn").instantiate()
+			promote_instance = load("res://scene/actor/piece_rook_white.tscn").instantiate()
 		66:
-			instance = load("res://scene/actor/piece_bishop_white.tscn").instantiate()
+			promote_instance = load("res://scene/actor/piece_bishop_white.tscn").instantiate()
 		78:
-			instance = load("res://scene/actor/piece_knight_white.tscn").instantiate()
+			promote_instance = load("res://scene/actor/piece_knight_white.tscn").instantiate()
 		113:
-			instance = load("res://scene/actor/piece_queen_black.tscn").instantiate()
+			promote_instance = load("res://scene/actor/piece_queen_black.tscn").instantiate()
 		114:
-			instance = load("res://scene/actor/piece_rook_black.tscn").instantiate()
+			promote_instance = load("res://scene/actor/piece_rook_black.tscn").instantiate()
 		98:
-			instance = load("res://scene/actor/piece_bishop_black.tscn").instantiate()
+			promote_instance = load("res://scene/actor/piece_bishop_black.tscn").instantiate()
 		110:
-			instance = load("res://scene/actor/piece_knight_black.tscn").instantiate()
-	add_child(instance)
-	instance.top_level = false
+			promote_instance = load("res://scene/actor/piece_knight_black.tscn").instantiate()
+	add_child(promote_instance)
+	promote_instance.top_level = false
 
 func set_larger_scale() -> Actor:
 	scale = Vector3(8, 8, 8)

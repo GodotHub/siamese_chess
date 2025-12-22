@@ -163,6 +163,15 @@ func receive_event(event:Dictionary) -> Dictionary:
 				"to": event["to"],
 				"captured_instance": captured_instance
 			}
+		"promotion&capture":
+			var captured_instance:Actor = chessboard_piece[event["to"]]
+			promote_and_capture_piece_instance(event["from"], event["to"], event["piece"])
+			return {
+				"type": "promotion&capture",
+				"from": event["from"],
+				"to": event["to"],
+				"captured_instance": captured_instance
+			}
 		"promotion":
 			promote_piece_instance(event["from"], event["to"], event["piece"])
 			return event.duplicate()
@@ -194,6 +203,10 @@ func receive_event(event:Dictionary) -> Dictionary:
 func receive_rollback_event(event:Dictionary) -> void:
 	match event["type"]:
 		"capture":
+			move_piece_instance(event["to"], event["from"])
+			move_piece_instance_from_backup(event["to"], event["captured_instance"])
+		"promotion&capture":
+			chessboard_piece[event["to"]].unpromote()
 			move_piece_instance(event["to"], event["from"])
 			move_piece_instance_from_backup(event["to"], event["captured_instance"])
 		"promotion":
@@ -289,6 +302,18 @@ func promote_piece_instance(from:int, to:int, piece:int) -> void:
 	instance.promote(get_node(Chess.to_position_name(to)).global_position, piece)
 	chessboard_piece.erase(from)
 	chessboard_piece[to] = instance
+	animation_finished.emit.call_deferred()
+
+func promote_and_capture_piece_instance(from:int, to:int, piece:int) -> void:
+	var instance_from:Actor = chessboard_piece[from]
+	var instance_to:Actor = chessboard_piece[to]
+	instance_from.capturing(get_node(Chess.to_position_name(to)).global_position, instance_to)
+	move_piece_instance_to_backup(to)
+	await instance_from.animation_finished
+	instance_from.promote(get_node(Chess.to_position_name(to)).global_position, piece)
+	await instance_from.animation_finished
+	chessboard_piece.erase(from)
+	chessboard_piece[to] = instance_from
 	animation_finished.emit.call_deferred()
 
 func en_passant_piece_instance(from:int, to:int, captured:int) -> void:
