@@ -1,11 +1,10 @@
 extends Level
 
-signal game_ended
-
 var standard_history_zobrist:PackedInt64Array = []
 var standard_history_state:Array[State] = []
 var standard_history_event:Array[Dictionary] = []
 var standard_engine:ChessEngine = PastorEngine.new()
+var chessboard_state:String = ""
 
 func _ready() -> void:
 	super._ready()
@@ -15,9 +14,6 @@ func _ready() -> void:
 	$chessboard.state.add_piece(cheshire_by, "k".unicode_at(0))
 	$chessboard.add_piece_instance(cheshire_instance, cheshire_by)
 	
-	standard_engine.connect("search_finished", in_game_black)
-	$table_0/chessboard_standard.connect("clicked_move", in_game_black_check_move)
-
 	standard_engine.set_max_depth(6)
 	standard_engine.set_think_time(INF)
 	$player.force_set_camera($camera)
@@ -38,99 +34,128 @@ func interact_pastor() -> void:
 	$chessboard/pieces/cheshire.set_position($chessboard.convert_name_to_position("e2"))
 	$chessboard/pieces/cheshire.play_animation("thinking")
 	$player.force_set_camera($camera_chessboard)
-	in_game()
-	await game_ended
+	change_state.call_deferred("in_game_start")
 
-func in_game() -> void:
+func state_ready_in_game_start(_arg:Dictionary) -> void:
 	$table_0/chessboard_standard.state = Chess.create_initial_state()
 	$table_0/chessboard_standard.add_default_piece_set()
-	in_game_white.call_deferred()
+	if $table_0/chessboard_standard.state.get_turn() == 0:
+		change_state.call_deferred("in_game_enemy")
+	else:
+		change_state.call_deferred("in_game_player")
 
-func in_game_white() -> void:
-	if $table_0/chessboard_standard.confirm_move != 0:
-		standard_history_zobrist.push_back($table_0/chessboard_standard.state.get_zobrist())
-		standard_history_state.push_back($table_0/chessboard_standard.state.duplicate())
-		var rollback_event:Dictionary = $table_0/chessboard_standard.execute_move($table_0/chessboard_standard.confirm_move)
-		standard_history_event.push_back(rollback_event)
+func state_ready_in_game_enemy(_arg:Dictionary) -> void:
+	$table_0/chessboard_standard.set_square_selection(0)
+	state_signal_connect(engine.search_finished, func() -> void:
+		change_state.call_deferred("in_game_move", {"move": engine.get_search_result()})
+	)
+	engine.set_think_time(3)
+	engine.set_max_depth(20)
+	engine.start_search($table_0/chessboard_standard.state, 0, standard_history_state, Callable())
+
+func state_ready_in_game_waiting() -> void:
+	state_signal_connect(engine.search_finished, change_state.bind("in_game_enemy"))
+	engine.stop_search()
+
+func state_ready_in_game_move(_arg:Dictionary) -> void:
+	standard_history_state.push_back($table_0/chessboard_standard.state.duplicate())
+	standard_history_zobrist.push_back($table_0/chessboard_standard.state.get_zobrist())
+	var rollback_event:Dictionary = $table_0/chessboard_standard.execute_move(_arg["move"])
+	standard_history_event.push_back(rollback_event)
 	if Chess.get_end_type($table_0/chessboard_standard.state) != "":
-		game_end.call_deferred()
-		return
-	$table_0/chessboard_standard.set_valid_move([])
-	standard_engine.start_search($table_0/chessboard_standard.state, 0, standard_history_zobrist, Callable())
+		change_state.call_deferred("game_end")
+	elif $table_0/chessboard_standard.state.get_turn() == 0:
+		change_state.call_deferred("in_game_enemy")
+	else:
+		change_state.call_deferred("in_game_player")
 
-func in_game_black() -> void:
+func state_ready_in_game_player(_arg:Dictionary) -> void:
+	var start_from:int = $table_0/chessboard_standard.state.get_bit(ord("K")) | $table_0/chessboard_standard.state.get_bit(ord("k")) | \
+						 $table_0/chessboard_standard.state.get_bit(ord("Q")) | $table_0/chessboard_standard.state.get_bit(ord("q")) | \
+						 $table_0/chessboard_standard.state.get_bit(ord("R")) | $table_0/chessboard_standard.state.get_bit(ord("r")) | \
+						 $table_0/chessboard_standard.state.get_bit(ord("B")) | $table_0/chessboard_standard.state.get_bit(ord("b")) | \
+						 $table_0/chessboard_standard.state.get_bit(ord("N")) | $table_0/chessboard_standard.state.get_bit(ord("n")) | \
+						 $table_0/chessboard_standard.state.get_bit(ord("P")) | $table_0/chessboard_standard.state.get_bit(ord("p"))
+	state_signal_connect(Dialog.on_next, func () -> void:
+		if Dialog.selected == "悔棋":
+			if standard_history_event.size() <= 1:
+				Dialog.push_selection(["离开对局"], "已回退", false, false)
+				return
+			$table_0/chessboard_standard.state = standard_history_state[-2]
+			$table_0/chessboard_standard.set_square_selection(
+				$table_0/chessboard_standard.state.get_bit(ord("K")) | $table_0/chessboard_standard.state.get_bit(ord("k")) |
+				$table_0/chessboard_standard.state.get_bit(ord("Q")) | $table_0/chessboard_standard.state.get_bit(ord("q")) |
+				$table_0/chessboard_standard.state.get_bit(ord("R")) | $table_0/chessboard_standard.state.get_bit(ord("r")) |
+				$table_0/chessboard_standard.state.get_bit(ord("B")) | $table_0/chessboard_standard.state.get_bit(ord("b")) |
+				$table_0/chessboard_standard.state.get_bit(ord("N")) | $table_0/chessboard_standard.state.get_bit(ord("n")) |
+				$table_0/chessboard_standard.state.get_bit(ord("P")) | $table_0/chessboard_standard.state.get_bit(ord("p"))
+			)
+			for i:int in 2:
+				$table_0/chessboard_standard.receive_rollback_event(standard_history_event[-1])
+				standard_history_zobrist.resize(standard_history_zobrist.size() - 1)
+				standard_history_state.pop_back()
+				standard_history_event.pop_back()
+			if standard_history_event.size() <= 1:
+				Dialog.push_selection(["离开对局"], "已回退", false, false)
+			else:
+				Dialog.push_selection(["悔棋", "离开对局"], "已回退", false, false)
+		elif Dialog.selected == "离开对局":
+			change_state.call_deferred("game_end")
+	)
+	state_signal_connect($table_0/chessboard_standard.click_selection, func () -> void:
+		change_state.call_deferred("in_game_ready_to_move", {"from": $table_0/chessboard_standard.selected})
+	)
+
 	if standard_history_event.size() <= 1:
 		Dialog.push_selection(["离开对局"], "轮到你了", false, false)
 	else:
 		Dialog.push_selection(["悔棋", "离开对局"], "轮到你了", false, false)
-	Dialog.connect("on_next", on_select_dialog, ConnectFlags.CONNECT_ONE_SHOT)
-	standard_history_zobrist.push_back($table_0/chessboard_standard.state.get_zobrist())
-	standard_history_state.push_back($table_0/chessboard_standard.state.duplicate())
-	var rollback_event:Dictionary = $table_0/chessboard_standard.execute_move(standard_engine.get_search_result())
-	standard_history_event.push_back(rollback_event)
-	if Chess.get_end_type($table_0/chessboard_standard.state) != "":
-		game_end.call_deferred()
-		return
-	$table_0/chessboard_standard.set_valid_move(Chess.generate_valid_move($table_0/chessboard_standard.state, 1))
+	$table_0/chessboard_standard.set_square_selection(start_from)
 
-func in_game_black_check_move() -> void:
+func state_exit_in_game_player() -> void:
 	Dialog.clear()
-	Dialog.disconnect("on_next", on_select_dialog)
-	var standard_chessboard:Chessboard = $table_0/chessboard_standard
-	var from:int = Chess.from(standard_chessboard.confirm_move)
-	var to:int = Chess.to(standard_chessboard.confirm_move)
-	var valid_move:Dictionary = standard_chessboard.valid_move
-	if from & 0x88 || to & 0x88 || !valid_move.has(from):
-		in_game_black.call_deferred()
-		return
-	var move_list:PackedInt32Array = valid_move[from].filter(func (move:int) -> bool: return to == Chess.to(move))
+
+func state_ready_in_game_ready_to_move(_arg:Dictionary) -> void:
+	var move_list:PackedInt32Array = Chess.generate_valid_move($table_0/chessboard_standard.state, 1)
+	var selection:int = 0
+	var from:int = _arg["from"]
+	for iter:int in move_list:
+		if Chess.from(iter) == from:
+			selection |= Chess.mask(Chess.to_64(Chess.to(iter)))
+	state_signal_connect($table_0/chessboard_standard.click_selection, func () -> void:
+		change_state.call_deferred("in_game_check_move", {"from": from, "to": $table_0/chessboard_standard.selected, "move_list": move_list})
+	)
+	state_signal_connect($table_0/chessboard_standard.click_empty, change_state.bind("in_game_player"))
+	$table_0/chessboard_standard.set_square_selection(selection)
+
+func state_ready_in_game_check_move(_arg:Dictionary) -> void:
+	var from:int = _arg["from"]
+	var to:int = _arg["to"]
+	var move_list:PackedInt32Array = Array(_arg["move_list"]).filter(func (move:int) -> bool: return from == Chess.from(move) && to == Chess.to(move))
 	if move_list.size() == 0:
-		in_game_black.call_deferred()
+		change_state.call_deferred("in_game_player", {})
 		return
 	elif move_list.size() > 1:
-		in_game_black_extra_move.call_deferred(move_list)
+		change_state.call_deferred("in_game_extra_move", {"move_list": move_list})
 	else:
-		standard_chessboard.confirm_move = move_list[0]
-		in_game_white.call_deferred()
+		change_state.call_deferred("in_game_move", {"move": move_list[0]})
 
-func in_game_black_extra_move(move_list:PackedInt32Array) -> void:
+func state_ready_in_game_extra_move(_arg:Dictionary) -> void:
 	var decision_list:PackedStringArray = []
 	var decision_to_move:Dictionary = {}
-	var standard_chessboard:Chessboard = $table_0/chessboard_standard
-	for iter:int in move_list:
+	for iter:int in _arg["move_list"]:
 		decision_list.push_back("%c" % Chess.extra(iter))
 		decision_to_move[decision_list[-1]] = iter
 	decision_list.push_back("cancel")
-	Dialog.connect("on_next", func () -> void:
+	state_signal_connect(Dialog.on_next, func () -> void:
 		if Dialog.selected == "cancel":
-			in_game_black.call_deferred()
+			change_state.call_deferred("in_game_player")
 		else:
-			standard_chessboard.confirm_move = decision_to_move[Dialog.selected]
-			in_game_white.call_deferred()
-	, ConnectFlags.CONNECT_ONE_SHOT)
-	Dialog.push_selection(decision_list, "请选择着法", false, true)
+			change_state.call_deferred("in_game_move", {"move": decision_to_move[Dialog.selected]})
+	)
+	Dialog.push_selection(decision_list, "请选择一个着法", true, true)
 
-func on_select_dialog() -> void:
-	if Dialog.selected == "悔棋":
-		if standard_history_event.size() <= 1:
-			Dialog.push_selection(["离开对局"], "已回退", false, false)
-			return
-		$table_0/chessboard_standard.state = standard_history_state[-2]
-		$table_0/chessboard_standard.set_valid_move(Chess.generate_valid_move(standard_history_state[-2], 1))
-		for i:int in 2:
-			$table_0/chessboard_standard.receive_rollback_event(standard_history_event[-1])
-			standard_history_zobrist.resize(standard_history_zobrist.size() - 1)
-			standard_history_state.pop_back()
-			standard_history_event.pop_back()
-		if standard_history_event.size() <= 1:
-			Dialog.push_selection(["离开对局"], "已回退", false, false)
-		else:
-			Dialog.push_selection(["悔棋", "离开对局"], "已回退", false, false)
-		Dialog.connect("on_next", on_select_dialog, ConnectFlags.CONNECT_ONE_SHOT)
-	elif Dialog.selected == "离开对局":
-		game_end.call_deferred()
-
-func game_end() -> void:
+func state_ready_game_end(_arg:Dictionary) -> void:
 	match Chess.get_end_type($table_0/chessboard_standard.state):
 		"checkmate_black":
 			Dialog.push_dialog("黑方胜", "", true, true)
@@ -152,4 +177,4 @@ func game_end() -> void:
 	$chessboard/pieces/cheshire.set_position($chessboard.convert_name_to_position("e3"))
 	$chessboard.set_enabled(true)
 	$table_0/chessboard_standard.set_enabled(false)
-	game_ended.emit()
+	change_state.call_deferred("explore_idle")
