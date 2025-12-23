@@ -703,14 +703,14 @@ void PastorEngine::search(const godot::Ref<State> &_state, int _group, const god
 	}
 	best_move = transposition_table->best_move(_state->get_zobrist());
 	best_score = transposition_table->probe_hash(_state->get_zobrist(), 1, -THRESHOLD, THRESHOLD);
-	principal_variation.clear();
-	godot::Ref<State> test_state = _state->duplicate();
-	while (transposition_table->probe_hash(test_state->get_zobrist(), 1, -THRESHOLD, THRESHOLD) != 65535)
-	{
-		int move = transposition_table->best_move(test_state->get_zobrist());
-		principal_variation.push_back(move);
-		Chess::apply_move(test_state, move);
-	}
+	//principal_variation.clear();
+	//godot::Ref<State> test_state = _state->duplicate();
+	//while (transposition_table->probe_hash(test_state->get_zobrist(), 1, -THRESHOLD, THRESHOLD) != 65535)
+	//{
+	//	int move = transposition_table->best_move(test_state->get_zobrist());
+	//	principal_variation.push_back(move);
+	//	Chess::apply_move(test_state, move);
+	//}
 }
 
 int PastorEngine::get_search_result()

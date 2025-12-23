@@ -39,7 +39,6 @@ func _ready() -> void:
 
 func change_state(next_state:String, arg:Dictionary = {}) -> void:
 	mutex.lock()
-	print(next_state)
 	# 涉及到信号的自动断连
 	for connection:Dictionary in level_state_signal_connection:
 		connection["signal"].disconnect(connection["method"])
@@ -54,6 +53,7 @@ func change_state(next_state:String, arg:Dictionary = {}) -> void:
 
 func state_signal_connect(_signal:Signal, _method:Callable) -> void:
 	_signal.connect(_method)
+	assert(_signal.is_connected(_method))
 	level_state_signal_connection.push_back({"signal": _signal, "method": _method})
 
 func state_ready_explore_idle(_arg:Dictionary) -> void:
