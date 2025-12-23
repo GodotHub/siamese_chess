@@ -74,6 +74,7 @@ int TranspositionTable::best_move(int64_t checksum)
 
 void TranspositionTable::record_hash(int64_t checksum, int8_t depth, int value, int8_t flag, int best_move)
 {
+	DEV_ASSERT(best_move != 0);
 	int index = checksum & table_size_mask;
 	if ((read_only && table[index].flag != UNKNOWN || depth < table[index].depth))
 	{

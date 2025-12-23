@@ -22,7 +22,7 @@ class ChessEngine : public godot::RefCounted
 		static void _bind_methods();
 	protected:
 		double start_thinking;
-		bool interrupted;
-		bool searching;
+		bool interrupted = false;
+		bool searching = false;
 };
 #endif

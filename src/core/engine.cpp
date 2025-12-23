@@ -4,6 +4,7 @@
 
 void ChessEngine::start_search(const godot::Ref<State> &_state, int _group, const godot::PackedInt64Array &history_state, const godot::Callable &_debug_output)
 {
+	DEV_ASSERT(searching == false);
 	searching = true;
 	interrupted = false;
 	start_thinking = godot::Time::get_singleton()->get_unix_time_from_system();
@@ -15,6 +16,7 @@ void ChessEngine::search_thread(const godot::Ref<State> &_state, int _group, con
 {
 	search(_state, _group, history_state, _debug_output);
 	searching = false;
+	DEV_ASSERT(has_connections("search_finished"));
 	call_deferred("emit_signal", "search_finished");
 }
 

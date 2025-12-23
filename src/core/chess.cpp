@@ -1189,6 +1189,7 @@ void Chess::_internal_generate_move(godot::PackedInt32Array &output, const godot
 	{
 		int _from = iter.pos();
 		int from_piece = iter.piece();
+		DEV_ASSERT(Chess::group(from_piece) == _group);
 		if ((from_piece & 95) == 'P')
 		{
 			int front = direction(from_piece, 0);

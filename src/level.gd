@@ -39,6 +39,7 @@ func _ready() -> void:
 
 func change_state(next_state:String, arg:Dictionary = {}) -> void:
 	mutex.lock()
+	print(next_state)
 	# 涉及到信号的自动断连
 	for connection:Dictionary in level_state_signal_connection:
 		connection["signal"].disconnect(connection["method"])
@@ -90,7 +91,6 @@ func state_ready_explore_ready_to_move(_arg:Dictionary) -> void:
 				change_state.call_deferred("explore_select_card", {"selection": selection})
 			"档案":
 				Archive.open()
-				chessboard.cancel()
 				change_state.call_deferred("explore_idle")
 			"设置":
 				change_state.call_deferred("explore_idle")
