@@ -234,6 +234,7 @@ func state_ready_versus_move(_arg:Dictionary) -> void:
 			change_state.call_deferred("versus_enemy")
 		else:
 			change_state.call_deferred("versus_player"))
+	assert(chessboard.state.get_turn() == Chess.group(chessboard.state.get_piece(Chess.from(_arg["move"]))))
 	chessboard.execute_move(_arg["move"])
 
 func state_ready_versus_player(_arg:Dictionary) -> void:
