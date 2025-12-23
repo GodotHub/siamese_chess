@@ -617,6 +617,7 @@ int PastorEngine::alphabeta(const godot::Ref<State> &_state, int score, int _alp
 	}
 	int next_killer_1 = 0;
 	int next_killer_2 = 0;
+	best_move = move_list[0];
 	for (int i = 0; i < move_count; i++)
 	{
 		if (i == 0 && has_transposition_table_move || i == 1 && has_killer_1 || i == 2 && has_killer_2)
