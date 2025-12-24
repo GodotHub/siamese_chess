@@ -130,9 +130,9 @@ piece_type = 121
 
 [node name="teleport_pointer_2" parent="." instance=ExtResource("10_n131h")]
 transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -7, 0, -5)
-to = "res://scene/level/outside_2.tscn"
+to = "res://scene/level/outside_7.tscn"
 args = {
-"by": 80
+"by": 23
 }
 
 [node name="teleport_pointer" parent="." instance=ExtResource("10_n131h")]
@@ -283,4 +283,11 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 0, 7)
 to = "res://scene/level/outside_3.tscn"
 args = {
 "by": 6
+}
+
+[node name="teleport_pointer_11" parent="." instance=ExtResource("10_n131h")]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -7, 0, -1)
+to = "res://scene/level/outside_7.tscn"
+args = {
+"by": 55
 }
