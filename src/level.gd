@@ -19,7 +19,7 @@ func _ready() -> void:
 	var state = State.new()
 	chessboard = $chessboard
 	for node:Node in get_children():
-		if node is Actor:
+		if node is Actor && node.piece_type != 0:
 			var by:int = Chess.to_position_int(chessboard.get_position_name(node.position))
 			state.add_piece(by, node.piece_type)
 		if node is MarkerBit:
@@ -31,7 +31,7 @@ func _ready() -> void:
 			interact_list[by] = {"": node.event}
 	chessboard.set_state(state)
 	for node:Node in get_children():
-		if node is Actor:
+		if node is Actor && node.piece_type != 0:
 			var by:int = Chess.to_position_int(chessboard.get_position_name(node.position))
 			node.get_parent().remove_child(node)
 			chessboard.add_piece_instance(node, by)
