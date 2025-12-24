@@ -9,29 +9,9 @@ func _ready() -> void:
 		var table:Array = [
 			{
 				"actor": load("res://scene/actor/enemy_cheshire.tscn").instantiate(),
-				"pos": 0x63,
-				"piece": ord("K")
-			},
-			{
-				"actor": load("res://scene/actor/piece_pawn_white.tscn").instantiate().set_larger_scale(),
 				"pos": 0x51,
-				"piece": ord("P")
-			},
-			{
-				"actor": load("res://scene/actor/piece_pawn_white.tscn").instantiate().set_larger_scale(),
-				"pos": 0x52,
-				"piece": ord("P")
-			},
-			{
-				"actor": load("res://scene/actor/piece_pawn_white.tscn").instantiate().set_larger_scale(),
-				"pos": 0x53,
-				"piece": ord("P")
-			},
-			{
-				"actor": load("res://scene/actor/piece_pawn_white.tscn").instantiate().set_larger_scale(),
-				"pos": 0x54,
-				"piece": ord("P")
-			},
+				"piece": ord("K")
+			}
 		]
 		for iter:Dictionary in table:
 			var actor:Actor = iter["actor"]

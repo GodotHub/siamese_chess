@@ -3,7 +3,7 @@
 [ext_resource type="Script" uid="uid://c733mdh8qpsk2" path="res://src/level/outside_1.gd" id="1_ychsu"]
 [ext_resource type="PackedScene" uid="uid://b3ml34bssywkr" path="res://scene/player.tscn" id="2_4c3sk"]
 [ext_resource type="PackedScene" uid="uid://dwvyc2qlcdag0" path="res://scene/chessboard_large.tscn" id="5_6ehyn"]
-[ext_resource type="PackedScene" uid="uid://rlos56ckp02d" path="res://scene/shrub.tscn" id="7_olkv4"]
+[ext_resource type="PackedScene" uid="uid://rlos56ckp02d" path="res://scene/actor/shrub.tscn" id="7_olkv4"]
 [ext_resource type="PackedScene" uid="uid://bfl3bn4u2am21" path="res://scene/actor/tree.tscn" id="8_glbyl"]
 [ext_resource type="Script" uid="uid://bt4vtnpxu5i4x" path="res://src/actor.gd" id="9_83jv4"]
 [ext_resource type="PackedScene" uid="uid://ekjtt81nkr2f" path="res://scene/actor/flower.tscn" id="9_gqr3t"]

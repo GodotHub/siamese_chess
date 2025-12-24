@@ -18,7 +18,7 @@ func _ready() -> void:
 	standard_engine.set_think_time(INF)
 	$player.force_set_camera($camera)
 	$table_0/chessboard_standard.set_enabled(false)
-	$chessboard/pieces/pastor.play_animation("thinking")
+	$pastor.play_animation("thinking")
 	interact_list[0x54] = {"下棋": interact_pastor}
 	title[0x54] = "玉兰"
 	interact_list[0x55] = {"下棋": interact_pastor}
