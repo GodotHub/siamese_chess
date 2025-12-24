@@ -12,3 +12,5 @@ func event() -> void:
 		file.store_string(JSON.stringify(file_content))
 		file.close()
 	Archive.open()
+	Archive.open_document(file_path)
+	level.change_state("explore_idle")

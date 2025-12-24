@@ -7,7 +7,7 @@
 [ext_resource type="PackedScene" uid="uid://bfl3bn4u2am21" path="res://scene/actor/tree.tscn" id="8_kcqwh"]
 [ext_resource type="PackedScene" uid="uid://ekjtt81nkr2f" path="res://scene/actor/flower.tscn" id="9_3g7ix"]
 [ext_resource type="PackedScene" uid="uid://d13fcqueggvup" path="res://assets/model/fence.glb" id="10_agd6e"]
-[ext_resource type="Script" uid="uid://bbi6kjxerg3hk" path="res://src/marker_teleport.gd" id="10_tlhmt"]
+[ext_resource type="Script" path="res://src/marker_teleport.gd" id="10_tlhmt"]
 [ext_resource type="Texture2D" uid="uid://cv64jbrjk4a11" path="res://assets/texture/piece_pawn.svg" id="11_crw01"]
 [ext_resource type="Script" uid="uid://bt4vtnpxu5i4x" path="res://src/actor.gd" id="11_not3w"]
 [ext_resource type="PackedScene" uid="uid://bwss6iu3vs38d" path="res://assets/model/hotel_gate.glb" id="12_not3w"]
@@ -187,7 +187,6 @@ to = "res://scene/level/outside_1.tscn"
 args = {
 "by": 4
 }
-metadata/_custom_type_script = "uid://bbi6kjxerg3hk"
 
 [node name="marker_teleport_2" type="Marker3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0, 7)
@@ -196,7 +195,6 @@ to = "res://scene/level/outside_1.tscn"
 args = {
 "by": 3
 }
-metadata/_custom_type_script = "uid://bbi6kjxerg3hk"
 
 [node name="marker_teleport_3" type="Marker3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, -7)
@@ -205,7 +203,6 @@ to = "res://scene/level/entrance.tscn"
 args = {
 "by": 3
 }
-metadata/_custom_type_script = "uid://bbi6kjxerg3hk"
 
 [node name="fence_0" parent="." instance=ExtResource("10_agd6e")]
 transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 7, 0, -3)
@@ -260,4 +257,3 @@ to = "res://scene/level/entrance.tscn"
 args = {
 "by": 4
 }
-metadata/_custom_type_script = "uid://bbi6kjxerg3hk"

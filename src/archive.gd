@@ -57,14 +57,14 @@ func update_list() -> void:
 		button.add_theme_stylebox_override("hover", StyleBoxEmpty.new())
 		button.add_theme_stylebox_override("pressed", StyleBoxEmpty.new())
 		button.add_theme_font_override("font", preload("res://assets/fonts/FangZhengShuSongJianTi-1.ttf"))
-		button.connect("button_up", button_pressed.bind(iter))
+		button.connect("button_up", open_document.bind(iter))
 		$texture_rect/scroll_container/v_box_container.add_child(button)
 		button_list.push_back(button)
 	
-func button_pressed(filename:String) -> void:
+func open_document(filename:String) -> void:
 	if is_instance_valid(document):
 		document.save_file()
-	
+	filename = filename.get_file()
 	var filename_splited:PackedStringArray = filename.split(".")	# 模板.名称.json
 	document = load(template_list[filename_splited[0]]).instantiate()
 	document.set_filename(filename)

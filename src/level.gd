@@ -35,6 +35,7 @@ func _ready() -> void:
 			if !interact_list.has(by):
 				interact_list[by] = {}
 			interact_list[by][node.selection] = node.event
+			title[by] = ""
 	chessboard.set_state(state)
 	for node:Node in get_children():
 		if node is Actor && node.piece_type != 0:
