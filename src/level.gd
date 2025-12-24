@@ -230,6 +230,10 @@ func state_ready_versus_move(_arg:Dictionary) -> void:
 			change_state.call_deferred("black_win")
 		elif Chess.get_end_type(chessboard.state) == "checkmate_white":
 			change_state.call_deferred("white_win")
+		elif Chess.get_end_type(chessboard.state) == "stalemate_black":
+			change_state.call_deferred("black_win")
+		elif Chess.get_end_type(chessboard.state) == "stalemate_white":
+			change_state.call_deferred("black_win")
 		elif chessboard.state.get_turn() == 0:
 			change_state.call_deferred("versus_enemy")
 		else:
