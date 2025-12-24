@@ -29,6 +29,12 @@ func _ready() -> void:
 			var by:int = Chess.to_position_int($chessboard.get_position_name(node.global_position))
 			state.set_bit(ord("Z"), state.get_bit(ord("Z")) | Chess.mask(Chess.to_64(by)))
 			interact_list[by] = {"": node.event}
+		if node is MarkerSelection:
+			var by:int = Chess.to_position_int($chessboard.get_position_name(node.global_position))
+			state.set_bit(ord("z"), state.get_bit(ord("z")) | Chess.mask(Chess.to_64(by)))
+			if !interact_list.has(by):
+				interact_list[by] = {}
+			interact_list[by][node.selection] = node.event
 	chessboard.set_state(state)
 	for node:Node in get_children():
 		if node is Actor && node.piece_type != 0:

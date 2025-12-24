@@ -1,4 +1,4 @@
-extends MarkerEvent
+extends MarkerSelection
 class_name MarkerDocument
 
 @export var file_path:String = "usr://archive/"
@@ -11,3 +11,4 @@ func event() -> void:
 		var file:FileAccess = FileAccess.open(path, FileAccess.WRITE)
 		file.store_string(JSON.stringify(file_content))
 		file.close()
+	Archive.open()
