@@ -13,10 +13,10 @@ func _ready() -> void:
 func _unhandled_input(event:InputEvent) -> void:
 	if !document || !visible:
 		return
-	if event is InputEventMultiScreenDrag:
+	if event is InputEventMultiScreenDrag && get_global_rect().has_point(event.position):
 		change_offset(event.relative)
 		get_viewport().set_input_as_handled()
-	if event is InputEventScreenPinch:
+	if event is InputEventScreenPinch && event.position && get_global_rect().has_point(event.position):
 		change_zoom(event.relative / 500)
 		get_viewport().set_input_as_handled()
 	var actual_position:Vector2
