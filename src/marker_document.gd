@@ -2,7 +2,7 @@ extends MarkerSelection
 class_name MarkerDocument
 
 @export var file_path:String = "usr://archive/"
-@export var file_content:Dictionary = {"line": []}
+@export var file_content:Dictionary = {"lines": []}
 @export var comment:String = ""
 
 func event() -> void:
