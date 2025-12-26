@@ -7,7 +7,7 @@
 [ext_resource type="PackedScene" uid="uid://d13fcqueggvup" path="res://assets/model/fence.glb" id="10_ogq1s"]
 [ext_resource type="Script" uid="uid://bt4vtnpxu5i4x" path="res://src/actor.gd" id="10_qs46h"]
 [ext_resource type="Texture2D" uid="uid://bcktgfe4r1bsf" path="res://assets/texture/piece_knight.svg" id="11_cqecb"]
-[ext_resource type="Script" uid="uid://bbi6kjxerg3hk" path="res://src/marker_teleport.gd" id="11_ogq1s"]
+[ext_resource type="Script" path="res://src/marker_teleport.gd" id="11_ogq1s"]
 [ext_resource type="PackedScene" uid="uid://cgoyrycf6ngyw" path="res://scene/actor/piece_knight_black.tscn" id="12_ngi5n"]
 [ext_resource type="PackedScene" uid="uid://8kbw64nuq0ai" path="res://assets/model/fence_turn.glb" id="13_mi7h5"]
 [ext_resource type="PackedScene" uid="uid://c7joe7stxo7vb" path="res://scene/card_item.tscn" id="15_qs46h"]
@@ -98,7 +98,6 @@ to = "res://scene/level/outside_1.tscn"
 args = {
 "by": 103
 }
-metadata/_custom_type_script = "uid://bbi6kjxerg3hk"
 
 [node name="marker_teleport_2" type="Marker3D" parent="."]
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -7.0000005, 0, -4.9999995)
@@ -107,7 +106,6 @@ to = "res://scene/level/outside_3.tscn"
 args = {
 "by": 96
 }
-metadata/_custom_type_script = "uid://bbi6kjxerg3hk"
 
 [node name="fence_0" parent="." instance=ExtResource("10_ogq1s")]
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 6.9999995, 0, -3.0000007)
@@ -151,7 +149,6 @@ to = "res://scene/level/outside_1.tscn"
 args = {
 "by": 39
 }
-metadata/_custom_type_script = "uid://bbi6kjxerg3hk"
 
 [node name="card_item" parent="." instance=ExtResource("15_qs46h")]
 transform = Transform3D(-7, 0, -6.119594e-07, 0, 7, 0, 6.119594e-07, 0, -7, 5.0000005, 0, 2.9999995)
@@ -231,7 +228,6 @@ to = "res://scene/level/outside_3.tscn"
 args = {
 "by": 32
 }
-metadata/_custom_type_script = "uid://bbi6kjxerg3hk"
 
 [node name="fence_23" parent="." instance=ExtResource("10_ogq1s")]
 transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -7, 0, 7)
