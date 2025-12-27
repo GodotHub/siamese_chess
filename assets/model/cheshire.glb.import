@@ -4152,10 +4152,10 @@ _subresources={
 "slices/amount": 0
 },
 "battle_move": {
-"save_to_file/enabled": false,
-"save_to_file/fallback_path": "",
+"save_to_file/enabled": true,
+"save_to_file/fallback_path": "res://assets/model/cheshire_battle_move.res",
 "save_to_file/keep_custom_tracks": "",
-"save_to_file/path": "",
+"save_to_file/path": "uid://j0u7qu786mvm",
 "settings/loop_mode": 1,
 "slice_1/end_frame": 0,
 "slice_1/loop_mode": 0,

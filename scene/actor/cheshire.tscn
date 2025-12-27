@@ -138,7 +138,6 @@ size = Vector2(0.1, 0.1)
 
 [node name="cheshire" instance=ExtResource("1_lkfns")]
 script = ExtResource("2_lp02k")
-piece_type = [107]
 
 [node name="animation_tree" type="AnimationTree" parent="." index="2"]
 tree_root = SubResource("AnimationNodeStateMachine_pjgvl")
@@ -163,3 +162,8 @@ one_shot = true
 explosiveness = 0.9
 process_material = SubResource("ParticleProcessMaterial_3kauh")
 draw_pass_1 = SubResource("PlaneMesh_2ct1d")
+
+[node name="audio_stream_player_3d" type="AudioStreamPlayer3D" parent="." index="5"]
+volume_db = -20.226
+max_db = -4.942
+bus = &"SFX"

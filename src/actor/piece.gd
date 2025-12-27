@@ -16,6 +16,7 @@ func _ready() -> void:
 	audio_stream_randomizer.add_stream(-1, load("res://assets/audio/351518__mh2o__chess_move_on_alabaster.wav"))
 	sfx = AudioStreamPlayer3D.new()
 	sfx.stream = audio_stream_randomizer
+	sfx.bus = &"SFX"
 	add_child(sfx)
 	sfx.unit_size = 2
 	sfx.volume_db = -20
@@ -31,11 +32,13 @@ func introduce(_pos:Vector3) -> void:	# 登场动画
 
 func move(_pos:Vector3) -> void:
 	var tween:Tween = create_tween()
+	tween.tween_callback(sfx.play)
 	tween.tween_property(self, "global_position", _pos, 0.3).set_trans(Tween.TRANS_SINE)
 	tween.tween_callback(animation_finished.emit)
 
 func capturing(_pos:Vector3, _captured:Actor) -> void:	# 攻击
 	var tween:Tween = create_tween()
+	tween.tween_callback(sfx.play)
 	tween.tween_property(self, "global_position", _pos, 0.3).set_trans(Tween.TRANS_SINE)
 	tween.tween_callback(animation_finished.emit)
 	_captured.captured(self)
@@ -46,6 +49,7 @@ func captured(_capturing:Actor = null) -> void:	# 被攻击
 
 func promote(_pos:Vector3, _piece:int) -> void:
 	var tween:Tween = create_tween()
+	tween.tween_callback(sfx.play)
 	tween.tween_property(self, "global_position", _pos, 0.3).set_trans(Tween.TRANS_SINE)
 	tween.tween_callback(change_model.bind(_piece))
 	tween.tween_callback(animation_finished.emit)
