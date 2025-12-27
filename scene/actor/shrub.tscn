@@ -1,7 +1,8 @@
-[gd_scene load_steps=8 format=3 uid="uid://rlos56ckp02d"]
+[gd_scene load_steps=10 format=3 uid="uid://rlos56ckp02d"]
 
 [ext_resource type="PackedScene" uid="uid://biv8ghyjqw63y" path="res://assets/model/shrub.glb" id="1_08tlt"]
 [ext_resource type="Script" uid="uid://df1er0legxfcr" path="res://src/actor/shrub.gd" id="2_4hxfj"]
+[ext_resource type="AudioStream" uid="uid://dpte58gqcbvic" path="res://assets/audio/511347__abacagi__bush_v1.wav" id="3_71i6i"]
 
 [sub_resource type="Curve" id="Curve_4hxfj"]
 _limits = [0.0, 3.0, 0.0, 1.0]
@@ -31,6 +32,11 @@ albedo_color = Color(0.16, 0.0784, 0.0784, 1)
 material = SubResource("StandardMaterial3D_ftdew")
 size = Vector2(0.1, 0.1)
 
+[sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_71i6i"]
+random_pitch = 1.47
+streams_count = 1
+stream_0/stream = ExtResource("3_71i6i")
+
 [node name="shrub" instance=ExtResource("1_08tlt")]
 script = ExtResource("2_4hxfj")
 
@@ -51,3 +57,6 @@ one_shot = true
 explosiveness = 0.9
 process_material = SubResource("ParticleProcessMaterial_dmn6y")
 draw_pass_1 = SubResource("PlaneMesh_2sf7p")
+
+[node name="audio_stream_player_3d" type="AudioStreamPlayer3D" parent="." index="4"]
+stream = SubResource("AudioStreamRandomizer_71i6i")

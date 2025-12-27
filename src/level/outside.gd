@@ -2,6 +2,7 @@ extends Level
 
 func _ready() -> void:
 	super._ready()
+	Ambient.change_environment_sound(load("res://assets/audio/405135__mjeno__autumn-forest-leaves-falling-close-to-pond-iii-loopable.wav"))
 	var cheshire_by:int = get_meta("by")
 	var cheshire_instance:Actor = load("res://scene/actor/cheshire.tscn").instantiate()
 	cheshire_instance.position = $chessboard.convert_name_to_position(Chess.to_position_name(cheshire_by))
