@@ -38,6 +38,7 @@ func interact_pastor() -> void:
 
 func state_ready_in_game_start(_arg:Dictionary) -> void:
 	$table_0/chessboard_standard.state = Chess.create_initial_state()
+	$table_0/chessboard_standard.remove_piece_set()
 	$table_0/chessboard_standard.add_default_piece_set()
 	if $table_0/chessboard_standard.state.get_turn() == 0:
 		change_state.call_deferred("in_game_enemy")

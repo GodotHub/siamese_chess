@@ -72,6 +72,14 @@ func add_default_piece_set() -> void:	# 最好交由外部来负责棋子的准�
 			"z":
 				add_piece_instance(load("res://scene/actor/piece_checker_4_black.tscn").instantiate(), i)
 
+func remove_piece_set() -> void:
+	for by:int in chessboard_piece:
+		chessboard_piece[by].queue_free()
+	for iter:Actor in backup_piece:
+		iter.queue_free()
+	chessboard_piece.clear()
+	backup_piece.clear()
+
 func input(_from:Node3D, _to:Area3D, _event:InputEvent, _event_position:Vector3, _normal:Vector3) -> void:
 	if _event is InputEventMouseButton:
 		if _event.pressed && _event.button_index == MOUSE_BUTTON_LEFT:
