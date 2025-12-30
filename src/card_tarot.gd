@@ -31,3 +31,9 @@ func use_card_directly() -> void:
 	chessboard.state.capture_piece(by)
 	chessboard = null
 	use_directly = false
+
+func show_up(_instance:Control) -> void:
+	if use_directly:
+		_instance.position.y = -700
+	else:
+		_instance.position.y = -600

@@ -23,3 +23,6 @@ func use_card_on_chessboard(_chessboard:Chessboard, _by:int) -> void:
 
 func use_card_directly() -> void:
 	pass
+
+func show_up(_instance:Control) -> void:
+	pass

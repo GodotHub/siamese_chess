@@ -195,12 +195,11 @@ func state_exit_explore_use_card() -> void:
 
 func state_ready_explore_using_card(_arg:Dictionary) -> void:
 	var card:Card = HoldCard.selected_card
-	var by:int = _arg["by"]
 	if card.use_directly:
 		card.use_card_directly()
 	else:
+		var by:int = _arg["by"]
 		card.use_card_on_chessboard(chessboard, by)
-	HoldCard.deselect()
 	change_state.call_deferred("explore_check_attack")
 
 func state_ready_versus_start(_arg:Dictionary) -> void:
