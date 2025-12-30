@@ -49,7 +49,7 @@ func reset() -> void:
 
 func card_input(_event:InputEvent, card_instance:TextureRect) -> void:
 	if _event is InputEventMouseButton:
-		if _event.pressed && _event.button_index == MOUSE_BUTTON_LEFT:
+		if !_event.pressed && _event.button_index == MOUSE_BUTTON_LEFT:
 			select_card(card_instance)
 
 # 这里需要切实地让player感知到自己选了这张牌
