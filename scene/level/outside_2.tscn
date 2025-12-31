@@ -7,7 +7,7 @@
 [ext_resource type="PackedScene" uid="uid://d13fcqueggvup" path="res://assets/model/fence.glb" id="10_ogq1s"]
 [ext_resource type="Script" uid="uid://bt4vtnpxu5i4x" path="res://src/actor.gd" id="10_qs46h"]
 [ext_resource type="Texture2D" uid="uid://bcktgfe4r1bsf" path="res://assets/texture/piece_knight.svg" id="11_cqecb"]
-[ext_resource type="Script" path="res://src/marker_teleport.gd" id="11_ogq1s"]
+[ext_resource type="Script" uid="uid://bbi6kjxerg3hk" path="res://src/marker_teleport.gd" id="11_ogq1s"]
 [ext_resource type="PackedScene" uid="uid://cgoyrycf6ngyw" path="res://scene/actor/piece_knight_black.tscn" id="12_ngi5n"]
 [ext_resource type="PackedScene" uid="uid://8kbw64nuq0ai" path="res://assets/model/fence_turn.glb" id="13_mi7h5"]
 [ext_resource type="PackedScene" uid="uid://c7joe7stxo7vb" path="res://scene/card_item.tscn" id="15_qs46h"]

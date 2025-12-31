@@ -300,7 +300,12 @@ func state_ready_versus_extra_move(_arg:Dictionary) -> void:
 	Dialog.push_selection(decision_list, "请选择一个着法", true, true)
 
 func state_ready_black_win(_arg:Dictionary) -> void:
-	var bit:int = chessboard.state.get_bit("A".unicode_at(0))
+	var bit:int = chessboard.state.get_bit(ord("K")) | \
+				  chessboard.state.get_bit(ord("Q")) | \
+				  chessboard.state.get_bit(ord("R")) | \
+				  chessboard.state.get_bit(ord("B")) | \
+				  chessboard.state.get_bit(ord("N")) | \
+				  chessboard.state.get_bit(ord("P"))
 	while bit:
 		chessboard.state.capture_piece(Chess.to_x88(Chess.first_bit(bit)))
 		chessboard.chessboard_piece[Chess.to_x88(Chess.first_bit(bit))].captured()
