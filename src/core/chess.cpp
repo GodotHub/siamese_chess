@@ -1383,8 +1383,8 @@ godot::PackedInt32Array Chess::generate_king_path(const godot::Ref<State> &_stat
 			{
 				continue;
 			}
-			godot::Ref<State>test_state = _state->duplicate();
-			apply_move(test_state, Chess::create(Chess::to_x88(min_node), next_x88, 0));
+			godot::Ref<State> test_state = _state->duplicate();
+			apply_move(test_state, Chess::create(_from, next_x88, 0));
 			if (is_check(test_state, 1 - Chess::group(_state->get_piece(_from))))
 			{
 				continue;
