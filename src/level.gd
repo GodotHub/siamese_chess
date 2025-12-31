@@ -232,15 +232,16 @@ func state_ready_versus_waiting() -> void:
 func state_ready_versus_move(_arg:Dictionary) -> void:
 	history_state.push_back(chessboard.state.get_zobrist())
 	state_signal_connect(chessboard.animation_finished, func() -> void:
-		if Chess.get_end_type(chessboard.state) == "checkmate_black":
+		var end_type:String = Chess.get_end_type(chessboard.state)
+		if end_type == "checkmate_black":
 			change_state.call_deferred("black_win")
-		elif Chess.get_end_type(chessboard.state) == "checkmate_white":
+		elif end_type == "checkmate_white":
 			change_state.call_deferred("white_win")
-		elif Chess.get_end_type(chessboard.state) == "stalemate_black":
+		elif end_type == "stalemate_black":
 			change_state.call_deferred("black_win")
-		elif Chess.get_end_type(chessboard.state) == "stalemate_white":
+		elif end_type == "stalemate_white":
 			change_state.call_deferred("black_win")
-		elif Chess.get_end_type(chessboard.state) == "not_enough_piece":
+		elif end_type == "not_enough_piece":
 			change_state.call_deferred("black_win")
 		elif chessboard.state.get_turn() == 0:
 			change_state.call_deferred("versus_enemy")
