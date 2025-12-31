@@ -55,7 +55,8 @@ func promote(_pos:Vector3, _piece:int) -> void:
 	tween.tween_callback(animation_finished.emit)
 
 func unpromote() -> void:
-	promote_instance.queue_free()
+	if is_instance_valid(promote_instance):
+		promote_instance.queue_free()
 	$piece.visible = true
 
 func change_model(_piece:int) -> void:

@@ -18,6 +18,7 @@ func reset() -> void:
 	if is_instance_valid(chessboard):
 		chessboard.remove_piece_instance(actor)
 		chessboard = null
+		actor.unpromote()
 
 func use_card_on_chessboard(_chessboard:Chessboard, _by:int) -> void:
 	_chessboard.state.add_piece(_by, piece)
