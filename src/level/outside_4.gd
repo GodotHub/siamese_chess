@@ -4,7 +4,7 @@ var battle_finished:bool = false
 
 func _ready() -> void:
 	super._ready()
-	battle_finished = Progress.has_key("outside_2_battle") && Progress.get_value("outside_2_battle")
+	battle_finished = Progress.has_key("outside_4_battle") && Progress.get_value("outside_4_battle")
 	if !battle_finished:
 		var table:Array = [
 			{
@@ -14,7 +14,7 @@ func _ready() -> void:
 			},
 			{
 				"actor": load("res://scene/actor/piece_rook_white.tscn").instantiate().set_larger_scale(),
-				"pos": 0x24,
+				"pos": 0x14,
 				"piece": ord("R")
 			}
 		]
@@ -29,4 +29,4 @@ func _ready() -> void:
 func on_level_state_changed(state:String) -> void:
 	if state == "black_win":
 		battle_finished = true
-		Progress.set_value("outside_2_battle", true)
+		Progress.set_value("outside_4_battle", true)
