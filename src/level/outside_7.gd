@@ -9,7 +9,7 @@ func _ready() -> void:
 		var table:Array = [
 			{
 				"actor": load("res://scene/actor/enemy_cheshire.tscn").instantiate(),
-				"pos": 0x16,
+				"pos": 0x61,
 				"piece": ord("K")
 			},
 			{
@@ -24,13 +24,18 @@ func _ready() -> void:
 			},
 			{
 				"actor": load("res://scene/actor/piece_knight_white.tscn").instantiate().set_larger_scale(),
-				"pos": 0x71,
+				"pos": 0x31,
 				"piece": ord("N")
 			},
 			{
 				"actor": load("res://scene/actor/piece_knight_white.tscn").instantiate().set_larger_scale(),
 				"pos": 0x52,
 				"piece": ord("N")
+			},
+			{
+				"actor": load("res://scene/actor/piece_rook_white.tscn").instantiate().set_larger_scale(),
+				"pos": 0x33,
+				"piece": ord("R")
 			}
 		]
 		for iter:Dictionary in table:
