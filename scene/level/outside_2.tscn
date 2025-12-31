@@ -7,8 +7,8 @@
 [ext_resource type="PackedScene" uid="uid://d13fcqueggvup" path="res://assets/model/fence.glb" id="10_ogq1s"]
 [ext_resource type="Script" uid="uid://bt4vtnpxu5i4x" path="res://src/actor.gd" id="10_qs46h"]
 [ext_resource type="Texture2D" uid="uid://bcktgfe4r1bsf" path="res://assets/texture/piece_knight.svg" id="11_cqecb"]
-[ext_resource type="Script" uid="uid://bbi6kjxerg3hk" path="res://src/marker_teleport.gd" id="11_ogq1s"]
 [ext_resource type="PackedScene" uid="uid://cgoyrycf6ngyw" path="res://scene/actor/piece_knight_black.tscn" id="12_ngi5n"]
+[ext_resource type="PackedScene" uid="uid://dgvq7kuhcahlb" path="res://scene/teleport_pointer.tscn" id="13_8sf6x"]
 [ext_resource type="PackedScene" uid="uid://8kbw64nuq0ai" path="res://assets/model/fence_turn.glb" id="13_mi7h5"]
 [ext_resource type="PackedScene" uid="uid://c7joe7stxo7vb" path="res://scene/card_item.tscn" id="15_qs46h"]
 [ext_resource type="PackedScene" uid="uid://hwvhjiv4h8w1" path="res://assets/model/fence_branch.glb" id="16_ijp1v"]
@@ -91,22 +91,6 @@ piece_type = 88
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 7.0000005, 0, 6.9999995)
 piece_type = 88
 
-[node name="marker_teleport" type="Marker3D" parent="."]
-transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 6.9999995, 0, -5.0000005)
-script = ExtResource("11_ogq1s")
-to = "res://scene/level/outside_1.tscn"
-args = {
-"by": 103
-}
-
-[node name="marker_teleport_2" type="Marker3D" parent="."]
-transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -7.0000005, 0, -4.9999995)
-script = ExtResource("11_ogq1s")
-to = "res://scene/level/outside_3.tscn"
-args = {
-"by": 96
-}
-
 [node name="fence_0" parent="." instance=ExtResource("10_ogq1s")]
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 6.9999995, 0, -3.0000007)
 script = ExtResource("10_qs46h")
@@ -141,14 +125,6 @@ piece_type = 121
 transform = Transform3D(1.3113417e-07, 0, -1, 0, 1, 0, 1, 0, 1.3113417e-07, 3.0000002, 0, 2.9999998)
 script = ExtResource("10_qs46h")
 piece_type = 121
-
-[node name="marker_teleport_3" type="Marker3D" parent="."]
-transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 7.0000005, 0, 2.9999993)
-script = ExtResource("11_ogq1s")
-to = "res://scene/level/outside_1.tscn"
-args = {
-"by": 39
-}
 
 [node name="card_item" parent="." instance=ExtResource("15_qs46h")]
 transform = Transform3D(-7, 0, -6.119594e-07, 0, 7, 0, 6.119594e-07, 0, -7, 5.0000005, 0, 2.9999995)
@@ -221,14 +197,6 @@ script = ExtResource("10_qs46h")
 transform = Transform3D(-4.371138e-08, 0, 1, 0, 1, 0, -1, 0, -4.371138e-08, 2.9999998, 0, 9)
 script = ExtResource("10_qs46h")
 
-[node name="marker_teleport_4" type="Marker3D" parent="."]
-transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -7.0000005, 0, 3.0000005)
-script = ExtResource("11_ogq1s")
-to = "res://scene/level/outside_3.tscn"
-args = {
-"by": 32
-}
-
 [node name="fence_23" parent="." instance=ExtResource("10_ogq1s")]
 transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -7, 0, 7)
 script = ExtResource("10_qs46h")
@@ -238,3 +206,31 @@ piece_type = 121
 transform = Transform3D(1.3113417e-07, 0, -1, 0, 1, 0, 1, 0, 1.3113417e-07, 3.0000002, 0, 7)
 script = ExtResource("10_qs46h")
 piece_type = 121
+
+[node name="teleport_pointer_2" parent="." instance=ExtResource("13_8sf6x")]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -7, 0, -5)
+to = "res://scene/level/outside_3.tscn"
+args = {
+"by": 96
+}
+
+[node name="teleport_pointer" parent="." instance=ExtResource("13_8sf6x")]
+transform = Transform3D(1.3113416e-07, 0, 1, 0, 1, 0, -1, 0, 1.3113416e-07, 7, 0, -5)
+to = "res://scene/level/outside_1.tscn"
+args = {
+"by": 103
+}
+
+[node name="teleport_pointer_3" parent="." instance=ExtResource("13_8sf6x")]
+transform = Transform3D(1.3113416e-07, 0, 1, 0, 1, 0, -1, 0, 1.3113416e-07, 7, 0, 3)
+to = "res://scene/level/outside_1.tscn"
+args = {
+"by": 39
+}
+
+[node name="teleport_pointer_4" parent="." instance=ExtResource("13_8sf6x")]
+transform = Transform3D(-4.371138e-08, 0, -1, 0, 1, 0, 1, 0, -4.371138e-08, -7, 0, 3)
+to = "res://scene/level/outside_3.tscn"
+args = {
+"by": 32
+}

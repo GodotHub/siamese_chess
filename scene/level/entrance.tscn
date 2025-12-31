@@ -6,12 +6,12 @@
 [ext_resource type="PackedScene" uid="uid://cpdfjiqb4d2q6" path="res://assets/model/pool.glb" id="4_vie8g"]
 [ext_resource type="PackedScene" uid="uid://d13fcqueggvup" path="res://assets/model/fence.glb" id="5_of156"]
 [ext_resource type="PackedScene" uid="uid://8kbw64nuq0ai" path="res://assets/model/fence_turn.glb" id="6_78g2j"]
-[ext_resource type="Script" uid="uid://bbi6kjxerg3hk" path="res://src/marker_teleport.gd" id="7_2kov4"]
 [ext_resource type="PackedScene" uid="uid://bwss6iu3vs38d" path="res://assets/model/hotel_gate.glb" id="7_h0t85"]
 [ext_resource type="PackedScene" uid="uid://cddqnr41xmo4x" path="res://assets/model/lotus_leaf.glb" id="8_h0t85"]
 [ext_resource type="Script" uid="uid://bt4vtnpxu5i4x" path="res://src/actor.gd" id="9_r5kom"]
 [ext_resource type="PackedScene" uid="uid://cwjgphuayqvy3" path="res://assets/model/hotel_door_large.glb" id="10_lvxho"]
 [ext_resource type="PackedScene" uid="uid://bfl3bn4u2am21" path="res://scene/actor/tree.tscn" id="12_x41v6"]
+[ext_resource type="PackedScene" uid="uid://dgvq7kuhcahlb" path="res://scene/teleport_pointer.tscn" id="13_as14m"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_j5fnc"]
 sky_top_color = Color(1, 1, 1, 1)
@@ -252,42 +252,6 @@ metadata/_custom_type_script = "uid://bt4vtnpxu5i4x"
 [node name="hotel_door_large" parent="." instance=ExtResource("10_lvxho")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.27220386, 11.386337)
 
-[node name="marker_teleport_entrance" type="Marker3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0, 7)
-script = ExtResource("7_2kov4")
-to = "res://scene/level/reception_lobby.tscn"
-args = {
-"by": 116
-}
-metadata/_custom_type_script = "uid://bbi6kjxerg3hk"
-
-[node name="marker_teleport_entrance_2" type="Marker3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 7)
-script = ExtResource("7_2kov4")
-to = "res://scene/level/reception_lobby.tscn"
-args = {
-"by": 115
-}
-metadata/_custom_type_script = "uid://bbi6kjxerg3hk"
-
-[node name="marker_teleport_entrance_3" type="Marker3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0, -8)
-script = ExtResource("7_2kov4")
-to = "res://scene/level/outside_0.tscn"
-args = {
-"by": 4
-}
-metadata/_custom_type_script = "uid://bbi6kjxerg3hk"
-
-[node name="marker_teleport_entrance_4" type="Marker3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, -8)
-script = ExtResource("7_2kov4")
-to = "res://scene/level/outside_0.tscn"
-args = {
-"by": 3
-}
-metadata/_custom_type_script = "uid://bbi6kjxerg3hk"
-
 [node name="tree" parent="." instance=ExtResource("12_x41v6")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7, 0, -8)
 piece_type = 121
@@ -302,3 +266,31 @@ piece_type = 0
 
 [node name="lotus_leaf_11" parent="." instance=ExtResource("8_h0t85")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.8758287, 0.2866273, 2.3786383)
+
+[node name="teleport_pointer" parent="." instance=ExtResource("13_as14m")]
+transform = Transform3D(1, 0, -1.7484555e-07, 0, 1, 0, 1.7484555e-07, 0, 1, -1, 0, 7)
+to = "res://scene/level/reception_lobby.tscn"
+args = {
+"by": 116
+}
+
+[node name="teleport_pointer_2" parent="." instance=ExtResource("13_as14m")]
+transform = Transform3D(1, 0, -1.7484555e-07, 0, 1, 0, 1.7484555e-07, 0, 1, 1, 0, 7)
+to = "res://scene/level/reception_lobby.tscn"
+args = {
+"by": 116
+}
+
+[node name="teleport_pointer_3" parent="." instance=ExtResource("13_as14m")]
+transform = Transform3D(-1, 0, 8.742278e-08, 0, 1, 0, -8.742278e-08, 0, -1, -1, 0, -8)
+to = "res://scene/level/outside_0.tscn"
+args = {
+"by": 4
+}
+
+[node name="teleport_pointer_4" parent="." instance=ExtResource("13_as14m")]
+transform = Transform3D(-1, 0, 8.742278e-08, 0, 1, 0, -8.742278e-08, 0, -1, 1, 0, -8)
+to = "res://scene/level/outside_0.tscn"
+args = {
+"by": 3
+}
