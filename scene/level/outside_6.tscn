@@ -1,6 +1,6 @@
 [gd_scene load_steps=12 format=3 uid="uid://beby1hqges8u0"]
 
-[ext_resource type="Script" uid="uid://in8n7yjdw5tm" path="res://src/level/outside_3.gd" id="1_pv7yn"]
+[ext_resource type="Script" uid="uid://k0bnq4fy4eqa" path="res://src/level/outside_6.gd" id="1_1fjtr"]
 [ext_resource type="PackedScene" uid="uid://b3ml34bssywkr" path="res://scene/player.tscn" id="2_dydo2"]
 [ext_resource type="PackedScene" uid="uid://dwvyc2qlcdag0" path="res://scene/chessboard_large.tscn" id="3_cnghu"]
 [ext_resource type="PackedScene" uid="uid://d13fcqueggvup" path="res://assets/model/fence.glb" id="4_nv7hc"]
@@ -29,7 +29,7 @@ volumetric_fog_emission = Color(1, 1, 1, 1)
 adjustment_enabled = true
 
 [node name="outside" type="Node3D"]
-script = ExtResource("1_pv7yn")
+script = ExtResource("1_1fjtr")
 metadata/by = 116
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
