@@ -30,3 +30,8 @@ func get_value(key:String) -> Variant:
 
 func set_value(key:String, data:Variant) -> void:
 	table[key] = data
+
+func accumulate(key:String, data:Variant) -> void:
+	if !table.has(key):
+		table[key] = 0
+	table[key] += data
