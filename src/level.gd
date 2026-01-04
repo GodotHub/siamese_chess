@@ -150,7 +150,7 @@ func state_ready_explore_check_attack(_arg:Dictionary) -> void:
 		change_state.call_deferred("explore_check_interact", _arg)
 		return
 	if Chess.is_check(chessboard.state, 1):
-		change_state.call_deferred("versus_start")
+		change_state("versus_alert")
 		return
 	var white_move_list:PackedInt32Array = Chess.generate_move(chessboard.state, 0)
 	for move:int in white_move_list:
@@ -158,7 +158,7 @@ func state_ready_explore_check_attack(_arg:Dictionary) -> void:
 		if !chessboard.state.has_piece(to):
 			continue
 		if char(chessboard.state.get_piece(to)) in ["k", "q", "r", "b", "n", "p"]:
-			change_state.call_deferred("versus_start")
+			change_state("versus_alert")
 			return
 	change_state.call_deferred("explore_check_interact", _arg)
 
@@ -200,7 +200,11 @@ func state_ready_explore_using_card(_arg:Dictionary) -> void:
 	else:
 		var by:int = _arg["by"]
 		card.use_card_on_chessboard(chessboard, by)
-	change_state.call_deferred("explore_check_attack")
+	change_state("explore_check_attack")
+
+func state_ready_versus_alert(_arg:Dictionary) -> void:
+	state_signal_connect(Dialog.on_next, change_state.bind("versus_start"))
+	Dialog.push_dialog("敌人发现了你！", "", true, true)
 
 func state_ready_versus_start(_arg:Dictionary) -> void:
 	chessboard.state.set_turn(0)
