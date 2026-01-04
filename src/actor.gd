@@ -15,7 +15,7 @@ func introduce(_pos:Vector3) -> void:	# 登场动画
 	visible = true
 	global_position = _pos
 
-func leave(_pos:Vector3) -> void:
+func leave() -> void:
 	visible = false
 
 func capturing(_pos:Vector3, _captured:Actor) -> void:	# 攻击
