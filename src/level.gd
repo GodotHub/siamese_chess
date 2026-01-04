@@ -323,8 +323,12 @@ func state_ready_black_win(_arg:Dictionary) -> void:
 func state_ready_white_win(_arg:Dictionary) -> void:
 	var by:int = Chess.to_x88(chessboard.state.bit_index("k".unicode_at(0))[0])
 	chessboard.state.capture_piece(Chess.to_x88(by))
-	chessboard.chessboard_piece[Chess.to_x88(by)].captured()
-	Dialog.push_dialog("你输了！", "", false, false)
+	#chessboard.chessboard_piece[Chess.to_x88(by)].captured()
+	state_signal_connect(Dialog.on_next, change_state.bind("conclude"))
+	Dialog.push_dialog("你输了！", "", true, true)
+
+func state_ready_conclude(_arg:Dictionary) -> void:
+	Loading.change_scene("res://scene/conclude.tscn", {"obtain": 10, "wins": 2}, 1)
 
 func state_ready_versus_draw(_arg:Dictionary) -> void:
 	var bit:int = chessboard.state.get_bit(ord("K")) | \
