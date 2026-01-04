@@ -313,12 +313,28 @@ func state_ready_black_win(_arg:Dictionary) -> void:
 		chessboard.state.capture_piece(Chess.to_x88(Chess.first_bit(bit)))
 		chessboard.chessboard_piece[Chess.to_x88(Chess.first_bit(bit))].captured()
 		bit = Chess.next_bit(bit)
-	change_state.call_deferred("explore_idle")
+	state_signal_connect(Dialog.on_next, change_state.bind("explore_idle"))
+	Dialog.push_dialog("你赢了！", "", true, true)
 
 func state_ready_white_win(_arg:Dictionary) -> void:
 	var by:int = Chess.to_x88(chessboard.state.bit_index("k".unicode_at(0))[0])
 	chessboard.state.capture_piece(Chess.to_x88(by))
 	chessboard.chessboard_piece[Chess.to_x88(by)].captured()
+	Dialog.push_dialog("你输了！", "", false, false)
+
+func state_ready_versus_draw(_arg:Dictionary) -> void:
+	var bit:int = chessboard.state.get_bit(ord("K")) | \
+				chessboard.state.get_bit(ord("Q")) | \
+				chessboard.state.get_bit(ord("R")) | \
+				chessboard.state.get_bit(ord("B")) | \
+				chessboard.state.get_bit(ord("N")) | \
+				chessboard.state.get_bit(ord("P"))
+	while bit:
+		chessboard.state.capture_piece(Chess.to_x88(Chess.first_bit(bit)))
+		chessboard.chessboard_piece[Chess.to_x88(Chess.first_bit(bit))].leave()
+		bit = Chess.next_bit(bit)
+	state_signal_connect(Dialog.on_next, change_state.bind("explore_idle"))
+	Dialog.push_dialog("平局", "", true, true)
 
 func state_ready_dialog(_arg:Dictionary) -> void:
 	var by:int = Chess.to_x88(chessboard.state.bit_index("k".unicode_at(0))[0])
