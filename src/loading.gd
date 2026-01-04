@@ -5,10 +5,12 @@ var current:Node = null
 func _ready() -> void:
 	current = get_tree().current_scene
 	$texture_rect.modulate = Color(1, 1, 1, 0)
+	$texture_rect.visible = false
 
-func change_scene(path:String, meta:Dictionary) -> void:
+func change_scene(path:String, meta:Dictionary, wait_time:float = 0.3) -> void:
 	var tween:Tween = create_tween()
-	tween.tween_property($texture_rect, "modulate", Color(1, 1, 1, 1), 0.3)
+	tween.tween_property($texture_rect, "visible", true, 0)
+	tween.tween_property($texture_rect, "modulate", Color(1, 1, 1, 1), wait_time)
 	await tween.finished
 	var instance:Node = load(path).instantiate()
 	for key:String in meta:
@@ -19,4 +21,5 @@ func change_scene(path:String, meta:Dictionary) -> void:
 	current = instance
 	tween.kill()
 	tween = create_tween()
-	tween.tween_property($texture_rect, "modulate", Color(1, 1, 1, 0), 0.3)
+	tween.tween_property($texture_rect, "modulate", Color(1, 1, 1, 0), wait_time)
+	tween.tween_property($texture_rect, "visible", false, 0)
