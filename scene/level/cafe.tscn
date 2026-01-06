@@ -638,11 +638,26 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.51041186, 2.9938352, 6.053
 [node name="menu" parent="." instance=ExtResource("30_7tmgw")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0.8820629, 4.255598)
 
-[node name="marker_document" type="Node3D" parent="."]
+[node name="marker_document_menu" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0, 3)
 script = ExtResource("31_2nvbi")
-file_path = "user://archive/menu.cafe.json"
+file_path = "user://archive/printed.menu.json"
+file_content = {
+"lines": [],
+"path": "res://assets/texture/menu.png"
+}
 selection = "菜单"
+metadata/_custom_type_script = "uid://dc4n8wl381mqw"
+
+[node name="marker_document_chess_movements" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 0, 1)
+script = ExtResource("31_2nvbi")
+file_path = "user://archive/printed.chess_movements.json"
+file_content = {
+"lines": [],
+"path": "res://assets/texture/chess_movements.png"
+}
+selection = "有关棋子的移动"
 metadata/_custom_type_script = "uid://dc4n8wl381mqw"
 
 [editable path="table_0"]
