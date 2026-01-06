@@ -6,6 +6,8 @@ var zoom:float = 1
 var pivot:Vector2 = Vector2()
 var offset:Vector2 = Vector2()
 var use_eraser:bool = false
+@export var zoom_curve:Curve
+var zoom_mapped:float = 1
 
 func _ready() -> void:
 	pass
@@ -17,12 +19,12 @@ func _unhandled_input(event:InputEvent) -> void:
 		change_offset(event.relative)
 		get_viewport().set_input_as_handled()
 	if event is InputEventScreenPinch && event.position && get_global_rect().has_point(event.position):
-		change_zoom(event.relative / 500)
+		change_zoom(event.relative / 1000)
 		get_viewport().set_input_as_handled()
 	var actual_position:Vector2
 	if event is InputEventMouseButton || event is InputEventMouseMotion || event is InputEventSingleScreenTouch || event is InputEventSingleScreenDrag || event is InputEventMultiScreenDrag || event is InputEventScreenPinch:
 		actual_position = event.position - $sub_viewport_container.global_position - document.get_global_position()
-		actual_position /= zoom
+		actual_position /= zoom_mapped
 	if event is InputEventMouseButton:
 		if !use_eraser:
 			if event.pressed && event.button_index == MOUSE_BUTTON_LEFT:
@@ -48,6 +50,7 @@ func set_document(_document) -> void:
 		$sub_viewport_container/sub_viewport.remove_child(document)
 	document = _document
 	zoom = 1
+	zoom_mapped = zoom_curve.sample(zoom)
 	pivot = Vector2(0, 0)
 	offset = $sub_viewport_container/sub_viewport.size / 2
 	$sub_viewport_container/sub_viewport.add_child(document)
@@ -58,14 +61,15 @@ func update_transform() -> void:
 		return
 	pivot = get_global_transform().basis_xform_inv(size * 0.5)
 	var offset_result:Vector2 = offset - pivot
-	offset_result *= zoom / document.scale.x
+	offset_result *= zoom_mapped / document.scale.x
 	offset = offset_result + pivot
-	document.scale = Vector2(zoom, zoom)
+	document.scale = Vector2(zoom_mapped, zoom_mapped)
 	document.position = offset
 
 func change_zoom(relative:float) -> void:
 	zoom += relative
 	zoom = clamp(zoom, 0.1, 2.0)
+	zoom_mapped = zoom_curve.sample(zoom)
 	update_transform()
 
 func change_offset(relative:Vector2) -> void:

@@ -1,7 +1,12 @@
-[gd_scene load_steps=5 format=3 uid="uid://bsobwdwnm840s"]
+[gd_scene load_steps=6 format=3 uid="uid://bsobwdwnm840s"]
 
 [ext_resource type="Script" uid="uid://dpwx8x2545los" path="res://src/document_browser.gd" id="1_cflc6"]
 [ext_resource type="Script" uid="uid://wa2q0lswte4p" path="res://addons/gdtim/InputManager.gd" id="2_y0c1r"]
+
+[sub_resource type="Curve" id="Curve_y0c1r"]
+_limits = [0.0, 2.0, 0.0, 1.0]
+_data = [Vector2(0, 0.10410559), 0.0, 0.0, 0, 0, Vector2(0.99999994, 2), 5.232873, 0.0, 0, 0]
+point_count = 2
 
 [sub_resource type="Gradient" id="Gradient_gckm1"]
 offsets = PackedFloat32Array(0)
@@ -18,6 +23,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_cflc6")
+zoom_curve = SubResource("Curve_y0c1r")
 
 [node name="touch_input_manager" type="Node" parent="."]
 script = ExtResource("2_y0c1r")
