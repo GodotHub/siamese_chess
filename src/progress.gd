@@ -23,10 +23,10 @@ func save_file() -> void:
 func has_key(key:String) -> bool:
 	return table.has(key)
 
-func get_value(key:String) -> Variant:
+func get_value(key:String, default:Variant = null) -> Variant:
 	if table.has(key):
 		return table[key]
-	return null
+	return default
 
 func set_value(key:String, data:Variant) -> void:
 	table[key] = data
@@ -35,3 +35,7 @@ func accumulate(key:String, data:Variant) -> void:
 	if !table.has(key):
 		table[key] = 0
 	table[key] += data
+
+func create_if_not_exist(key:String, data:Variant) -> void:
+	if !has_key(key):
+		table[key] = data
