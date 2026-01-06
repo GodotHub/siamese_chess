@@ -13,13 +13,13 @@ func play_animation(anim:String) -> void:
 	$animation_tree.get("parameters/playback").travel(anim)
 
 func introduce(_pos:Vector3) -> void:	# 登场动画
-	if tween && tween.is_running():
-		tween.kill()
-	if !visible:
-		visible = true
-		global_position = _pos
-	else:
-		move(_pos)
+#	if tween && tween.is_running():
+#		tween.kill()
+#	if !visible:
+	visible = true
+	global_position = _pos
+#	else:
+#		move(_pos)
 
 func capturing(_pos:Vector3, _captured:Actor) -> void:	# 攻击
 	target_position = _pos
