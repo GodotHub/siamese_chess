@@ -42,6 +42,8 @@ func _ready() -> void:
 			var by:int = Chess.to_position_int(chessboard.get_position_name(node.position))
 			node.get_parent().remove_child(node)
 			chessboard.add_piece_instance(node, by)
+	Progress.create_if_not_exist("obtain", 0)
+	Progress.create_if_not_exist("wins", 0)
 	change_state("explore_idle")
 
 func change_state(next_state:String, arg:Dictionary = {}) -> void:
@@ -318,6 +320,7 @@ func state_ready_black_win(_arg:Dictionary) -> void:
 		chessboard.chessboard_piece[Chess.to_x88(Chess.first_bit(bit))].captured()
 		bit = Chess.next_bit(bit)
 	state_signal_connect(Dialog.on_next, change_state.bind("explore_idle"))
+	Progress.accumulate("wins", 1)
 	Dialog.push_dialog("你赢了！", "", true, true)
 
 func state_ready_white_win(_arg:Dictionary) -> void:
@@ -328,7 +331,7 @@ func state_ready_white_win(_arg:Dictionary) -> void:
 	Dialog.push_dialog("你输了！", "", true, true)
 
 func state_ready_conclude(_arg:Dictionary) -> void:
-	Loading.change_scene("res://scene/conclude.tscn", {"obtain": 10, "wins": 2}, 1)
+	Loading.change_scene("res://scene/conclude.tscn", {}, 1)
 
 func state_ready_versus_draw(_arg:Dictionary) -> void:
 	var bit:int = chessboard.state.get_bit(ord("K")) | \
