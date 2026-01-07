@@ -5,7 +5,10 @@ var document:Document = null
 var zoom:float = 1
 var offset:Vector2 = Vector2()
 var use_eraser:bool = false
-@export var zoom_curve:Curve
+
+# 线性变化显然不能够很舒服地进行缩放
+# 曲线函数：(x / 2) ^ 2 * 0.95 + 0.1
+# 反函数： sqrt((y - 0.1) / 0.95) * 2
 var zoom_mapped:float = 1
 
 func _ready() -> void:
@@ -50,7 +53,7 @@ func set_document(_document) -> void:
 	document = _document
 	var rect:Rect2 = document.get_rect()
 	zoom_mapped = min($sub_viewport_container/sub_viewport.size.x / rect.size.x, $sub_viewport_container/sub_viewport.size.y / rect.size.y)
-	zoom = 1
+	zoom = sqrt((zoom_mapped - 0.1) / 0.95) * 2
 	offset = $sub_viewport_container/sub_viewport.size / 2
 	$sub_viewport_container/sub_viewport.add_child(document)
 	update_transform()
@@ -68,7 +71,7 @@ func update_transform() -> void:
 func change_zoom(relative:float) -> void:
 	zoom += relative
 	zoom = clamp(zoom, 0.1, 2.0)
-	zoom_mapped = zoom_curve.sample(zoom)
+	zoom_mapped = pow(zoom / 2, 2) * 0.95 + 0.1
 	update_transform()
 
 func change_offset(relative:Vector2) -> void:
