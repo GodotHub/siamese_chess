@@ -20,7 +20,7 @@ func stringify() -> String:
 	return JSON.stringify(data_dict)
 
 func get_rect() -> Rect2:
-	return $history.get_rect()
+	return $history.get_rect() * $history.transform
 
 func set_state(_state:State) -> void:
 	state = _state.duplicate()

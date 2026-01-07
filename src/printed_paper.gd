@@ -18,4 +18,4 @@ func stringify() -> String:
 	return JSON.stringify(data_dict)
 
 func get_rect() -> Rect2:
-	return $sprite_2d.get_rect()
+	return $sprite_2d.get_rect() * $sprite_2d.transform
