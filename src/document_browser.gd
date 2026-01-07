@@ -61,7 +61,7 @@ func set_document(_document) -> void:
 func update_transform() -> void:
 	if !is_instance_valid(document):
 		return
-	var pivot:Vector2 = get_global_transform().basis_xform_inv(size * 0.5)
+	var pivot:Vector2 = get_global_transform().basis_xform_inv($sub_viewport_container/sub_viewport.size * 0.5)
 	var offset_result:Vector2 = offset - pivot
 	offset_result *= zoom_mapped / document.scale.x
 	offset = offset_result + pivot
