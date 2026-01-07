@@ -43,6 +43,9 @@ func set_filename(_filename:String) -> void:
 func get_filename() -> String:
 	return filename
 
+func get_rect() -> Rect2:
+	return Rect2(-552 / 2, -780 / 2, 552, 780)
+
 func start_drawing(start_position:Vector2) -> void:
 	var new_line:Line2D = Line2D.new()
 	new_line.joint_mode = Line2D.LINE_JOINT_ROUND

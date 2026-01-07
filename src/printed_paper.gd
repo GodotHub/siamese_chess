@@ -16,3 +16,6 @@ func stringify() -> String:
 	data_dict["path"] = img_path
 	data_dict["lines"] = get_lines()
 	return JSON.stringify(data_dict)
+
+func get_rect() -> Rect2:
+	return $sprite_2d.get_rect()

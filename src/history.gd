@@ -19,6 +19,9 @@ func stringify() -> String:
 	data_dict["lines"] = get_lines()
 	return JSON.stringify(data_dict)
 
+func get_rect() -> Rect2:
+	return $history.get_rect()
+
 func set_state(_state:State) -> void:
 	state = _state.duplicate()
 	history.clear()

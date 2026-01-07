@@ -3,7 +3,6 @@ class_name DocumentBrowser
 
 var document:Document = null
 var zoom:float = 1
-var pivot:Vector2 = Vector2()
 var offset:Vector2 = Vector2()
 var use_eraser:bool = false
 @export var zoom_curve:Curve
@@ -49,17 +48,17 @@ func set_document(_document) -> void:
 	if is_instance_valid(document):
 		$sub_viewport_container/sub_viewport.remove_child(document)
 	document = _document
+	var rect:Rect2 = document.get_rect()
+	zoom_mapped = min($sub_viewport_container/sub_viewport.size.x / rect.size.x, $sub_viewport_container/sub_viewport.size.y / rect.size.y)
 	zoom = 1
-	zoom_mapped = zoom_curve.sample(zoom)
-	pivot = Vector2(0, 0)
 	offset = $sub_viewport_container/sub_viewport.size / 2
 	$sub_viewport_container/sub_viewport.add_child(document)
-	document.position = $sub_viewport_container/sub_viewport.size / 2
+	update_transform()
 
 func update_transform() -> void:
 	if !is_instance_valid(document):
 		return
-	pivot = get_global_transform().basis_xform_inv(size * 0.5)
+	var pivot:Vector2 = get_global_transform().basis_xform_inv(size * 0.5)
 	var offset_result:Vector2 = offset - pivot
 	offset_result *= zoom_mapped / document.scale.x
 	offset = offset_result + pivot
@@ -73,5 +72,5 @@ func change_zoom(relative:float) -> void:
 	update_transform()
 
 func change_offset(relative:Vector2) -> void:
-	offset += relative
+	offset += relative / 2
 	update_transform()
