@@ -13,14 +13,15 @@
 [ext_resource type="PackedScene" uid="uid://bfl3bn4u2am21" path="res://scene/actor/tree.tscn" id="12_x41v6"]
 [ext_resource type="PackedScene" uid="uid://dgvq7kuhcahlb" path="res://scene/teleport_pointer.tscn" id="13_as14m"]
 
-[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_j5fnc"]
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_x41v6"]
 sky_top_color = Color(1, 1, 1, 1)
 sky_horizon_color = Color(1, 1, 1, 1)
-ground_bottom_color = Color(1, 1, 1, 1)
-ground_horizon_color = Color(1, 1, 1, 1)
+sky_curve = 0.5795615
+ground_bottom_color = Color(0.75, 0.195, 0.195, 1)
+ground_horizon_color = Color(0.7490196, 0.1882353, 0.2, 1)
 
 [sub_resource type="Sky" id="Sky_gimty"]
-sky_material = SubResource("ProceduralSkyMaterial_j5fnc")
+sky_material = SubResource("ProceduralSkyMaterial_x41v6")
 
 [sub_resource type="Environment" id="Environment_sb1hd"]
 background_mode = 2

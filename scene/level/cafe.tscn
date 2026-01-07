@@ -32,14 +32,14 @@
 [ext_resource type="PackedScene" uid="uid://du7djoab5q014" path="res://scene/menu_board.tscn" id="30_7tmgw"]
 [ext_resource type="Script" uid="uid://dc4n8wl381mqw" path="res://src/marker_document.gd" id="31_2nvbi"]
 
-[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_e1edc"]
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_2nvbi"]
 sky_top_color = Color(1, 1, 1, 1)
 sky_horizon_color = Color(1, 1, 1, 1)
-ground_bottom_color = Color(1, 1, 1, 1)
-ground_horizon_color = Color(1, 1, 1, 1)
+ground_bottom_color = Color(0, 0, 0, 1)
+ground_horizon_color = Color(0, 0, 0, 1)
 
 [sub_resource type="Sky" id="Sky_kgksa"]
-sky_material = SubResource("ProceduralSkyMaterial_e1edc")
+sky_material = SubResource("ProceduralSkyMaterial_2nvbi")
 
 [sub_resource type="Environment" id="Environment_ve7rb"]
 background_mode = 2

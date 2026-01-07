@@ -10,14 +10,15 @@
 [ext_resource type="PackedScene" uid="uid://rlos56ckp02d" path="res://scene/actor/shrub.tscn" id="8_5gqpn"]
 [ext_resource type="PackedScene" uid="uid://hwvhjiv4h8w1" path="res://assets/model/fence_branch.glb" id="9_kptv7"]
 
-[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_gs8dr"]
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_kptv7"]
 sky_top_color = Color(1, 1, 1, 1)
-sky_horizon_color = Color(2.1665, 2.1665, 2.1665, 1)
-ground_bottom_color = Color(1, 1, 1, 1)
-ground_horizon_color = Color(2.1665, 2.1665, 2.1665, 1)
+sky_horizon_color = Color(1, 1, 1, 1)
+sky_curve = 0.5795615
+ground_bottom_color = Color(0.75, 0.195, 0.195, 1)
+ground_horizon_color = Color(0.7490196, 0.1882353, 0.2, 1)
 
 [sub_resource type="Sky" id="Sky_cdevh"]
-sky_material = SubResource("ProceduralSkyMaterial_gs8dr")
+sky_material = SubResource("ProceduralSkyMaterial_kptv7")
 
 [sub_resource type="Environment" id="Environment_w3jsn"]
 background_mode = 2

@@ -7,9 +7,6 @@
 [node name="chessboard_large" instance=ExtResource("1_x56hs")]
 script = ExtResource("2_j52ln")
 
-[node name="chessbase" parent="." index="0"]
-transparency = 0.78
-
 [node name="CollisionShape3D" parent="h3" index="0"]
 visible = false
 

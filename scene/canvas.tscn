@@ -11,7 +11,6 @@ viewport_path = NodePath("sub_viewport")
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_2pvxu"]
 resource_local_to_scene = true
 transparency = 1
-shading_mode = 0
 albedo_texture = SubResource("ViewportTexture_lelh2")
 
 [node name="canvas" type="Node3D"]

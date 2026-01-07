@@ -20,8 +20,8 @@
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_j5fnc"]
 sky_top_color = Color(1, 1, 1, 1)
 sky_horizon_color = Color(1, 1, 1, 1)
-ground_bottom_color = Color(1, 1, 1, 1)
-ground_horizon_color = Color(1, 1, 1, 1)
+ground_bottom_color = Color(0, 0, 0, 1)
+ground_horizon_color = Color(0, 0, 0, 1)
 
 [sub_resource type="Sky" id="Sky_gimty"]
 sky_material = SubResource("ProceduralSkyMaterial_j5fnc")
@@ -43,7 +43,7 @@ metadata/by = 80
 [node name="player" parent="." instance=ExtResource("2_gimty")]
 
 [node name="camera" type="Camera3D" parent="."]
-transform = Transform3D(0.985733, 0.114297, -0.123559, 1.93588e-08, 0.734086, 0.679056, 0.168317, -0.669368, 0.723613, -0.621102, 10.018, 11.9718)
+transform = Transform3D(0.985733, 0.11429672, -0.123559184, 1.93588e-08, 0.73408616, 0.6790564, 0.168317, -0.66936827, 0.72361284, -1.8114014, 11.159217, 13.41664)
 fov = 58.5874
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
@@ -170,3 +170,28 @@ to = "res://scene/level/entrance.tscn"
 args = {
 "by": 115
 }
+
+[node name="csg_wall_2" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.0408626, 1.51379, -8.2439575)
+size = Vector3(11.855515, 3, 0.4732666)
+material = SubResource("StandardMaterial3D_gimty")
+
+[node name="csg_elevator_wall_4" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.1305356, 1.51379, -8.2439575)
+size = Vector3(2.0584414, 3, 0.4732666)
+material = SubResource("StandardMaterial3D_gimty")
+
+[node name="csg_elevator_wall_5" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.991712, 2.8370323, -8.2439575)
+size = Vector3(2.2494354, 0.35351563, 0.4732666)
+material = SubResource("StandardMaterial3D_gimty")
+
+[node name="csg_wall_6" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.96607, 1.51379, 5.797713)
+size = Vector3(0.408875, 3, 4.441066)
+material = SubResource("StandardMaterial3D_gimty")
+
+[node name="csg_wall_7" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.201963, 1.51379, -0.2517252)
+size = Vector3(0.3688584, 3, 16.490627)
+material = SubResource("StandardMaterial3D_gimty")
