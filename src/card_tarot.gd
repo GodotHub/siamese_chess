@@ -30,6 +30,7 @@ func use_card_on_chessboard(_chessboard:Chessboard, _by:int) -> void:
 func use_card_directly() -> void:
 	chessboard.remove_piece_instance(actor)
 	chessboard.state.capture_piece(by)
+	actor.unpromote()
 	chessboard = null
 	use_directly = false
 
